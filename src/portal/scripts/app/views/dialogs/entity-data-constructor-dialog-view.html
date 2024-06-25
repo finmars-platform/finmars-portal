@@ -142,12 +142,12 @@
                                         <md-button class="ec-tab-btn"
                                                    data-ng-click="vm.toggleEditTab(tab)"
                                                    aria-label="input form editor tab edition toggle">
-                                            <ng-md-icon icon="edit"></ng-md-icon>
+                                            <span class='material-icons tiny'>edit</span>
                                         </md-button>
                                         <md-button class="ec-tab-btn"
                                                    data-ng-click="vm.deleteTab(tab)"
                                                    aria-label="input form editor tab deletion">
-                                            <ng-md-icon icon="delete"></ng-md-icon>
+                                            <span class='material-icons tiny'>delete</span>
                                         </md-button>
                                     </div>
 
@@ -171,11 +171,11 @@
                                 <md-tab-body>
                                     <div class="ec-md-content ec-layout-tab">
                                         <div class="ec-layout-box">
-                                            <md-button class="{{tab.layout.columns === item ? 'active' : '' }} ec-layout-btn"
+                                            <md-button class="{{tab.layout.columns === item ? 'active' : '' }} ec-layout-btn stop"
                                                        data-ng-click="vm.setLayoutColumns(tab, item, $event)"
                                                        data-ng-repeat="item in vm.boxColumns"
                                                        aria-label="input form editor columns quantity">
-                                                <ng-md-icon icon="stop" data-ng-repeat="icon in vm.range(item)"></ng-md-icon>
+                                                <span class="material-icons" data-ng-repeat="icon in vm.range(item)">stop</span>
                                             </md-button>
                                         </div>
 

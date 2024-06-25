@@ -546,6 +546,11 @@
         top: -3px;
       }
 
+      .material-icons {
+        position: relative;
+        top: -3px;
+      }
+
     }
 
   }
@@ -788,6 +793,11 @@
         fill: #777777;
         margin: 0;
       }
+
+      .material-icons {
+        color: #777777;
+        margin: 0;
+      }
     }
 
   }
@@ -997,6 +1007,12 @@
       top: 4px;
       left: 3px;
     }
+
+    .material-icons {
+      position: absolute;
+      top: 4px;
+      left: 3px;
+    }
   }
 
   .g-columns-holder {
@@ -1197,11 +1213,24 @@
       height: @icon-size;
     }
 
+    .material-icons {
+      width: @icon-size;
+      height: @icon-size;
+    }
+
     &.rounded {
       border-radius: 50%;
 
       ng-md-icon svg {
         fill: var(--secondary-color);
+      }
+
+      .material-icons  {
+        color: var(--secondary-color);
+      }
+
+      .material-icons {
+        color: var(--secondary-color);
       }
     }
 
@@ -1216,6 +1245,10 @@
 
       ng-md-icon svg {
         fill: var(--secondary-color);
+      }
+
+      .material-icons  {
+        color: var(--secondary-color);
       }
     }
 
@@ -1257,6 +1290,10 @@
 
     ng-md-icon svg {
       fill: var(--secondary-color);
+    }
+
+    .material-icons  {
+      color: var(--secondary-color);
     }
 
 
@@ -1597,6 +1634,12 @@
           }
         }
 
+        .material-icons  {
+          width: @star-icon-size;
+          height: @star-icon-size;
+          color: @g-table-border-color;
+        }
+
         &:hover {
           background: none;
 
@@ -1604,6 +1647,10 @@
             svg {
               fill: @g-top-part-color;
             }
+          }
+
+          .material-icons {
+              color: @g-top-part-color;
           }
         }
       }
@@ -1613,6 +1660,10 @@
           svg {
             fill: #FAC878
           }
+        }
+
+        .material-icons {
+            color: #FAC878
         }
 
       }
@@ -1643,6 +1694,12 @@
         width: auto;
         height: auto;
         fill: var(--secondary-color);
+        color: var(--secondary-color);
+      }
+
+      .material-icons  {
+        width: auto;
+        height: auto;
         color: var(--secondary-color);
       }
 
@@ -2278,6 +2335,10 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
     right: 1px;
 
     ng-md-icon {
+      top: 0;
+    }
+
+    .material-icons {
       top: 0;
     }
   }
@@ -3213,6 +3274,12 @@ body.md-dialog-is-showing {
     padding-left: 30px;
 
     ng-md-icon {
+      position: absolute;
+      top: 4px;
+      left: 6px;
+    }
+
+    .material-icons  {
       position: absolute;
       top: 4px;
       left: 6px;

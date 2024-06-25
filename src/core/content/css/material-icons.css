@@ -137,3 +137,8 @@
     text-rendering: optimizeLegibility;
     font-feature-settings: "liga";
 }
+
+.material-icons.tiny{
+    font-size: 1rem
+}
+

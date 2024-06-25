@@ -8,12 +8,13 @@
                 <div layout="row">
                     <div ng-if="item.type !== 'table'"
                          class="ec-extend-btns-holder flex-row">
+
                         <button class="md-button md-raised" ng-click="decreaseColspan(item)">
-                            <ng-md-icon icon="chevron_left" size="16"></ng-md-icon>
+                            <span class='material-icons tiny center'>keyboard_arrow_left</span>
                         </button>
 
                         <button class="md-button md-raised" ng-click="increaseColspan(item)">
-                            <ng-md-icon icon="chevron_right" size="16"></ng-md-icon>
+                            <span class='material-icons tiny center'>keyboard_arrow_right</span>
                         </button>
                     </div>
 
@@ -23,10 +24,10 @@
 
                     <div class="options-holder" flex="40">
                         <md-button aria-label="delete attribute" data-ng-click="deleteField()">
-                            <ng-md-icon icon="delete"></ng-md-icon>
+                            <span class='material-icons'>delete</span>
                         </md-button>
                         <md-button aria-label="edit attribute" ng-click="toggleEditMode($event)">
-                            <ng-md-icon icon="mode_edit"></ng-md-icon>
+                            <span class="material-icons">edit</span>
                         </md-button>
                     </div>
                 </div>
@@ -40,7 +41,7 @@
                  data-tab-order="{{tab.tabOrder}}"
                  data-colspan="{{item.colspan}}">
                 <md-button aria-label="add field" ng-click="toggleEditMode($event)" class="width-100 ec-attr-empty-btn">
-                    <ng-md-icon icon="add_circle"></ng-md-icon>
+                    <span class="material-icons">add_circle</span>
                 </md-button>
             </div>
         </div>

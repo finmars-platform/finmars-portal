@@ -12,14 +12,14 @@
             <md-button
                     class="scheme-edit-button md-fab {{vm.config.scheme && vm.hasSchemeEditPermission? '' : 'disabled-btn' }}"
                     data-ng-click="vm.editScheme($event)">
-                <ng-md-icon icon="edit" size="24"></ng-md-icon>
+                <span class="material-icons" style="font-size: 24px">edit</span>
                 <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme</md-tooltip>
             </md-button>
             <md-button
                     style="right: -120px;"
                     class="scheme-edit-button md-fab {{vm.config.scheme && vm.hasSchemeEditPermission? '' : 'disabled-btn' }}"
                     data-ng-click="vm.editSchemeV2($event)">
-                <ng-md-icon icon="developer_dashboard" size="24"></ng-md-icon>
+                <span class="material-icons" style="font-size: 24px">developer_board</span>
                 <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme (v2)</md-tooltip>
             </md-button>
         </div>

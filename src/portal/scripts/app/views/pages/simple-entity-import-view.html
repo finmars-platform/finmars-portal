@@ -22,7 +22,7 @@
                     class="scheme-edit-button md-fab"
                     data-ng-click="vm.editScheme($event)"
                     ng-disabled="!vm.config.scheme || !vm.hasSchemeEditPermission" style="top: 3px;">
-                <ng-md-icon icon="edit" size="24"></ng-md-icon>
+                <span class="material-icons" style="font-size: 24px">edit</span>
                 <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme</md-tooltip>
             </md-button>
             <md-button
@@ -30,7 +30,7 @@
                     class="scheme-edit-button md-fab"
                     ng-disabled="!vm.config.scheme || !vm.hasSchemeEditPermission"
                     data-ng-click="vm.editSchemeV2($event)">
-                <ng-md-icon icon="developer_dashboard" size="24"></ng-md-icon>
+                <span class="material-icons" style="font-size: 24px">developer_board</span>
                 <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme (v2)</md-tooltip>
             </md-button>
         </div>

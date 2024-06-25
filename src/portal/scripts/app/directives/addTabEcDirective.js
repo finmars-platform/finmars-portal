@@ -14,7 +14,7 @@
 
                 var btnString = '<md-button class="ec-tab-add-btn"' +
                     'data-ng-click="vm.addTab()" aria-label="tab addition button">' +
-                    '<ng-md-icon icon="add_circle"></ng-md-icon>' +
+                    '<span class="material-icons">add_circle</span>' +
                     '</md-button>';
 
                 var btn = $compile(btnString)(scope.$parent);

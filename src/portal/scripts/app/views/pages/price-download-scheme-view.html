@@ -64,26 +64,26 @@
                     </th>
                     <th>
                         <md-button class="md-icon-button">
-                            <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                            <span data-ng-click="vm.toggleQuery()" class="material-icons">search</span>
                         </md-button>
                     </th>
                 </tr>
                 <tr style="border: 0" data-ng-if="vm.queryStatus" class="filter-row-holder">
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.user_code">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.provider_name">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.bid0">
                         </md-input-container>
                     </th>
@@ -101,13 +101,13 @@
                     </th>-->
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.bid_multiplier">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.ask0">
                         </md-input-container>
                     </th>
@@ -125,31 +125,31 @@
                     </th>-->
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.ask_multiplier">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.last">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.last_multiplier">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.mid">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.mid_multiplier">
                         </md-input-container>
                     </th>
@@ -177,22 +177,30 @@
                             <!-- Trigger element is a md-button with an icon -->
                             <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button"
                                        aria-label="Open sample menu">
-                                <ng-md-icon icon="settings"></ng-md-icon>
+                                <span class="material-icons">settings</span>
                             </md-button>
                             <md-menu-content>
                                 <md-menu-item>
                                     <md-button ng-click="vm.editItem(item)">
-                                        <ng-md-icon icon="mode_edit" style="top: 6px;
-    position: relative;
-    margin-right: 10px;"></ng-md-icon>
+                                        <span
+                                            style="top: 6px;
+                                            position: relative;
+                                            margin-right: 10px;"
+                                            class="material-icons"
+                                        >
+                                            mode_edit
+                                        </span>
                                         Edit
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item>
                                     <md-button ng-click="vm.deleteItem(item, $index)">
-                                        <ng-md-icon icon="delete" style="top: 6px;
-    position: relative;
-    margin-right: 10px;"></ng-md-icon>
+                                        <span
+                                            style="top: 6px;
+                                            position: relative;
+                                            margin-right: 10px;"
+                                            class="material-icons"
+                                        >delete</span>
                                         Delete
                                     </md-button>
                                 </md-menu-item>
@@ -424,68 +432,68 @@
 
                     <th>
                         <md-button class="md-icon-button">
-                            <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                            <span data-ng-click="vm.toggleQuery()" class="material-icons">search</span>
                         </md-button>
                     </th>
                 </tr>
                 <tr style="border: 0" data-ng-if="vm.queryStatus" class="filter-row-holder">
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.user_code">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.provider_name">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.bid_history">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.ask_history">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.last_history">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.mid_history">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.bid_history_multiplier">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.ask_history_multiplier">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.last_history_multiplier">
                         </md-input-container>
                     </th>
                     <th>
                         <md-input-container>
-                            <ng-md-icon icon="search"></ng-md-icon>
+                            <span class="material-icons">search</span>
                             <input type="text" data-ng-model="vm.query.mid_history_multiplier">
                         </md-input-container>
                     </th>
@@ -509,22 +517,22 @@
                             <!-- Trigger element is a md-button with an icon -->
                             <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button"
                                        aria-label="Open sample menu">
-                                <ng-md-icon icon="settings"></ng-md-icon>
+                                <span class="material-icons">settings</span>
                             </md-button>
                             <md-menu-content>
                                 <md-menu-item>
                                     <md-button ng-click="vm.editItem(item)">
-                                        <ng-md-icon icon="mode_edit" style="top: 6px;
-    position: relative;
-    margin-right: 10px;"></ng-md-icon>
+                                        <span class="material-icons" style="top: 6px;
+                                            position: relative;
+                                            margin-right: 10px;">mode_edit</span>
                                         Edit
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item>
                                     <md-button ng-click="vm.deleteItem(item, $index)">
-                                        <ng-md-icon icon="delete" style="top: 6px;
-    position: relative;
-    margin-right: 10px;"></ng-md-icon>
+                                        <span class="material-icons" style="top: 6px;
+                                            position: relative;
+                                            margin-right: 10px;">delete</span>
                                         Delete
                                     </md-button>
                                 </md-menu-item>
@@ -682,7 +690,7 @@
 
                     <th>
                         <md-button class="md-icon-button">
-                            <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                            <span data-ng-click="vm.toggleQuery()" class="material-icons">search</span>
                         </md-button>
                     </th>
                 </tr>
@@ -722,22 +730,25 @@
                             <!-- Trigger element is a md-button with an icon -->
                             <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button"
                                        aria-label="Open sample menu">
-                                <ng-md-icon icon="settings"></ng-md-icon>
+                                <span class="material-icons">settings</span>
                             </md-button>
                             <md-menu-content>
                                 <md-menu-item>
                                     <md-button ng-click="vm.editItem(item)">
-                                        <ng-md-icon icon="mode_edit" style="top: 6px;
-    position: relative;
-    margin-right: 10px;"></ng-md-icon>
+                                        <span
+                                            class="material-icons"
+                                            style="top: 6px;
+                                            position: relative;
+                                            margin-right: 10px;"
+                                        >mode_edit</span>
                                         Edit
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item>
                                     <md-button ng-click="vm.deleteItem(item, $index)">
-                                        <ng-md-icon icon="delete" style="top: 6px;
-    position: relative;
-    margin-right: 10px;"></ng-md-icon>
+                                        <span class="material-icons" style="top: 6px;
+                                            position: relative;
+                                            margin-right: 10px;">delete</span>
                                         Delete
                                     </md-button>
                                 </md-menu-item>

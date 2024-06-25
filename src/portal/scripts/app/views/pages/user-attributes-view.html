@@ -47,10 +47,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenPortfolioAttrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -64,40 +64,28 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'portfolio', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'portfolio', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Import Classifiers from .csv file
+                                            </md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'portfolio', $event)">
-                                        <ng-md-icon icon="map">
-                                            <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">map<md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'portfolio', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'portfolio', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'portfolio', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -161,10 +149,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenAccountAttrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -178,40 +166,28 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'account', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'account', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload<md-tooltip md-direction="top">Import Classifiers from .csv file
+                                            </md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'account', $event)">
-                                        <ng-md-icon icon="map">
-                                            <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">map<md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'account', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'account', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'account', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -274,10 +250,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenInstrumentAttrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
 
@@ -292,40 +268,28 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'instrument', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'instrument', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload<md-tooltip md-direction="top">Import Classifiers from .csv file
+                                            </md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'instrument', $event)">
-                                        <ng-md-icon icon="map">
-                                            <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">map<md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'instrument', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'instrument', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'instrument', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -388,10 +352,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenResponsibleAttrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -405,40 +369,31 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'responsible', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'responsible', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload
+                                            <md-tooltip md-direction="top">Import Classifiers from .csv file</md-tooltip>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'responsible', $event)">
-                                        <ng-md-icon icon="map">
+                                        <span class="material-icons">map
                                             <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'responsible', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'responsible', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'responsible', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -501,10 +456,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenCounterpartyAttrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -518,40 +473,31 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'counterparty', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'counterparty', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload
+                                            <md-tooltip md-direction="top">Import Classifiers from .csv file</md-tooltip>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'counterparty', $event)">
-                                        <ng-md-icon icon="map">
+                                        <span class="material-icons">map
                                             <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'counterparty', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'counterparty', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'counterparty', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -615,10 +561,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenCurrencyAttrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -632,40 +578,31 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'currency', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'currency', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload
+                                            <md-tooltip md-direction="top">Import Classifiers from .csv file</md-tooltip>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'currency', $event)">
-                                        <ng-md-icon icon="map">
+                                        <span class="material-icons">map
                                             <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'currency', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'currency', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'currency', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -728,10 +665,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenStrategy1Attrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -745,40 +682,31 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'strategy-1', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'strategy-1', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload
+                                            <md-tooltip md-direction="top">Import Classifiers from .csv file</md-tooltip>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'strategy-1', $event)">
-                                        <ng-md-icon icon="map">
+                                        <span class="material-icons">map
                                             <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'strategy-1', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'strategy-1', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'strategy-1', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -841,10 +769,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenStrategy2Attrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -858,40 +786,31 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'strategy-2', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'strategy-2', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload
+                                            <md-tooltip md-direction="top">Import Classifiers from .csv file</md-tooltip>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'strategy-2', $event)">
-                                        <ng-md-icon icon="map">
+                                        <span class="material-icons">map
                                             <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'strategy-2', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'strategy-2', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'strategy-2', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -952,10 +871,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenStrategy3Attrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -969,40 +888,31 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'strategy-3', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'strategy-3', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload
+                                            <md-tooltip md-direction="top">Import Classifiers from .csv file</md-tooltip>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'strategy-3', $event)">
-                                        <ng-md-icon icon="map">
+                                        <span class="material-icons">map
                                             <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'strategy-3', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'strategy-3', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'strategy-3', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -1065,10 +975,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenAccountTypeAttrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -1082,40 +992,31 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'account-type', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'account-type', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload
+                                            <md-tooltip md-direction="top">Import Classifiers from .csv file</md-tooltip>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'account-type', $event)">
-                                        <ng-md-icon icon="map">
+                                        <span class="material-icons">map
                                             <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'account-type', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'account-type', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'account-type', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -1176,10 +1077,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenInstrumentTypeAttrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -1193,40 +1094,31 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'instrument-type', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'instrument-type', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload
+                                            <md-tooltip md-direction="top">Import Classifiers from .csv file</md-tooltip>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'instrument-type', $event)">
-                                        <ng-md-icon icon="map">
+                                        <span class="material-icons">map
                                             <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'instrument-type', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'instrument-type', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'instrument-type', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>
@@ -1287,10 +1179,10 @@
                                  data-ng-if="vm.checkIsHidden(attr, 'showHiddenTransactionTypeAttrs')">
                             <div class="am-attr-card__wrapper">
                                 <div class="am-attr-card__left-side">
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="!attr.is_hidden"
-                                                icon="visibility"></ng-md-icon>
-                                    <ng-md-icon class="am-attr-card__status" data-ng-if="attr.is_hidden"
-                                                icon="visibility_off"></ng-md-icon>
+                                    <span data-ng-if="!attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility</span>
+                                    <span data-ng-if="attr.is_hidden" class="material-icons am-attr-card__status"
+                                    >visibility_off</span>
 
                                     <div layout="column">
                                         <div><b data-ng-bind="attr.name"></b> (<span
@@ -1304,40 +1196,31 @@
                                 <div class="am-attr-misc">
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.exportClassifiers(attr, 'transaction-type', $event)">
-                                        <ng-md-icon icon="file_download">
-                                            <md-tooltip md-direction="top">Export Classifier</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_download<md-tooltip md-direction="top">Export Classifier</md-tooltip></span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.importClassifiers(attr, 'transaction-type', $event)">
-                                        <ng-md-icon icon="file_upload">
-                                            <md-tooltip md-direction="top">Import Classifiers from .csv file
-                                            </md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">file_upload
+                                            <md-tooltip md-direction="top">Import Classifiers from .csv file</md-tooltip>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.openClassifierMapping(attr, 'transaction-type', $event)">
-                                        <ng-md-icon icon="map">
+                                       <span class="material-icons">map
                                             <md-tooltip md-direction="top">Open Classifier Mappings</md-tooltip>
-                                        </ng-md-icon>
+                                        </span>
                                     </md-button>
                                     <md-button data-ng-if="attr['value_type'] === 30" class="am-attr-btn"
                                                data-ng-click="vm.editTreeAttr(attr, 'transaction-type', $event)">
-                                        <ng-md-icon icon="format_align_right">
-                                            <md-tooltip md-direction="top">Edit Classifier tre</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">format_align_right<md-tooltip md-direction="top">Edit Classifier tre</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.editAttr(attr, 'transaction-type', $event)">
-                                        <ng-md-icon icon="edit">
-                                            <md-tooltip md-direction="top">Edit Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">edit<md-tooltip md-direction="top">Edit Attribute</md-tooltip></span>
                                     </md-button>
                                     <md-button class="am-attr-btn"
                                                data-ng-click="vm.deleteAttr(attr, 'transaction-type', $event)">
-                                        <ng-md-icon icon="delete">
-                                            <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
-                                        </ng-md-icon>
+                                        <span class="material-icons">delete<md-tooltip md-direction="top">Delete Attribute</md-tooltip></span>
                                     </md-button>
                                 </div>
                             </div>

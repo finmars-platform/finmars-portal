@@ -84,12 +84,18 @@
                               data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                         ({{item.count}})
 
-                        <span data-ng-if="item.is_duplicate" class="cursor-pointer"><ng-md-icon
-                                icon="warning"
-                                size="18">
-                            <md-tooltip class="tooltip_2"
-                                        md-direction="top">Warning. Some items of this entity already exist in ecosystem</md-tooltip>
-                        </ng-md-icon></span>
+                        <span data-ng-if="item.is_duplicate" class="cursor-pointer">
+                            <span
+                                style="font-size: 18px;"
+                                class="material-icons"
+                            >warning
+                                <md-tooltip
+                                        class="tooltip_2"
+                                        md-direction="top">
+                                    Warning. Some items of this entity already exist in ecosystem
+                                </md-tooltip>
+                            </span>
+                        </span>
 
 
                     </div>
@@ -108,26 +114,35 @@
                     'child-with-icon': vm.checkForTextIcon(item.entity, child),
                     'text-warning-red': child.is_duplicate && vm.settings.mode == 'overwrite',
                     'text-warning-blue': child.is_duplicate && vm.settings.mode == 'skip'}">
-                        <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)"
-                                    icon="folder"
-                                    fill="#000"
-                                    size="20"></ng-md-icon>
+                        <span
+                            data-ng-if="vm.checkForTextIcon(item.entity, child)"
+                            class="material-icons"
+                            style="font-size: 20px; color: var(--secondary-color)"
+                            >
+                            folder
+                        </span>
                         {{vm.getItemName(child)}}
                         <span data-ng-if="child.countOfUsages__ || child.countOfUsages__ === 0">(<b>{{child.countOfUsages__}}</b>)</span>
 
-                        <span data-ng-if="child.is_duplicate && vm.settings.mode == 'overwrite'" class="cursor-pointer"><ng-md-icon
-                                icon="warning"
-                                size="18">
+                        <span data-ng-if="child.is_duplicate && vm.settings.mode == 'overwrite'" class="cursor-pointer">
+                            <span
+                                    style="font-size: 18px;"
+                                    class="material-icons"
+                            >warning
                             <md-tooltip class="tooltip_2"
                                         md-direction="top">Warning. You already have this entity, it will be overwritten</md-tooltip>
-                        </ng-md-icon></span>
+                            </span>
+                        </span>
 
-                        <span data-ng-if="child.is_duplicate && vm.settings.mode == 'skip'" class="cursor-pointer"><ng-md-icon
-                                icon="warning"
-                                size="18">
-                            <md-tooltip class="tooltip_2"
+                        <span data-ng-if="child.is_duplicate && vm.settings.mode == 'skip'" class="cursor-pointer">
+                            <span
+                                style="font-size: 18px;"
+                                class="material-icons"
+                            >warning
+                                <md-tooltip class="tooltip_2"
                                         md-direction="top">Will not be imported as it is already exists</md-tooltip>
-                        </ng-md-icon></span>
+                        `   </span>
+                        </span>
                     </span>
                         </div>
 

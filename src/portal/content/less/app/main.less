@@ -21,6 +21,11 @@ ng-md-icon {
   fill: var(--secondary-color);
 }
 
+.material-icons {
+  color: var(--secondary-color);
+  cursor: default;
+}
+
 md-menu-content.md-default-theme, md-menu-content {
   background: var(--page-background-color);
 }
@@ -1224,14 +1229,14 @@ md-menu-bar.header-logout-menu {
   display: flex;
   align-items: center;
 
-  ng-md-icon, span.material-icons {
+  .material-icons, span.material-icons {
     position: relative;
     top: 0;
     left: -6px;
   }
 
   &.expand-sidenav-btn {
-    ng-md-icon, span.material-icons {
+    .material-icons, span.material-icons {
       left: -5px;
     }
   }
@@ -1271,7 +1276,7 @@ md-menu-bar.header-logout-menu {
     margin: 0;
     left: initial;
 
-    ng-md-icon {
+    .material-icons {
       top: initial;
       right: 4px;
     }
@@ -1593,7 +1598,7 @@ mdp-time-picker.custom-time-picker {
       padding-left: 28px;
     }
 
-    ng-md-icon {
+    .material-icons {
       opacity: 0.3;
       position: absolute;
     }
@@ -1615,8 +1620,11 @@ mdp-time-picker.custom-time-picker {
   height: 30px;
   padding: 0 6px;
 
-  ng-md-icon {
+  .material-icons {
     fill: #fff;
+  }
+  .material-icons{
+    color: #fff;
   }
 }
 
@@ -1669,7 +1677,7 @@ mdp-time-picker.custom-time-picker {
   color: var(--secondary-color);
   padding-top: 40px;
 
-  ng-md-icon {
+  .material-icons {
     opacity: 0.5;
     color: var(--secondary-color);
   }
@@ -2030,7 +2038,7 @@ md-menu-content md-menu.md-menu {
   position: relative;
   padding-left: 10px;
 
-  ng-md-icon {
+  .material-icons {
     position: absolute;
     right: -30px;
     bottom: -2px;
@@ -2115,7 +2123,7 @@ md-menu-content md-menu.md-menu {
   padding-left: 35px;
   line-height: 2.5;
 
-  ng-md-icon {
+  .material-icons {
     position: absolute;
     left: 5px;
     top: 5px;
@@ -2394,7 +2402,7 @@ md-menu-content.dropdown-buttons-menu {
     text-align: left;
   }
 
-  ng-md-icon {
+  .material-icons {
     position: relative;
     margin-right: 10px;
     top: 6px;
@@ -3721,6 +3729,10 @@ span.highlight {
       //fill: #fff;
       fill: var(--on-primary-color);
     }
+    .material-icons {
+      //fill: #fff;
+      color: var(--on-primary-color);
+    }
   }
 
 
@@ -4100,3 +4112,12 @@ md-dialog.entity-editor-dialog {
   max-width: 100vw;
   max-height: inherit;
 }
+
+
+.md-button:not(.stop) .material-icons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+

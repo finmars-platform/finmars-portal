@@ -1,10 +1,11 @@
+g-group-settings
 <div data-ng-if="isReport" class="settings-btn">
     <md-menu>
         <md-button aria-label="view constructor groups settings"
                    class="md-icon-button"
                    ng-disabled="group.error_data"
                    ng-click="openGroupSettings($mdOpenMenu, $event)">
-            <ng-md-icon icon="settings"></ng-md-icon>
+            <span class="material-icons">settings</span>
         </md-button>
 
         <md-menu-content width="4">
@@ -13,10 +14,13 @@
                 <md-button md-prevent-menu-close="md-prevent-menu-close"
                            ng-click="reportSetSubtotalType('line')"
                            class="g-settings-option-btn">
-                    <ng-md-icon icon="done"
-                                data-ng-show="group.report_settings.subtotal_type == 'line'"></ng-md-icon>
-                    <ng-md-icon icon="done" style="visibility: hidden;"
-                                data-ng-show="group.report_settings.subtotal_type != 'line'"></ng-md-icon>
+                        <span class="material-icons"
+                              data-ng-show="group.report_settings.subtotal_type == 'line'">
+                        done</span>
+                    <span class="material-icons"
+                          style="visibility: hidden;"
+                          data-ng-show="group.report_settings.subtotal_type != 'line'"
+                    >done</span>
                     <span>Subtotal on Top</span>
                 </md-button>
             </md-menu-item>
@@ -25,10 +29,13 @@
                 <md-button md-prevent-menu-close="md-prevent-menu-close"
                            ng-click="reportSetSubtotalType('area')"
                            class="g-settings-option-btn">
-                    <ng-md-icon icon="done"
-                                data-ng-show="group.report_settings.subtotal_type == 'area'"></ng-md-icon>
-                    <ng-md-icon icon="done" style="visibility: hidden;"
-                                data-ng-show="group.report_settings.subtotal_type != 'area'"></ng-md-icon>
+                       <span class="material-icons"
+                             data-ng-show="group.report_settings.subtotal_type == 'area'"
+                       >done</span>
+                    <span class="material-icons"
+                          style="visibility: hidden;"
+                          data-ng-show="group.report_settings.subtotal_type != 'area'"
+                    >done</span>
                     <span>Subtotal on Bottom</span>
                 </md-button>
             </md-menu-item>
@@ -37,10 +44,14 @@
                 <md-button md-prevent-menu-close="md-prevent-menu-close"
                            ng-click="reportSetSubtotalType('arealine')"
                            class="g-settings-option-btn">
-                    <ng-md-icon icon="done"
-                                data-ng-show="group.report_settings.subtotal_type == 'arealine'"></ng-md-icon>
-                    <ng-md-icon icon="done" style="visibility: hidden;"
-                                data-ng-show="group.report_settings.subtotal_type != 'arealine'"></ng-md-icon>
+                    <span class="material-icons"
+                          data-ng-show="group.report_settings.subtotal_type == 'arealine'"
+                    >done</span>
+
+                    <span class="material-icons"
+                          style="visibility: hidden;"
+                          data-ng-show="group.report_settings.subtotal_type != 'arealine'"
+                    >done</span>
                     <span>Subtotal on Top and Bottom</span>
                 </md-button>
             </md-menu-item>
@@ -49,10 +60,14 @@
                 <md-button md-prevent-menu-close="md-prevent-menu-close"
                            ng-click="reportSetBlankLineType('area')"
                            class="g-settings-option-btn">
-                    <ng-md-icon icon="done"
-                                data-ng-show="group.report_settings.blankline_type == 'area'"></ng-md-icon>
-                    <ng-md-icon icon="done" style="visibility: hidden;"
-                                data-ng-show="group.report_settings.blankline_type != 'area'"></ng-md-icon>
+                      <span class="material-icons"
+                            data-ng-show="group.report_settings.blankline_type == 'area'">
+                        >done</span>
+                    <span>Add blank line</
+                    <span class="material-icons"
+                          style="visibility: hidden;"
+                          data-ng-show="group.report_settings.blankline_type != 'area'">
+                        done</span>
                     <span>Add blank line</span>
                 </md-button>
             </md-menu-item>
@@ -60,8 +75,9 @@
             <md-menu-item>
                 <md-button ng-click="renameGroup($mdMenu, $event)"
                            class="g-settings-option-btn">
-                    <ng-md-icon icon="visibility_off"
-                                style="visibility: hidden;"></ng-md-icon>
+                    <span class="material-icons"
+                          style="visibility: hidden;">
+                        visibility_off</span>
                     <span>Rename</span>
                 </md-button>
                 <md-menu-content style="display: none"></md-menu-content>
@@ -78,14 +94,16 @@
                    class="md-icon-button"
                    ng-disabled="group.error_data"
                    ng-click="openGroupSettings($mdOpenMenu, $event)">
-            <ng-md-icon icon="settings"></ng-md-icon>
+            <span class="material-icons">
+                        settings</span>
         </md-button>
         <md-menu-content width="4">
             <md-menu-item>
                 <md-button ng-click="renameGroup($mdMenu, $event)"
                            class="g-settings-option-btn">
-                    <ng-md-icon icon="visibility_off"
-                                style="visibility: hidden;"></ng-md-icon>
+                    <span class="material-icons"
+                          style="visibility: hidden;">
+                        visibility_off</span>
                     <span>Rename group</span>
                 </md-button>
                 <md-menu-content style="display: none"></md-menu-content>
