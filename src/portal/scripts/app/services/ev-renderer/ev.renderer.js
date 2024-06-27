@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var groupRender = require('./group.renderer');
+    // var groupRender = require('./group.renderer');
     var objectRender = require('./object.renderer');
     var controlRender = require('./control.renderer');
     var placeholderRender = require('./placeholder.renderer');
