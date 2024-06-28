@@ -29,6 +29,7 @@
         if (column.value_type === 10 || column.value_type === 30) {
 
             result.html_result = renderHelper.formatStringForCell( obj[column.key] );
+
             result.raw_text_result = obj[column.key];
 
         }
