@@ -14,7 +14,6 @@
 
         var contentElem;
         var contentElemHeight;
-        var contentElemPaddingTop;
 
         var contentWrapElem;
         var contentWrapElemHeight;
@@ -74,21 +73,12 @@
          * Because contentElem do not always have static width
          * and its width changed by gColumnResizerComponent
          * it doesn't have functions for managing width like other elements
-         * in ev-scroll.manager.js (viewportElem, rootWrapElem etc.).
+         * in ev-scroll.manager.js / rv-scroll.manager.js
+         * (viewportElem, rootWrapElem etc.).
          * To change width of contentElem use getContentElem() and then
          * set .style.width of element.
          * To get contentElem width use getContentElem().clientWidth.
          * */
-
-        function setContentElemPaddingTop(padding) {
-
-            contentElemPaddingTop = padding;
-            contentElem.style.paddingTop = padding + 'px';
-        }
-
-        function getContentElemPaddingTop() {
-            return contentElemPaddingTop;
-        }
 
         function setContentWrapElem(elem) {
             contentWrapElem = elem;
@@ -184,11 +174,6 @@
 
             setContentElemHeight: setContentElemHeight,
             getContentElemHeight: getContentElemHeight,
-
-            setContentElemWidth: setContentElemWidth,
-
-            setContentElemPaddingTop: setContentElemPaddingTop,
-            getContentElemPaddingTop: getContentElemPaddingTop,
 
             // content wrap elem
 

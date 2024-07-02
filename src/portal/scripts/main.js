@@ -75,13 +75,15 @@ import utilsService from "./app/services/utilsService";
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
-import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 import dashboard2ReportViewerComponentMatrixController
     from "./app/controllers/dashboard/_version2/reportViewer/componentMatrixController";
 import systemPageController from "./app/controllers/pages/systemPageController";
 import attributesSelectorDialogController from "./app/controllers/dialogs/attributesSelectorDialogController";
 import splitPanelReportViewerWidgetController
     from "./app/controllers/entityViewer/splitPanelReportViewerWidgetController";
+
+import gColumnResizerComponent from "./app/directives/groupTable/gColumnResizerComponent";
+import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 
 //# region form tabs
 import instrumentTypePricingTabController
@@ -944,7 +946,7 @@ export default (function () {
     portal.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]); //2021-12-17 DEPRECATED
     portal.directive('groupColumns', ['$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'uiService', 'evRvDomManagerService', 'rvDataProviderService', require('./app/directives/groupTable/gColumnsComponent')]);
     // portal.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
-    portal.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
+    portal.directive('groupColumnResizer', ['evRvDomManagerService', gColumnResizerComponent]);
     portal.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
     portal.directive('gHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
     portal.directive('groupWidthAligner', [require('./app/directives/groupTable/gWidthAlignerComponent')]);

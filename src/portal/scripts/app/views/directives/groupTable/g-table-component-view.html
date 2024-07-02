@@ -4,11 +4,11 @@
     <div class="g-recon verticalSplitPanelWrapper"
          data-ng-if="isRootEntityViewer && verticalAdditions.isOpen && domElemsAreReady">
 
-        <div group-width-aligner
-             root-wrap-elem="rootWrapElem"
-             content-wrap-elem="contentWrapElem"
-             ev-data-service="evDataService"
-             ev-event-service="evEventService"></div>
+        <div data-group-width-aligner
+             data-root-wrap-elem="rootWrapElem"
+             data-content-wrap-elem="contentWrapElem"
+             data-ev-data-service="evDataService"
+             data-ev-event-service="evEventService"></div>
 
         <div class="g-width-slider"></div>
 
@@ -75,10 +75,10 @@
 
                             <div class="g-column-area-wrap">
                                 <div data-ng-if="components.columnArea && viewType !== 'matrix'">
-                                    <group-columns ev-data-service="evDataService"
-                                                   ev-event-service="evEventService"
-                                                   attribute-data-service="attributeDataService"
-                                                   content-wrap-element="contentWrapElem"
+                                    <group-columns data-ev-data-service="evDataService"
+                                                   data-ev-event-service="evEventService"
+                                                   data-attribute-data-service="attributeDataService"
+                                                   data-content-wrap-element="contentWrapElem"
                                     ></group-columns>
                                 </div>
 
