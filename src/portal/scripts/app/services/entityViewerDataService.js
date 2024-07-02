@@ -201,6 +201,9 @@
             isNewLayout: false, // does layout exist on server,
             autoRefreshState: true,
             ignoreLoadedDataMethods: {},
+            componentsStatuses: {
+                tableBody: false,
+            }
         };
 
         var dashboardData = {
@@ -474,6 +477,14 @@
 
         function getComponents() {
             return data.components;
+        }
+
+        function setComponentsStatuses(componentsStatuses) {
+            data.componentsStatuses = componentsStatuses;
+        }
+
+        function getComponentsStatuses() {
+            return data.componentsStatuses;
         }
 
         function setReportOptions(options) {
@@ -1962,6 +1973,8 @@
 
             setComponents: setComponents,
             getComponents: getComponents,
+            setComponentsStatuses: setComponentsStatuses,
+            getComponentsStatuses: getComponentsStatuses,
 
             setReportOptions: setReportOptions,
             getReportOptions: getReportOptions,
@@ -2205,7 +2218,6 @@
 
             incrementCurrentRequestId: incrementCurrentRequestId,
             getCurrentRequestId: getCurrentRequestId,
-
         }
     }
 

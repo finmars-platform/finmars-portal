@@ -52,32 +52,20 @@
 
         function calculateWorkareaWrapWidth (contentWrapElement, workareaWrapElement, evDataService) {
 
-            var components = evDataService.getComponents();
             var contentWrapWidth = contentWrapElement.clientWidth;
-
-            // if (components.sidebar) {
-            //
-            //     var interfaceLayout = evDataService.getInterfaceLayout();
-            //     workareaWrapElement.style.width = (contentWrapWidth - interfaceLayout.filterArea.width) + 'px'
-            //
-            // } else {
-            //     workareaWrapElement.style.width = contentWrapWidth + 'px'
-            // }
 
             workareaWrapElement.style.width = contentWrapWidth + 'px'
 
         }
 
-
 		/**
 		 * Calculate width of elements common between entity and report viewers
 		 *
 		 * @param {Object} evDataService
-		 * @return { {contentElem: HTMLDivElement, width: Number|null} } - .ev-content with auto or fixed width
+		 * @return { Number } - width that is used by `.ev-content` and other elements
 		 */
 		function calculateCommonElemsWidth (evDataService) {
 
-			let areaWidth = 0;
 			let dropNewFieldWidth = 400;
 
 			const viewContext = evDataService.getViewContext();
@@ -96,16 +84,125 @@
 			const addColBtnWidth = 50;
 
 			const columns = evDataService.getColumns();
+			let columnsWidth = 0;
 			let i;
-
 			for (i = 0; i < columns.length; i = i + 1) {
 
 				var columnWidth = parseInt(columns[i].style.width.split('px')[0], 10);
 
-				areaWidth = areaWidth + columnWidth;
+				columnsWidth = columnsWidth + columnWidth;
 			}
 
-			return areaWidth + buttonSelectAllWidth + addColBtnWidth + dropNewFieldWidth;
+			return columnsWidth + buttonSelectAllWidth + addColBtnWidth + dropNewFieldWidth;
+
+		}
+
+		/**
+		 *
+		 * @param evDataService {Object}
+		 * @param isReport {Boolean}
+		 * @param viewportWidth {Number} - width of `.ev-viewport`
+		 * @param contentElement {HTMLDivElement} - `.ev-content`
+		 * @return {Number} - sum of widths of HTML elements that constitute `.ev-content`
+		 */
+		function calculateContentWidth(evDataService, isReport, viewportWidth, contentElement) {
+
+			// Sum of widths of elements:
+			// select all rows checkbox, columns, drop new column area, add column button
+			let contentWidth = calculateCommonElemsWidth(evDataService);
+
+			let rowSettingsWidth = isReport ? 88 : 124;
+			const rowSettings = evDataService.getRowSettings();
+			rowSettingsWidth = rowSettings.folded ? 0 : rowSettingsWidth;
+
+			contentWidth = contentWidth + rowSettingsWidth;
+
+			// width of .ev-viewport
+			// const viewportElementWidth = scrollManager.getViewportWidth();
+
+			if (contentWidth < viewportWidth) {
+				// table occupies all available width
+				// contentWidth = viewportWidth;
+
+				contentElement.style.width = 'auto';
+
+			} else {
+				// table needs more width than available
+				contentElement.style.width = contentWidth + "px";
+			}
+
+			/*
+            var areaWidth = 0;
+            var i;
+            var columnMargins = 0;
+            var dropNewFieldWidth = 400;
+            if (viewContext === 'dashboard') {
+                dropNewFieldWidth = 105;
+            }
+
+            var columns = evDataService.getColumns();
+
+            for (i = 0; i < columns.length; i = i + 1) {
+
+                var columnWidth = parseInt(columns[i].style.width.split('px')[0], 10);
+
+                areaWidth = areaWidth + columnWidth + columnMargins;
+            }
+
+            var resultWidth = areaWidth + dropNewFieldWidth + 50 + 50;
+
+            if (resultWidth > contentWrapElemWidth) {
+                rvScrollManager.setContentElemWidth(resultWidth);
+            }
+
+            return contentWidth;*/
+			return contentWidth;
+
+		}
+
+		/**
+		 *
+		 * @param contentElement {HTMLDivElement} - `.ev-content`
+		 * @param viewportWidth {Number} - width of `.ev-viewport`
+		 * @param scrollableColumnsAreaElement {HTMLDivElement} - `groups-columns .g-scrollable-area`
+		 * @param evDataService
+		 */
+		function calculateScrollableElementsWidth(contentElement, viewportWidth, scrollableColumnsAreaElement, evDataService) {
+
+			const isReport = evDataService.isEntityReport();
+			const contentElemWidth = calculateContentWidth(evDataService, isReport, viewportWidth, contentElement);
+
+			if (contentElemWidth < viewportWidth) {
+				scrollableColumnsAreaElement.style.width = viewportWidth + "px";
+
+			} else {
+				scrollableColumnsAreaElement.style.width = contentElemWidth + "px";
+			}
+
+		}
+
+		/**
+		 *
+		 * @param rootWrapElement {HTMLDivElement} - `.g-wrapper.g-root-wrapper`
+		 * @param contentWrapElement {HTMLDivElement} - `.g-content-wrap`
+		 * @param workareaWrapElement {HTMLDivElement} - `.g-workarea-wrap`
+		 * @param viewportElement {HTMLDivElement} - `.ev-viewport`
+		 * @param contentElement {HTMLDivElement} - `.ev-content`
+		 * @param scrollableColumnsAreaElement {HTMLDivElement} - `groups-columns .g-scrollable-area`
+		 * @param evDataService {Object}
+		 */
+		function calculateTableElementsSizes(rootWrapElement, contentWrapElement, workareaWrapElement, viewportElement, contentElement, scrollableColumnsAreaElement, evDataService) {
+
+			calculateContentWrapHeight(rootWrapElement, contentWrapElement, evDataService);
+			// for vertical split panel contentWrapElem width calculated by gWidthAlignerComponent.js
+			// horizontal split panel contentWrapElem take all available width
+			if ( evDataService.isRootEntityViewer() ) {
+				calculateContentWrapWidth(rootWrapElement, contentWrapElement, evDataService);
+			}
+
+			calculateWorkareaWrapWidth(contentWrapElement, workareaWrapElement, evDataService);
+
+			calculateScrollableElementsWidth(contentElement, viewportElement.clientWidth, scrollableColumnsAreaElement, evDataService);
 
 		}
 
@@ -501,11 +598,10 @@
 		//endregion
 
         return {
-            calculateContentWrapHeight: calculateContentWrapHeight,
-            calculateContentWrapWidth: calculateContentWrapWidth,
-
-            calculateWorkareaWrapWidth: calculateWorkareaWrapWidth,
+			calculateTableElementsSizes: calculateTableElementsSizes,
 			calculateCommonElemsWidth: calculateCommonElemsWidth,
+			calculateContentWidth: calculateContentWidth,
+			calculateScrollableElementsWidth: calculateScrollableElementsWidth,
 			//region ev rv tables menus
 			clearDropdowns: clearDropdowns,
 			prepareRowAndGetPopupMenu: prepareRowAndGetPopupMenu,

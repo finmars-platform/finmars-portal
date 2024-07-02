@@ -30,7 +30,7 @@
                 evEventService: '=',
                 rootWrapElement: '=',
                 contentWrapElement: '=',
-                workareaWrapElement: '='
+                workareaWrapElement: '=',
             },
             /*            template: '<div>' +
                             '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
@@ -45,6 +45,7 @@
 
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
+                var columnsScrollableAreaElem = scope.workareaWrapElement.querySelector('.g-scrollable-area');
                 // var progressBar = elem[0].querySelector('.ev-progressbar');
 
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
@@ -84,6 +85,29 @@
                     })
 
                 };
+
+                function calculateElemsAndScrolls () {
+
+                    /* calculateElemsWrapsSizes() must be called before
+                     * calculateScroll() at least after webpage loaded the first time.
+                     * */
+                    evRvDomManagerService.calculateTableElementsSizes(
+                        scope.rootWrapElement,
+                        scope.contentWrapElement,
+                        scope.workareaWrapElement,
+                        viewportElem,
+                        contentElem,
+                        columnsScrollableAreaElem,
+                        scope.evDataService,
+                    );
+
+                    if (scope.isReport) {
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                    } else {
+                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+                    }
+
+                }
 
                 function renderReportViewer() {
 
@@ -388,14 +412,14 @@
 
                 var calculateElemsWrapsSizes = function () {
 
-                    evRvDomManagerService.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
+                    /*evRvDomManagerService.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
                     // for vertical split panel contentWrapElem width calculated by gWidthAlignerComponent.js
                     // horizontal split panel contentWrapElem take all available width
                     if (isRootEntityViewer) {
                         evRvDomManagerService.calculateContentWrapWidth(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
                     }
 
-                    evRvDomManagerService.calculateWorkareaWrapWidth(elements.contentWrapElem, elements.workareaWrapElem, scope.evDataService);
+                    evRvDomManagerService.calculateWorkareaWrapWidth(elements.contentWrapElem, elements.workareaWrapElem, scope.evDataService);*/
 
                 }
 
@@ -490,7 +514,15 @@
 
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
-                    calculateElemsWrapsSizes();
+                    evRvDomManagerService.calculateTableElementsSizes(
+                        scope.rootWrapElement,
+                        scope.contentWrapElement,
+                        scope.workareaWrapElement,
+                        viewportElem,
+                        contentElem,
+                        columnsScrollableAreaElem,
+                        scope.evDataService,
+                    );
 
                     updateTableContent();
 
@@ -507,13 +539,7 @@
 
                 scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
 
-                    calculateElemsWrapsSizes();
-
-                    if (scope.isReport) {
-                        rvDomManager.calculateScroll(elements, scope.evDataService);
-                    } else {
-                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                    }
+                    calculateElemsAndScrolls();
 
                     scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
@@ -612,11 +638,11 @@
 
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
-                        calculateElemsWrapsSizes();
+                        calculateElemsAndScrolls();
 
                         if (scope.isReport) {
 
-                            rvDomManager.calculateScroll(elements, scope.evDataService);
+                            // rvDomManager.calculateScroll(elements, scope.evDataService);
 
                             rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService, usersService, globalDataService);
                             // rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
@@ -655,9 +681,10 @@
                                 cellContentOverflow();
                             });*/
 
-                        } else {
+                        }
+                        else {
 
-                            evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+                            // evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
                             evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService, usersService, globalDataService);
                             evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
@@ -669,6 +696,10 @@
                             }
 
                         }
+
+                        const componentStatuses = scope.evDataService.getComponentsStatuses();
+                        componentStatuses.tableBody = true;
+                        scope.evDataService.setComponentsStatuses(componentStatuses);
 
                         scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
