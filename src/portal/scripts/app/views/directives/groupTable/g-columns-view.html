@@ -110,8 +110,8 @@
                  data-on-cancel="onSubtotalTypeSelectCancel()"
                  data-popup-event-service="evEventService">
 
-                <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
-                    <span ng-bind="column.name"></span>
+                <md-tooltip data-md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
+                    <span class="whitespace-pre" data-ng-bind="column.name"></span>
                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                     <span data-ng-if="column.error_data">{{column.error_data.description}}</span>
                 </md-tooltip>
@@ -169,7 +169,7 @@
                             <div class="flex-row flex-i-center name-block">
 
                                 <div ng-if="!column.layout_name">
-                                    <span ng-bind="column.name"></span>
+                                    <span class="column-name" ng-bind="column.name"></span>
                                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                                 </div>
 
@@ -248,7 +248,7 @@
                  popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
-                    <span ng-bind="column.name"></span>
+                    <span ng-bind="column.name" class="whitespace-pre"></span>
 <!--                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>-->
                     <span data-ng-if="column.error_data">{{column.error_data.description}}</span>
                 </md-tooltip>
@@ -284,9 +284,14 @@
                             <div class="flex-row flex-i-center name-block">
 
                                 <div>
-                                    <span ng-if="!column.layout_name" ng-bind="column.name"></span>
-                                    <span ng-if="column.layout_name" ng-bind="column.layout_name"></span>
-                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                                    <span ng-if="!column.layout_name"
+                                          class="column-name"
+                                          ng-bind="column.name"></span>
+                                    <span ng-if="column.layout_name"
+                                          ng-bind="column.layout_name"
+                                          class="column-name"></span>
+                                    <span data-ng-if="column.status == 'missing'"
+                                          class="column-name">(Deleted)</span>
                                 </div>
 
 <!--                                <span ng-if="isReport" class="material-icons arrow-down">arrow_drop_down</span>-->

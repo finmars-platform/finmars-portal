@@ -195,7 +195,8 @@
 
                 scope.openSelectorDialog = function ($event) {
 
-                    var parent = angular.element(document.body);
+                    // var parent = angular.element(document.body);
+                    var dialogParent = document.querySelector(".dialog-containers-wrap");
 
                     if (dialogParent) {
 
