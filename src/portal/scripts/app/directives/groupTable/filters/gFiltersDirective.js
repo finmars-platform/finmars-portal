@@ -14,6 +14,7 @@
 
     const convertReportHelper = require('../../../helpers/converters/convertReportHelper');
     const reportCopyHelper = require('../../../helpers/reportCopyHelper');
+    const stringHelper = require('../../../helpers/stringHelper');
 
     const exportExcelService = require('../../../services/exportExcelService').default;
 
@@ -241,6 +242,13 @@
 
                 };
 
+                /**
+                 *
+                 * @param filterName {String}
+                 * @param filterValues {Object|Array}
+                 * @param filterType {String}
+                 * @return {String} - HTML to use inside a tooltip for a chip
+                 */
                 vm.getChipTextElem = function (filterName, filterValues, filterType) {
 
                     let filterVal = filterValues || "";
@@ -262,6 +270,12 @@
                             const formattedDates = filterValues.map(date => moment(date).format('YYYY-MM-DD'));
                             filterVal = formattedDates.join(', ');
                             break;
+                        default:
+                            filterVal = filterVal[0]
+                    }
+
+                    if (typeof filterVal === "string") {
+                        filterVal = stringHelper.escapeHtml(filterVal);
                     }
 
                     return `<span class="g-filter-chips-text">

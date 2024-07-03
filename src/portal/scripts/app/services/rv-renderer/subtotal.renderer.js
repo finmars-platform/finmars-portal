@@ -94,14 +94,14 @@
 
                     if (column.value_type === 10 && item.value_string) {
 
-                        result.html_result = item.value_string;
+                        result.html_result = renderHelper.formatStringForCell(item.value_string);
                         result.raw_text_result = item.value_string;
 
                     }
 
                     if (column.value_type === 30 && item.classifier_object) {
 
-                        result.html_result = item.classifier_object.name;
+                        result.html_result = stringHelper.escapeHtml(item.classifier_object.name);
                         result.raw_text_result = item.classifier_object.name;
                     }
 
@@ -189,7 +189,7 @@
 
                         if (groupName && typeof groupName === 'string') {
 
-                            groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+                            groupName = renderHelper.formatStringForCell(groupName);
 
                         }
 
@@ -220,7 +220,7 @@
             return result;
 
         }
-        else if (columnNumber === obj.___level - 1) {
+        else if (columnNumber === obj.___level - 1) { // column for the last group
 
             var foldButton = '';
             var foldButtonStr = '';
@@ -244,7 +244,7 @@
 
                 if (groupName && typeof groupName === 'string') {
 
-                    groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+                    groupName = renderHelper.formatStringForCell(groupName);
 
                 }
 
@@ -269,7 +269,7 @@
             }
 
         }
-        else if (columnNumber > obj.___level - 1) {
+        else if (columnNumber > obj.___level - 1) { // a column without a group
 
             var showTotal;
             var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id; // if subtotal_formula_id === 0, it means no formula has been chosen
@@ -299,34 +299,11 @@
 
         }
 
-        /* Insert 'Grand Total' text inside first cell of the row */
-        /* var rootGroupOptions = evDataService.getRootGroupOptions();
-        var grandTotalIsActive = rootGroupOptions.subtotal_type;
-
-        if (obj.___level === 0 && grandTotalIsActive && columnNumber === 1) { */
-        // in new rv interface, there is always Grand total row
-
-        /* if (obj.___level === 0 && columnNumber === 1) {
-            result.html_result = '<span class="text-bold">GRAND TOTAL</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>';
-            result.raw_text_result = 'Grand Total';
-        } */
-
         return result;
 
     };
 
     var getBgColor = function (evDataService, obj, columnNumber) {
-
-        // var result = '';
-        //
-        // if (columnNumber >= obj.___level - 1) {
-        //
-        //     result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
-        //
-        // }
-        //
-        //
-        // return result;
 
         var result = '';
 
@@ -472,10 +449,6 @@
         return classList;
 
     }
-
-    var getCellWrapWidth = function (column) {
-
-    };
 
     var render = function (evDataService, obj) {
 

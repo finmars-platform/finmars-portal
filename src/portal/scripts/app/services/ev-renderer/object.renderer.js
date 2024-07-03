@@ -219,12 +219,11 @@
                 }
 
                 if (column.value_type === 10 && item.value_string) {
-                    rawTextResult = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
-
+                    rawTextResult = renderHelper.formatStringForCell(rawTextResult);
                 }
 
                 if (column.value_type === 30 && item.classifier_object) {
-                    rawTextResult = item.classifier_object.name;
+                    rawTextResult = stringHelper.escapeHtml(item.classifier_object.name);
                 }
 
                 if (column.value_type === 40 && item.value_date) {
@@ -284,7 +283,7 @@
                 }
                 else {
 
-                    var aElem = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
+                    var aElem = renderHelper.formatStringForCell( obj[column.key] );
 
                     return {
                         html_result: aElem,

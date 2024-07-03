@@ -10,26 +10,32 @@
 
 `npm install`
 
-2) Build project
+2) Run local Web Server
+
+2.1) Proxy requests to one of finmars backends for development
+
+`REALM=realm00000 DATABASE_ID=space00000 node server-proxy`
+
+replace `realm00000` and `space00000` with the ones that will be used
+
+2.2) When using locally deployed backend
+
+`node server-local`
+
+3) Build project
 
 #### Important Disclaimer GULP is Deprecated, since 2024-01-14 it Migrated to Vite
 https://vitejs.dev/
 
-`npm run build-local`
-
-2.1) Build project for local development using server-proxy.js
+If using server-proxy.js
 
 `PROJECT_ENV=local API_HOST=http://0.0.0.0:8080 AUTHORIZER_URL=http://0.0.0.0:8080/authorizer npm run build-local` - for MAC and Linux
 
 `set PROJECT_ENV=local set API_HOST=http://localhost:8080 set AUTHORIZER_URL=http://0.0.0.0:8080/authorizer` - for windows
 
-or if you deployed backend locally and using server.js
+If using server.js and a locally deployed backend
 
 `PROJECT_ENV=local API_HOST=http://0.0.0.0:8000 AUTHORIZER_URL=http://0.0.0.0:8083/authorizer npm run build-local` - for MAC and Linux
-
-3) Run local Web Server
-
-`npm run server-proxy`
 
 4) How to run tests
 

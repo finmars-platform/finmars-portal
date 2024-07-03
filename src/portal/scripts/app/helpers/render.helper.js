@@ -4,6 +4,7 @@
 (function () {
 
     var evRvCommonHelper = require('./ev-rv-common.helper').default;
+    var stringHelper = require('./stringHelper').default;
 
     var icons = {
         'checkIcon': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>',
@@ -395,6 +396,13 @@
         return value;
     }
 
+    /**
+     * Format a number using number format settings from a column
+     *
+     * @param obj {Object} - object that contains a number inside `obj[column.key]`
+     * @param column {Object} - data of entity / report viewer column
+     * @return {String} - formatted number
+     */
     var formatValue = function (obj, column) {
 
         var value = obj[column.key];
@@ -559,6 +567,26 @@
 		}
 
 	};
+
+    /**
+     * Escape HTML special characters and if needed insert hyperlinks
+     *
+     * @param string {String}
+     * @return {String}
+     */
+    var formatStringForCell = function (string) {
+
+        if (typeof string !== "string") {
+            throw new Error(`[stringHelper escapeHtml] Invalid type of argument. Expected 'string' got an ${typeof string}: ${string}`);
+        }
+
+        string = stringHelper.escapeHtml(string);
+        string = stringHelper.parseAndInsertHyperlinks(string, "class='openLinkInNewTab'");
+
+        return string;
+
+    };
+
 	/** @module renderHelper */
     module.exports = {
         isFirstInWholeChain: isFirstInWholeChain,
@@ -585,7 +613,9 @@
         isColumnEqualLastGroup: isColumnEqualLastGroup,
         isColumnAfterGroupsList: isColumnAfterGroupsList,
 
-		isCellWithProxylineFoldButton: isCellWithProxylineFoldButton
+		isCellWithProxylineFoldButton: isCellWithProxylineFoldButton,
+
+        formatStringForCell: formatStringForCell,
     }
 
 }());
