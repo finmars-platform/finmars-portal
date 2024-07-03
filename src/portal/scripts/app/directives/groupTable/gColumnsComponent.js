@@ -2890,6 +2890,11 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     initEventListeners();
 
+                    const componentsStatuses = scope.evDataService.getComponentsStatuses();
+                    componentsStatuses.columnArea = true;
+                    scope.evDataService.setComponentsStatuses(componentsStatuses);
+                    scope.evEventService.dispatchEvent(evEvents.COLUMN_AREA_READY);
+
                     waitForTableBodyReadiness();
 
                 };

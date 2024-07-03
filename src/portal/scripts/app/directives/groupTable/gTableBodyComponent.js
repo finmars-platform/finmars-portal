@@ -31,6 +31,9 @@
                 rootWrapElement: '=',
                 contentWrapElement: '=',
                 workareaWrapElement: '=',
+
+                // optional. May not exist if columnArea is turned off.
+                columnsScrollableAreaElement: '=',
             },
             /*            template: '<div>' +
                             '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
@@ -45,9 +48,8 @@
 
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
-                var columnsScrollableAreaElem = scope.workareaWrapElement.querySelector('.g-scrollable-area');
+                // var columnsScrollableAreaElem = scope.workareaWrapElement.querySelector('.g-scrollable-area');
                 // var progressBar = elem[0].querySelector('.ev-progressbar');
-
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
 
                 var elements = {
@@ -97,7 +99,7 @@
                         scope.workareaWrapElement,
                         viewportElem,
                         contentElem,
-                        columnsScrollableAreaElem,
+                        scope.columnsScrollableAreaElement,
                         scope.evDataService,
                     );
 
@@ -520,7 +522,7 @@
                         scope.workareaWrapElement,
                         viewportElem,
                         contentElem,
-                        columnsScrollableAreaElem,
+                        scope.columnsScrollableAreaElement,
                         scope.evDataService,
                     );
 

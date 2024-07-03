@@ -169,6 +169,22 @@
 		 */
 		function calculateScrollableElementsWidth(contentElement, viewportWidth, scrollableColumnsAreaElement, evDataService) {
 
+			if (!contentElement instanceof Element) {
+
+				throw "[evRvDomManager calculateScrollableElementsWidth] " +
+				"invalid contentElement. Expected Element" +
+				`got: ${contentElement}`
+
+			}
+
+			if (!scrollableColumnsAreaElement instanceof Element) {
+
+				throw "[evRvDomManager calculateScrollableElementsWidth] " +
+				"invalid scrollableColumnsAreaElement. Expected Element" +
+				`got: ${scrollableColumnsAreaElement}`
+
+			}
+
 			const isReport = evDataService.isEntityReport();
 			const contentElemWidth = calculateContentWidth(evDataService, isReport, viewportWidth, contentElement);
 
@@ -188,11 +204,32 @@
 		 * @param workareaWrapElement {HTMLDivElement} - `.g-workarea-wrap`
 		 * @param viewportElement {HTMLDivElement} - `.ev-viewport`
 		 * @param contentElement {HTMLDivElement} - `.ev-content`
-		 * @param scrollableColumnsAreaElement {HTMLDivElement} - `groups-columns .g-scrollable-area`
+		 * @param [scrollableColumnsAreaElement] {HTMLDivElement} - `groups-columns .g-scrollable-area`
 		 * @param evDataService {Object}
 		 */
 		function calculateTableElementsSizes(rootWrapElement, contentWrapElement, workareaWrapElement, viewportElement, contentElement, scrollableColumnsAreaElement, evDataService) {
 
+			//# region Validation
+			const elementsData = {
+				rootWrapElement,
+				contentWrapElement,
+				workareaWrapElement,
+				viewportElement,
+				contentElement,
+			}
+
+			for (const [key, value] of Object.entries(elementsData)) {
+
+				if (!value instanceof Element) {
+
+					throw "[evRvDomManager calculateTableElementsSizes] " +
+					`Invalid ${key}. Expected Element` +
+					`got: ${value}`
+
+				}
+
+			}
+			//# endregion
 			calculateContentWrapHeight(rootWrapElement, contentWrapElement, evDataService);
 			// for vertical split panel contentWrapElem width calculated by gWidthAlignerComponent.js
 			// horizontal split panel contentWrapElem take all available width
@@ -202,7 +239,20 @@
 
 			calculateWorkareaWrapWidth(contentWrapElement, workareaWrapElement, evDataService);
 
-			calculateScrollableElementsWidth(contentElement, viewportElement.clientWidth, scrollableColumnsAreaElement, evDataService);
+			const components = evDataService.getComponents();
+
+			if (components.columnArea) {
+
+				if (!scrollableColumnsAreaElement instanceof Element) {
+
+					throw "[evRvDomManager calculateTableElementsSizes] " +
+					"invalid scrollableColumnsAreaElement. Expected Element" +
+					`got: ${scrollableColumnsAreaElement}`
+
+				}
+
+				calculateScrollableElementsWidth(contentElement, viewportElement.clientWidth, scrollableColumnsAreaElement, evDataService);
+			}
 
 		}
 

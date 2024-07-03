@@ -1296,7 +1296,7 @@ export default function (toastNotificationService, transactionTypeService, price
     /**
      *
      * @param elements {Object}
-     * @param elements.viewportElement {HTMLDivElement} - `.ev-viewport`
+     * @param elements.viewportElem {HTMLDivElement} - `.ev-viewport`
      * @param elements.contentElem {HTMLDivElement} - `.ev-content`
      * @param elements.workareaWrapElem {HTMLDivElement} - `.g-workarea-wrap`
      * @param elements.contentWrapElem {HTMLDivElement} - `.g-content-wrap`

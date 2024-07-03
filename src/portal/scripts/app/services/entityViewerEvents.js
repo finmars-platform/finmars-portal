@@ -72,6 +72,7 @@ module.exports = {
     `.g-workarea-wrap`, `.g-content-wrap`, `.ev-content`, `.ev-viewport`.
      */
     'TABLE_SIZES_CALCULATED': 'TABLE_SIZES_CALCULATED',
+    'COLUMN_AREA_READY': 'COLUMN_AREA_READY',
 
 
     'REPORT_OPTIONS_CHANGE': 'REPORT_OPTIONS_CHANGE',
