@@ -38,8 +38,8 @@
 
         if (groupType.value_type === 'field') {
 
-            additionalText = additionalText + ' (' + group.___group_identifier + ')'
-			additionalText = stringHelper.parseAndInsertHyperlinks(additionalText, "class='openLinkInNewTab'");
+            additionalText = additionalText + ' (' + group.___group_identifier + ')';
+			additionalText = renderHelper.formatStringForCell(additionalText);
 
         }
 
@@ -47,7 +47,7 @@
 
         if (groupName && typeof groupName === 'string') {
 
-        	groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+        	groupName = renderHelper.formatStringForCell(groupName);
 
 		}
 
@@ -55,7 +55,7 @@
 
         return '<div class="' + classes + '" style="top: ' + offsetTop + 'px" data-type="group" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' +
             		rowSelection + foldButton + groupName + additionalText +
-			'</div>'
+			'</div>';
 
     };
 
