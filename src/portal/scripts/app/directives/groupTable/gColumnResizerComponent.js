@@ -248,7 +248,7 @@ export default function (evRvDomManagerService) {
                 // initColumnSliderListener();
                 elem[0].addEventListener('mousedown', onColSliderMousedown);
 
-                resizeScrollableArea();
+                // resizeScrollableArea();
 
                 rtIndex = scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 

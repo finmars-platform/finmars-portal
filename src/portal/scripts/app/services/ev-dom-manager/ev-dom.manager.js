@@ -1366,42 +1366,19 @@
         }
 
     };*/
+
     /**
-     * Calculates width of content of table. Sets width for element .ev-content.
      *
-     * @param {Object} evDataService
-     * @param {Object} evScrollManager
-     * @return {Number} - width of table's content
+     * @param elements {Object}
+     * @param elements.viewportElem {HTMLDivElement} - `.ev-viewport`
+     * @param elements.contentElem {HTMLDivElement} - `.ev-content`
+     * @param elements.workareaWrapElem {HTMLDivElement} - `.g-workarea-wrap`
+     * @param elements.contentWrapElem {HTMLDivElement} - `.g-content-wrap`
+     * @param elements.rootWrapElem {HTMLDivElement} - `.g-wrapper.g-root-wrapper`
+     * @param elements.leftPanelElem {HTMLDivElement} - `.gEvLeftPanelHolder`
+     * @param evDataService {Object}
+     * @param evScrollManager {Object} - instance of `/ev-dom-manager/ev-scroll.manager.js`
      */
-    const calculateContentWidth = function(evDataService, evScrollManager) {
-
-        // Sum of widths of elements:
-        // select all rows checkbox, columns, drop new column area, add column button
-        let contentWidth = evRvDomManagerService.calculateCommonElemsWidth(evDataService);
-
-        const rowSettings = evDataService.getRowSettings();
-        const rowSettingsWidth = rowSettings.folded ? 0 : 124;
-
-        contentWidth = contentWidth + rowSettingsWidth;
-
-        // width of .ev-viewport
-        const viewportElemWidth = evScrollManager.getViewportWidth();
-
-        if (contentWidth < viewportElemWidth) {
-            // table occupies all available width
-            contentWidth = viewportElemWidth;
-
-            evScrollManager.setContentElemWidth('auto');
-
-        } else {
-            // table needs more width than available
-            evScrollManager.setContentElemWidth(contentWidth);
-        }
-
-        return contentWidth;
-
-    }
-
     const calculateScroll = function (elements, evDataService, evScrollManager) {
 
         evScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
@@ -1500,7 +1477,7 @@
 
         evScrollManager.setContentElemHeight(totalHeight);
 
-        calculateContentWidth(evDataService, evScrollManager);
+        evRvDomManagerService.calculateContentWidth(evDataService, false, viewportWidth, evScrollManager.getContentElem());
 
     };
 

@@ -202,7 +202,8 @@
             autoRefreshState: true,
             ignoreLoadedDataMethods: {},
             componentsStatuses: {
-                tableBody: false,
+                tableBody: false, // gTableBodyComponent
+                columnArea: false, // gColumnsComponent
             }
         };
 
