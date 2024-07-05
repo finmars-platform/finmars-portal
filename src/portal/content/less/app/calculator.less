@@ -72,11 +72,11 @@
   margin: 0 auto;
   text-align: right;
   padding: 0 8px;
-  color: rgba(255, 255, 255, 0.87);
+  color: var(--card-border-color);
 
   .calculator-output-area {
     height: 70px;
-    border: 1px solid #fff;
+    border: 1px solid var(--card-border-color);
     margin: 0 8px;
     padding: 0 8px;
     box-sizing: border-box;
@@ -113,17 +113,18 @@
   }
 
   button {
-    border: 0;
     background: transparent;
-    color: inherit;
+    color: var(--card-border-color);
     cursor: pointer;
     font: inherit;
     margin: 8px;
     width: 40px;
     height: 40px;
     transition: all 0.5s;
-    border: 1px solid rgba(255, 255, 255, 0.87);
-
+    border: 1px solid var(--card-border-color);
+    ng-md-icon {
+      fill: var(--card-border-color) !important;
+    }
     &:hover {
       background-color: #664366;
     }

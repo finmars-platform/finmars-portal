@@ -69,7 +69,7 @@ md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolb
 }
 
 .md-button.md-default-theme:not([disabled]).md-focused, .md-button:not([disabled]).md-focused, .md-button.md-default-theme:not([disabled]):hover, .md-button:not([disabled]):hover {
-  background: var(--state-active-background-color);
+  background: var(--state-active-background-color) !important;
 }
 
 input {
@@ -684,7 +684,7 @@ md-backdrop.md-select-backdrop {
 }*/
 
 .pickmeup {
-  z-index: 55;
+  z-index: 80;
   background: var(--dialog-background-color);
 }
 
@@ -1015,7 +1015,7 @@ md-card.small-width {
 
 .jstree-default .jstree-anchor,
 .jstree-default .jstree-wholerow {
-  background: #fff;
+  background: var(--page-background-color);
 }
 
 .jstree-default .jstree-wholerow-clicked {
@@ -3286,7 +3286,7 @@ md-checkbox.md-indeterminate .md-icon:after {
 .chip-div {
   position: relative;
   height: 28px;
-  background-color: var(--state-active-background-color);
+  background-color: rgba(255, 219, 208, .5);
   border-radius: 16px;
   padding: 6px 12px;
   margin: 0 4px;
@@ -4099,4 +4099,85 @@ md-dialog.entity-editor-dialog {
   height: 100vh;
   max-width: 100vw;
   max-height: inherit;
+}
+
+.md-input-focused label, .md-block label, .layout-column label, md-input-container label {
+  color: var(--secondary-color) !important;
+}
+
+.md-input-focused input {
+  border-color: var(--card-border-color) !important;
+}
+
+
+.dialog-containers-wrap:has(.rename-dialog ), .dialog-containers-wrap:has(.two-fields-multiselector-dialog) {
+  z-index: 81;
+}
+
+.member-file-upload {
+  width: 100px;
+  text-align: end;
+}
+
+.calculator-dialog {
+  h2 {
+    font-size: 18px;
+  }
+  .material-icons {
+    color: var(--secondary-color);
+  }
+}
+
+
+.context-menu-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0px;
+}
+
+.context-menu-option {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.context-item-name {
+  font-size: 1.2em;
+}
+
+.context-buttons {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 8px;
+}
+
+.context-button {
+  padding: 8px;
+}
+
+.context-subitems {
+  padding-left: 80px;
+}
+
+.context-subitem-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.md-button.md-warn.md-raised {
+  background-color: var(--primary-color);
+}
+
+.jstree-clicked {
+  color: #333333 !important;
+}
+
+.sub-context-menu {
+  padding-left: 80px;
+  .context-menu-block {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+  }
 }
