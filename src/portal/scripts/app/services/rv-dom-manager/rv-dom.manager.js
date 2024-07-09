@@ -299,7 +299,7 @@ export default function (toastNotificationService, transactionTypeService, price
                     console.log('handleFoldButtonClick.group', group);
                     console.log('handleFoldButtonClick.requestParameters', requestParameters);
 
-                    rvDataProviderService.updateDataStructureByRequestParameters(evDataService, evEventService, requestParameters)
+                    rvDataProviderService.updateDataStructureByRequestParameters(evDataService, evEventService, [requestParameters])
 
                 }
 
@@ -349,7 +349,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
             console.log('handleRetryButtonClick.requestParameters', requestParameters);
 
-            rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService).then(function () {
+            rvDataProviderService.updateDataStructureByRequestParameters(evDataService, evEventService, [requestParameters]).then(function () {
 
                 evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
@@ -1049,7 +1049,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
                 console.log('rv.handleControlClick', requestParameters);
 
-                rvDataProviderService.updateDataStructureByRequestParameters(evDataService, evEventService, requestParameters)
+                rvDataProviderService.updateDataStructureByRequestParameters(evDataService, evEventService, [requestParameters])
 
             }
 

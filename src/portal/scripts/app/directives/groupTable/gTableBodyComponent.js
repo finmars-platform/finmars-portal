@@ -488,7 +488,6 @@
                     }
 
                     scope.evDataService.setDataLoadStatus(true);
-                    const requestParamsList = scope.evDataService.getRequestParametersAsList();
 
                     scope.dataLoadStatus = true;
                     scope.error = false;
