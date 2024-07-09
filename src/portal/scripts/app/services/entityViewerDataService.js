@@ -1,3 +1,47 @@
+/**
+ * @typedef {Object} requestParameterBody
+ * @property {Array} columns
+ * @property {Array} filter_settings
+ * @property {undefined} globalTableSearch
+ * @property { [String] } groups_types
+ * @property {Number} page
+ * @property { [String] } groups_values
+ * @property {String} groups_order - values: "asc", "desc"
+ * @property {Number} [page_size=40]
+ *
+ * @private
+ */
+
+/**
+ * @typedef {Object} requestParameterPagination
+ * @property {Array} page
+ * @property {Number} [page_size=40]
+ * @property {Number} count
+ * @property {Number} downloaded
+ *
+ * @private
+ */
+
+/**
+ * @typedef {Object} evRvRequestParamenters
+ * @property {String} requestType - values: 'groups', 'objects'
+ * @property {undefined|Number} id - TODO find out when it is undefined
+ * @property {
+ *     {
+ *         groupName: null|String,
+ *         groupId: null|String,
+ *         parentGroupId: null|String,
+ *     }
+ * } event
+ * @property { requestParameterBody } body
+ * @property { requestParameterPagination } pagination
+ * @property { [Number] } requestedPages
+ * @property { [] } processedPages
+ * @property {String} [status] - values: "loaded", "error"
+ *
+ * @global
+ */
+
 (function () {
 
     'use strict';
@@ -115,7 +159,7 @@
 
 
     };
-    /** @module entityViewerDataService */
+
     module.exports = function (reportHelper) {
 
         var data = {
@@ -233,7 +277,7 @@
          *
          * @param {Object} [interfaceLayout]
          * @returns {Object} - interface layout with only properties that user changes
-         * @memberOf module:entityViewerDataService
+         * @memberOf entityViewerDataService
          */
         var getInterfaceLayoutToSave = function (interfaceLayout) {
 
@@ -331,7 +375,7 @@
         /**
          *
          * @param isReport {Boolean}
-         * @memberOf module:entityViewerDataService
+         * @memberOf entityViewerDataService
          */
         function setIsReport(isReport) {
             data.isReport = isReport;
@@ -340,7 +384,7 @@
         /**
          *
          * @returns {Boolean}
-         * @memberOf module:entityViewerDataService
+         * @memberOf entityViewerDataService
          */
         function isEntityReport() {
             return data.isReport;
@@ -372,6 +416,12 @@
             return data.attributesFromAbove
         }
 
+        /**
+         * @typedef {Function} setGroups
+         * @param { [{}] } groups
+         * @memberof entityViewerDataService
+         */
+        /** @type {setGroups} */
         function setGroups(groups) {
 
             if (groups) {
@@ -382,6 +432,12 @@
             }
         }
 
+        /**
+         * @typedef {Function} getGroups
+         * @return { []|[{}] }
+         * @memberof entityViewerDataService
+         * */
+        /** @type {Function} */
         function getGroups() {
             if (!Array.isArray(data.groups)) {
                 return [];
@@ -518,7 +574,7 @@
          *
          * @param {String|null=} dateFrom
          * @param {String=} dateTo
-         * @memberof module:entityViewerDataService
+         * @memberof entityViewerDataService
          */
         function stashReportDates(dateFrom, dateTo) {
 
@@ -563,7 +619,7 @@
 
         /**
          * @returns {{dateFrom?: Object, dateTo: Object}|undefined}
-         * @memberof module:entityViewerDataService
+         * @memberof entityViewerDataService
          * */
         function getStashedReportDates() {
             return data.reportDatesData || {};
@@ -658,10 +714,22 @@
 
         }
 
+        /**
+         * @typedef {Function} setData
+         * @param obj {Object}
+         * @memberof entityViewerDataService
+         */
+        /** @param obj {Object} */
         function setData(obj) {
             data.data[obj.___id] = obj;
         }
 
+        /**
+         * @typedef {Function} setAllData
+         * @param data {Object}
+         * @memberof entityViewerDataService
+         */
+        /** @param data {Object} */
         function setAllData(data) {
             data.data = data;
         }
@@ -851,7 +919,12 @@
             return data.lastClickInfo;
         }
 
-
+        /**
+         *
+         * @typedef { Function } setRequestParameters
+         * @param requestParameters {evRvRequestParamenters}
+         */
+        /** @type {setRequestParameters} */
         function setRequestParameters(requestParameters) {
 
             data.requestParameters[requestParameters.id] = requestParameters;
@@ -961,6 +1034,15 @@
             }
         }
 
+        /**
+         * @typedef {Function} getAllRequestParameters
+         * @return {{}}
+         * @memberof entityViewerDataService
+         */
+        /**
+         *
+         * @return {{}}
+         */
         function getAllRequestParameters() {
             return data.requestParameters;
         }
@@ -1097,7 +1179,7 @@
          * @param {String} actionData.actionKey - edit, delete etc
          * @param {Object=} actionData.object - data about table row targeted for action
          * @param {string|number=} actionData.id - e.g. transactionType.id, price history error id, etc.
-         * @memberof module:entityViewerDataService
+         * @memberof entityViewerDataService
          */
         function setRowsActionData(actionData) {
             data.rowsActionData = actionData;
@@ -1106,12 +1188,17 @@
         /**
          *
          * @returns {{actionKey: String, [object]: Object, [id]: string|number} | any}
-         * @memberof module:entityViewerDataService
+         * @memberof entityViewerDataService
          */
         function getRowsActionData() {
             return data.rowsActionData;
         }
 
+        /**
+         * @typedef {Function} getActiveGroupTypeSort
+         * @return { null|{} }
+         */
+        /** @type {getActiveGroupTypeSort} */
         function getActiveGroupTypeSort() {
             return data.activeGroupTypeSort;
         }
@@ -1832,7 +1919,7 @@
          * Setting status to false allows to skip layout changes loss warning once
          *
          * @param status {boolean}
-         * @memberOf module:entityViewerDataService
+         * @memberOf entityViewerDataService
          */
         function setLayoutChangesLossWarningState(status) {
             data.warnAboutLayoutChangesLoss = status;
@@ -1841,7 +1928,7 @@
         /**
          * If warnAboutLayoutChangesLoss === false, turns warning back on before returning false
          *
-         *@memberOf module:entityViewerDataService
+         *@memberOf entityViewerDataService
          */
         function isLayoutChangesLossWarningNeeded() {
 
@@ -1897,7 +1984,15 @@
             return data.renderTime;
         }
 
-
+        /**
+         * @typedef {Function} enqueueDataRequest
+         * @param request {evRvRequestParamenters}
+         * @memberof entityViewerDataService
+         */
+        /**
+         *
+         * @param request {evRvRequestParamenters}
+         */
         function enqueueDataRequest(request) {
 
             console.log("rv.queue.enqueueDataRequest", request)
@@ -1925,12 +2020,35 @@
             data.currentRequestId = data.currentRequestId + 1;
         }
 
+        /**
+         *
+         * @typedef {Function} getCurrentRequestId
+         * @return {number}
+         */
+        /** @type {getCurrentRequestId} */
         function getCurrentRequestId() {
 
             return data.currentRequestId
 
         }
 
+        /**
+         * @typedef {Object} entityViewerDataService
+         * @property {setRequestParameters} setRequestParameters
+         * @property {getAllRequestParameters} getAllRequestParameters
+         * @property {getCurrentRequestId} getCurrentRequestId
+         * @property {getActiveGroupTypeSort} getActiveGroupTypeSort
+         * @property {enqueueDataRequest} enqueueDataRequest
+         *
+         * @property {setGroups} setGroups
+         * @property {getGroups} getGroups
+         *
+         * @property {setData} setData
+         * @property {setAllData} setAllData
+         * @global
+         */
+
+        /** @type {entityViewerDataService} */
         return {
 
             setRootEntityViewer: setRootEntityViewer,

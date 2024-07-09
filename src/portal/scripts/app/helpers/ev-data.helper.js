@@ -285,6 +285,12 @@
 
     };
 
+    /**
+     *
+     * @param level {Number}
+     * @param evDataService {Object}
+     * @return {[{}]|[]} - array of groups from data
+     */
     var getGroupsByLevel = function (level, evDataService) {
 
         var data = evDataService.getData();
