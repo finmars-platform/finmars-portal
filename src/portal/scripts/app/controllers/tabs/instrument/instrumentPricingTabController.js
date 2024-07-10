@@ -94,6 +94,12 @@
             vm.entity.pricing_policies.push({})
         }
 
+        vm.removePricingPolicy = function (item) {
+            vm.entity.pricing_policies = vm.entity.pricing_policies.filter(function(policy) {
+                return policy !== item;
+            });
+        }
+
         vm.getPricingConfigurations = function () {
 
             configurationService.getList({
@@ -112,7 +118,7 @@
 
                 vm.pricingModules = vm.pricingModules.map(function (item) {
                     item._id = item.id;
-                    item.id = item.configuration_code + ':run_pricing';
+                    item.id = item.configuration_code;
                     return item
                 })
 
