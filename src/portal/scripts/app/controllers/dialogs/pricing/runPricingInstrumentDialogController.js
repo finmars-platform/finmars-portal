@@ -26,11 +26,9 @@
 
         vm.item = {
             currencies: [],
-            instruments: [],
+            instruments: [vm.instrument.id],
             pricing_policies: []
         };
-
-        // TODO pricingv2 fill instrument attribute, to run this particular pricing only for this instrument
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
