@@ -102,7 +102,7 @@
 
                 <td>
                     <dropdown-select label="Pricing Policy"
-                                     model="item.pricing_policy"
+                                     model="item.pricing_policy_id"
                                      placeholder-text="Pricing Policy"
                                      menu-options="vm.pricingPolicies"
                                      small-options="{tooltipText: 'Pricing Policy'}"
@@ -122,6 +122,10 @@
 
                 <td>
                     <md-button class="outline-button" data-ng-click="vm.configurePricingModule($event, item)">Configure</md-button>
+                </td>
+
+                <td>
+                    <md-button class="outline-button" data-ng-click="vm.removePricingPolicy(item)">&times;</md-button>
                 </td>
 
             </tr>
