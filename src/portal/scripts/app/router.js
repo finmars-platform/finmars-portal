@@ -126,7 +126,7 @@
         });
 
         $stateProvider.state('app.portal.template-layout-manager', {
-            url: '/template-layouts',
+            url: '/template-layout',
             templateUrl: 'views/pages/template-layout-manager-view.html',
             controller: 'TemplateLayoutManagerController as vm'
         });
@@ -827,7 +827,7 @@
                 controller: 'FormsDataConstructor as vm'
             })
             .state('app.portal.settings.layouts', {
-                url: '/layouts',
+                url: '/layout',
                 templateUrl: 'views/pages/layouts-settings-view.html',
                 controller: 'LayoutsSettingsController as vm'
             })
@@ -837,7 +837,7 @@
                 controller: 'InputFormLayoutsSettingsController as vm'
             })
             .state('app.portal.settings.notifications', {
-                url: '/notifications',
+                url: '/notification',
                 templateUrl: 'views/settings/profile-settings-view.html',
                 controller: 'SettingsGeneralProfileController as vm'
             })
