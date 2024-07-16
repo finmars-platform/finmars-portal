@@ -17,8 +17,8 @@
 
         //com.finmars.standard-pricing-roll:run_pricing
         // data.instrumentPricingPolicy.target_pricing_schema_user_code
-        var configuration_code = data.instrumentPricingPolicy.target_pricing_schema_user_code.split(':')[0];
-        var configuration_path = configuration_code.split('.').join('/')
+        var configuration_code = data.instrumentPricingPolicy?.target_pricing_schema_user_code?.split(':')?.[0];
+        var configuration_path = configuration_code?.split('.')?.join('/')
         vm.iframeUrl = '/' + currentMasterUser.realm_code + '/' + currentMasterUser.space_code + '/api/storage/workflows/' + configuration_path + '/setup.html'
 
         vm.iframeUrl = vm.iframeUrl + '?instrument=' + data.instrument.id;

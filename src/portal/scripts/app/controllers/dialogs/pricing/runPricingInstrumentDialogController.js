@@ -7,7 +7,7 @@
 
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService').default;
     var pricingPolicyService = require('../../../services/pricingPolicyService').default;
-    ;
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService').default;
 
 
     module.exports = function runPricingInstrumentDialogController($scope, $mdDialog, globalDataService, data) {
@@ -25,8 +25,8 @@
         }
 
         vm.item = {
-            currencies: [],
-            instruments: [vm.instrument.id],
+            currencies: vm.instrument?.pricing_currency_object?.user_code ? [vm.instrument.pricing_currency_object.user_code] : [],
+            instruments: [vm.instrument.user_code],
             pricing_policies: []
         };
 
@@ -37,6 +37,7 @@
         vm.agree = function () {
 
             pricingPolicyService.runPricing(vm.item).then(function (data) {
+                toastNotificationService.success('Success. Schedule  is being processed');
                 // TODO pricingv2 task card to show progress
                 $mdDialog.hide({status: 'disagree'});
             })
