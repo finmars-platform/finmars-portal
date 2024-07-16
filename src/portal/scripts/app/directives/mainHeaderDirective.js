@@ -30,6 +30,22 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode();
 
+            scope.getDocumentationLink = function () {
+
+                var link = 'https://docs.finmars.com/search?term='
+
+                var pieces = window.location.href.split('/#!/')[1].split('?')[0].split('/')
+
+                pieces = pieces.map(function (item) {
+                    return item.split('-').join(' ')
+                })
+
+                link = link + pieces.join(' ')
+
+                return link
+
+            }
+
             scope.toggleDarkMode = function () {
 
                 if (scope.isThemeInDarkMode) {

@@ -28,7 +28,7 @@
         });
 
         $stateProvider.state('app.portal.attributesManager', {
-            url: '/attributes/:entityType?from=?instanceId=',
+            url: '/attribute/:entityType?from=?instanceId=',
             templateUrl: 'views/attributes-manager-view.html',
             controller: 'AttributesManagerController as vm'
         });
@@ -63,7 +63,7 @@
         });
 
         $stateProvider.state('app.portal.dashboard-layout-manager', {
-            url: '/dashboard-layouts/',
+            url: '/dashboard-layout/',
             templateUrl: 'views/dashboard-layout-manager-view.html',
             controller: 'DashboardLayoutManagerController as vm'
         });
@@ -84,13 +84,13 @@
         });
 
         $stateProvider.state('app.portal.context-menu-layout-manager', {
-            url: '/context-menu-layouts',
+            url: '/context-menu-layout',
             templateUrl: 'views/context-menu-layout-manager-view.html',
             controller: 'ContextMenuLayoutManagerController as vm'
         });
 
         $stateProvider.state('app.portal.manual-sorting-layout-manager', {
-            url: '/manual-sorting-layouts',
+            url: '/manual-sorting-layout',
             templateUrl: 'views/manual-sorting-layout-manager-view.html',
             controller: 'ManualSortingLayoutManagerController as vm'
         });
@@ -146,7 +146,7 @@
                 template: '<div data-ui-view class="ev-abstract-elem"></div>'
             })
             .state('app.portal.data.portfolio', {
-                url: '/portfolios',
+                url: '/portfolio',
                 templateUrl: 'views/data/data-portfolio-view.html',
                 controller: 'DataPortfolioController as vm',
                 params: {
@@ -154,7 +154,7 @@
                 }
             })
             .state('app.portal.data.portfolio-register', {
-                url: '/portfolio-registers',
+                url: '/portfolio-register',
                 templateUrl: 'views/data/data-portfolio-register-view.html',
                 controller: 'DataPortfolioRegisterController as vm',
                 params: {
@@ -162,7 +162,7 @@
                 }
             })
             .state('app.portal.data.portfolio-register-record', {
-                url: '/portfolio-register-records',
+                url: '/portfolio-register-record',
                 templateUrl: 'views/data/data-portfolio-register-record-view.html',
                 controller: 'DataPortfolioRegisterRecordController as vm',
                 params: {
@@ -170,7 +170,7 @@
                 }
             })
             .state('app.portal.data.account', {
-                url: '/accounts',
+                url: '/account',
                 templateUrl: 'views/data/data-account-view.html',
                 controller: 'DataAccountController as vm',
                 params: {
@@ -178,7 +178,7 @@
                 }
             })
             .state('app.portal.data.account-type', {
-                url: '/account-types',
+                url: '/account-type',
                 templateUrl: 'views/data/data-account-type-view.html',
                 controller: 'DataAccountTypeController as vm',
                 params: {
@@ -194,7 +194,7 @@
                 }
             })
             .state('app.portal.data.counterparty', {
-                url: '/counterparties',
+                url: '/counterparty',
                 templateUrl: 'views/data/data-counterparty-view.html',
                 controller: 'DataCounterpartyController as vm',
                 params: {
@@ -210,7 +210,7 @@
                 }
             })
             .state('app.portal.data.responsible', {
-                url: '/responsibles',
+                url: '/responsible',
                 templateUrl: 'views/data/data-responsible-view.html',
                 controller: 'DataResponsibleController as vm',
                 params: {
@@ -218,7 +218,7 @@
                 }
             })
             .state('app.portal.data.instrument', {
-                url: '/instruments?entity',
+                url: '/instrument?entity',
                 templateUrl: 'views/data/data-instrument-view.html',
                 controller: 'DataInstrumentController as vm',
                 params: {
@@ -226,7 +226,7 @@
                 }
             })
             .state('app.portal.data.generated-event', {
-                url: '/generated-events',
+                url: '/generated-event',
                 templateUrl: 'views/data/data-generated-event-view.html',
                 controller: 'DataGeneratedEventController as vm',
                 params: {
@@ -234,7 +234,7 @@
                 }
             })
             .state('app.portal.data.instrument-type', {
-                url: '/instrument-types',
+                url: '/instrument-type',
                 templateUrl: 'views/data/data-instrument-type-view.html',
                 controller: 'DataInstrumentTypeController as vm',
                 params: {
@@ -242,7 +242,7 @@
                 }
             })
             .state('app.portal.data.portfolio-type', {
-                url: '/portfolio-types',
+                url: '/portfolio-type',
                 templateUrl: 'views/data/data-portfolio-type-view.html',
                 controller: 'DataPortfolioTypeController as vm',
                 params: {
@@ -250,7 +250,7 @@
                 }
             })
             .state('app.portal.data.portfolio-reconcile-group', {
-                url: '/portfolio-reconcile-groups',
+                url: '/portfolio-reconcile-group',
                 templateUrl: 'views/data/data-portfolio-reconcile-group-view.html',
                 controller: 'DataPortfolioReconcileGroupController as vm',
                 params: {
@@ -275,7 +275,7 @@
                 }
             }) */
             .state('app.portal.data.complex-transaction', {
-                url: '/complex-transactions',
+                url: '/complex-transaction',
                 templateUrl: 'views/data/data-complex-transaction-view.html',
                 controller: 'DataComplexTransactionController as vm',
                 params: {
@@ -283,7 +283,7 @@
                 }
             })
             .state('app.portal.data.transaction', {
-                url: '/transactions',
+                url: '/transaction',
                 templateUrl: 'views/data/data-transaction-view.html',
                 controller: 'DataTransactionController as vm',
                 params: {
@@ -291,7 +291,7 @@
                 }
             })
             .state('app.portal.data.transaction-type', {
-                url: '/transaction-types',
+                url: '/transaction-type',
                 templateUrl: 'views/data/data-transaction-type-view.html',
                 controller: 'DataTransactionTypeController as vm',
                 params: {
@@ -307,7 +307,7 @@
                 }
             })
             .state('app.portal.data.currency-history', {
-                url: '/currencies',
+                url: '/currency-history',
                 templateUrl: 'views/data/data-currency-history-view.html',
                 controller: 'DataCurrencyHistoryController as vm',
                 params: {
@@ -315,7 +315,7 @@
                 }
             })
             .state('app.portal.data.price-history', {
-                url: '/pricing',
+                url: '/price-history',
                 templateUrl: 'views/data/data-price-history-view.html',
                 controller: 'DataPriceHistoryController as vm',
                 params: {
@@ -363,7 +363,7 @@
             })
 
             .state('app.portal.data.currency-history-error', {
-                url: '/currencies-errors',
+                url: '/currency-history-error',
                 templateUrl: 'views/data/data-currency-history-error-view.html',
                 controller: 'DataCurrencyHistoryErrorController as vm',
                 params: {
@@ -371,7 +371,7 @@
                 }
             })
             .state('app.portal.data.price-history-error', {
-                url: '/pricing-errors',
+                url: '/price-history-error',
                 templateUrl: 'views/data/data-price-history-error-view.html',
                 controller: 'DataPriceHistoryErrorController as vm',
                 params: {
@@ -380,7 +380,7 @@
             })
 
             .state('app.portal.reports', {
-                url: '/reports',
+                url: '/report',
                 abstract: true,
                 template: '<div data-ui-view class="ev-abstract-elem"></div>'
             })
@@ -433,7 +433,7 @@
                 }
             })
             .state('app.portal.reports.check-for-events', {
-                url: '/check-for-events',
+                url: '/check-for-event',
                 templateUrl: 'views/pages/check-for-events-view.html',
                 controller: 'CheckEventsController as vm'
             })
@@ -464,13 +464,13 @@
             })
 
             .state('app.portal.celery-worker-page', {
-                url: '/workers',
+                url: '/worker',
                 templateUrl: 'views/pages/celery-worker-page-view.html',
                 controller: 'CeleryWorkerPageController as vm',
             })
 
             .state('app.portal.tasks-page', {
-                url: '/tasks?id&date_from&date_to&query&types&statuses&result&page',
+                url: '/task?id&date_from&date_to&query&types&statuses&result&page',
                 templateUrl: 'views/pages/tasks-page-view.html',
                 controller: 'TasksPageController as vm',
                 reloadOnSearch: false,
@@ -487,7 +487,7 @@
             })
 
             .state('app.portal.processes', {
-                url: '/processes',
+                url: '/process',
                 templateUrl: 'views/pages/processes-view.html',
                 controller: 'ProcessesController as vm'
             })
@@ -502,7 +502,7 @@
             })
 
             .state('app.portal.workflows', {
-                url: '/workflows',
+                url: '/workflow',
                 templateUrl: 'views/pages/workflows-page-view.html',
                 controller: 'WorkflowsPageController as vm'
             })
@@ -534,19 +534,19 @@
             })
 
             .state('app.portal.system-messages', {
-                url: '/system-messages',
+                url: '/system-message',
                 templateUrl: 'views/pages/system-messages-view.html',
                 controller: 'SystemMessagesController as vm'
             })
 
             .state('app.portal.pricing-policy', {
-                url: '/pricing-policies',
+                url: '/pricing-policy',
                 templateUrl: 'views/pages/pricing-policy-page-view.html',
                 controller: 'PricingPolicyPageController as vm'
             })
 
             .state('app.portal.portfolio-bundle', {
-                url: '/portfolio-bundles',
+                url: '/portfolio-bundle',
                 templateUrl: 'views/pages/portfolio-bundle-page-view.html',
                 controller: 'PortfolioBundlePageController as vm'
             })
@@ -558,31 +558,31 @@
             })
 
             .state('app.portal.pricing-schemes', {
-                url: '/pricing-schemes',
+                url: '/pricing-scheme',
                 templateUrl: 'views/pages/pricing-scheme-page-view.html',
                 controller: 'PricingSchemePageController as vm'
             })
 
             .state('app.portal.schedules', {
-                url: '/schedules',
+                url: '/schedule',
                 templateUrl: 'views/pages/schedule-page-view.html',
                 controller: 'SchedulePageController as vm'
             })
 
             .state('app.portal.pricing-procedure', {
-                url: '/pricing-procedures',
+                url: '/pricing-procedure',
                 templateUrl: 'views/pages/pricing-procedure-page-view.html',
                 controller: 'PricingProcedurePageController as vm'
             })
 
             .state('app.portal.data-procedure', {
-                url: '/data-procedures',
+                url: '/data-procedure',
                 templateUrl: 'views/pages/data-procedure-page-view.html',
                 controller: 'DataProcedurePageController as vm'
             })
 
             .state('app.portal.expression-procedure', {
-                url: '/expression-procedures',
+                url: '/expression-procedure',
                 templateUrl: 'views/pages/expression-procedure-page-view.html',
                 controller: 'ExpressionProcedurePageController as vm'
             })
@@ -594,18 +594,18 @@
             })
 
             .state('app.portal.pricing-parent-procedure', {
-                url: '/pricing-parent-procedures',
+                url: '/pricing-parent-procedure',
                 templateUrl: 'views/pages/pricing-parent-procedure-page-view.html',
                 controller: 'PricingParentProcedurePageController as vm'
             })
 
             .state('app.portal.run-pricing-procedure', {
-                url: '/run-pricing-procedures',
+                url: '/run-pricing-procedure',
                 templateUrl: 'views/pages/run-pricing-procedure-page-view.html',
                 controller: 'RunPricingProcedurePageController as vm'
             })
             .state('app.portal.run-data-procedure', {
-                url: '/run-data-procedures',
+                url: '/run-data-procedure',
                 templateUrl: 'views/pages/run-data-procedure-page-view.html',
                 controller: 'RunDataProcedurePageController as vm'
             })
@@ -832,7 +832,7 @@
                 controller: 'LayoutsSettingsController as vm'
             })
             .state('app.portal.settings.input-form-layouts', {
-                url: '/input-form-layouts',
+                url: '/input-form-layout',
                 templateUrl: 'views/pages/input-form-layouts-settings-view.html',
                 controller: 'InputFormLayoutsSettingsController as vm'
             })
@@ -847,7 +847,7 @@
                 controller: 'SettingsGeneralInterfaceAccessController as vm'
             })
             .state('app.portal.settings.user-attributes', {
-                url: '/user-attributes',
+                url: '/user-attribute',
                 templateUrl: 'views/pages/user-attributes-view.html',
                 controller: 'EntitiesCustomAttributesController as vm'
             })
@@ -877,12 +877,12 @@
                 controller: 'SettingsGeneralComplexImportController as vm'
             })
             .state('app.portal.settings.template-fields', {
-                url: '/aliases',
+                url: '/aliase',
                 templateUrl: 'views/pages/template-fields-view.html',
                 controller: 'TemplateFieldsController as vm'
             })
             .state('app.portal.settings.tooltips', {
-                url: '/tooltips',
+                url: '/tooltip',
                 templateUrl: 'views/pages/entity-tooltip-page-view.html',
                 controller: 'EntityTooltipPageController as vm'
             })
@@ -893,7 +893,7 @@
                 controller: 'CrossEntityAttributeExtensionPageController as vm'
             })
             .state('app.portal.settings.color-palettes', {
-                url: '/palettes',
+                url: '/palette',
                 templateUrl: 'views/colorPicker/color-palettes-settings-view.html',
                 controller: 'ColorPalettesSettingsController as vm',
                 resolve: {
@@ -933,17 +933,17 @@
                 controller: 'ExportConfigurationsController as vm'
             })
             .state('app.portal.settings.data-providers', {
-                url: '/data-providers',
+                url: '/data-provider',
                 templateUrl: 'views/settings/data-providers-settings-view.html',
                 controller: 'SettingsGeneralDataProvidersController as vm'
             })
             .state('app.portal.settings.data-providers-config', {
-                url: '/data-providers/:dataProviderId',
+                url: '/data-provider/:dataProviderId',
                 templateUrl: 'views/settings/data-providers-config-settings-view.html',
                 controller: 'SettingsGeneralDataProvidersConfigController as vm'
             })
             .state('app.portal.settings.data-providers-bloomberg', {
-                url: '/data-providers/bloomberg/:id',
+                url: '/data-provider/bloomberg/:id',
                 templateUrl: 'views/settings/data-providers-bloomberg-settings-view.html',
                 controller: 'SettingsGeneralDataProvidersBloombergController as vm'
             })
@@ -953,7 +953,7 @@
                 controller: 'SettingsGeneralInitConfigurationController as vm'
             })
             .state('app.portal.settings.users-and-groups', {
-                url: '/data-providers',
+                url: '/data-provider',
                 templateUrl: 'views/settings/data-providers-settings-view.html',
                 controller: 'SettingsGeneralDataProvidersController as vm'
             })
@@ -972,12 +972,12 @@
                 }
             })
             .state('app.portal.data.transactions', {
-                url: '/audit/transactions',
+                url: '/audit/transaction',
                 templateUrl: 'views/system/audit-transactions-view.html',
                 controller: 'TransactionsAuditController as vm'
             })
             .state('app.portal.data.instruments', {
-                url: '/audit/instruments',
+                url: '/audit/instrument',
                 templateUrl: 'views/system/audit-instruments-view.html',
                 controller: 'InstrumentsAuditController as vm'
             })
@@ -987,7 +987,7 @@
                 controller: 'AuditController as vm'
             })
             .state('app.portal.system.file-reports', {
-                url: '/file-reports',
+                url: '/file-report',
                 templateUrl: 'views/pages/file-reports-view.html',
                 controller: 'FileReportsController as vm'
             });
