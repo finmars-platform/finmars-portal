@@ -37,7 +37,9 @@
 
     var instrumentTypeService = require('../../services/instrumentTypeService').default;
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entityId, data) {
+    const pricingPolicyService = require('../../services/pricingPolicyService').default;
+
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, configurationService, entityType, entityId, data) {
 
         var vm = this;
 
@@ -1844,6 +1846,77 @@
 
         };
 
+        vm.addPricingPolicy = function () {
+            vm.entity.pricing_policies.push({})
+        }
+
+        vm.removePricingPolicy = function (item) {
+            vm.entity.pricing_policies = vm.entity.pricing_policies.filter(function(policy) {
+                return policy !== item;
+            });
+        }
+
+        vm.getPricingConfigurations = function () {
+
+            configurationService.getList({
+                pageSize: 1000,
+                page: 1,
+                filters: {
+                    type: "pricing"
+                },
+                sort: {
+                    direction: "DESC",
+                    key: "created"
+                }
+            }).then(function (data) {
+
+                vm.pricingModules = data.results;
+
+                vm.pricingModules = vm.pricingModules.map(function (item) {
+                    item._id = item.id;
+                    item.id = item.configuration_code;
+                    return item
+                })
+
+                $scope.$apply();
+
+            });
+
+        }
+
+        vm.getPricingPolicies = function () {
+
+            pricingPolicyService.getList().then(function (data) {
+
+                vm.pricingPolicies = data.results;
+                $scope.$apply();
+
+            })
+
+        }
+
+        vm.configurePricingModule = function ($event, item) {
+
+            // TODO force entity save before open module configuration iframe dialog
+
+            $mdDialog.show({
+                controller: 'ConfigurePricingModuleDialogController as vm',
+                templateUrl: 'views/dialogs/configure-pricing-module-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        instrument: vm.entity,
+                        instrumentPricingPolicy: item
+                    }
+                }
+            })
+
+        }
+
         vm.onEntityChange = function (fieldKey) {
 
             if (fieldKey) {
@@ -2150,6 +2223,8 @@
                 $scope.$apply();
 
             });
+            vm.getPricingPolicies();
+            vm.getPricingConfigurations();
         };
 
         vm.init();

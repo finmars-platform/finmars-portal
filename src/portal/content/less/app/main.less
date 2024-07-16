@@ -684,7 +684,7 @@ md-backdrop.md-select-backdrop {
 }*/
 
 .pickmeup {
-  z-index: 55;
+  z-index: 80;
   background: var(--dialog-background-color);
 }
 
@@ -1455,7 +1455,7 @@ table.centered tbody tr td {
 }
 
 thead {
-  border-bottom: 1px solid #d0d0d0;
+  border-bottom: 1px solid var(--table-border-color);
 }
 
 td,
@@ -2297,6 +2297,7 @@ md-menu-content md-menu.md-menu {
 md-input-container .md-placeholder,
 md-input-container label:not(.md-no-float):not(.md-container-ignore) {
   pointer-events: initial;
+  color: var(--secondary-color);
 }
 
 #side-menu-Report li:last-child {
@@ -4099,4 +4100,7 @@ md-dialog.entity-editor-dialog {
   height: 100vh;
   max-width: 100vw;
   max-height: inherit;
+}
+.pricing-policy .custom-input-container {
+  margin-top: 20px;
 }
