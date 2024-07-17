@@ -26,9 +26,14 @@
 
         vm.item = {
             currencies: vm.instrument?.pricing_currency_object?.user_code ? [vm.instrument.pricing_currency_object.user_code] : [],
-            instruments: [vm.instrument.user_code],
             pricing_policies: []
         };
+
+        if (vm.instrument.configuration_code) {
+            vm.item.instrument_types = [vm.instrument.user_code];
+        } else {
+            vm.item.instruments = [vm.instrument.user_code];
+        }
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

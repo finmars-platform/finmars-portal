@@ -838,6 +838,7 @@ export default (function () {
 
 
     portal.controller('PricingPolicyPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingPolicyPageController')]);
+    portal.controller('PricingManagePageController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/pages/pricingManagePageController')]);
     portal.controller('PortfolioBundlePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/portfolioBundlePageController')]);
     portal.controller('PricingSchemePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingSchemePageController')]);
     portal.controller('RunPricingInstrumentDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/pricing/runPricingInstrumentDialogController')]);
