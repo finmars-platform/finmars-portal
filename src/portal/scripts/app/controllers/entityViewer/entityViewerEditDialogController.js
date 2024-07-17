@@ -1609,35 +1609,35 @@
 
         };
 
-        vm.getInstrumentPricingSchemes = function () { // TODO Victor. Must removed after introducing new design with grid table.
-
-            instrumentPricingSchemeService.getList().then(function (data) {
-
-                vm.instrumentPricingSchemes = data.results;
-
-                vm.generateInstrumentAttributeTypesByValueTypes();
-
-                console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
-
-                $scope.$apply();
-
-            })
-
-        };
+        // vm.getInstrumentPricingSchemes = function () { // TODO Victor. Must removed after introducing new design with grid table.
+        //
+        //     instrumentPricingSchemeService.getList().then(function (data) {
+        //
+        //         vm.instrumentPricingSchemes = data.results;
+        //
+        //         vm.generateInstrumentAttributeTypesByValueTypes();
+        //
+        //         console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
+        //
+        //         $scope.$apply();
+        //
+        //     })
+        //
+        // };
 
         vm.getEntityPricingSchemes = function () {
 
-            if (vm.entityType === 'currency') {
-                vm.getCurrencyPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument-type') {
-                vm.getInstrumentPricingSchemes();
-            }
+            // if (vm.entityType === 'currency') {
+            //     vm.getCurrencyPricingSchemes();
+            // }
+            //
+            // if (vm.entityType === 'instrument') {
+            //     vm.getInstrumentPricingSchemes();
+            // }
+            //
+            // if (vm.entityType === 'instrument-type') {
+            //     vm.getInstrumentPricingSchemes();
+            // }
 
         };
 

@@ -1612,21 +1612,21 @@
 
         };
 
-        vm.getEntityPricingSchemes = function () {
-
-            if (vm.entityType === 'currency') {
-                vm.getCurrencyPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument-type') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-        };
+        // vm.getEntityPricingSchemes = function () {
+        //
+        //     if (vm.entityType === 'currency') {
+        //         vm.getCurrencyPricingSchemes();
+        //     }
+        //
+        //     if (vm.entityType === 'instrument') {
+        //         vm.getInstrumentPricingSchemes();
+        //     }
+        //
+        //     if (vm.entityType === 'instrument-type') {
+        //         vm.getInstrumentPricingSchemes();
+        //     }
+        //
+        // };
 
         // Instrument tab Exposure start
 

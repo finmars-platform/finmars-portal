@@ -446,9 +446,9 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog, con
 
 	};
 
-	const getInstrumentPricingSchemes = instrumentPricingSchemeService.getList().then(data => {
-		vm.instrumentPricingSchemes =  data.results;
-	});
+	// const getInstrumentPricingSchemes = instrumentPricingSchemeService.getList().then(data => {
+	// 	vm.instrumentPricingSchemes =  data.results;
+	// });
 
 	const getInstrAttributeTypes = attributeTypeService.getList('instrument', {pageSize: 1000}).then(function (data) {
 		vm.instrAttributeTypes = data.results;
@@ -582,7 +582,8 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog, con
 		initGridTableEvents(); */
 		vm.getPricingConfigurations();
 		vm.getPricingPolicies();
-		Promise.all([getInstrumentPricingSchemes, getInstrAttributeTypes]).then(function () {
+		// Promise.all([getInstrumentPricingSchemes, getInstrAttributeTypes]).then(function () {
+		Promise.all([getInstrAttributeTypes]).then(function () {
 
 			generateInstrumentAttributeTypesByValueTypes();
 			/* formatDataForPricingGridTable();
