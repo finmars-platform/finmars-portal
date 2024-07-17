@@ -584,7 +584,6 @@ const utilsHelper = require("../../helpers/utils.helper");
                 };
 
                 const signalSortChange = function (columnOrGroup) {
-
                     /* *
                         * For some reason dispatch evEvents.DATA_LOAD_START from
                         * ev-data-provider.service -> getObjects() do not register.
@@ -2262,7 +2261,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                                     console.log('handleFoldButtonClick.group', group);
                                     console.log('handleFoldButtonClick.requestParameters', requestParameters);
 
-                                    return rvDataProviderService.updateDataStructureByRequestParameters(scope.evDataService, scope.evEventService, [requestParameters])
+                                    return rvDataProviderService.updateDataStructureByRequestParameters(scope.evDataService, scope.evEventService, requestParameters)
                                 })
 
                             }

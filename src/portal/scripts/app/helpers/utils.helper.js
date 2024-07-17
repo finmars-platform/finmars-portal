@@ -121,7 +121,10 @@
     }
 
     function convertToTree(data, rootGroup, optimize) {
-
+        console.log(
+            "testing116.rvDataHelper convertToTree data",
+            structuredClone(data)
+        );
         var list = [];
 
         // var dataOrderReference = {}; // Only need for keep tracking on original item index
@@ -137,42 +140,48 @@
             }
         }
 
-        var originalKeys = Object.keys(data);
+        // var originalKeys = Object.keys(data);
 
-        originalKeys.forEach(function (key) {
+        var indicesInsideParentData = {
+            [rootGroup.___id]: null
+        };
+
+        Object.keys(data).forEach(function (key) {
 
             if (data[key].___type === 'group' || data[key].___type === 'placeholder_group') {
 
-                if (data[key].hasOwnProperty('results')) {
+                if ( data[key].hasOwnProperty('results') ) {
 
-                        data[key].results.forEach(function (item, index) {
+                    data[key].results.forEach(function (item, index) {
 
-                            try { // temporary for debugging plat691
+                        indicesInsideParentData[item.___id] = index;
 
-                                if (!data[item.___id]) {
-                                    data[item.___id] = item;
-                                }
+                        try { // temporary for debugging plat691
 
-                            } catch (e) {
-
-                                console.error(
-                                    `plat691 [utilsHelper.convertToTree] ` +
-                                    "data " +
-                                    JSON.parse(JSON.stringify(data))
-                                );
-                                console.error(
-                                    `plat691 [utilsHelper.convertToTree] ` +
-                                    "key, data[key] " +
-                                    key, JSON.parse(JSON.stringify( data[key] ))
-                                );
-                                console.error(
-                                    `plat691 [utilsHelper.convertToTree] ` +
-                                    `item index ${index}`
-                                );
-                                throw e;
+                            if (!data[item.___id]) {
+                                data[item.___id] = item;
                             }
 
-                        });
+                        } catch (e) {
+
+                            console.error(
+                                `plat691 [utilsHelper.convertToTree] ` +
+                                "data " +
+                                JSON.parse(JSON.stringify(data))
+                            );
+                            console.error(
+                                `plat691 [utilsHelper.convertToTree] ` +
+                                "key, data[key] " +
+                                key, JSON.parse(JSON.stringify( data[key] ))
+                            );
+                            console.error(
+                                `plat691 [utilsHelper.convertToTree] ` +
+                                `item index ${index}`
+                            );
+                            throw e;
+                        }
+
+                    });
 
 
                 }
@@ -183,31 +192,57 @@
 
         console.timeEnd("convertToTree.thirdLoop");
 
-        var extendedKeys = Object.keys(data);
+        // var extendedKeys = Object.keys(data);
 
         console.time("convertToTree.forthLoop");
 
         // console.log('convertToTree.extendedKeys', extendedKeys)
         // performance update
 
+        var listMap = {};
+        var typeSpecificProps = [
+            "___is_selected",
+            "___subtotal_type",
+            "___items_count",
+            "___group_name",
+            "___is_open",
+            "___has_selected_child",
+            "___group_identifier",
+        ];
 
-        extendedKeys.forEach(function (key, index) {
+        Object.keys(indicesInsideParentData).forEach(function (key, index) {
 
-            list.push({
-                ___index: index,
+            /*if ( !indicesInsideParentData[node.___parentId] && indicesInsideParentData[node.___parentId] !== 0 ) {
+                console.error(`[utilsHelper convertToTree] Unable to identify index for the parent of: `, node);
+            }*/
+
+            var listItem = {
+                ___index: indicesInsideParentData[key],
                 ___id: data[key].___id,
                 ___parentId: data[key].___parentId,
                 ___level: data[key].___level,
                 ___type: data[key].___type,
-                ___subtotal_type: data[key].___subtotal_type,
-                ___items_count: data[key].___items_count,
-                ___group_name: data[key].___group_name,
-                ___is_open: data[key].___is_open,
-                ___is_selected: data[key].___is_selected,
-                ___has_selected_child: data[key].___has_selected_child,
-                ___group_identifier: data[key].___group_identifier
-            });
+            };
 
+            typeSpecificProps.forEach(function (prop) {
+
+                if ( data[key].hasOwnProperty(prop) ) {
+                    listItem[prop] = data[key][prop]
+                }
+
+            })
+
+            if ( (data[key].___type === 'group' || data[key].___type === 'placeholder_group') &&
+
+                data[key].hasOwnProperty('results') ) {
+
+                listItem.results = [];
+
+            }
+
+            list.push(listItem);
+
+            listMap[listItem.___id] = index;
 
         });
 
@@ -215,23 +250,37 @@
 
         console.time("convertToTree.toTree");
 
-        var map = {}, node, roots = [], i;
+        /*var map = {}, node, roots = [], i;
         for (i = 0; i < extendedKeys.length; i += 1) {
             map[list[i].___id] = i;
             list[i].results = [];
-        }
-        console.log("testing116.utilsHelper convertToTree map", structuredClone(map));
+        }*/
+        // console.log("testing116.utilsHelper convertToTree map", structuredClone(map));
+        console.log("testing116.utilsHelper convertToTree indicesInsideParentData", structuredClone(indicesInsideParentData));
         console.log("testing116.utilsHelper convertToTree list", structuredClone(list));
+        var node, roots = [];
+        var i;
         for (i = 0; i < list.length; i += 1) {
             node = list[i];
 
-            if (node.___parentId !== null) {
+            if (node.___id !== rootGroup.___id) {
 
-                if ( !list[map[node.___parentId]] ) {
-                    console.error(`Parent ${node.___parentId} does not exist`)
+                var parentListIndex = listMap[node.___parentId];
+
+                if ( !parentListIndex && parentListIndex !== 0 ) {
+                    console.error(`[utilsHelper convertToTree] Unable to identify index inside list for the parent of: `, node);
                 }
 
-                if (node.___type === 'group' || node.___type === 'placeholder_group') {
+                if ( !list[parentListIndex] ) {
+                    console.error(`[utilsHelper convertToTree] Can not find parent for: `, node);
+                }
+
+                // verify `___type`, `___subtotal_type`, `___subtotal_subtype`
+
+
+                list[parentListIndex].results.splice(node.___index, 0, node);
+
+                /*if (node.___type === 'group' || node.___type === 'placeholder_group') {
                     // insertItemInNode(list, map, node, dataOrderReference)
                     list[map[node.___parentId]].results[node.___index] = node;
                 } else if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'control') {
@@ -259,7 +308,7 @@
 
                     list[map[node.___parentId]].results.push(node)
 
-                }
+                }*/
 
             } else {
 
@@ -267,7 +316,8 @@
 
             }
         }
-
+        console.log("testing116.utilsHelper convertToTree result",
+            structuredClone(roots));
         console.timeEnd("convertToTree.toTree");
 
         return roots[0];
