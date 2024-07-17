@@ -776,6 +776,10 @@
             optimize = true
         }
 
+        /*
+        Must be called after all items inserted
+        (insertSubtotalsAndControlsToResults, getLoadControl etc.)
+        */
         var tree = utilsHelper.convertToTree(data, rootGroup, optimize);
         console.log("getFlatStructure.tree", tree)
 

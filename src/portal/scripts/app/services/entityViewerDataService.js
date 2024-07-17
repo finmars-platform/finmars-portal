@@ -1,9 +1,11 @@
 /**
+ * Data that is assigned to a property `frontend_request_options`
+ * of an object inside a body of a request
  * @typedef {Object} requestParameterBody
  * @property {Array} columns
  * @property {Array} filter_settings
  * @property {undefined} globalTableSearch
- * @property { [String] } groups_types
+ * @property { [Object] } groups_types
  * @property {Number} page
  * @property { [String] } groups_values
  * @property {String} groups_order - values: "asc", "desc"
@@ -14,8 +16,8 @@
 
 /**
  * @typedef {Object} requestParameterPagination
- * @property {Array} page
- * @property {Number} [page_size=40]
+ * @property {Number} page
+ * @property {Number} page_size - 40 by default
  * @property {Number} count
  * @property {Number} downloaded
  *
@@ -23,9 +25,10 @@
  */
 
 /**
+ * Parameters for a request for groups or objects for the entity / report viewer
  * @typedef {Object} evRvRequestParamenters
  * @property {String} requestType - values: 'groups', 'objects'
- * @property {undefined|Number} id - TODO find out when it is undefined
+ * @property {undefined|Number} id - Equals to an '___id' of a group. `undefined` if it is report / entity viewer without groups.
  * @property {
  *     {
  *         groupName: null|String,
@@ -33,6 +36,7 @@
  *         parentGroupId: null|String,
  *     }
  * } event
+ * @property { Number } [groups_level]
  * @property { requestParameterBody } body
  * @property { requestParameterPagination } pagination
  * @property { [Number] } requestedPages
@@ -181,7 +185,7 @@
             },
             useFromAboveFilters: [],
             pagination: {
-                page_size: 40
+                page_size: 10
             },
             status: {
                 data: null
@@ -276,7 +280,7 @@
         /**
          *
          * @param {Object} [interfaceLayout]
-         * @returns {Object} - interface layout with only properties that user changes
+         * @return {Object} - interface layout with only properties that user changes
          * @memberOf entityViewerDataService
          */
         var getInterfaceLayoutToSave = function (interfaceLayout) {
@@ -383,7 +387,7 @@
 
         /**
          *
-         * @returns {Boolean}
+         * @return {Boolean}
          * @memberOf entityViewerDataService
          */
         function isEntityReport() {
@@ -454,6 +458,12 @@
             return data.rootGroupOptions;
         }
 
+        /**
+         * @typedef {Function} setFilters
+         * @param filters { [Object|void] }
+         * @memberof entityViewerDataService
+         */
+        /** @param filters { [Object|void] } */
         function setFilters(filters) {
 
             if (filters) {
@@ -465,6 +475,12 @@
 
         }
 
+        /**
+         * @typedef {Function} getFilters
+         * @return {[Object|void]}
+         * @memberof entityViewerDataService
+         */
+        /** @return {[Object|void]} */
         function getFilters() {
             return data.filters;
         }
@@ -618,7 +634,7 @@
         }
 
         /**
-         * @returns {{dateFrom?: Object, dateTo: Object}|undefined}
+         * @return {{dateFrom?: Object, dateTo: Object}|undefined}
          * @memberof entityViewerDataService
          * */
         function getStashedReportDates() {
@@ -821,6 +837,13 @@
 
         }
 
+        /**
+         * @typedef {Function} getData
+         * @param [hashId] {String}
+         * @return {Object|undefined}
+         * @memberof entityViewerDataService
+         */
+        /** @param hashId {String} */
         function getData(hashId) {
 
             if (hashId) {
@@ -842,6 +865,12 @@
             return data.data[hashId];
         }
 
+        /**
+         * @typedef {Function} getDataAsList
+         * @return {[{}]}
+         * @memberof entityViewerDataService
+         */
+        /** @return {[{}]} */
         function getDataAsList() {
 
             var keys = Object.keys(data.data);
@@ -851,21 +880,35 @@
             var keysLen = keys.length;
 
             for (i = 0; i < keysLen; i = i + 1) {
-                result.push(data.data[keys[i]]);
+                result.push( data.data[keys[i]] );
             }
 
             return result;
 
         }
 
+        /**
+         * @typedef {Function} resetOnlyItems
+         * @memberof entityViewerDataService
+         */
         function resetOnlyItems() {
 
-            var list = getDataAsList()
+            const list = getDataAsList()
+            let parentsIds = new Set();
 
             list.forEach(function (item) {
                 if (item.___type === 'object') {
-                    delete data.data[item.___id]
+
+                    parentsIds.add(item.___parentId);
+                    delete data.data[item.___id];
+
                 }
+            })
+
+            parentsIds = [...parentsIds];
+
+            parentsIds.forEach(id => {
+                data.data[id].results = [];
             })
 
         }
@@ -875,9 +918,12 @@
             var list = getDataAsList()
 
             list.forEach(function (item) {
+
                 if (item.___type === 'group' && item.___parentId != null) { // except root group
-                    delete data.data[item.___id]
+                    deleteRequestParameters(item.___id);
+                    delete data.data[item.___id];
                 }
+
             })
 
         }
@@ -931,6 +977,16 @@
 
         }
 
+        /**
+         * @typedef {Function} deleteRequestParameters
+         * @param requestParametersId {Number}
+         * @memberof entityViewerDataService
+         */
+        /** @param requestParametersId {Number} */
+        function deleteRequestParameters(requestParametersId) {
+            delete data.requestParameters[requestParametersId];
+        }
+
         function resetRequestParameters() { // resets number of row's pages
             data.requestParameters = {};
         }
@@ -961,6 +1017,21 @@
 
         }
 
+        /**
+         * @typedef {Function} getRequestParameters
+         * @param id {Number} - id of requestParameters.
+         * Equals to an `___id` of a group or an object
+         * @return { evRvRequestParamenters }
+         *
+         * @memberof entityViewerDataService
+         */
+        /**
+         *
+         * @param id {Number} - id of requestParameters.
+         * Equals to an `___id` of a group or an object
+         *
+         * @return { evRvRequestParamenters }
+         */
         function getRequestParameters(id) {
 
             if (data.requestParameters[id]) {
@@ -1187,7 +1258,7 @@
 
         /**
          *
-         * @returns {{actionKey: String, [object]: Object, [id]: string|number} | any}
+         * @return {{actionKey: String, [object]: Object, [id]: string|number} | any}
          * @memberof entityViewerDataService
          */
         function getRowsActionData() {
@@ -1658,7 +1729,7 @@
         /**
          * Get layout to open inside split panel not by default.
          *
-         * @returns {number|void} - id of layout to open
+         * @return {number|void} - id of layout to open
          */
         function getSplitPanelLayoutToOpen() {
             var splitPanelActiveLayoutName = data.splitPanelLayoutToOpen;
@@ -1874,7 +1945,7 @@
          * Contains sorting data loaded from server (e.g. manual sorting). Used for groupType and column sorting.
          *
          * @param {String} key - key of column
-         * @returns {*|null}
+         * @return {*|null}
          */
         function getColumnSortData(key) {
 
@@ -1999,6 +2070,13 @@
             data.requestsQueue.push(request);
         }
 
+        /**
+         *
+         * @typedef {Function} dequeueDataRequest
+         * @return {evRvRequestParamenters}
+         * @memberof entityViewerDataService
+         */
+        /** @return {evRvRequestParamenters} */
         function dequeueDataRequest() {
 
             console.log("rv.queue.dequeueDataRequest", data.requestsQueue[0])
@@ -2011,6 +2089,12 @@
             return data.requestsQueue
         }
 
+        /**
+         * @typedef {Function} isRequestsQueueEmpty
+         * @return {Boolean}
+         * @memberof entityViewerDataService
+         * */
+        /** @return {Boolean} */
         function isRequestsQueueEmpty() {
             return data.requestsQueue.length === 0;
         }
@@ -2035,16 +2119,26 @@
         /**
          * @typedef {Object} entityViewerDataService
          * @property {setRequestParameters} setRequestParameters
+         * @property {getRequestParameters} getRequestParameters
+         * @property {deleteRequestParameters} deleteRequestParameters
          * @property {getAllRequestParameters} getAllRequestParameters
          * @property {getCurrentRequestId} getCurrentRequestId
          * @property {getActiveGroupTypeSort} getActiveGroupTypeSort
-         * @property {enqueueDataRequest} enqueueDataRequest
          *
          * @property {setGroups} setGroups
          * @property {getGroups} getGroups
+         * @property {setFilters} setFilters
+         * @property {getFilters} getFilters
          *
          * @property {setData} setData
          * @property {setAllData} setAllData
+         * @property {getData} getData
+         * @property {getDataAsList} getDataAsList
+         * @property {resetOnlyItems} resetOnlyItems
+         *
+         * @property {enqueueDataRequest} enqueueDataRequest
+         * @property {dequeueDataRequest} dequeueDataRequest
+         * @property {isRequestsQueueEmpty} isRequestsQueueEmpty
          * @global
          */
 
@@ -2145,6 +2239,7 @@
             isRequestParametersExist: isRequestParametersExist,
             setRequestParameters: setRequestParameters,
             getRequestParameters: getRequestParameters,
+            deleteRequestParameters: deleteRequestParameters,
             getRequestParametersAsList: getRequestParametersAsList,
 
             getActiveRequestParameters: getActiveRequestParameters,
