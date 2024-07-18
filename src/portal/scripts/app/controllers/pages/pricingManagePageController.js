@@ -8,6 +8,7 @@
     var pricingPolicyService = require('../../services/pricingPolicyService').default;
     var currencyService = require('../../services/currencyService').default;
     var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
+    var instrumentTypeService = require('../../services/instrumentTypeService').default;
 
     module.exports = function ($scope, $mdDialog, instrumentService) {
 
@@ -24,6 +25,9 @@
 
         vm.currencies = [];
         vm.currencyModel = [];
+
+        vm.instrumentTypes = [];
+        vm.instrumentTypeModel = [];
 
         vm.getPricingPolicies = function () {
             pricingPolicyService.getList().then(function (data) {
@@ -73,6 +77,22 @@
             })
         };
 
+        vm.getInstrumentTypes = function () {
+            instrumentTypeService.getListLight().then(function (data) {
+
+                vm.instrumentTypes = data.results.map((item) => {
+                    return {
+                        id: item.user_code,
+                        name: item.name
+                    }
+                });
+
+                vm.readyStatus.content = true;
+
+                $scope.$apply();
+            })
+        };
+
         vm.runPricing = function () {
             vm.data = {}
             vm.data.date_from = vm.item.date_from;
@@ -80,6 +100,7 @@
             vm.data.pricing_policies = vm.pricingModel;
             vm.data.currencies = vm.currencyModel;
             vm.data.instruments = vm.instrumentModel;
+            vm.data.instrument_types = vm.instrumentTypeModel;
 
             pricingPolicyService.runPricing(vm.data).then(function (data) {
                 // TODO pricingv2 task card to show progress
@@ -93,6 +114,7 @@
             vm.getPricingPolicies();
             vm.getInstruments();
             vm.getCurrencies();
+            vm.getInstrumentTypes();
         };
 
         vm.init();

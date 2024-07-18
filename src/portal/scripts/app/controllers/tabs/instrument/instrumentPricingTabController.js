@@ -45,6 +45,8 @@
 
         vm.runPricingInstrument = function ($event) {
 
+            vm.entity.isInstrument = true;
+
             $mdDialog.show({
                 controller: 'RunPricingInstrumentDialogController as vm',
                 templateUrl: 'views/dialogs/pricing/run-pricing-instrument-dialog-view.html',
