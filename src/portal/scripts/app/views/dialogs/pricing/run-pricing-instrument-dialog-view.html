@@ -32,6 +32,24 @@
 
             </div>
 
+            <div class="m-t-16">
+
+                <h4>Pricing Policies</h4>
+
+                <div class="p-l-8">
+
+                    <div data-ng-repeat="policy in vm.pricingPolicies">
+
+                        <md-checkbox ng-model="vm.pricingPolicyFilter[policy.id]"
+                                     aria-label="override">
+                            {{policy.name}}
+                        </md-checkbox>
+
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
 
