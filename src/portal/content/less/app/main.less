@@ -684,7 +684,7 @@ md-backdrop.md-select-backdrop {
 }*/
 
 .pickmeup {
-  z-index: 80;
+  z-index: 81; // 81 because of z-index of popup inside grid table
   background: var(--dialog-background-color);
 }
 
@@ -4107,11 +4107,6 @@ md-dialog.entity-editor-dialog {
 
 .md-input-focused input {
   border-color: var(--card-border-color) !important;
-}
-
-
-.dialog-containers-wrap:has(.rename-dialog ), .dialog-containers-wrap:has(.two-fields-multiselector-dialog) {
-  z-index: 81;
 }
 
 .member-file-upload {
