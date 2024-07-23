@@ -87,13 +87,56 @@
     </div>
 
     <div ng-if="vm.readyStatus">
-        <grid-table class="instrument-pricing-policies-table"
-                    data-gt-data-service="vm.pricingPoliciesGridTableDataService"
-                    data-gt-event-service="vm.pricingPoliciesGridTableEventService">
-        </grid-table>
+
+        <table >
+
+            <thead>
+            <tr>
+                <th>Pricing Policy</th>
+                <th>Pricing Module</th>
+                <th>Configure</th>
+            </tr>
+            </thead>
+
+            <tr data-ng-repeat="item in vm.entity.pricing_policies">
+
+                <td>
+                    <dropdown-select label="Pricing Policy"
+                                     model="item.pricing_policy_id"
+                                     placeholder-text="Pricing Policy"
+                                     menu-options="vm.pricingPolicies"
+                                     small-options="{tooltipText: 'Pricing Policy'}"
+                                     style="width: 306px">
+                    </dropdown-select>
+                </td>
+
+                <td>
+                    <dropdown-select label="Pricing Module"
+                                     model="item.target_pricing_schema_user_code"
+                                     placeholder-text="Pricing Module"
+                                     menu-options="vm.pricingModules"
+                                     small-options="{tooltipText: 'Pricing Module'}"
+                                     style="width: 306px">
+                    </dropdown-select>
+                </td>
+
+                <td>
+                    <md-button class="outline-button" data-ng-click="vm.configurePricingModule($event, item)">Configure</md-button>
+                </td>
+
+                <td>
+                    <md-button class="outline-button" data-ng-click="vm.removePricingPolicy(item)">&times;</md-button>
+                </td>
+
+            </tr>
+
+        </table>
+
+        <md-button class="md-primary md-raised" data-ng-click="vm.addPricingPolicy($event)">Add Pricing Policy</md-button>
+
     </div>
 
-    <div ng-if="!vm.readyStatus" class="flex-row flex-c-center width-100" style="height: 100px;">
+    <div ng-if="!vm.readyStatus" class="flex-row flex-c-center width-100" style="height: 100px; padding: 1rem 0rem;">
         <progress-circular diameter="100"></progress-circular>
     </div>
 
