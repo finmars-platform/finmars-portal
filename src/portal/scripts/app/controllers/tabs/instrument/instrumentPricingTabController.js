@@ -41,7 +41,7 @@
         vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
         vm.entityChange = $scope.$parent.vm.entityChange;
         //endregion
-
+        vm.entity.pricing_policies = vm.entity.pricing_policies ?? [];
 
         vm.runPricingInstrument = function ($event) {
 
