@@ -80,58 +80,66 @@
 
     </div>
 
-    <table >
+    <div ng-if="vm.readyStatus.content" class="m-t-16">
 
-        <thead>
-        <tr>
-            <th>Pricing Policy</th>
-            <th>Pricing Module</th>
-            <th>Configure</th>
-        </tr>
-        </thead>
+        <table>
 
-        <tr data-ng-repeat="item in vm.entity.pricing_policies">
+            <thead>
+            <tr>
+                <th>Pricing Policy</th>
+                <th>Pricing Module</th>
+                <th>Configure</th>
+            </tr>
+            </thead>
 
-            <td>
-                <div data-ng-if="!vm.pricingPolicies?.length">
-                    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
-                        <progress-circular diameter="50"></progress-circular>
+            <tr data-ng-repeat="item in vm.entity.pricing_policies">
+
+                <td>
+                    <div data-ng-if="!vm.pricingPolicies?.length">
+                        <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                            <progress-circular diameter="50"></progress-circular>
+                        </div>
                     </div>
-                </div>
-                <dropdown-select
-                        class="pricing-policy"
-                        label="Pricing Policy"
-                        model="item.pricing_policy_id"
-                        placeholder-text="Pricing Policy"
-                        menu-options="vm.pricingPolicies"
-                        small-options="{tooltipText: 'Pricing Policy'}"
-                        style="width: 306px; margin-top: 24px">
-                </dropdown-select>
-            </td>
+                    <dropdown-select
+                            class="pricing-policy"
+                            label="Pricing Policy"
+                            model="item.pricing_policy_id"
+                            placeholder-text="Pricing Policy"
+                            menu-options="vm.pricingPolicies"
+                            small-options="{tooltipText: 'Pricing Policy'}"
+                            style="width: 306px; margin-top: 24px">
+                    </dropdown-select>
+                </td>
 
-            <td>
-                <dropdown-select
-                        class="pricing-policy"
-                        label="Pricing Module"
-                        model="item.target_pricing_schema_user_code"
-                        placeholder-text="Pricing Module"
-                        menu-options="vm.pricingModules"
-                        small-options="{tooltipText: 'Pricing Module'}"
-                        style="width: 306px">
-                </dropdown-select>
-            </td>
+                <td>
+                    <dropdown-select
+                            class="pricing-policy"
+                            label="Pricing Module"
+                            model="item.target_pricing_schema_user_code"
+                            placeholder-text="Pricing Module"
+                            menu-options="vm.pricingModules"
+                            small-options="{tooltipText: 'Pricing Module'}"
+                            style="width: 306px">
+                    </dropdown-select>
+                </td>
 
-            <td>
-                <md-button data-ng-if="item.target_pricing_schema_user_code" class="outline-button m-t-20" data-ng-click="vm.configurePricingModule($event, item)">Configure</md-button>
-            </td>
+                <td>
+                    <md-button data-ng-if="item.target_pricing_schema_user_code" class="outline-button m-t-20" data-ng-click="vm.configurePricingModule($event, item)">Configure</md-button>
+                </td>
 
-            <td>
-                <md-button class="outline-button m-t-20" data-ng-click="vm.removePricingPolicy(item)">&times;</md-button>
-            </td>
+                <td>
+                    <md-button class="outline-button m-t-20" data-ng-click="vm.removePricingPolicy(item)">&times;</md-button>
+                </td>
 
-        </tr>
+            </tr>
 
-    </table>
+        </table>
+
+    </div>
+
+    <div ng-if="!vm.readyStatus.content" class="flex-row flex-c-center width-100" style="height: 100px; padding: 1rem 0rem;">
+        <progress-circular diameter="100"></progress-circular>
+    </div>
     <md-button class="md-primary md-raised" data-ng-click="vm.addPricingPolicy($event)">Add Pricing Policy</md-button>
 
 </div>
