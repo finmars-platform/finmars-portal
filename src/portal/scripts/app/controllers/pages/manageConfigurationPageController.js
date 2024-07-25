@@ -167,7 +167,7 @@
 
                     vm.generatePages(data)
 
-                    vm.items = data.results;
+                    vm.items = data.results.sort((a, b) => a.name.localeCompare(b.name));;
                     vm.count = data.count;
 
                     if (vm.items.length) {
