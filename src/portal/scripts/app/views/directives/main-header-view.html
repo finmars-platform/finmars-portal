@@ -120,7 +120,7 @@
 
                     <md-menu-content>
                         <md-menu-item>
-                            <a href="/documentation" class="help-link" target="_blank">Documentation</a>
+                            <a href="{{getDocumentationLink()}}" class="help-link" target="_blank">Documentation</a>
                         </md-menu-item>
                         <md-menu-item>
                             <a href="{{'/' + currentMasterUser.realm_code + '/' + currentMasterUser.space_code + '/docs/api/v1/'}}"

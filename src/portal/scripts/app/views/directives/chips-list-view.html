@@ -23,7 +23,7 @@
             </md-button>
 
             <md-tooltip ng-if="getTooltipContent(chip)"
-                        md-direction="top"
+                        data-md-direction="top"
                         class="tooltip_1"
                         data-ng-class="{'custom-field-error': !!chip.error_data}"
                         ng-bind-html="getTooltipContent(chip)"></md-tooltip>

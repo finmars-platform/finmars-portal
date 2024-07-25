@@ -14,6 +14,7 @@
 
     const convertReportHelper = require('../../../helpers/converters/convertReportHelper');
     const reportCopyHelper = require('../../../helpers/reportCopyHelper');
+    const stringHelper = require('../../../helpers/stringHelper');
 
     const exportExcelService = require('../../../services/exportExcelService').default;
 
@@ -42,6 +43,8 @@
                 // $scope.currentAdditions = $scope.evDataService.getAdditions();
                 $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
                 $scope.viewContext = $scope.evDataService.getViewContext();
+
+                const dialogContainersWrap = document.querySelector('.dialog-containers-wrap');
 
                 // filter area always shown inside dashboard
                 if ($scope.viewContext === "dashboard") {
@@ -241,6 +244,13 @@
 
                 };
 
+                /**
+                 *
+                 * @param filterName {String}
+                 * @param filterValues {Object|Array}
+                 * @param filterType {String}
+                 * @return {String} - HTML to use inside a tooltip for a chip
+                 */
                 vm.getChipTextElem = function (filterName, filterValues, filterType) {
 
                     let filterVal = filterValues || "";
@@ -262,6 +272,12 @@
                             const formattedDates = filterValues.map(date => moment(date).format('YYYY-MM-DD'));
                             filterVal = formattedDates.join(', ');
                             break;
+                        default:
+                            filterVal = filterVal[0]
+                    }
+
+                    if (typeof filterVal === "string") {
+                        filterVal = stringHelper.escapeHtml(filterVal);
                     }
 
                     return `<span class="g-filter-chips-text">
@@ -487,6 +503,7 @@
                         $mdDialog.show({
                             controller: controllerName,
                             templateUrl: templateUrl,
+                            parent: dialogContainersWrap,
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: $scope.attributeDataService,
@@ -501,7 +518,7 @@
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
                             templateUrl: 'views/directives/groupTable/g-modal-view.html',
-                            parent: document.querySelector('.dialog-containers-wrap'),
+                            parent: dialogContainersWrap,
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: $scope.attributeDataService,
