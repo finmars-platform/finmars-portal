@@ -47,16 +47,43 @@
             vm.propertyName = propertyName;
         };
 
-        vm.breadcrumbsNavigation = function ($index) {
-
-            if ($index === -1) {
-                vm.currentPath = []
-            } else {
-                vm.currentPath = vm.currentPath.filter(function (item, index) {
-                    return index <= $index;
-                })
+        $scope.$watch(function() {
+            return vm.searchTerm;
+        }, function(newVal, oldVal) {
+            if (newVal !== oldVal) {
+                vm.search(newVal);
             }
+        });
 
+        vm.search = async function(query) {
+
+            if (query.length) {
+                explorerService.searchFiles(query).then(function (data) {
+
+                    vm.items = data.results;
+                    vm.processing = false;
+
+                    $scope.$apply();
+
+                })
+            } else {
+                vm.listFiles();
+            }
+        };
+
+        vm.breadcrumbsNavigation = function ($index, filePath = null) {
+
+            if (filePath) {
+                vm.currentPath = filePath.split('/')
+            } else {
+                if ($index === -1) {
+                    vm.currentPath = []
+                } else {
+                    vm.currentPath = vm.currentPath.filter(function (item, index) {
+                        return index <= $index;
+                    })
+                }
+            }
             // vm.listFiles();
             // IMPORTANT! State.go escaping slashes and router goes mad
             window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
@@ -158,26 +185,11 @@
 
             vm.currentPath.push(item.name);
 
-            window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
+            const url = '#!/explorer/' + vm.currentPath.join('/');
 
-            if (item.name.indexOf('.ipynb') !== -1) {
+            window.open(url, '_blank');
 
-
-                vm.fileEditorLoading = true;
-
-                vm.downloadAndOpenPlaybook();
-
-            } else {
-
-                vm.fileEditor = {};
-
-                vm.showEditor = true;
-
-                vm.fileEditorLoading = true;
-
-                vm.downloadAndEdit();
-
-            }
+            vm.currentPath.pop();
 
         }
 
@@ -990,7 +1002,11 @@
 
                     } else {
 
+                        vm.fileEditor = {};
+
                         vm.showEditor = true;
+
+                        vm.fileEditorLoading = true;
 
                         vm.downloadAndEdit();
 

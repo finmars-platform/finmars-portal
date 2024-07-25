@@ -36,6 +36,24 @@
             })
     };
 
+  var searchFiles = function (search) {
+
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
+
+
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/search?query=' + search,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        }
+      })
+  };
+
     var viewFile = function (path) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -193,6 +211,7 @@
 
     module.exports = {
         listFiles: listFiles,
+        searchFiles: searchFiles,
         viewFile: viewFile,
         deleteFile: deleteFile,
         createFolder: createFolder,
