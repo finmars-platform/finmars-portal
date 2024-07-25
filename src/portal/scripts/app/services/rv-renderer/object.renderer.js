@@ -7,7 +7,6 @@
 
     var renderHelper = require('../../helpers/render.helper');
     var rvHelper = require('../../helpers/rv.helper');
-    var stringHelper = require('../../helpers/stringHelper');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
 
@@ -29,12 +28,12 @@
 
         if (column.value_type === 10 || column.value_type === 30) {
 
-            result.html_result = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
+            result.html_result = renderHelper.formatStringForCell( obj[column.key] );
+
             result.raw_text_result = obj[column.key];
 
         }
-
-        if (column.value_type === 20) {
+        else if (column.value_type === 20) {
 
             result.html_result = renderHelper.formatValue(obj, column);
             result.numeric_result = obj[column.key];
@@ -42,27 +41,23 @@
             result.raw_text_result = result.html_result;
 
         }
-
-        if (column.value_type === 40) {
+        else if (column.value_type === 40) {
 
             result.html_result = obj[column.key];
             result.raw_text_result = obj[column.key];
 
         }
-
-        if (column.value_type === 'field') {// maybe deprecated logic, but required for old layouts
+        else if (column.value_type === 'field') {// maybe deprecated logic, but required for old layouts
             result.html_result = obj[column.key];
             result.raw_text_result = obj[column.key];
         }
-
-        if (column.value_type === 'float') {// maybe deprecated logic, but required for old layouts
+        else if (column.value_type === 'float') {// maybe deprecated logic, but required for old layouts
             result.html_result = renderHelper.formatValue(obj, column);
             result.numeric_result = obj[column.key];
             // result.raw_text_result = renderHelper.formatValue(obj, column); // Twice process format?
             result.raw_text_result = result.html_result;
         }
-
-        if (column.value_type === 60) {
+        else if (column.value_type === 60) {
             if (obj[column.key]) {
 
                 result.html_result = 'True'
@@ -74,7 +69,7 @@
             }
         }
 
-        if (Array.isArray(obj[column.key])) {
+        if ( Array.isArray(obj[column.key]) ) {
 
             result.html_result = '[' + obj[column.key].length + ']';
             result.raw_text_result = '[' + obj[column.key].length + ']';
@@ -155,7 +150,7 @@
 
                     if (groupName && typeof groupName === 'string') {
 
-                        groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+                        groupName = renderHelper.formatStringForCell(groupName);
 
                     }
 

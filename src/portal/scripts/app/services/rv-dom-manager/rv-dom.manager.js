@@ -1293,6 +1293,16 @@ export default function (toastNotificationService, transactionTypeService, price
 
     }; */
 
+    /**
+     *
+     * @param elements {Object}
+     * @param elements.viewportElem {HTMLDivElement} - `.ev-viewport`
+     * @param elements.contentElem {HTMLDivElement} - `.ev-content`
+     * @param elements.workareaWrapElem {HTMLDivElement} - `.g-workarea-wrap`
+     * @param elements.contentWrapElem {HTMLDivElement} - `.g-content-wrap`
+     * @param elements.rootWrapElem {HTMLDivElement} - `.g-wrapper.g-root-wrapper`
+     * @param evDataService {Object}
+     */
     var calculateScroll = function (elements, evDataService) {
 
         rvScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
@@ -1373,29 +1383,12 @@ export default function (toastNotificationService, transactionTypeService, price
         rvScrollManager.setContentElemHeight(totalHeight);
         // rvScrollManager.setContentElemPaddingTop(paddingTop);
 
-        // There is another method that calculates contentElemWidth. That is resizeScrollableArea() form gColumnResizerComponent.js
-        var areaWidth = 0;
-        var i;
-        var columnMargins = 16;
-        var dropNewFieldWidth = 400;
-        if (viewContext === 'dashboard') {
-            dropNewFieldWidth = 105;
-        }
-
-        var columns = evDataService.getColumns();
-
-        for (i = 0; i < columns.length; i = i + 1) {
-
-            var columnWidth = parseInt(columns[i].style.width.split('px')[0], 10);
-
-            areaWidth = areaWidth + columnWidth + columnMargins;
-        }
-
-        var resultWidth = areaWidth + dropNewFieldWidth;
-
-        if (resultWidth > contentWrapElemWidth) {
-            rvScrollManager.setContentElemWidth(resultWidth);
-        }
+        evRvDomManagerService.calculateContentWidth(
+            evDataService,
+            true,
+            rvScrollManager.getViewportWidth(),
+            rvScrollManager.getContentElem()
+        );
 
         // console.log('resultWidth', resultWidth);
 

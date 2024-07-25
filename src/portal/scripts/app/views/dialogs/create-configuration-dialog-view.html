@@ -38,6 +38,11 @@
                 </md-input-container>
 
                 <md-input-container class="width-80">
+                    <label>Configuration Channel</label>
+                    <input type="text" data-ng-model="vm.item.target_configuration_channel">
+                </md-input-container>
+
+                <md-input-container class="width-80">
                     <label>Is Package</label>
                     <input type="checkbox" data-ng-model="vm.item.target_configuration_is_package">
                 </md-input-container>
@@ -52,7 +57,7 @@
                 </md-input-container>
                 <div class="input-upload-file-container">
                     <p class="configurationFileImport">Select file</p>
-                    <label for="configurationFileImport" class="md-button md-raised md-primary IFUlabel">
+                    <label for="configurationFileImport" class="md-button md-raised md-primary IFUlabel member-file-upload">
                         <ng-md-icon icon="file_upload"></ng-md-icon>
                         <span>BROWSE</span></label>
                 </div>

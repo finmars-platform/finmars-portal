@@ -46,9 +46,9 @@
 			aElemAttrs = elemAttrs;
 
 			/*
-			(?:^|\s) : start of text or white space
-			(?:http|ftp|mailto|file|data|irc) : uri schemes
-			:[^\s]+ : colon and any character before white space or end of text
+			(?:^|\s) - start of text or white space
+			(?:http|ftp|mailto|file|data|irc) - uri schemes
+			:[^\s]+ - colon and any character before white space or end of text
 			*/
 			let stringWithHyperlink = str.replaceAll(/(?:^|\s)(?:http|https|ftp|mailto|file|data|irc):[^\s]+/g, insertHyperlinks);
 
@@ -60,9 +60,29 @@
 
 	};
 
+	/**
+	 *
+	 * @param string {String}
+	 * @return {string}
+	 */
+	let escapeHtml = (string) => {
+
+		if (typeof string !== "string") {
+			throw new Error(`[stringHelper escapeHtml] Invalid type of argument. Expected 'string' got an ${typeof string}: ${string}`);
+		}
+
+		return string.replaceAll("&", "&amp;")
+				.replaceAll("<", "&lt;")
+				.replaceAll(">", "&gt;")
+				.replaceAll('"', "&quot;")
+				.replaceAll("'", "&#039;");
+
+	};
+
     module.exports = {
         toHash: toHash,
-		parseAndInsertHyperlinks: parseAndInsertHyperlinks
+		parseAndInsertHyperlinks: parseAndInsertHyperlinks,
+		escapeHtml: escapeHtml,
     }
 
 }());

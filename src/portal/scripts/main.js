@@ -24,7 +24,6 @@ import 'ui-select/dist/select.min.css'
 // import {FinmarsButton} from '@finmars/ui';
 // import '@finmars/ui/dist/finmars-ui.css';
 // import {vueClassConverter} from './vue-helper.js';
-
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 // Ensure that the worker is imported as a module.
 import {pdfjsWorker} from 'pdfjs-dist/legacy/build/pdf.worker.entry';
@@ -75,13 +74,15 @@ import utilsService from "./app/services/utilsService";
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
-import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 import dashboard2ReportViewerComponentMatrixController
     from "./app/controllers/dashboard/_version2/reportViewer/componentMatrixController";
 import systemPageController from "./app/controllers/pages/systemPageController";
 import attributesSelectorDialogController from "./app/controllers/dialogs/attributesSelectorDialogController";
 import splitPanelReportViewerWidgetController
     from "./app/controllers/entityViewer/splitPanelReportViewerWidgetController";
+
+import gColumnResizerComponent from "./app/directives/groupTable/gColumnResizerComponent";
+import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 
 //# region form tabs
 import instrumentTypePricingTabController
@@ -602,7 +603,8 @@ export default (function () {
     portal.controller('AccrualCalculationSchedulesController', ['$scope', '$mdDialog', 'instrumentService', 'gridTableHelperService', 'multitypeFieldService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
     portal.controller('EventSchedulesTabController', ['$scope', '$mdDialog', 'instrumentService', 'gridTableHelperService', require('./app/controllers/tabs/instrument/eventSchedulesTabController')]);
     // portal.controller('PricingPoliciesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/pricingPoliciesTabController')]);
-    portal.controller('InstrumentPricingTabController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/instrumentPricingTabController')]);
+    portal.controller('InstrumentPricingTabController', ['$scope', '$mdDialog', 'gridTableHelperService', 'configurationService', require('./app/controllers/tabs/instrument/instrumentPricingTabController')]);
+    portal.controller('ConfigurePricingModuleDialogController', ['$scope', '$mdDialog', '$sce', 'globalDataService', 'data', require('./app/controllers/dialogs/configurePricingModuleDialogController')]);
     portal.controller('InstrumentTypePricingTabController', ['$scope', '$mdDialog', instrumentTypePricingTabController]);
     portal.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
     portal.controller('ManualPricingFormulasTabController', ['$scope', 'fieldResolverService', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
@@ -944,7 +946,7 @@ export default (function () {
     portal.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]); //2021-12-17 DEPRECATED
     portal.directive('groupColumns', ['$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'uiService', 'evRvDomManagerService', 'rvDataProviderService', require('./app/directives/groupTable/gColumnsComponent')]);
     // portal.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
-    portal.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
+    portal.directive('groupColumnResizer', ['evRvDomManagerService', gColumnResizerComponent]);
     portal.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
     portal.directive('gHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
     portal.directive('groupWidthAligner', [require('./app/directives/groupTable/gWidthAlignerComponent')]);
