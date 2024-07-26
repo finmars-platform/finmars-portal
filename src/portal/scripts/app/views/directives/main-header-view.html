@@ -22,6 +22,11 @@
 
             <div class="header-misc" layout="row">
 
+                <label class="toggle-switch">
+                    <input type="checkbox" data-ng-checked="isThemeInDarkMode" data-ng-click="toggleDarkMode()">
+                    <span class="slider round"></span>
+                </label>
+
                 <div ng-if="openedInside === 'profile'">
 
                     <a ng-if="currentMasterUser"
@@ -177,7 +182,6 @@
 
                 </div>
 
-
                 <div class="header-profile">
                     <md-menu>
                         <md-button class="md-button header-account-btn" aria-label="Account button"
@@ -188,12 +192,12 @@
                             <md-menu-item >
                                 <a class="md-button" href="{{profileUrl}}">Profile</a>
                             </md-menu-item>
-                            <md-menu-item >
-                                <a class="md-button" data-ng-click="toggleDarkMode()" data-ng-if="isThemeInDarkMode">Disable
-                                    Dark Theme</a>
-                                <a class="md-button" data-ng-click="toggleDarkMode()" data-ng-if="!isThemeInDarkMode">Enable
-                                    Dark Theme</a>
-                            </md-menu-item>
+<!--                            <md-menu-item >-->
+<!--                                <a class="md-button" data-ng-click="toggleDarkMode()" data-ng-if="isThemeInDarkMode">Disable-->
+<!--                                    Dark Theme</a>-->
+<!--                                <a class="md-button" data-ng-click="toggleDarkMode()" data-ng-if="!isThemeInDarkMode">Enable-->
+<!--                                    Dark Theme</a>-->
+<!--                            </md-menu-item>-->
                             <md-menu-item >
                                 <a class="md-button" data-ng-click="openAccManager()">Account Security</a>
                             </md-menu-item>
