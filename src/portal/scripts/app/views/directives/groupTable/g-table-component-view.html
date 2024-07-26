@@ -4,11 +4,11 @@
     <div class="g-recon verticalSplitPanelWrapper"
          data-ng-if="isRootEntityViewer && verticalAdditions.isOpen && domElemsAreReady">
 
-        <div group-width-aligner
-             root-wrap-elem="rootWrapElem"
-             content-wrap-elem="contentWrapElem"
-             ev-data-service="evDataService"
-             ev-event-service="evEventService"></div>
+        <div data-group-width-aligner
+             data-root-wrap-elem="rootWrapElement"
+             data-content-wrap-elem="contentWrapElement"
+             data-ev-data-service="evDataService"
+             data-ev-event-service="evEventService"></div>
 
         <div class="g-width-slider"></div>
 
@@ -16,7 +16,7 @@
             <g-vertical-split-panel-report-binder ev-data-service="evDataService"
                                                   ev-event-service="evEventService"
                                                   sp-exchange-service="spExchangeService"
-                                                  root-wrap-elem="rootWrapElem"
+                                                  root-wrap-elem="rootWrapElement"
                                                   class="display-block height-100">
             </g-vertical-split-panel-report-binder>
         </div>
@@ -44,7 +44,7 @@
                     <g-filters data-ev-data-service="evDataService"
                                data-ev-event-service="evEventService"
                                data-attribute-data-service="attributeDataService"
-                               data-content-wrap-element="contentWrapElem"
+                               data-content-wrap-element="contentWrapElement"
                                data-hide-filters-block="hideFiltersBlock"
                                data-hide-use-from-above-filters="hideUseFromAboveFilters">
                     </g-filters>
@@ -58,7 +58,7 @@
                                          data-ev-event-service="evEventService"
                                          data-attribute-data-service="attributeDataService"
                                          data-sp-exchange-service="spExchangeService"
-                                         data-content-wrap-element="contentWrapElem"></g-ev-left-panel>
+                                         data-content-wrap-element="contentWrapElement"></g-ev-left-panel>
 
                         <div class="drop-area-wrap left-side-groups-drop-area display-none gLeftSideGroupsHolder">
                             <div class="g-drop-area gDropArea"></div>
@@ -75,27 +75,31 @@
 
                             <div class="g-column-area-wrap">
                                 <div data-ng-if="components.columnArea && viewType !== 'matrix'">
-                                    <group-columns ev-data-service="evDataService"
-                                                   ev-event-service="evEventService"
-                                                   attribute-data-service="attributeDataService"
-                                                   content-wrap-element="contentWrapElem"
+                                    <group-columns data-ev-data-service="evDataService"
+                                                   data-ev-event-service="evEventService"
+                                                   data-attribute-data-service="attributeDataService"
+                                                   data-content-wrap-element="contentWrapElement"
                                     ></group-columns>
                                 </div>
 
                             </div>
 
-                            <group-table-body data-ng-if="viewType == 'report_viewer'"
+                            <group-table-body data-ng-if="
+                                                viewType === 'report_viewer' &&
+                                                (!components.columnArea || columnsScrollableAreaElement)
+                                              "
                                               class="group-table-body"
                                               data-ng-class="{
                                                 'g-font-size-small': reportOptions.table_font_size === 'small',
                                                 'g-font-size-medium': reportOptions.table_font_size === 'medium',
                                                 'g-font-size-large': reportOptions.table_font_size === 'large'
                                               }"
-                                              ev-data-service="evDataService"
-                                              ev-event-service="evEventService"
-                                              workarea-wrap-element="workareaWrapElem"
-                                              content-wrap-element="contentWrapElem"
-                                              root-wrap-element="rootWrapElem"
+                                              data-ev-data-service="evDataService"
+                                              data-ev-event-service="evEventService"
+                                              data-workarea-wrap-element="workareaWrapElement"
+                                              data-content-wrap-element="contentWrapElement"
+                                              data-root-wrap-element="rootWrapElement"
+                                              data-columns-scrollable-area-element="columnsScrollableAreaElement"
                             ></group-table-body>
 
                             <report-viewer-matrix data-ng-if="viewType == 'matrix'"
@@ -105,17 +109,17 @@
                                                   ev-data-service="evDataService"
                                                   ev-event-service="evEventService"></report-viewer-matrix>
 
-                            <div ng-if="isReport"
-                                 rv-gcf-areas-dnd
-                                 ev-data-service="evDataService"
-                                 ev-event-service="evEventService"
-                                 content-wrap-element="contentWrapElem"></div>
+                            <div data-ng-if="isReport && components.columnArea"
+                                 data-rv-gcf-areas-dnd
+                                 data-ev-data-service="evDataService"
+                                 data-ev-event-service="evEventService"
+                                 data-content-wrap-element="contentWrapElement"></div>
 
-                            <div ng-if="!isReport"
-                                 ev-gcf-areas-dnd
-                                 ev-data-service="evDataService"
-                                 ev-event-service="evEventService"
-                                 content-wrap-element="contentWrapElem"></div>
+                            <div data-ng-if="!isReport && components.columnArea"
+                                 data-ev-gcf-areas-dnd
+                                 data-ev-data-service="evDataService"
+                                 data-ev-event-service="evEventService"
+                                 data-content-wrap-element="contentWrapElement"></div>
 
                         </div>
 
@@ -134,8 +138,8 @@
             <div data-g-height-aligner
                  data-ev-data-service="evDataService"
                  data-ev-event-service="evEventService"
-                 data-root-wrap-elem="rootWrapElem"
-                 data-content-wrap-elem="contentWrapElem"></div>
+                 data-root-wrap-elem="rootWrapElement"
+                 data-content-wrap-elem="contentWrapElement"></div>
         </div>
 
         <div class="g-height-slider"></div>

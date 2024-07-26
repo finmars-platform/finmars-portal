@@ -243,13 +243,13 @@
 
             });
 
-            reader.readAsText(vm.data.blob);
+            reader.readAsText(vm.data.content);
 
         }
 
         vm.init = function () {
 
-            if (vm.data.blob) {
+            if (vm.data.content instanceof Blob) {
                 vm.readBlob()
             } else {
                 vm.formatContent()

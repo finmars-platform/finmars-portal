@@ -44,6 +44,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                 scope.isReport = scope.evDataService.isEntityReport();
 
                 scope.entityType = scope.evDataService.getEntityType();
+                scope.gTableBodyReady = false;
                 scope.dataIsLoading = false;
                 scope.rowStatusFilterIcon = `<span class="material-icons">star_outline</span>`;
 
@@ -2830,6 +2831,28 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                 };
 
+                const waitForTableBodyReadiness = function() {
+
+                    const componentsStatuses = scope.evDataService.getComponentsStatuses();
+                    scope.gTableBodyReady = componentsStatuses.tableBody;
+
+                    if (!scope.gTableBodyReady) {
+
+                        const tscIndex = scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, function () {
+
+                            const componentsStatuses = scope.evDataService.getComponentsStatuses();
+                            scope.gTableBodyReady = componentsStatuses.tableBody;
+
+                            if (scope.gTableBodyReady) {
+                                scope.evEventService.removeEventListener(evEvents.TABLE_SIZES_CALCULATED, tscIndex);
+                            }
+
+                        });
+
+                    }
+
+                }
+
                 const init = function () {
 
                     evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns);
@@ -2866,6 +2889,13 @@ const utilsHelper = require("../../helpers/utils.helper");
                     scope.rowFilterColor = evSettings.row_type_filter;
 
                     initEventListeners();
+
+                    const componentsStatuses = scope.evDataService.getComponentsStatuses();
+                    componentsStatuses.columnArea = true;
+                    scope.evDataService.setComponentsStatuses(componentsStatuses);
+                    scope.evEventService.dispatchEvent(evEvents.COLUMN_AREA_READY);
+
+                    waitForTableBodyReadiness();
 
                 };
 

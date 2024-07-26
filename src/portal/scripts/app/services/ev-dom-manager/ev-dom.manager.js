@@ -1367,7 +1367,19 @@
 
     };*/
 
-    var calculateScroll = function (elements, evDataService, evScrollManager) {
+    /**
+     *
+     * @param elements {Object}
+     * @param elements.viewportElem {HTMLDivElement} - `.ev-viewport`
+     * @param elements.contentElem {HTMLDivElement} - `.ev-content`
+     * @param elements.workareaWrapElem {HTMLDivElement} - `.g-workarea-wrap`
+     * @param elements.contentWrapElem {HTMLDivElement} - `.g-content-wrap`
+     * @param elements.rootWrapElem {HTMLDivElement} - `.g-wrapper.g-root-wrapper`
+     * @param elements.leftPanelElem {HTMLDivElement} - `.gEvLeftPanelHolder`
+     * @param evDataService {Object}
+     * @param evScrollManager {Object} - instance of `/ev-dom-manager/ev-scroll.manager.js`
+     */
+    const calculateScroll = function (elements, evDataService, evScrollManager) {
 
         evScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
         evScrollManager.setContentElem(elements.contentElem); // .ev-content
@@ -1461,11 +1473,11 @@
             evScrollManager.setViewportWidth(viewportWidth);
         }
 
-        var paddingTop = calculatePaddingTop(evDataService);
         var totalHeight = calculateTotalHeight(evDataService);
 
         evScrollManager.setContentElemHeight(totalHeight);
-        // evScrollManager.setContentElemPaddingTop(paddingTop);
+
+        evRvDomManagerService.calculateContentWidth(evDataService, false, viewportWidth, evScrollManager.getContentElem());
 
     };
 
