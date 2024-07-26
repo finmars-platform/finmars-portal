@@ -9,68 +9,69 @@
     <md-dialog-content class="custom-scrollbar p-24">
 
         <usercode-input data-item="vm.item"></usercode-input>
+        <div layout="column">
+            <div>
+                <md-input-container class="width-80">
+                    <label>Name</label>
+                    <input type="text" data-ng-model="vm.item.name">
+                </md-input-container>
 
-        <div>
-            <md-input-container class="width-80">
-                <label>Name</label>
-                <input type="text" data-ng-model="vm.item.name">
-            </md-input-container>
-
-        </div>
-
-        <md-button data-ng-click="vm.toggleMode()" class="md-raised m-b-16 m-t-16">
-
-            <span data-ng-if="vm.isFromMarketplace">I want to upload .zip file manually</span>
-            <span data-ng-if="!vm.isFromMarketplace">I want to provide code from marketplace</span>
-
-        </md-button>
-
-        <div data-ng-if="vm.isFromMarketplace">
-
-            <md-input-container class="width-80">
-                <label>Configuration Code</label>
-                <input type="text" data-ng-model="vm.item.target_configuration_code">
-            </md-input-container>
-
-            <md-input-container class="width-80">
-                <label>Configuration Version</label>
-                <input type="text" data-ng-model="vm.item.target_configuration_version">
-            </md-input-container>
-
-            <md-input-container class="width-80">
-                <label>Configuration Channel</label>
-                <input type="text" data-ng-model="vm.item.target_configuration_channel">
-            </md-input-container>
-
-            <md-input-container class="width-80">
-                <label>Is Package</label>
-                <input type="checkbox" data-ng-model="vm.item.target_configuration_is_package">
-            </md-input-container>
-
-        </div>
-
-        <div data-ng-if="!vm.isFromMarketplace">
-
-            <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
-                <input type="file" id="configurationFileImport" input-file-directive
-                       read-file="vm.file">
-            </md-input-container>
-            <div class="input-upload-file-container">
-                <p class="configurationFileImport">Select file</p>
-                <label for="configurationFileImport" class="md-button md-raised md-primary IFUlabel">
-                    <ng-md-icon icon="file_upload"></ng-md-icon>
-                    <span>BROWSE</span></label>
             </div>
 
-            <div data-ng-if="vm.error" style="color: red;">
-                File is incorrect
+            <md-button data-ng-click="vm.toggleMode()" class="md-raised m-b-16 m-t-16">
+
+                <span data-ng-if="vm.isFromMarketplace">I want to upload .zip file manually</span>
+                <span data-ng-if="!vm.isFromMarketplace">I want to provide code from marketplace</span>
+
+            </md-button>
+
+            <div data-ng-if="vm.isFromMarketplace">
+
+                <md-input-container class="width-80">
+                    <label>Configuration Code</label>
+                    <input type="text" data-ng-model="vm.item.target_configuration_code">
+                </md-input-container>
+
+                <md-input-container class="width-80">
+                    <label>Configuration Version</label>
+                    <input type="text" data-ng-model="vm.item.target_configuration_version">
+                </md-input-container>
+
+                <md-input-container class="width-80">
+                    <label>Configuration Channel</label>
+                    <input type="text" data-ng-model="vm.item.target_configuration_channel">
+                </md-input-container>
+
+                <md-input-container class="width-80">
+                    <label>Is Package</label>
+                    <input type="checkbox" data-ng-model="vm.item.target_configuration_is_package">
+                </md-input-container>
+
             </div>
 
-        </div>
-        <div>
+            <div data-ng-if="!vm.isFromMarketplace">
+
+                <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
+                    <input type="file" id="configurationFileImport" input-file-directive
+                           read-file="vm.file">
+                </md-input-container>
+                <div class="input-upload-file-container">
+                    <p class="configurationFileImport">Select file</p>
+                    <label for="configurationFileImport" class="md-button md-raised md-primary IFUlabel member-file-upload">
+                        <ng-md-icon icon="file_upload"></ng-md-icon>
+                        <span>BROWSE</span></label>
+                </div>
+
+                <div data-ng-if="vm.error" style="color: red;">
+                    File is incorrect
+                </div>
+
+            </div>
+            <div>
             <div><label for="">Notes</label></div>
             <textarea class="width-100" name="" id="" cols="30" rows="10"
                       data-ng-model="vm.item.notes"></textarea>
+        </div>
         </div>
 
 

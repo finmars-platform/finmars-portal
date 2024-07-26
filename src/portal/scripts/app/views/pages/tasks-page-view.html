@@ -96,6 +96,42 @@
 
                 </div>
 
+                <div>
+<!--                    <div class="task-status-badge status-init">-->
+<!--                        <div class="status-content display-flex flex-i-center" layout="row">-->
+<!--                            <ng-md-icon class="display-flex flex-i-center" size="14" icon="check_circle"></ng-md-icon>-->
+<!--                            <div class="task-status-text">Init</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="task-status-badge status-progress">-->
+<!--                        <div class="status-content display-flex flex-i-center" layout="row">-->
+<!--                            <ng-md-icon class="display-flex flex-i-center" size="14" icon="hourglass_full"></ng-md-icon>-->
+<!--                            <div class="task-status-text">Running</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="task-status-badge status-success">-->
+<!--                        <div class="status-content display-flex flex-i-center" layout="row">-->
+<!--                            <ng-md-icon class="display-flex flex-i-center" size="14" icon="check_circle"></ng-md-icon>-->
+<!--                            <div class="task-status-text">Success</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="task-status-badge status-error">-->
+<!--                        <div class="status-content display-flex flex-i-center" layout="row">-->
+<!--                            <ng-md-icon class="display-flex flex-i-center" size="14" icon="error"></ng-md-icon>-->
+<!--                            <div class="task-status-text">Error</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="task-status-badge status-canceled">-->
+<!--                        <div class="status-content display-flex flex-i-center" layout="row">-->
+<!--                            <ng-md-icon class="display-flex flex-i-center" size="14" icon="do_not_disturb"></ng-md-icon>-->
+<!--                            <div class="task-status-text">Canceled</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
                 <div data-ng-if="vm.readyStatus.data" layout="row">
 
                     <div class="tasks-table-holder">
@@ -120,8 +156,8 @@
                                             <div data-ng-click="vm.selectActiveTask($event, item)">
                                                 <div class="task-status-badge status-init"
                                                      data-ng-if="item.status == 'I' || item.status == 'init'">
-                                                    <div layout="row">
-                                                        <ng-md-icon size="14" icon="check_circle"></ng-md-icon>
+                                                    <div class="status-content display-flex flex-i-center" layout="row">
+                                                        <ng-md-icon class="display-flex flex-i-center" size="14" icon="check_circle"></ng-md-icon>
                                                         <div class="task-status-text">Init</div>
                                                     </div>
 
@@ -129,32 +165,32 @@
 
                                                 <div class="task-status-badge status-progress"
                                                      data-ng-if="item.status == 'P' || item.status == 'progress'">
-                                                    <div layout="row">
-                                                        <ng-md-icon size="14" icon="hourglass_full"></ng-md-icon>
+                                                    <div class="status-content display-flex flex-i-center" layout="row">
+                                                        <ng-md-icon class="display-flex flex-i-center" size="14" icon="hourglass_full"></ng-md-icon>
                                                         <div class="task-status-text">Running</div>
                                                     </div>
                                                 </div>
 
                                                 <div class="task-status-badge status-success"
                                                      data-ng-if="item.status == 'D' || item.status == 'success'">
-                                                    <div class="status-content" layout="row">
-                                                        <ng-md-icon size="14" icon="check_circle"></ng-md-icon>
+                                                    <div class="status-content display-flex flex-i-center" layout="row">
+                                                        <ng-md-icon class="display-flex flex-i-center" size="14" icon="check_circle"></ng-md-icon>
                                                         <div class="task-status-text">Success</div>
                                                     </div>
                                                 </div>
 
                                                 <div class="task-status-badge status-error"
                                                      data-ng-if="item.status == 'E' || item.status == 'error'">
-                                                    <div layout="row">
-                                                        <ng-md-icon size="14" icon="error"></ng-md-icon>
+                                                    <div class="status-content display-flex flex-i-center" layout="row">
+                                                        <ng-md-icon class="display-flex flex-i-center" size="14" icon="error"></ng-md-icon>
                                                         <div class="task-status-text">Error</div>
                                                     </div>
                                                 </div>
 
                                                 <div class="task-status-badge status-canceled"
                                                      data-ng-if="item.status == 'C' || item.status == 'canceled'">
-                                                    <div layout="row">
-                                                        <ng-md-icon size="14" icon="do_not_disturb"></ng-md-icon>
+                                                    <div class="status-content display-flex flex-i-center" layout="row">
+                                                        <ng-md-icon class="display-flex flex-i-center" size="14" icon="do_not_disturb"></ng-md-icon>
                                                         <div class="task-status-text">Canceled</div>
                                                     </div>
                                                 </div>

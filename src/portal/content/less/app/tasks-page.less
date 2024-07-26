@@ -120,7 +120,7 @@
     color: #fff;
     font-size: 14px;
     border-radius: 2px;
-    max-width: 80px;
+    max-width: 84px;
     padding: 4px;
     fill: #fff;
     cursor: pointer;
@@ -184,7 +184,7 @@
   }
 
 
-  .status-success {
+  .status-success, .status-init {
     background: var(--success-color);
     border: 1px solid var(--table-border-color);
     color: var(--secondary-color-static);
@@ -214,6 +214,15 @@
     background: grey;
     border: 1px solid var(--table-border-color);
   }
+
+  .status-init, .status-progress, .status-error, .status-canceled {
+    color: var(--secondary-color-static);
+  }
+
+  .status-progress svg, .status-error svg, .status-canceled svg {
+    fill: var(--secondary-color-static);
+  }
+
 
   .task-status-in-progress {
     font-size: 11px;
