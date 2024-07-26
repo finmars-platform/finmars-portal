@@ -187,7 +187,16 @@
   .status-success {
     background: var(--success-color);
     border: 1px solid var(--table-border-color);
-    color: var(--secondary-color);
+    color: var(--secondary-color-static);
+    ng-md-icon {
+      fill: var(--secondary-color-static);
+      display: flex;
+      align-items: center;
+    }
+    .status-content {
+      display: flex;
+      align-items: center;
+    }
   }
 
   .status-error {

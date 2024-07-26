@@ -205,10 +205,14 @@
 
                 </div>
 
-                <div class="resize-slider"
-                     data-group-column-resizer
-                     ev-data-service="evDataService"
-                     ev-event-service="evEventService"></div>
+                <div data-ng-if="gTableBodyReady">
+                    <div class="resize-slider"
+                         data-group-column-resizer
+                         data-ev-data-service="evDataService"
+                         data-ev-event-service="evEventService"
+                         data-content-wrap-element="contentWrapElement"></div>
+                </div>
+
                 <!-- gDraggableHeadArea used to prevent call of event "dragleave" by children of gcAreaDnD -->
                 <div class="g-table-header-drop gDraggableHeadArea"
                      data-attr-key="{{column.key}}"></div>
@@ -320,9 +324,13 @@
 
                 </div>
 
-                <div class="resize-slider" data-group-column-resizer
-                     ev-data-service="evDataService"
-                     ev-event-service="evEventService"></div>
+                <div data-ng-if="gTableBodyReady">
+                    <div class="resize-slider"
+                         data-group-column-resizer
+                         data-ev-data-service="evDataService"
+                         data-ev-event-service="evEventService"
+                         data-content-wrap-element="contentWrapElement"></div>
+                </div>
 
                 <div class="g-table-header-drop gDraggableHeadArea"
                      data-attr-key="{{column.key}}"></div>

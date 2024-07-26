@@ -81,9 +81,9 @@
                     scope.isRecon = true;
                 }
 
-                scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
-                scope.workareaWrapElem = elem[0].querySelector('.g-workarea-wrap');
-                scope.rootWrapElem = document.querySelector('.g-wrapper.g-root-wrapper'); // we are looking for parent
+                scope.contentWrapElement = elem[0].querySelector('.g-content-wrap');
+                scope.workareaWrapElement = elem[0].querySelector('.g-workarea-wrap');
+                scope.rootWrapElement = document.querySelector('.g-wrapper.g-root-wrapper'); // we are looking for parent
 
 
                 if (scope.isRootEntityViewer) {
@@ -91,22 +91,22 @@
                     // we took a local root wrapper = .g-wrapper
                     // because there is an issue with ng-class, we can't set 'g-root-wrapper' before querying it from DOM
 
-                    scope.rootWrapElem = elem[0].querySelector('.g-wrapper');
+                    scope.rootWrapElement = elem[0].querySelector('.g-wrapper');
                 }
 
                 if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
                     var splitPanelHeight = $(elem).parents(".g-additions").height();
-                    scope.contentWrapElem.style.height = splitPanelHeight + 'px';
+                    scope.contentWrapElement.style.height = splitPanelHeight + 'px';
                 }
 
                 console.log('updateDomElementsReadyStatus. scope', scope);
-                console.log('groupTable.rootWrapElem', scope.rootWrapElem);
-                console.log('groupTable.contentWrapElem', scope.contentWrapElem);
-                console.log('groupTable.workareaWrapElem', scope.workareaWrapElem);
+                console.log('groupTable.rootWrapElem', scope.rootWrapElement);
+                console.log('groupTable.contentWrapElem', scope.contentWrapElement);
+                console.log('groupTable.workareaWrapElem', scope.workareaWrapElement);
 
                 // IMPORTANT, that variable blocks child component rendering
                 // because child components require some elements that render in this component
-                // we need to query from DOM scope.rootWrapElem, scope.contentWrapElem, scope.workareaWrapElem
+                // we need to query from DOM scope.rootWrapElement, scope.contentWrapElement, scope.workareaWrapElement
                 // Here how it looks like in 2 steps:
                 // 1) template create .g-wrapper, .g-content-wrap, .g-workarea-wrap' and we query them here
                 // 2) then we set domElemsAreReady to true, and child components start rendering and we pass queried elements to them
@@ -264,9 +264,38 @@
 
                 };
 
+                const waitForColumnArea = function() {
+
+                    const componentsStatuses = scope.evDataService.getComponentsStatuses();
+
+                    if (componentsStatuses.columnArea) {
+                        scope.columnsScrollableAreaElement = scope.workareaWrapElement.querySelector('.g-scrollable-area');
+                        return;
+                    }
+
+                    const carIndex = scope.evEventService.addEventListener(evEvents.COLUMN_AREA_READY, function () {
+
+                        const componentsStatuses = scope.evDataService.getComponentsStatuses();
+
+                        if (componentsStatuses.columnArea) {
+
+                            scope.columnsScrollableAreaElement = scope.workareaWrapElement.querySelector('.g-scrollable-area');
+
+                            scope.evEventService.removeEventListener(evEvents.COLUMN_AREA_READY, carIndex);
+
+                        }
+
+                    });
+
+                }
+
                 scope.init = function () {
 
                     initEventListeners();
+
+                    if (scope.components.columnArea) {
+                        waitForColumnArea();
+                    }
 
 					if (scope.isReport) applyGroupsFoldingFromLocalStorage();
 
