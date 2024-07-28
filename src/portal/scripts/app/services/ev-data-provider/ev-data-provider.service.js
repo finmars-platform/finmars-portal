@@ -384,10 +384,6 @@
 
             return item
         });
-        console.log(
-            "testing116.rvDataProviderService deserializeObjects" +
-            "final parentGroup", structuredClone(parentGroup)
-        );
     	/*var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
@@ -535,10 +531,6 @@
         parentGroup.results = parentGroup.results.filter(function (item) {
             return item.___type !== 'control';
         });
-        console.log(
-            "testing116.evDataProviderService getGroups parentGroup with children",
-            structuredClone(parentGroup),
-        );
         // TODO: consider moving assigning of properties from bellow to `loadedGroups.map` above
         parentGroup.results = parentGroup.results.map(function (item, index) {
 
@@ -563,14 +555,6 @@
 
             return item;
         });
-        console.log(
-            "testing116.evDataProviderService getGroups data end",
-            structuredClone(entityViewerDataService.getData()),
-        );
-        console.log(
-            "testing116.evDataProviderService getGroups parentGroup end",
-            structuredClone(parentGroup),
-        );
         /* var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
@@ -653,10 +637,6 @@
                 return requestParameters.processedPages.indexOf(page) === -1
 
             });
-            console.log(
-                "testing116.evDataProviderService getObject pagesToRequest",
-                pagesToRequest
-            );
             //if (requestParameters.body.frontend_filter_changed) {
             pagesToRequest.forEach(function (pageToRequest) {
 
@@ -695,10 +675,6 @@
                     }
 
                     // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                    console.log(
-                        "testing116.evDataProviderService getObjects data",
-                        structuredClone(entityViewerDataService.getData()),
-                    );
                     objectsService.getFilteredList(entityType, options).then(function (data) {
                         // TODO: validate `id` of objects
                         // console.log('requestParameters', requestParameters);
@@ -808,10 +784,7 @@
     var getGroups = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
         entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
-        console.log(
-            "testing116.evDataProviderService getGroups beginning data",
-            structuredClone(entityViewerDataService.getData()),
-        );
+
         return new Promise(function (resolve, reject) {
 
             var promises = [];
@@ -938,10 +911,7 @@
 
             Promise.all(promises).then(function () {
 				entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                console.log(
-                    "testing116.evDataProviderService getGroups end data",
-                    structuredClone(entityViewerDataService.getData()),
-                );
+
             	resolve();
             })
 
@@ -1068,10 +1038,7 @@
         entityViewerDataService.resetAllObjects();
 
         let dataList = entityViewerDataService.getDataAsList();
-        console.log(
-            "testing116.evDataProviderService sortGroupType dataList ",
-            structuredClone(dataList),
-        );
+
         let data = entityViewerDataService.getData();
 
         dataList.forEach(item => {
@@ -1138,11 +1105,6 @@
 
         const sortingRequestParameters = getRequestParametersListForSorting(
             groupsWithChildrenToSort, entityViewerDataService
-        );
-
-        console.log(
-            "testing116.evDataProviderService sortGroupType sortingRequestParameters",
-            sortingRequestParameters,
         );
 
         var promises = [];

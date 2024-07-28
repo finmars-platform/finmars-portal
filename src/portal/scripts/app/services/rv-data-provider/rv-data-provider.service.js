@@ -38,14 +38,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         requestParameters.status = 'loading';
 
-        /*var activeColumnSort = evDataService.getActiveColumnSort();
-
-        if (activeColumnSort) {
-            requestParameters.body.ordering = activeColumnSort.key;
-            requestParameters.body.ordering_mode = activeColumnSort.options.sort_settings.mode;
-        }
-
-        evDataService.setRequestParameters(requestParameters);*/
         evDataService.setRequestParameters(requestParameters);
 
         var requestId = evDataService.getCurrentRequestId();
@@ -54,27 +46,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             requestParameters, evDataService
         );
 
-        /*var activeColumnSort = evDataService.getActiveColumnSort();
-
-        if (activeColumnSort) {
-            options.frontend_request_options.ordering = activeColumnSort.key;
-            options.frontend_request_options.ordering_mode = activeColumnSort.options.sort_settings.mode;
-        }*/
-
         return new Promise(function (resolve, reject) {
 
-            /*var entityType = evDataService.getEntityType();
-
-            var options = requestParameters.body;
-            var event = requestParameters.event;
-
-            var page = parseInt(options.page.toString(), 10) - 1;
-            var step = 10000; // TODO fix pagination problem in future
-            var i;*/
-
-            /*var options = requestParameters.body;
-
-            options.groups_types = evDataHelper.getGroupsTypesToLevel(requestParameters.level, evDataService); */
             objectsService.getList(options, evDataService)
                 .then(
                     function (data) {
@@ -87,14 +60,15 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         }
 
                         var parentGroup = evDataService.getData(requestParameters.id);
+                        var origChildrenLength = parentGroup.results.length;
                         // var reportOptions = evDataService.getReportOptions();
                         data.results.map(function (item, index) {
 
                             item.___fromData = true;
                             item.___parentId = parentGroup.___id;
                             item.___type = 'object';
-                            // item.___index = index;
-                            item.___level = parentGroup.___level + 1;
+                            item.___index = origChildrenLength + index;
+                            item.___level = requestParameters.level;
 
                             //# region Create an ___id
                             item.___id = evRvCommonHelper.getId(item);
@@ -167,7 +141,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     evDataService.setRequestParameters(requestParameters);
 
-                    reject();
+                    reject(error);
 
                 })
 
@@ -210,6 +184,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         }
 
                         var parentGroup = evDataService.getData(requestParameters.id);
+                        var origChildrenLength = parentGroup.results.length;
 
                         data.results.map(function (item, index) {
 
@@ -219,8 +194,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                             item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
 
-                            item.___level = parentGroup.___level + 1;
-                            // item.___index = index;
+                            item.___level = requestParameters.level;
+                            item.___index = origChildrenLength + index;
 
                             item.___type = 'group';
 
@@ -229,6 +204,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                             var groupSettings = rvDataHelper.getOrCreateGroupSettings(evDataService, item);
 
+                            //# region `___is_open` property
                             if (groupSettings.hasOwnProperty('is_open')) {
                                 item.___is_open = groupSettings.is_open;
                             }
@@ -253,9 +229,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                             if (entityType === 'transaction-report' && viewContext === 'split_panel') {
                                 item.___is_open = true;
                             }
-
-                            // console.log('parentGroup.___is_open', parentGroup.___is_open)
-                            // console.log('item.___is_open', item.___is_open)
+                            //# endregion `___is_open` property
 
                             const itemPrevIndex = parentGroup.results.findIndex(
                                 chGroup => chGroup.___id === item.___id
@@ -397,9 +371,19 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         e
                     );
 
+                    requestParameters.status = 'error';
+                    requestParameters.error = {
+                        origin: "front-end"
+                    };
+
+                    evDataService.setRequestParameters(requestParameters);
+
                 }
 
-                reject(e);
+                reject({
+                    requestParameters: requestParameters,
+                    error: e,
+                });
 
             });
 
@@ -427,10 +411,13 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             processQueue(evDataService, evEventService)
                 .then(function (processedReqParams) {
                     evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
                     resolve(processedReqParams);
+
                 })
                 .catch(function (e) {
-                   reject(e);
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                    reject(e);
                 });
 
         });
@@ -461,7 +448,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
      *
      * @param error {*} - data about an error from a catch function
      * @param evDataService {entityViewerDataService}
-     * @param requestParametersId {Number}
+     * @param requestParametersId {String}
      * @param processedRequestParameters { [evRvRequestParameters]|[] }
      * @param resolveCb {Function} - callback function to resolve promise of
      * `executeObjectRequest` or `executeRequest`
@@ -672,7 +659,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 promiseQueue.enqueue(
                     function () {
-                        return updateDataStructureByRequestParameters(evDataService, evEventService, requestParameters, false)
+                        return updateDataStructureByRequestParameters(evDataService, evEventService, requestParameters)
                     }
                 )
 
@@ -714,7 +701,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
     };
 
     /**
-     * Helper function for functions `sortObjects` and `sortGroupType`
+     * Helper function for functions `sortObjects` and `sortGroupType`.
+     * Resets parameters for pagination of request parameters that will be used
+     * for sorting.
      * @see sortObjects
      * @see sortGroupType
      *
@@ -736,11 +725,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
             if (isSortingReqParam) {
 
-                /*rParams.pagination.page = 1;
-                rParams.pagination.count = 0;
-                rParams.pagination.downloaded = 0;
-
-                rParams.requestedPages = [1];*/
                 rParams = evDataService.resetRequestParametersPages(rParams);
 
                 evDataService.setRequestParameters(rParams);

@@ -125,6 +125,7 @@
                     rvDataHelper.syncLevelFold(scope.evDataService);
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService, globalDataService);
+
                     flatList.shift(); // remove root group
 
                     flatList = flatList.filter(function (item) {
@@ -474,11 +475,17 @@
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     console.log("gTableBodyComponent DATA_LOAD_END");
-                    console.log(
-                        "testing116.gTableBodyComponent DATA_LOAD_END",
-                        structuredClone(scope.evDataService.getData()),
-                    );
                     // progressBar.style.display = 'none';
+
+                    if ( errorWhileLoadingData() ) {
+
+                        scope.error = true;
+
+                        return setTimeout(function () {
+                            scope.$apply();
+                        }, 0)
+
+                    }
 
                     contentElem.style.opacity = '1';
 
@@ -587,7 +594,8 @@
                 }
 
                 /**
-                 * Check whether error occurred while trying to load root group
+                 * Check whether error occurred while trying to load root group.
+                 * In that case there is no data to show, so show an error message.
                  *
                  * @return {boolean} - true if error occurred
                  */

@@ -618,6 +618,12 @@
 
     };
 
+    /**
+     * Returns deep copy of `data` from entityViewerDataService
+     *
+     * @param evDataService {Object}
+     * @return {{}}
+     */
     var getNewDataInstance = function (evDataService) {
 
         var sourceData = evDataService.getData();
@@ -629,6 +635,7 @@
         Object.keys(sourceData).forEach(function (key) {
 
             result[key] = simpleObjectCopy(sourceData[key]); // performance issue
+            delete result[key].___fromData;
             // result[key] = Object.assign({}, sourceData[key])
 
 
