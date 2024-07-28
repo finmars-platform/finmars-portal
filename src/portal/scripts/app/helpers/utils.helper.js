@@ -121,10 +121,7 @@
     }
 
     function convertToTree(data, rootGroup, optimize) {
-        console.log(
-            "testing116.utilsHelper convertToTree data",
-            structuredClone(data)
-        );
+
         var list = [];
 
         for (const item of rootGroup.results) {
@@ -136,6 +133,8 @@
             }
         }
 
+        /** Index of a group or an object inside the array `results`
+         * of their parent group */
         var indicesInsideParentData = {
             [rootGroup.___id]: null
         };
@@ -193,6 +192,7 @@
         // console.log('convertToTree.extendedKeys', extendedKeys)
         // performance update
 
+        /** Used to find index of a group or an object inside `list` by its ___id  */
         var listMap = {};
         var typeSpecificProps = [
             "___is_selected",
@@ -215,7 +215,7 @@
             }
 
             var listItem = {
-                ___index: indicesInsideParentData[key],
+                ___tree_index: indicesInsideParentData[key],
                 ___id: data[key].___id,
                 ___parentId: data[key].___parentId,
                 ___level: data[key].___level,
@@ -249,9 +249,6 @@
 
         console.time("convertToTree.toTree");
 
-        // console.log("testing116.utilsHelper convertToTree map", structuredClone(map));
-        console.log("testing116.utilsHelper convertToTree indicesInsideParentData", structuredClone(indicesInsideParentData));
-        console.log("testing116.utilsHelper convertToTree list", structuredClone(list));
         var node, roots = [];
         var i;
         for (i = 0; i < list.length; i += 1) {
@@ -272,7 +269,7 @@
                 // verify `___type`, `___subtotal_type`, `___subtotal_subtype`
 
 
-                list[parentListIndex].results.splice(node.___index, 0, node);
+                list[parentListIndex].results.splice(node.___tree_index, 0, node);
 
                 /* TODO: if everything alright delete in release 1.17.0
 
@@ -312,8 +309,7 @@
 
             }
         }
-        console.log("testing116.utilsHelper convertToTree result",
-            structuredClone(roots));
+
         console.timeEnd("convertToTree.toTree");
 
         return roots[0];
@@ -324,13 +320,24 @@
         return flattenTree(tree, 'results');
     }
 
+    /**
+     * Use only when creating flat list. E.g. inside `rvDataHelper.getFlatStructure`.
+     * CAREFUL! Mutates `data`. Even shallow copying is not used
+     * to increase performance.
+     *
+     * @param { [{}] } list
+     * @param {Object} data
+     * @return { [{}] }
+     */
     function fillListWithData(list, data) {
 
         // console.log('fillListWithData', data);
 
         list = list.map(function (item) {
 
-            return data[item.___id]
+            delete data[item.___id].___fromData;
+
+            return data[item.___id];
 
         })
 
