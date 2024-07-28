@@ -1,16 +1,23 @@
 /**
  * Data that is assigned to a property `frontend_request_options`
  * of an object inside a body of a request
- * @typedef {Object} requestParameterBody
- * @property {Array} columns
- * @property {Array} filter_settings
- * @property {undefined} globalTableSearch
- * @property { [Object] } groups_types
- * @property {Number} page
- * @property { [String] } groups_values
- * @property {String} groups_order - values: "asc", "desc"
- * @property {Number} [page_size=40]
+ * @typedef {Object} requestParametersEvent
+ * @property {String} ___id - `___id` of a group. Equals to `requestParameters.id`
+ * @property {String} groupName - `___group_name`
+ * @property {String} groupIdentifier - `___group_identifier`
+ * @property {String|null} parentGroupId - null in case of
  *
+ * @memberof evRvRequestParameters
+ * @private
+ */
+
+/**
+ * Data that is assigned to a property `frontend_request_options`
+ * of an object inside a body of a request
+ * @typedef {Object} requestParametersBody
+ * @property { [String] } groups_values
+ *
+ * @memberof evRvRequestParameters
  * @private
  */
 
@@ -26,18 +33,15 @@
 
 /**
  * Parameters for a request for groups or objects for the entity / report viewer
- * @typedef {Object} evRvRequestParamenters
+ * @namespace evRvRequestParameters
+ * @typedef {Object} evRvRequestParameters
  * @property {String} requestType - values: 'groups', 'objects'
- * @property {undefined|Number} id - Equals to an '___id' of a group. `undefined` if it is report / entity viewer without groups.
- * @property {
- *     {
- *         groupName: null|String,
- *         groupId: null|String,
- *         parentGroupId: null|String,
- *     }
- * } event
- * @property { Number } [groups_level]
- * @property { requestParameterBody } body
+ * @property {String} id - Equals to an '___id' of a group. `undefined` if it is report / entity viewer without groups.
+ *
+ * @property { requestParametersEvent} event
+ *
+ * @property { Number } [level] - a level of children to request
+ * @property { requestParametersBody } body
  * @property { requestParameterPagination } pagination
  * @property { [Number] } requestedPages
  * @property { [] } processedPages
@@ -130,6 +134,7 @@
         obj.next = null;
         obj.previous = null;
         obj.results = [];
+        obj.___fromData = true;
         obj.___group_name = 'root';
         obj.___is_open = true;
         obj.___id = rootHash;
@@ -477,10 +482,14 @@
 
         /**
          * @typedef {Function} getFilters
-         * @return {[Object|void]}
+         * @return { [Object|void]|{backend: [], frontend: []} } - array
+         * for report viewer, object for entity viewer
          * @memberof entityViewerDataService
          */
-        /** @return {[Object|void]} */
+        /**
+         * @return { [Object|void]|{backend: [], frontend: []} } - array
+         * for report viewer, object for entity viewer
+         * */
         function getFilters() {
             return data.filters;
         }
@@ -737,6 +746,10 @@
          */
         /** @param obj {Object} */
         function setData(obj) {
+            if (!obj.___fromData) {
+                throw new Error("Trying to set invalid object inside data.");
+            }
+
             data.data[obj.___id] = obj;
         }
 
@@ -745,9 +758,53 @@
          * @param data {Object}
          * @memberof entityViewerDataService
          */
-        /** @param data {Object} */
-        function setAllData(data) {
-            data.data = data;
+        /** @param dataObj {Object} */
+        function setAllData(dataObj) {
+            data.data = dataObj;
+        }
+
+        /**
+         * Remove an object or a group from `data.data`, from their parent group.
+         * In case of a group, delete its request parameters.
+         *
+         * @typedef {Function} deleteObjectOrGroup
+         * @param {String} id
+         * @memberof entityViewerDataService
+         */
+        /** @param {String} id */
+        function deleteObjectOrGroup(id) {
+
+            var item = data[id];
+
+            if (!item) {
+                return;
+            }
+
+            delete data[id];
+
+            if (item.___parentId) { // not root
+
+                var parent = getData(item.___parentId);
+
+                /*parent.results = parent.results.filter(
+                    child => child.___id !== id
+                )*/
+
+                var itemIndex = parent.results.findIndex(
+                    child => child.___id === id
+                );
+
+                if (itemIndex > 0) {
+                    parent.results.splice(itemIndex, 1);
+                }
+
+                setData(parent);
+
+            }
+
+
+            deleteRequestParameters(id);
+
         }
 
         function setSourceData(obj) {
@@ -888,10 +945,10 @@
         }
 
         /**
-         * @typedef {Function} resetOnlyItems
+         * @typedef {Function} resetAllObjects
          * @memberof entityViewerDataService
          */
-        function resetOnlyItems() {
+        function resetAllObjects() {
 
             const list = getDataAsList()
             let parentsIds = new Set();
@@ -908,7 +965,17 @@
             parentsIds = [...parentsIds];
 
             parentsIds.forEach(id => {
+
+                if ( isRequestParametersExist(id) ) {
+
+                    data.requestParameters[id] = resetRequestParametersPages(
+                        data.requestParameters[id]
+                    );
+
+                }
+
                 data.data[id].results = [];
+
             })
 
         }
@@ -968,7 +1035,7 @@
         /**
          *
          * @typedef { Function } setRequestParameters
-         * @param requestParameters {evRvRequestParamenters}
+         * @param requestParameters {evRvRequestParameters}
          */
         /** @type {setRequestParameters} */
         function setRequestParameters(requestParameters) {
@@ -982,9 +1049,36 @@
          * @param requestParametersId {Number}
          * @memberof entityViewerDataService
          */
-        /** @param requestParametersId {Number} */
+        /** @param requestParametersId {String} */
         function deleteRequestParameters(requestParametersId) {
             delete data.requestParameters[requestParametersId];
+        }
+
+        /**
+         * @typedef {Function} resetRequestParametersPages
+         * @param requestParameters {evRvRequestParameters}
+         * @return {evRvRequestParameters}
+         * @memberof entityViewerDataService
+         */
+        /**
+         * @param requestParameters {evRvRequestParameters}
+         * @return {evRvRequestParameters}
+         * */
+        function resetRequestParametersPages(requestParameters) {
+
+            requestParameters.pagination.page = 1;
+            requestParameters.pagination.count = 0;
+            requestParameters.pagination.downloaded = 0;
+
+            requestParameters.requestedPages = [1];
+
+            // For entity viewer
+            if ( requestParameters.hasOwnProperty("processedPages") ) {
+                requestParameters.processedPages = [];
+            }
+
+            return requestParameters;
+
         }
 
         function resetRequestParameters() { // resets number of row's pages
@@ -1018,19 +1112,93 @@
         }
 
         /**
+         * @typedef {Function} createRequestParameters
+         * @param {String} requestType - values: "group", "object"
+         * @param {String} id
+         * @param {String|null} parentId
+         * @param {Number} level - level of groups or objects to request
+         * @param {String} groupName
+         * @param {String} groupIdentifier
+         * @param {
+         *     {
+         *         groupsValues?: Array,
+         *     }
+         * } [optionalArguments]
+         *
+         * @return { evRvRequestParameters }
+         * @memberof entityViewerDataService
+         */
+        /**
+         *
+         * @param {String} requestType - values: "group", "object"
+         * @param {String} id
+         * @param {String|null} parentId
+         * @param {Number} level - level of groups or objects to request
+         * @param {String} groupName
+         * @param {String} groupIdentifier
+         * @param {
+         *     {
+         *         groupsValues?: Array,
+         *     }
+         * } [optionalArguments]
+         * @return { evRvRequestParameters }
+         */
+        var createRequestParameters = function(
+            requestType,
+            id,
+            parentId,
+            level,
+            groupName,
+            groupIdentifier,
+            {
+                groupsValues
+            }={}
+        ) {
+
+            if ( !["groups", "objects"].includes(requestType) ) {
+                throw `[entityViewerDataService.createRequestParameters] Invalid requestType: ${requestType}`
+            }
+
+            return {
+                requestType: requestType,
+                id: id,
+                level: level,
+                event: {
+                    ___id: id,
+                    parentGroupId: parentId,
+                    groupName: groupName,
+                    groupIdentifier: groupIdentifier
+                },
+                body: {
+                    groups_values: groupsValues || [],
+                },
+                pagination: {
+                    page: 1,
+                    get page_size() {
+                        return getPagination().page_size;
+                    },
+                    count: 1,
+                    downloaded: 0,
+                },
+                requestedPages: [1],
+                processedPages: [],
+            };
+        }
+
+        /**
          * @typedef {Function} getRequestParameters
-         * @param id {Number} - id of requestParameters.
+         * @param id {String} - id of requestParameters.
          * Equals to an `___id` of a group or an object
-         * @return { evRvRequestParamenters }
+         * @return { evRvRequestParameters }
          *
          * @memberof entityViewerDataService
          */
         /**
          *
-         * @param id {Number} - id of requestParameters.
+         * @param id {String} - id of requestParameters.
          * Equals to an `___id` of a group or an object
          *
-         * @return { evRvRequestParamenters }
+         * @return { evRvRequestParameters }
          */
         function getRequestParameters(id) {
 
@@ -1040,26 +1208,29 @@
 
                 var groups = getGroups();
 
-                var defaultParameters = {};
+                var defaultParameters = createRequestParameters(
+                    "groups",
+                    id,
+                    null,
+                    1,
+                    "root",
+                    "root",
+                );
 
-                if (groups.length) {
+                /*if (groups.length) {
 
                     defaultParameters = {
                         requestType: 'groups',
                         id: id,
-                        groups_level: 1, // 0 is for root
+                        level: 1, // 0 is for root
                         event: {
                             ___id: id,
-                            groupName: 'root',  // seems its ___group_name
-                            groupId: 'root', // seems its ___group_identifier
+                            groupName: 'root',  // ___group_name
+                            groupIdentifier: 'root', // ___group_identifier
                             parentGroupId: null
                         },
                         body: {
-                            groups_types: [groups[0]],
-                            page: 1,
                             groups_values: [],
-                            groups_order: 'asc',
-                            page_size: data.pagination.page_size,
                         },
                         pagination: {
                             page: 1,
@@ -1076,18 +1247,14 @@
                     defaultParameters = {
                         requestType: 'objects',
                         id: id,
-                        groups_level: 1, // 0 is for root
+                        level: 1, // 0 is for root
                         event: {
                             groupName: null,
                             groupId: null,
                             parentGroupId: null
                         },
                         body: {
-                            groups_types: [],
-                            page: 1,
                             groups_values: [],
-                            groups_order: 'asc',
-                            page_size: data.pagination.page_size,
                         },
                         pagination: {
                             page: 1,
@@ -1098,6 +1265,14 @@
                         requestedPages: [1],
                         processedPages: []
                     };
+
+                }*/
+
+                if (!groups.length) {
+
+                    defaultParameters.requestType = "objects";
+                    defaultParameters.event.groupName = "";
+                    defaultParameters.event.groupIdentifier = "";
 
                 }
 
@@ -1800,6 +1975,12 @@
             data.ev_options = evOptions;
         }
 
+        /**
+         * @typedef {Function} getEntityViewerOptions
+         * @return {{}}
+         * @memberof entityViewerDataService
+         */
+        /** @return {{}} */
         function getEntityViewerOptions() {
             return data.ev_options;
         }
@@ -2057,12 +2238,12 @@
 
         /**
          * @typedef {Function} enqueueDataRequest
-         * @param request {evRvRequestParamenters}
+         * @param request {evRvRequestParameters}
          * @memberof entityViewerDataService
          */
         /**
          *
-         * @param request {evRvRequestParamenters}
+         * @param request {evRvRequestParameters}
          */
         function enqueueDataRequest(request) {
 
@@ -2073,10 +2254,10 @@
         /**
          *
          * @typedef {Function} dequeueDataRequest
-         * @return {evRvRequestParamenters}
+         * @return {evRvRequestParameters}
          * @memberof entityViewerDataService
          */
-        /** @return {evRvRequestParamenters} */
+        /** @return {evRvRequestParameters} */
         function dequeueDataRequest() {
 
             console.log("rv.queue.dequeueDataRequest", data.requestsQueue[0])
@@ -2118,10 +2299,12 @@
 
         /**
          * @typedef {Object} entityViewerDataService
+         * @property {createRequestParameters} createRequestParameters
          * @property {setRequestParameters} setRequestParameters
          * @property {getRequestParameters} getRequestParameters
          * @property {deleteRequestParameters} deleteRequestParameters
          * @property {getAllRequestParameters} getAllRequestParameters
+         * @property {resetRequestParametersPages} resetRequestParametersPages
          * @property {getCurrentRequestId} getCurrentRequestId
          * @property {getActiveGroupTypeSort} getActiveGroupTypeSort
          *
@@ -2134,7 +2317,11 @@
          * @property {setAllData} setAllData
          * @property {getData} getData
          * @property {getDataAsList} getDataAsList
-         * @property {resetOnlyItems} resetOnlyItems
+         * @property {resetAllObjects} resetAllObjects
+         * @property {deleteObjectOrGroup} deleteObjectOrGroup
+         *
+         *
+         * @property {getEntityViewerOptions} getEntityViewerOptions
          *
          * @property {enqueueDataRequest} enqueueDataRequest
          * @property {dequeueDataRequest} dequeueDataRequest
@@ -2219,7 +2406,7 @@
             getGroup: getGroup,
             setData: setData,
             setAllData: setAllData,
-            resetOnlyItems: resetOnlyItems,
+            resetAllObjects: resetAllObjects,
             resetObjectsOfGroup: resetObjectsOfGroup,
             resetOnlyGroups: resetOnlyGroups,
             resetData: resetData,
@@ -2237,6 +2424,7 @@
             getLastClickInfo: getLastClickInfo,
 
             isRequestParametersExist: isRequestParametersExist,
+            createRequestParameters: createRequestParameters,
             setRequestParameters: setRequestParameters,
             getRequestParameters: getRequestParameters,
             deleteRequestParameters: deleteRequestParameters,
@@ -2245,6 +2433,7 @@
             getActiveRequestParameters: getActiveRequestParameters,
             setActiveRequestParametersId: setActiveRequestParametersId,
 
+            resetRequestParametersPages: resetRequestParametersPages,
             resetRequestParameters: resetRequestParameters,
             getAllRequestParameters: getAllRequestParameters,
 

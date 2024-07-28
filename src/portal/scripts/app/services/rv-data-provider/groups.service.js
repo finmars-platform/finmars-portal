@@ -3,12 +3,9 @@
  * @module ReportViewerDataProviderGroupsService
  */
 import rvSubtotalHelper from "../../helpers/rv-subtotal.service";
-import evRvCommonHelper from "../../helpers/ev-rv-common.helper";
-import queryParamsHelper from "../../helpers/queryParamsHelper";
-import {default as evDataHelper} from "../../helpers/ev-data.helper";
 
-var filterService = require('./filter.service');
-var sortService = require('./sort.service');
+var filterService = require('./filter.service').default;
+var sortService = require('./sort.service').default;
 
 export default function (entityResolverService) {
 
@@ -242,7 +239,7 @@ export default function (entityResolverService) {
 
     }
 
-    var getBackendList = function (options, entityViewerDataService) {
+    /*var getBackendList = function (options, entityViewerDataService) {
 
         console.log("getBackendList options!", options)
 
@@ -315,7 +312,7 @@ export default function (entityResolverService) {
                 .catch( function (error) { reject(error); } );
         });
 
-    }
+    }*/
 
     /**
      * Get list of groups
@@ -333,7 +330,9 @@ export default function (entityResolverService) {
         console.log("getBackendList!", reportOptions)
         var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
 
-        reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
+        if (entityType === "transaction-report") {
+            reportOptions.filters = entityViewerDataService.getFilters();
+        }
 
         reportOptions.page = options.page
         reportOptions.page_size = options.page_size
@@ -343,13 +342,13 @@ export default function (entityResolverService) {
         reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
 
         var groupType = reportOptions.frontend_request_options.groups_types.at(-1);
-
+        // TODO: move sorting outside of groupsService.getList. Pass it here inside an argument `options`.
         if (groupType.options.sort) {
             options.frontend_request_options.groups_order = groupType.options.sort.toLocaleLowerCase();
             options.frontend_request_options.ordering_mode = groupType.options.sort_settings.mode;
         }
 
-        if (!reportOptions.frontend_request_options['filter_settings']) {
+        /*if (!reportOptions.frontend_request_options['filter_settings']) {
 
             var filters = entityViewerDataService.getFilters();
 
@@ -375,9 +374,9 @@ export default function (entityResolverService) {
 
             });
 
-
-
-        }
+        }*/
+        // TODO: apply `filter_settings` to `options` inside to rv-data-provider.service
+        reportOptions.frontend_request_options['filter_settings'] = filterService.getFiltersForBackend(entityViewerDataService);
 
         return new Promise(function (resolve, reject) {
 

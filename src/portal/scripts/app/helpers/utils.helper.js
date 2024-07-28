@@ -122,14 +122,10 @@
 
     function convertToTree(data, rootGroup, optimize) {
         console.log(
-            "testing116.rvDataHelper convertToTree data",
+            "testing116.utilsHelper convertToTree data",
             structuredClone(data)
         );
         var list = [];
-
-        // var dataOrderReference = {}; // Only need for keep tracking on original item index
-        var referenceItem;
-
 
         for (const item of rootGroup.results) {
             if (!data[item.___id]) {
@@ -139,8 +135,6 @@
                 }
             }
         }
-
-        // var originalKeys = Object.keys(data);
 
         var indicesInsideParentData = {
             [rootGroup.___id]: null
@@ -210,11 +204,15 @@
             "___group_identifier",
         ];
 
-        Object.keys(indicesInsideParentData).forEach(function (key, index) {
+        Object.keys(indicesInsideParentData).forEach(function (key) {
 
-            /*if ( !indicesInsideParentData[node.___parentId] && indicesInsideParentData[node.___parentId] !== 0 ) {
-                console.error(`[utilsHelper convertToTree] Unable to identify index for the parent of: `, node);
-            }*/
+            if ( data[key].___id !== rootGroup.___id &&
+                !indicesInsideParentData[data[key].___id] &&
+                indicesInsideParentData[data[key].___id] !== 0 ) {
+
+                console.error(`[utilsHelper convertToTree] Unable to find index inside the parent for the node: `, node);
+
+            }
 
             var listItem = {
                 ___index: indicesInsideParentData[key],
@@ -232,17 +230,18 @@
 
             })
 
-            if ( (data[key].___type === 'group' || data[key].___type === 'placeholder_group') &&
-
-                data[key].hasOwnProperty('results') ) {
+            if (
+                (data[key].___type === 'group' || data[key].___type === 'placeholder_group') &&
+                data[key].hasOwnProperty('results')
+            ) {
 
                 listItem.results = [];
 
             }
 
-            list.push(listItem);
+            listMap[listItem.___id] = list.length;
 
-            listMap[listItem.___id] = index;
+            list.push(listItem);
 
         });
 
@@ -250,11 +249,6 @@
 
         console.time("convertToTree.toTree");
 
-        /*var map = {}, node, roots = [], i;
-        for (i = 0; i < extendedKeys.length; i += 1) {
-            map[list[i].___id] = i;
-            list[i].results = [];
-        }*/
         // console.log("testing116.utilsHelper convertToTree map", structuredClone(map));
         console.log("testing116.utilsHelper convertToTree indicesInsideParentData", structuredClone(indicesInsideParentData));
         console.log("testing116.utilsHelper convertToTree list", structuredClone(list));
@@ -280,7 +274,9 @@
 
                 list[parentListIndex].results.splice(node.___index, 0, node);
 
-                /*if (node.___type === 'group' || node.___type === 'placeholder_group') {
+                /* TODO: if everything alright delete in release 1.17.0
+
+                if (node.___type === 'group' || node.___type === 'placeholder_group') {
                     // insertItemInNode(list, map, node, dataOrderReference)
                     list[map[node.___parentId]].results[node.___index] = node;
                 } else if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'control') {

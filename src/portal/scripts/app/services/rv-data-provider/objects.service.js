@@ -1,9 +1,6 @@
-import evRvCommonHelper from "../../helpers/ev-rv-common.helper";
-import queryParamsHelper from "../../helpers/queryParamsHelper";
-
-var filterService = require('./filter.service');
-var sortService = require('./sort.service');
-var metaHelper = require('../../helpers/meta.helper')
+var filterService = require('./filter.service').default;
+var sortService = require('./sort.service').default;
+var metaHelper = require('../../helpers/meta.helper').default;
 
 export default function (entityResolverService) {
 
@@ -205,7 +202,6 @@ export default function (entityResolverService) {
         var reportOptions = entityViewerDataService.getReportOptions();
         var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
         var activeColumnSort = entityViewerDataService.getActiveColumnSort();
-        console.log("getBackendList!", reportOptions)
 
         if (entityType === "transaction-report") {
             reportOptions.filters = entityViewerDataService.getFilters();
@@ -220,38 +216,14 @@ export default function (entityResolverService) {
 
         console.log('getBackendList.activeColumnSort', activeColumnSort);
 
+        // TODO: move sorting outside of objectsService.getList. Pass it inside an argument `options`.
         if (activeColumnSort && activeColumnSort.options && activeColumnSort.options.sort) {
             reportOptions.frontend_request_options['items_order'] = activeColumnSort.options.sort.toLowerCase();
             reportOptions.frontend_request_options['ordering'] = activeColumnSort.key;
         }
 
-        if (!reportOptions.frontend_request_options['filter_settings']) {
-
-            var filters = entityViewerDataService.getFilters();
-
-            reportOptions.frontend_request_options['filter_settings'] = []
-
-            filters.forEach(function (item) {
-
-                if (evRvCommonHelper.isFilterValid(item)) {
-
-                    var key = queryParamsHelper.entityPluralToSingular(item.key);
-
-                    var filterSettings = {
-                        key: key,
-                        filter_type: item.options.filter_type,
-                        exclude_empty_cells: item.options.exclude_empty_cells,
-                        value_type: item.value_type,
-                        value: item.options.filter_values
-                    };
-
-                    reportOptions.frontend_request_options['filter_settings'].push(filterSettings);
-
-                }
-
-            });
-
-        }
+        // TODO: apply `filter_settings` to `options` inside to rv-data-provider.service
+        reportOptions.frontend_request_options['filter_settings'] = filterService.getFiltersForBackend(entityViewerDataService);
 
 
         const data = await entityResolverService.getListReportItems(entityType, reportOptions)
