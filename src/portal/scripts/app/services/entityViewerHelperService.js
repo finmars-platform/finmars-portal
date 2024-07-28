@@ -962,7 +962,7 @@
             /*var filter_types = requestParameters[key].body.groups_types.map(function (item) {
                 return item.key
             });*/
-            var groupTypes = evDataHelper.getGroupsTypesToLevel(requestParameters[key].groups_level, evDataService);
+            var groupTypes = evDataHelper.getGroupsTypesToLevel(requestParameters[key].level, evDataService);
             var filtersKeys = groupTypes.map(gType => gType.key);
 
             var filter_values = requestParameters[key].body.groups_values;

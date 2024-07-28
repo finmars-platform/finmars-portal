@@ -474,7 +474,10 @@
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     console.log("gTableBodyComponent DATA_LOAD_END");
-
+                    console.log(
+                        "testing116.gTableBodyComponent DATA_LOAD_END",
+                        structuredClone(scope.evDataService.getData()),
+                    );
                     // progressBar.style.display = 'none';
 
                     contentElem.style.opacity = '1';
@@ -592,7 +595,7 @@
 
                     const requestParamsList = scope.evDataService.getRequestParametersAsList();
 
-                    const rootRequestParam = requestParamsList.find(rp => rp.groups_level === 1);
+                    const rootRequestParam = requestParamsList.find(rp => rp.level === 1);
 
                     if (!rootRequestParam) {
                         return false;

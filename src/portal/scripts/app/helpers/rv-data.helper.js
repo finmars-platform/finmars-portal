@@ -1,3 +1,9 @@
+/**
+ * Contains functions that work with `data` from entityViewerDataService
+ * for report viewer
+ *
+ * @module rvDataHelper
+ */
 (function () {
 
     var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
