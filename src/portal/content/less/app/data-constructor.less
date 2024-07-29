@@ -74,8 +74,8 @@ md-optgroup.bold-field-select > label {
   padding-left: 1em;
   padding-right: 1em;
   &.active {
-    background: #f3d074;
-    box-shadow: 0 0 30px rgba(255, 187, 0, .5);
+    background: var(--dialog-content-background-color);
+    box-shadow: 0 0 30px var(--dialog-content-background-color);
     padding-top: 2em;
   }
 
@@ -474,7 +474,7 @@ button.ec-manage-row-btn {
   }
 
   .ec-attr-empty {
-    border: 1px dotted black;
+    border: 1px dotted rgb(var(--table-border-color-rgb));
     padding: 6px 8px;
     button {
       line-height: 1;
