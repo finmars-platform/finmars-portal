@@ -273,6 +273,10 @@
 
 	//endregion PRICING tab
 
+	var runPricing = function(data){
+		return pricingPolicyRepository.runPricing(data);
+	};
+
     module.exports = {
 
         getList: getList,
@@ -288,6 +292,8 @@
 		pricingDefaultValueFieldTypes: pricingDefaultValueFieldTypes,
 		getPpGtTemplateRow: getPpGtTemplateRow,
 		openPricingMultipleParametersDialog: openPricingMultipleParametersDialog,
+
+		runPricing: runPricing
 
     }
 
