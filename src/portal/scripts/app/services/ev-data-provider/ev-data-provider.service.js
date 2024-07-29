@@ -282,12 +282,6 @@
             parentGroup.next = data.next;
             parentGroup.previous = data.previous;
 
-            /*for (i = 0; i < step; i = i + 1) {
-                if (pageAsIndex * step + i < parentGroup.count) {
-                    parentGroup.results[pageAsIndex * step + i] = data.results[i];
-                }
-            }*/
-
         }
         else {
 
@@ -328,7 +322,9 @@
 
         }
 
-        loadedObjects = loadedObjects.map(function (obj) {
+        var origChildrenLength = parentGroup.results.length;
+
+        loadedObjects = loadedObjects.map(function (obj, index) {
 
             obj.___fromData = true;
             obj.___type = 'object';
@@ -341,6 +337,7 @@
             obj.___parentId = parentGroup.___id;
 
             obj.___level = requestParameters.level;
+            obj.___index = origChildrenLength + index;
             obj.___id = evRvCommonHelper.getId(obj);
 
             const itemPrevIndex = parentGroup.results.findIndex(
@@ -494,7 +491,9 @@
             }
         }
 
-        loadedGroups = loadedGroups.map(function (group) {
+        var origChildrenLength = parentGroup.results.length;
+
+        loadedGroups = loadedGroups.map(function (group, index) {
 
             group.___fromData = true;
 
@@ -508,6 +507,7 @@
             group.___items_count = group.___items_count ? group.___items_count : 0;
 
             group.___level = requestParameters.level;
+            group.___index = origChildrenLength + index;
 
             group.___is_open = false;
 
@@ -641,24 +641,6 @@
             pagesToRequest.forEach(function (pageToRequest) {
 
                 promises.push(new Promise(function (resolveLocal) {
-
-                    /*var options = Object.assign({}, requestParameters.body);
-
-					options.filter_settings = options.filter_settings.backend;
-
-                    options.page = pageToRequest;
-                    options.page_size = itemsPerPage;
-                    options.is_enabled = 'any';
-
-                    if (options.groups_types) {
-
-                        options.groups_types = options.groups_types.map(function (groupType) {
-
-                            return groupType.key;
-
-                        })
-
-                    }*/
 
                     // `requestParameters.pagination.page` must be updated before calling `getOptionsForGetList()`
                     requestParameters.pagination.page = pageToRequest;
