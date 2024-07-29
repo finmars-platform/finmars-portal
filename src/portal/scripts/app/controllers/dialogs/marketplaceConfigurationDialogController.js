@@ -139,8 +139,8 @@
                 version: vm.version,
                 is_package: item.is_package
             }).then(function (data) {
-
-                toastNotificationService.info("Configuration is installing");
+                vm.activeTaskId = data?.task_id
+                $scope.$apply();
 
             })
 

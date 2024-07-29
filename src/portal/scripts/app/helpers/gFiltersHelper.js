@@ -27,8 +27,12 @@ export default function () {
 			filter.options.filter_values = []
 		}
 
+		if (!filter.options.hasOwnProperty('enabled')) {
+			filter.options.enabled = true;
+		}
+
 		if (!filter.options.hasOwnProperty('exclude_empty_cells')) {
-			filter.options.exclude_empty_cells = false;
+			filter.options.exclude_empty_cells = true;
 		}
 
 		if (isReport) {

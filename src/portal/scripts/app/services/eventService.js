@@ -1,9 +1,27 @@
+/**
+ * @typedef {Object} entityViewerEventService
+ * @property {addEventListener} addEventListener
+ * @property {removeEventListener} removeEventListener
+ * @property {dispatchEvent} dispatchEvent
+ */
+
 (function () {
 
+    /**
+     *
+     * @return { entityViewerEventService }
+     */
     module.exports = function () {
 
         var events = {};
 
+        /**
+         * @typedef {Function} addEventListener
+         * @param {String} eventName
+         * @param {Function} callback
+         * @return {number}
+         */
+        /** @type {addEventListener} */
         function addEventListener(eventName, callback) {
 
             if (!events.hasOwnProperty(eventName)) {
@@ -16,6 +34,16 @@
 
         }
 
+        /**
+         * @typedef {Function} removeEventListener
+         * @param eventName {String}
+         * @param index {Number}
+         * @memberof entityViewerEventService
+         */
+        /**
+         * @param eventName {String}
+         * @param index {Number}
+         */
         function removeEventListener(eventName, index) {
 
             if (!events.hasOwnProperty(eventName)) {
@@ -34,6 +62,17 @@
 
         }
 
+        /**
+         * @typedef {Function} dispatchEvent
+         * @param {String} eventName
+         * @param {Object} [argumentsObj]
+         * @memberof entityViewerEventService
+         */
+        /**
+         *
+         * @param {String} eventName
+         * @param {Object} [argumentsObj]
+         */
         function dispatchEvent(eventName, argumentsObj) {
             // console.log('events[eventName]', events[eventName]);
 

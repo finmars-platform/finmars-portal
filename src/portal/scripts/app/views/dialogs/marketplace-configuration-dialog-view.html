@@ -145,3 +145,6 @@
         </div>
     </md-dialog-actions>
 </md-dialog>
+<div data-ng-if="vm.activeTaskId" style="position: absolute; top:10px; right: 10px; z-index: 1; background: var(--dialog-background-color);">
+    <task-card task-id="vm.activeTaskId"></task-card>
+</div>

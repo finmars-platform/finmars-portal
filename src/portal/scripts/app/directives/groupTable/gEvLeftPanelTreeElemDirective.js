@@ -26,9 +26,13 @@
 
                 scope.unfoldGroup = function ($event) {
 
-                    scope.item.___is_open = true;
+                    // scope.item.___is_open = true;
 
-                    scope.evDataService.setData(scope.item);
+                    // scope.evDataService.setData(scope.item);
+                    const itemData = scope.evDataService.getData(scope.item.___id);
+                    itemData.___is_open = true;
+
+                    scope.evDataService.setData(itemData);
 
                     const hasUnloadedChildren = scope.item.___items_count > 0 && !scope.item.results.length;
 
@@ -45,28 +49,25 @@
 
                     }
 
+                    // event UPDATE_TABLE dispatched by `evDomManager.requestGroups()`
                     evDomManager.requestGroups(scope.item.___id, scope.item.___parentId, scope.evDataService, scope.evEventService);
 
                     // scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 }
 
                 scope.foldGroup = function ($event) {
-                    scope.item.___is_open = false;
-                    scope.evDataService.setData(scope.item)
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+
+                    const itemData = scope.evDataService.getData(scope.item.___id);
+
+                    itemData.___is_open = false;
+                    scope.evDataService.setData(itemData);
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
                 }
 
                 var deselectChildrenObjs = function (itemId) {
 
-                    /*item.results.forEach(function (child) { // deactivate objects from previously selected group
-
-                        if (child.___type === 'object') {
-                            child.___is_activated = false;
-                        }
-
-                    });
-
-                    return item;*/
                     const children = evRvCommonHelper.getDirectChildren(itemId, scope.evDataService);
 
                     children.forEach(child => {
@@ -94,22 +95,21 @@
 
                     scope.total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
 
-                    if (requestParameters.body.page < scope.total_pages) {
+                    if (requestParameters.pagination.page < scope.total_pages) {
 
-                        if (!requestParameters.body.page) {
-                            requestParameters.body.page = 1;
+                        if (!requestParameters.pagination.page) {
+                            requestParameters.pagination.page = 1;
                             requestParameters.requestedPages = [1]
                         }
 
-                        requestParameters.body.page = requestParameters.body.page + 1;
                         requestParameters.pagination.page = requestParameters.pagination.page + 1;
-                        requestParameters.requestedPages.push(requestParameters.body.page);
+                        requestParameters.requestedPages.push(requestParameters.pagination.page);
 
                         scope.evDataService.setRequestParameters(requestParameters);
                         scope.evDataService.setActiveRequestParametersId(requestParameters.id);
 
 
-                        scope.currentPage = requestParameters.body.page
+                        scope.currentPage = requestParameters.pagination.page
                     }
 
 
@@ -129,26 +129,47 @@
 
                     scope.total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
 
-                    if (requestParameters.body.page < scope.total_pages) {
+                    if (requestParameters.pagination.page < scope.total_pages) {
 
-                        if (!requestParameters.body.page) {
-                            requestParameters.body.page = 1;
+                        if (!requestParameters.pagination.page) {
+                            requestParameters.pagination.page = 1;
                             requestParameters.requestedPages = [1]
                         }
 
                         requestParameters.loadAll = true;
 
-                        requestParameters.body.page = requestParameters.body.page + 1;
                         requestParameters.pagination.page = requestParameters.pagination.page + 1;
-                        requestParameters.requestedPages.push(requestParameters.body.page);
+                        requestParameters.requestedPages.push(requestParameters.pagination.page);
 
                         scope.evDataService.setRequestParameters(requestParameters);
 
-                        scope.currentPage = requestParameters.body.page
-
+                        scope.currentPage = requestParameters.pagination.page
 
                     }
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                }
+
+                /**
+                 * Must be used inside `scope.toggleGroupSelection()`
+                 * @see scope.toggleGroupSelection
+                 *
+                 * @param {Object} group - is the `scope.item`
+                 * @param {Array} selectedGroups
+                 * @return {Array} - selectedGroups without the one that was deselected
+                 */
+                var deselectGroup = function (group, selectedGroups) {
+
+                    if (group.results && group.results.length) {
+
+                        var groupData = scope.evDataService.getData(scope.item.___id);
+                        deselectChildrenObjs(groupData);
+
+                    }
+
+                    return selectedGroups.filter(function (group) {
+                        return group.___id !== scope.item.___id;
+                    });
 
                 }
 
@@ -158,7 +179,10 @@
                         return;
                     }
 
-                    var selectedGroups = [];
+                    var selectedGroups;
+                    var requestObjects = false;
+
+                    var itemData = scope.evDataService.getData(scope.item.___id);
 
                     scope.multiselectIsActive = scope.evDataService.getSelectedGroupsMultiselectState();
 
@@ -181,38 +205,27 @@
 
                         scope.evDataService.setSelectedGroups([]);
 
-                        scope.item.___is_selected = selected; // return ___is_selected status of clicked group after resetting statuses of all groups
+                        itemData.___is_selected = selected; // return ___is_selected status of clicked group after resetting statuses of all groups
 
                     }
 
                     selectedGroups = scope.evDataService.getSelectedGroups();
 
-                    if (scope.item.___is_selected) {
-
-                        if (scope.item.results && scope.item.results.length) {
-
-                            var item = scope.evDataService.getData(scope.item.___id);
-                            deselectChildrenObjs(item);
-
-                            // scope.evDataService.setData(item);
-
-                        }
-
-                        selectedGroups = selectedGroups.filter(function (group) {
-                            return group.___id !== scope.item.___id;
-                        });
+                    if (itemData.___is_selected) {
+                        selectedGroups = deselectGroup(itemData, selectedGroups);
 
                     } else {
 
-                        evDomManager.requestObjects(scope.item.___id, scope.item.___parentId, scope.evDataService, scope.evEventService)
+                        // evDomManager.requestObjects(scope.item.___id, scope.item.___parentId, scope.evDataService, scope.evEventService)
+                        requestObjects = true;
 
-                        selectedGroups.push(scope.item);
+                        selectedGroups.push(itemData);
 
                     }
 
-                    scope.item.___is_selected = !scope.item.___is_selected;
+                    itemData.___is_selected = !itemData.___is_selected;
 
-                    scope.evDataService.setData(scope.item);
+                    scope.evDataService.setData(itemData);
 
                     scope.evDataService.setSelectedGroups(selectedGroups);
 
@@ -223,7 +236,13 @@
                     scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.HIDE_BULK_ACTIONS_AREA);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    if (requestObjects) {
+                        // event UPDATE_TABLE will be dispatched by `evDomManager.requestObjects()`
+                        evDomManager.requestObjects(itemData.___id, itemData.___parentId, scope.evDataService, scope.evEventService)
+
+                    } else {
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    }
 
                 }
 
@@ -288,12 +307,12 @@
 
                         scope.total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
 
-                        if (!requestParameters.body.page) {
-                            requestParameters.body.page = 1;
-                            requestParameters.requestedPages = [1]
+                        if (!requestParameters.pagination.page) {
+                            requestParameters.pagination.page = 1;
+                            requestParameters.requestedPages = [1];
                         }
 
-                        scope.currentPage = requestParameters.body.page
+                        scope.currentPage = requestParameters.pagination.page;
 
                         console.log('scope.requestParameters', scope.requestParameters);
                         console.log('scope.currentPage', scope.currentPage);
