@@ -224,8 +224,13 @@
 
         }
 
+        vm.onShowModulesChange = function () {
+            vm.currentPage = 1;
 
-        vm.getData = function (isModules) {
+            vm.getData();
+        }
+
+        vm.getData = function () {
 
             vm.readyStatus.data = false;
 
@@ -233,10 +238,6 @@
                 delete vm.filters['is_package']
             } else {
                 vm.filters['is_package'] = true
-            }
-
-            if (isModules && !vm.showModules) {
-                vm.currentPage = 1;
             }
 
             return new Promise(function (resolve, reject) {
