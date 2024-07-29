@@ -225,7 +225,7 @@
         }
 
 
-        vm.getData = function () {
+        vm.getData = function (isModules) {
 
             vm.readyStatus.data = false;
 
@@ -235,6 +235,10 @@
                 vm.filters['is_package'] = true
             }
 
+            if (isModules && !vm.showModules) {
+                vm.currentPage = 1;
+            }
+
             return new Promise(function (resolve, reject) {
 
                 marketplaceService.getList({
@@ -242,14 +246,14 @@
                     page: vm.currentPage,
                     filters: vm.filters,
                     sort: {
-                        direction: "DESC",
-                        key: "created"
+                        direction: "ASC",
+                        key: "name"
                     }
                 }).then(function (data) {
 
                     vm.generatePages(data);
 
-                    vm.items = data.results.sort((a, b) => a.name.localeCompare(b.name));
+                    vm.items = data.results;
                     vm.count = data.count;
 
                     vm.items.forEach(function (remoteItem) {
