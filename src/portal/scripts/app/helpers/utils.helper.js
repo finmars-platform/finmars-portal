@@ -124,10 +124,6 @@
 
         var list = [];
 
-        // var dataOrderReference = {}; // Only need for keep tracking on original item index
-        var referenceItem;
-
-
         for (const item of rootGroup.results) {
             if (!data[item.___id]) {
 
@@ -137,42 +133,48 @@
             }
         }
 
-        var originalKeys = Object.keys(data);
+        /** Index of a group or an object inside the array `results`
+         * of their parent group */
+        var indicesInsideParentData = {
+            [rootGroup.___id]: null
+        };
 
-        originalKeys.forEach(function (key) {
+        Object.keys(data).forEach(function (key) {
 
             if (data[key].___type === 'group' || data[key].___type === 'placeholder_group') {
 
-                if (data[key].hasOwnProperty('results')) {
+                if ( data[key].hasOwnProperty('results') ) {
 
-                        data[key].results.forEach(function (item, index) {
+                    data[key].results.forEach(function (item, index) {
 
-                            try { // temporary for debugging plat691
+                        indicesInsideParentData[item.___id] = index;
 
-                                if (!data[item.___id]) {
-                                    data[item.___id] = item;
-                                }
+                        try { // temporary for debugging plat691
 
-                            } catch (e) {
-
-                                console.error(
-                                    `plat691 [utilsHelper.convertToTree] ` +
-                                    "data " +
-                                    JSON.parse(JSON.stringify(data))
-                                );
-                                console.error(
-                                    `plat691 [utilsHelper.convertToTree] ` +
-                                    "key, data[key] " +
-                                    key, JSON.parse(JSON.stringify( data[key] ))
-                                );
-                                console.error(
-                                    `plat691 [utilsHelper.convertToTree] ` +
-                                    `item index ${index}`
-                                );
-                                throw e;
+                            if (!data[item.___id]) {
+                                data[item.___id] = item;
                             }
 
-                        });
+                        } catch (e) {
+
+                            console.error(
+                                `plat691 [utilsHelper.convertToTree] ` +
+                                "data " +
+                                JSON.parse(JSON.stringify(data))
+                            );
+                            console.error(
+                                `plat691 [utilsHelper.convertToTree] ` +
+                                "key, data[key] " +
+                                key, JSON.parse(JSON.stringify( data[key] ))
+                            );
+                            console.error(
+                                `plat691 [utilsHelper.convertToTree] ` +
+                                `item index ${index}`
+                            );
+                            throw e;
+                        }
+
+                    });
 
 
                 }
@@ -183,31 +185,63 @@
 
         console.timeEnd("convertToTree.thirdLoop");
 
-        var extendedKeys = Object.keys(data);
+        // var extendedKeys = Object.keys(data);
 
         console.time("convertToTree.forthLoop");
 
         // console.log('convertToTree.extendedKeys', extendedKeys)
         // performance update
 
+        /** Used to find index of a group or an object inside `list` by its ___id  */
+        var listMap = {};
+        var typeSpecificProps = [
+            "___is_selected",
+            "___subtotal_type",
+            "___items_count",
+            "___group_name",
+            "___is_open",
+            "___has_selected_child",
+            "___group_identifier",
+        ];
 
-        extendedKeys.forEach(function (key, index) {
+        Object.keys(indicesInsideParentData).forEach(function (key) {
 
-            list.push({
-                ___index: index,
+            if ( data[key].___id !== rootGroup.___id &&
+                !indicesInsideParentData[data[key].___id] &&
+                indicesInsideParentData[data[key].___id] !== 0 ) {
+
+                console.error(`[utilsHelper convertToTree] Unable to find index inside the parent for the node: `, node);
+
+            }
+
+            var listItem = {
+                ___tree_index: indicesInsideParentData[key],
                 ___id: data[key].___id,
                 ___parentId: data[key].___parentId,
                 ___level: data[key].___level,
                 ___type: data[key].___type,
-                ___subtotal_type: data[key].___subtotal_type,
-                ___items_count: data[key].___items_count,
-                ___group_name: data[key].___group_name,
-                ___is_open: data[key].___is_open,
-                ___is_selected: data[key].___is_selected,
-                ___has_selected_child: data[key].___has_selected_child,
-                ___group_identifier: data[key].___group_identifier
-            });
+            };
 
+            typeSpecificProps.forEach(function (prop) {
+
+                if ( data[key].hasOwnProperty(prop) ) {
+                    listItem[prop] = data[key][prop]
+                }
+
+            })
+
+            if (
+                (data[key].___type === 'group' || data[key].___type === 'placeholder_group') &&
+                data[key].hasOwnProperty('results')
+            ) {
+
+                listItem.results = [];
+
+            }
+
+            listMap[listItem.___id] = list.length;
+
+            list.push(listItem);
 
         });
 
@@ -215,19 +249,29 @@
 
         console.time("convertToTree.toTree");
 
-        var map = {}, node, roots = [], i;
-        for (i = 0; i < extendedKeys.length; i += 1) {
-            map[list[i].___id] = i;
-            list[i].results = [];
-        }
+        var node, roots = [];
+        var i;
         for (i = 0; i < list.length; i += 1) {
             node = list[i];
 
-            if (node.___parentId !== null) {
+            if (node.___id !== rootGroup.___id) {
 
-                if ( !list[map[node.___parentId]] ) {
-                    console.error(`Parent ${node.___parentId} does not exist`)
+                var parentListIndex = listMap[node.___parentId];
+
+                if ( !parentListIndex && parentListIndex !== 0 ) {
+                    console.error(`[utilsHelper convertToTree] Unable to identify index inside list for the parent of: `, node);
                 }
+
+                if ( !list[parentListIndex] ) {
+                    console.error(`[utilsHelper convertToTree] Can not find parent for: `, node);
+                }
+
+                // verify `___type`, `___subtotal_type`, `___subtotal_subtype`
+
+
+                list[parentListIndex].results.splice(node.___tree_index, 0, node);
+
+                /* TODO: if everything alright delete in release 1.17.0
 
                 if (node.___type === 'group' || node.___type === 'placeholder_group') {
                     // insertItemInNode(list, map, node, dataOrderReference)
@@ -257,7 +301,7 @@
 
                     list[map[node.___parentId]].results.push(node)
 
-                }
+                }*/
 
             } else {
 
@@ -276,13 +320,24 @@
         return flattenTree(tree, 'results');
     }
 
+    /**
+     * Use only when creating flat list. E.g. inside `rvDataHelper.getFlatStructure`.
+     * CAREFUL! Mutates `data`. Even shallow copying is not used
+     * to increase performance.
+     *
+     * @param { [{}] } list
+     * @param {Object} data
+     * @return { [{}] }
+     */
     function fillListWithData(list, data) {
 
         // console.log('fillListWithData', data);
 
         list = list.map(function (item) {
 
-            return data[item.___id]
+            delete data[item.___id].___fromData;
+
+            return data[item.___id];
 
         })
 

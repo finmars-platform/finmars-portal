@@ -227,7 +227,8 @@
 
                     } else {
 
-                        rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        // rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        rvDataProviderService.createDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
                         // Frontend is deprecated since 2023-09-10
                         // if (window.location.href.indexOf('v2=true') !== -1) {
                         //     rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
