@@ -190,7 +190,7 @@
             },
             useFromAboveFilters: [],
             pagination: {
-                page_size: 10
+                page_size: 40
             },
             status: {
                 data: null
