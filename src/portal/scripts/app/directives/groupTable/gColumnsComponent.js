@@ -584,7 +584,6 @@ const utilsHelper = require("../../helpers/utils.helper");
                 };
 
                 const signalSortChange = function (columnOrGroup) {
-
                     /* *
                         * For some reason dispatch evEvents.DATA_LOAD_START from
                         * ev-data-provider.service -> getObjects() do not register.

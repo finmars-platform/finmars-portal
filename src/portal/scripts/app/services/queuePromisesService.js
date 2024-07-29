@@ -43,6 +43,11 @@ export default function () {
 
     };
 
+    /**
+     *
+     * @param promise {Function} - function that returns a promise
+     * @return {Promise<unknown>}
+     */
     const enqueue = function (promise) {
         return new Promise((resolve, reject) => {
             queue.push({
