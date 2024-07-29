@@ -349,7 +349,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
             console.log('handleRetryButtonClick.requestParameters', requestParameters);
 
-            rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService).then(function () {
+            rvDataProviderService.updateDataStructureByRequestParameters(evDataService, evEventService, requestParameters).then(function () {
 
                 evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
@@ -1028,10 +1028,10 @@ export default function (toastNotificationService, transactionTypeService, price
 
         var total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
 
-        if (requestParameters.body.page < total_pages) {
+        if (requestParameters.pagination.page < total_pages) {
 
-            if (!requestParameters.body.page) {
-                requestParameters.body.page = 1;
+            if (!requestParameters.pagination.page) {
+                requestParameters.pagination.page = 1;
                 requestParameters.requestedPages = [1]
             }
 
@@ -1040,9 +1040,8 @@ export default function (toastNotificationService, transactionTypeService, price
 
             if (isLoadMoreButtonPressed) {
 
-                requestParameters.body.page = requestParameters.body.page + 1;
                 requestParameters.pagination.page = requestParameters.pagination.page + 1;
-                requestParameters.requestedPages.push(requestParameters.body.page);
+                requestParameters.requestedPages.push(requestParameters.pagination.page);
 
                 evDataService.setRequestParameters(requestParameters);
                 evDataService.setActiveRequestParametersId(requestParameters.id);

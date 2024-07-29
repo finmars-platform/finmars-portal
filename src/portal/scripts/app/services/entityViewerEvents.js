@@ -1,3 +1,7 @@
+/**
+ * @module entityViewerEvents
+ */
+
 module.exports = {
     'COLUMNS_CHANGE': 'COLUMNS_CHANGE',
     'FILTERS_CHANGE': 'FILTERS_CHANGE',
