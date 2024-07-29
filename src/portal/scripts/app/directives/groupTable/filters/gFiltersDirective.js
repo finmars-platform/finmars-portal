@@ -253,7 +253,7 @@
                  */
                 vm.getChipTextElem = function (filterName, filterValues, filterType) {
 
-                    let filterVal = filterValues || "";
+                    let filterVal = "";
 
                     switch (filterType) {
                         case 'from_to':
@@ -272,8 +272,13 @@
                             const formattedDates = filterValues.map(date => moment(date).format('YYYY-MM-DD'));
                             filterVal = formattedDates.join(', ');
                             break;
+
                         default:
-                            filterVal = filterVal[0]
+                            // at this point `filterValues` likely contains an array
+                            if ( filterValues && (filterValues[0] || filterValues[0] === 0) ) {
+                                filterVal = filterValues[0];
+                            }
+
                     }
 
                     if (typeof filterVal === "string") {
