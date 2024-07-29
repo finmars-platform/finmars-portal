@@ -69,7 +69,7 @@ md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolb
 }
 
 .md-button.md-default-theme:not([disabled]).md-focused, .md-button:not([disabled]).md-focused, .md-button.md-default-theme:not([disabled]):hover, .md-button:not([disabled]):hover {
-  background: var(--state-active-background-color);
+  background: var(--state-active-background-color) !important;
 }
 
 input {
@@ -142,6 +142,9 @@ button {
   &:focus {
     outline: none;
   }
+}
+md-select-menu.md-default-theme md-content md-option[disabled] .md-text, md-select-menu md-content md-option[disabled] .md-text {
+  color: var(--disable-primary);
 }
 
 md-select.md-default-theme[disabled] .md-select-icon, md-select[disabled] .md-select-icon, md-select.md-default-theme[disabled] .md-select-value, md-select[disabled] .md-select-value, md-select.md-default-theme[disabled] .md-select-value.md-select-placeholder, md-select[disabled] .md-select-value.md-select-placeholder {
@@ -684,7 +687,7 @@ md-backdrop.md-select-backdrop {
 }*/
 
 .pickmeup {
-  z-index: 55;
+  z-index: 81; // 81 because of z-index of popup inside grid table
   background: var(--dialog-background-color);
 }
 
@@ -1015,7 +1018,7 @@ md-card.small-width {
 
 .jstree-default .jstree-anchor,
 .jstree-default .jstree-wholerow {
-  background: #fff;
+  background: var(--page-background-color);
 }
 
 .jstree-default .jstree-wholerow-clicked {
@@ -3286,7 +3289,7 @@ md-checkbox.md-indeterminate .md-icon:after {
 .chip-div {
   position: relative;
   height: 28px;
-  background-color: var(--state-active-background-color);
+  background-color: rgba(255, 219, 208, .5);
   border-radius: 16px;
   padding: 6px 12px;
   margin: 0 4px;
@@ -4099,4 +4102,197 @@ md-dialog.entity-editor-dialog {
   height: 100vh;
   max-width: 100vw;
   max-height: inherit;
+}
+
+.md-input-focused label, .md-block label, .layout-column label, md-input-container label {
+  color: var(--secondary-color) !important;
+}
+
+.md-input-focused input {
+  border-color: var(--card-border-color) !important;
+}
+
+.member-file-upload {
+  width: 100px;
+  text-align: end;
+}
+
+
+.context-menu-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0px;
+}
+
+.context-menu-option {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.context-item-name {
+  font-size: 1.2em;
+}
+
+.context-buttons {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 8px;
+}
+
+.context-button {
+  padding: 8px;
+}
+
+.context-subitems {
+  padding-left: 80px;
+}
+
+.context-subitem-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.md-button.md-warn.md-raised {
+  background-color: var(--primary-color);
+}
+
+.jstree-clicked {
+  color: #333333 !important;
+}
+
+.sub-context-menu {
+  padding-left: 80px;
+  .context-menu-block {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+  }
+}
+
+.md-input-focused label, .md-block label, .layout-column label, md-input-container label {
+  color: var(--secondary-color) !important;
+}
+
+.md-input-focused input {
+  border-color: var(--card-border-color) !important;
+}
+
+.member-file-upload {
+  width: 100px;
+  text-align: end;
+}
+
+
+.context-menu-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0px;
+}
+
+.context-menu-option {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.context-item-name {
+  font-size: 1.2em;
+}
+
+.context-buttons {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 8px;
+}
+
+.context-button {
+  padding: 8px;
+}
+
+.context-subitems {
+  padding-left: 80px;
+}
+
+.context-subitem-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.md-button.md-warn.md-raised {
+  background-color: var(--primary-color);
+}
+
+.jstree-clicked {
+  color: #333333 !important;
+}
+
+.sub-context-menu {
+  padding-left: 80px;
+  .context-menu-block {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+  }
+}
+
+
+//styles for toggle button
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 32px;
+  margin-top: 10px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--primary-color);
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 2px;
+  bottom: 4px;
+  background-color: var(--on-primary-color);
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: var(--primary-color); /* Adjust the color to match the image */
+}
+
+input:checked + .slider:before {
+  left: 0px;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

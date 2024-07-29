@@ -104,7 +104,7 @@
 				var filterSettings = {
 					key: filter.key,
 					filter_type: filter.options.filter_type,
-					exclude_empty_cells: filter.options.exclude_empty_cells,
+					exclude_empty_cells: true,
 					value_type: filter.value_type,
 					value: filter.options.filter_values
 				};

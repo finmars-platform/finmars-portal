@@ -44,6 +44,8 @@
                 $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
                 $scope.viewContext = $scope.evDataService.getViewContext();
 
+                const dialogContainersWrap = document.querySelector('.dialog-containers-wrap');
+
                 // filter area always shown inside dashboard
                 if ($scope.viewContext === "dashboard") {
                     $scope.areFiltersOpened = true;
@@ -501,6 +503,7 @@
                         $mdDialog.show({
                             controller: controllerName,
                             templateUrl: templateUrl,
+                            parent: dialogContainersWrap,
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: $scope.attributeDataService,
@@ -515,7 +518,7 @@
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
                             templateUrl: 'views/directives/groupTable/g-modal-view.html',
-                            parent: document.querySelector('.dialog-containers-wrap'),
+                            parent: dialogContainersWrap,
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: $scope.attributeDataService,
