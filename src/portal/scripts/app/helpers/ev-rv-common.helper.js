@@ -116,12 +116,14 @@
 
 	};
 
+
     module.exports = {
         getId: getId,
         getParents: getParents,
         getDirectChildren: getDirectChildren,
 
-		isFilterValid: isFilterValid
+		isFilterValid: isFilterValid,
+
     }
 
 

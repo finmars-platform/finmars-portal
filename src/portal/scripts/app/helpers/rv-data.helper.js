@@ -1,3 +1,9 @@
+/**
+ * Contains functions that work with `data` from entityViewerDataService
+ * for report viewer
+ *
+ * @module rvDataHelper
+ */
 (function () {
 
     var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
@@ -612,6 +618,12 @@
 
     };
 
+    /**
+     * Returns deep copy of `data` from entityViewerDataService
+     *
+     * @param evDataService {Object}
+     * @return {{}}
+     */
     var getNewDataInstance = function (evDataService) {
 
         var sourceData = evDataService.getData();
@@ -623,6 +635,7 @@
         Object.keys(sourceData).forEach(function (key) {
 
             result[key] = simpleObjectCopy(sourceData[key]); // performance issue
+            delete result[key].___fromData;
             // result[key] = Object.assign({}, sourceData[key])
 
 
@@ -776,6 +789,10 @@
             optimize = true
         }
 
+        /*
+        Must be called after all items inserted
+        (insertSubtotalsAndControlsToResults, getLoadControl etc.)
+        */
         var tree = utilsHelper.convertToTree(data, rootGroup, optimize);
         console.log("getFlatStructure.tree", tree)
 
