@@ -285,6 +285,12 @@
 
     };
 
+    /**
+     *
+     * @param level {Number}
+     * @param evDataService {Object}
+     * @return {[{}]|[]} - array of groups from data
+     */
     var getGroupsByLevel = function (level, evDataService) {
 
         var data = evDataService.getData();
@@ -863,19 +869,53 @@
 
 
     };
+
     /**
-     * Returns group type and chain of parent group types based on level
      *
-     * @param {Number} level
+     * @param level {Number}
+     * @param evDataService { entityViewerDataService } -
+     * @return {Object|null} - null if there are no group types or group type
+     * that matches to the level
+     */
+    var getGroupTypeForLevel = function (level, evDataService) {
+
+        if (level < 1) {
+            throw `[evDataHelper.getGroupTypeForLevel] Invalid level of a group: ${level}`;
+        }
+
+        var groupTypes = evDataService.getGroups();
+
+        if (!groupTypes.length) {
+            return null;
+        }
+
+        var groupTypeIndex = level - 1;
+
+        if (groupTypeIndex < 0 || groupTypeIndex > groupTypes.length - 1) {
+            throw `[evDataHelper.getGroupTypeForLevel] The following level does not match any group type: ${level}`;
+        }
+
+        return groupTypes[groupTypeIndex];
+
+    }
+
+    /**
+     * Returns group type and its parent group types based on a level
+     *
+     * @param {Number} level - a level of a group whose group type will be last
      * @param evDataService
-     * @returns {*[]}
+     * @returns {[Object]|[]}
      */
     var getGroupsTypesToLevel = function (level, evDataService) {
+
+        if (level < 1) {
+            throw `[evDataHelper.getGroupsTypesToLevel] Invalid level of a group: ${level}`;
+        }
 
         var groups = evDataService.getGroups();
         var group_types = [];
 
-        var to = level;
+        var to = level - 1;
 
         if (level >= groups.length) {
             to = groups.length - 1;
@@ -1160,6 +1200,7 @@
         isGroupSelected: isGroupSelected,
         isSelected: isSelected,
 
+        getGroupTypeForLevel: getGroupTypeForLevel,
         getGroupsTypesToLevel: getGroupsTypesToLevel,
         getGroupsValuesByItem: getGroupsValuesByItem,
 
