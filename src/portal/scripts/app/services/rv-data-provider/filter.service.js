@@ -1,6 +1,7 @@
 (function () {
 
-    var queryParamsHelper = require('../../helpers/queryParamsHelper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
+    var queryParamsHelper = require('../../helpers/queryParamsHelper').default;
 
     var isActiveAndValid = function (filter) {
 
@@ -587,6 +588,40 @@
 
     };
 
+    /**
+     *
+     * @param evDataService { entityViewerDataService }
+     * @return { [{}]|[] } - array of filters formatted for a backend
+     */
+    const getFiltersForBackend = function (evDataService) {
+
+        const resultFilters = [];
+        const filters = evDataService.getFilters();
+
+        filters.forEach(function (item) {
+
+            if (evRvCommonHelper.isFilterValid(item)) {
+
+                var key = queryParamsHelper.entityPluralToSingular(item.key);
+
+                var filterSettings = {
+                    key: key,
+                    filter_type: item.options.filter_type,
+                    exclude_empty_cells: true,
+                    value_type: item.value_type,
+                    value: item.options.filter_values
+                };
+
+                resultFilters.push(filterSettings);
+
+            }
+
+        });
+
+        return resultFilters;
+
+    }
+
 
     module.exports = {
         filterTableRows: filterTableRows,
@@ -594,7 +629,10 @@
         // filterByRowType: filterByRowType,
         getRegularFilters: getRegularFilters,
         convertTableFiltersToRegularFilters: convertTableFiltersToRegularFilters,
-        filterByGlobalTableSearch: filterByGlobalTableSearch
+        filterByGlobalTableSearch: filterByGlobalTableSearch,
+
+        getFiltersForBackend: getFiltersForBackend,
+
     }
 
 }());

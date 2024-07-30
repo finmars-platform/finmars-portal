@@ -49,10 +49,12 @@
 
                     })
 
-                    if (tree.results.length) {
+                    if (tree.___type === "group" && tree.results.length) {
+
                         tree.results.forEach(function (branch) {
                             scope.recursiveMarkHasSelected(branch, selectedGroups)
                         })
+
                     }
 
                 }
@@ -81,14 +83,6 @@
 
                 }
 
-                /* scope.resize = function () {
-                    var table = document.querySelector('.g-table-section')
-
-                    var leftPanel = document.querySelector('.g-ev-left-panel-holder')
-
-                    leftPanel.style.height = (table.clientHeight - 15) + 'px'; // todo 10?
-                } */
-
                 scope.handleSlider = function () {
 
                     var slider = document.querySelector('.evLeftPanelSlider')
@@ -107,19 +101,17 @@
                         console.log('mousedown event', event)
 
                         var clientX = event.clientX;
-                        var clientY = event.clientY;
 
                         var originalWidth = interfaceLayout.evLeftPanel.width;
 
                         $(window).bind('mousemove', function sliderMouseMove(event) {
 
                             var diffX = event.clientX - clientX;
-                            // var diffY = clientY + event.clientY
+
                             resultWidth = Math.max(230, originalWidth + diffX);
 
                             interfaceLayout.evLeftPanel.width = resultWidth;
-                            // leftPanel.style.width = resultWidth + 'px';
-                            // tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
+
                             leftPanel.style["flex-basis"] = resultWidth + 'px';
                             leftPanel.style.width = resultWidth + 'px';
 
@@ -158,8 +150,7 @@
                         }
 
                         interfaceLayout.evLeftPanel.width = resultWidth;
-                        // leftPanel.style.width = resultWidth + 'px';
-                        // tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
+
                         leftPanel.style["flex-basis"] = resultWidth + 'px';
                         leftPanel.style.width = resultWidth + 'px';
 
@@ -208,39 +199,6 @@
                         }, 0)
 
                     });
-
-                    /* scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
-
-
-                        setTimeout(function () {
-                            scope.tree = scope.generateGroupsTree();
-                            scope.$apply();
-                        }, 0)
-
-                    }); */
-
-                    /* In one of GROUPS_CHANGE listeners, update table called
-                    scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
-
-                        scope.groupTypes = scope.evDataService.getGroups()
-
-                        setTimeout(function () {
-                            scope.tree = scope.generateGroupsTree();
-                            scope.$apply();
-                        }, 0)
-
-                    }); */
-
-                    /* REDRAW_TABLE called after entity viewer's front filters changed
-                    scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
-
-
-                        setTimeout(function () {
-                            scope.tree = scope.generateGroupsTree();
-                            scope.$apply();
-                        }, 0)
-
-                    }); */
 
                 }
 
@@ -316,7 +274,7 @@
                     dragulaInit: function () {
 
                         const items = [
-                            document.querySelector('.evLeftPanelGroupingSection')
+                            document.querySelector('.evLeftPanelGroupingDndArea')
                         ];
 
                         this.dragula = dragula(items, {
@@ -332,30 +290,36 @@
                     }
                 };
 
-                scope.sortGroupType = function ($event, item, $index, type) {
+                scope.sortGroupType = function ($index, type) {
 
+                    let groupTypes = scope.evDataService.getGroups();
+
+                    /*
                     // reset sorting for other groups
                     var i;
                     for (i = 0; i < scope.groupTypes.length; i = i + 1) {
                         if (!scope.groupTypes[i].options) {
                             scope.groupTypes[i].options = {};
                         }
-                    }
+                    }*/
 
-                    var group = scope.groupTypes[$index];
-                    console.log("groups sorting group", group);
-                    item.options.sort = type;
+                    groupTypes = groupTypes.map(gType => {
 
-                    scope.groupTypes.forEach(function (item) {
-
-                        if (group.key === item.key || group.id === item.id) {
-                            item = group
+                        if (!gType.options) {
+                            gType.options = {};
                         }
 
-                    });
+                        return gType;
 
-                    scope.evDataService.setGroups(scope.groupTypes);
+                    })
+
+                    var group = groupTypes[$index];
+                    group.options.sort = type;
+
+                    scope.evDataService.setGroups(groupTypes);
                     scope.evDataService.setActiveGroupTypeSort(group);
+
+                    scope.groupTypes = scope.evDataService.getGroups();
 
                     scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
 
@@ -564,16 +528,6 @@
                     console.log('scope.groupTypes', scope.groupTypes)
 
                     scope.tree = JSON.parse(JSON.stringify(scope.generateGroupsTree()));
-
-                    /* setTimeout(function () {
-
-                        scope.resize();
-
-                    }, 100)
-
-                    window.addEventListener('resize', function () {
-                        scope.resize();
-                    }); */
 
                     scope.handleSlider();
                     scope.drake.init();

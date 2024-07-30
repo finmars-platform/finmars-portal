@@ -1,3 +1,5 @@
+import QueuePromisesService from "../queuePromisesService";
+
 var evEvents = require('../entityViewerEvents').default;
 var evDataHelper = require('../../helpers/ev-data.helper').default;
 var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
@@ -6,42 +8,31 @@ var queryParamsHelper = require('../../helpers/queryParamsHelper').default;
 
 export default function (entityResolverService, pricesCheckerService, reportHelper, groupsService, objectsService) {
 
-    var injectRegularFilters = function (requestParameters, evDataService, evEventService) {
+    /**
+     * Use only inside `getGroups` and `getObjects`
+     * @see getGroups
+     * @see getObjects
+     *
+     * @param requestParameters { evRvRequestParameters }
+     * @param evDataService { entityViewerDataService }
+     * @return { {frontend_request_options: Object, page: Number, page_size: Number} }
+     */
+    var getOptionsForGetList = function (requestParameters, evDataService) {
 
-        // console.log('injectRegularFilters.requestParameters', requestParameters);
+        const options = {
+            frontend_request_options: structuredClone(requestParameters.body),
+        };
 
-        var newRequestParametersBody = Object.assign({}, requestParameters.body);
-        newRequestParametersBody['filter_settings'] = [];
+        options.frontend_request_options.groups_types = evDataHelper.getGroupsTypesToLevel(requestParameters.level, evDataService);
 
-        var filters = evDataService.getFilters();
+        options.page = requestParameters.pagination.page;
+        options.page_size = requestParameters.pagination.page_size;
 
-        filters.forEach(function (item) {
+        return options;
 
-            if (evRvCommonHelper.isFilterValid(item)) {
+    }
 
-                var key = queryParamsHelper.entityPluralToSingular(item.key);
-
-                var filterSettings = {
-                    key: key,
-                    filter_type: item.options.filter_type,
-                    exclude_empty_cells: true,
-                    value_type: item.value_type,
-                    value: item.options.filter_values
-                };
-
-                newRequestParametersBody['filter_settings'].push(filterSettings);
-
-            }
-
-        });
-
-        requestParameters.body = newRequestParametersBody;
-
-        evDataService.setRequestParameters(requestParameters);
-
-    };
-
-    var getObjects = function (requestParameters, evDataService, evEventService) {
+    var getObjects = function (requestParameters, evDataService) {
 
         console.log('getObjects.requestParameters', requestParameters);
 
@@ -49,196 +40,252 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         evDataService.setRequestParameters(requestParameters);
 
+        var requestId = evDataService.getCurrentRequestId();
+
+        var options = getOptionsForGetList(
+            requestParameters, evDataService
+        );
+
         return new Promise(function (resolve, reject) {
 
-            var entityType = evDataService.getEntityType();
+            objectsService.getList(options, evDataService)
+                .then(
+                    function (data) {
 
-            var options = requestParameters.body;
-            var event = requestParameters.event;
+                        if (requestId !== evDataService.getCurrentRequestId()) {
+                            // do not remove
+                            // Seems that this response is too old, just ignore it
+                            // szhitenev 2023-11-16
+                            return reject("ABORTED_BY_CLIENT");
+                        }
 
-            var page = parseInt(options.page.toString(), 10) - 1;
-            var step = 10000; // TODO fix pagination problem in future
-            var i;
+                        var parentGroup = evDataService.getData(requestParameters.id);
+                        var origChildrenLength = parentGroup.results.length;
+                        // var reportOptions = evDataService.getReportOptions();
+                        data.results.map(function (item, index) {
 
-            var requestId = evDataService.getCurrentRequestId();
+                            item.___fromData = true;
+                            item.___parentId = parentGroup.___id;
+                            item.___type = 'object';
+                            item.___index = origChildrenLength + index;
+                            item.___level = requestParameters.level;
 
-            objectsService.getList(options, evDataService).then(function (data) {
+                            //# region Create an ___id
+                            item.___id = evRvCommonHelper.getId(item);
 
-                if (requestId !== evDataService.getCurrentRequestId()) {
-                    // do not remove
-                    // Seems that this response is too old, just ignore it
-                    // szhitenev 2023-11-16
-                    return
-                }
+                            // Some depricated logic,
+                            // right now new object will overwrite old one
+                            // FN-2320 2023-11-12 szhitenev
+                            /*var duplicateObj;
 
-                var parentGroup = evDataService.getData(requestParameters.id);
-                var reportOptions = evDataService.getReportOptions();
+                            try {
+                                // returns an error if a matching object is not found
+                                duplicateObj = evDataService.getObject(item.___id, item.___parentId);
+                            } catch (e) {
+                                console.error(e);
+                            }
 
-                data.results.map(function (item, index) {
+                            if (duplicateObj) {
+                                console.log("Error: duplicate ___id was created for an object: ", item);
+                                var customError = new Error("Object with an ___id " + item.___id + " already exist");
+                                customError.___item_data = item;
 
-                    item.___parentId = parentGroup.___id;
-                    item.___type = 'object';
-                    item.___index = index;
-                    item.___level = parentGroup.___level + 1;
+                                throw customError;
 
-                    //# region Create an ___id
-                    item.___id = evRvCommonHelper.getId(item);
+                            }*/
 
-                    // Some depricated logic,
-                    // right now new object will overwrite old one
-                    // FN-2320 2023-11-12 szhitenev
-                    /*var duplicateObj;
+                            const itemPrevIndex = parentGroup.results.findIndex(
+                                chObject => chObject.___id === item.___id
+                            );
 
-                    try {
-                        // returns an error if a matching object is not found
-                        duplicateObj = evDataService.getObject(item.___id, item.___parentId);
-                    } catch (e) {
-                        console.error(e);
+                            if (itemPrevIndex > -1) { // remove previous version of the group
+                                parentGroup.results.splice(itemPrevIndex, 1);
+                            }
+
+                            parentGroup.results.push(item);
+                            evDataService.setData(item);
+
+                        });
+
+                        requestParameters.status = 'loaded';
+
+                        evDataService.setRequestParameters(requestParameters);
+
+                        resolve(data);
+
+                    },
+                    function (e) {
+
+                        // After integrating AbortSignal, process it in this function
+
+                        console.error(
+                            '[rvDataProviderService.getObjects] objectsService.getList rejected',
+                            e
+                        );
+
+                        requestParameters.status = 'error';
+
+                        evDataService.setRequestParameters(requestParameters);
+
+                        reject({
+                            key: "getListError",
+                            error: e
+                        });
                     }
+                )
+                .catch(function (error) {
 
-                    if (duplicateObj) {
-                        console.log("Error: duplicate ___id was created for an object: ", item);
-                        var customError = new Error("Object with an ___id " + item.___id + " already exist");
-                        customError.___item_data = item;
+                    console.error('getObjects.error', error);
 
-                        throw customError;
+                    requestParameters.status = 'error';
 
-                    }*/
+                    evDataService.setRequestParameters(requestParameters);
 
-                    evDataService.setData(item);
-                });
+                    reject(error);
 
-                requestParameters.status = 'loaded';
-
-                evDataService.setRequestParameters(requestParameters);
-
-                resolve(data);
-
-            }).catch(function (error) {
-
-                console.error('getObjects.error', error);
-
-                requestParameters.status = 'error';
-
-                evDataService.setRequestParameters(requestParameters);
-
-                reject();
-
-            })
+                })
 
         });
 
     };
 
+    /**
+     *
+     * @param requestParameters { evRvRequestParameters }
+     * @param evDataService
+     * @param evEventService
+     * @return {Promise<unknown>}
+     */
     var getGroups = function (requestParameters, evDataService, evEventService) {
 
         console.log('getGroups.requestParameters', requestParameters);
 
         requestParameters.status = 'loading';
 
-        // var groupTypes = evDataService.getGroups();
-        var matchingGTypeIndex = requestParameters.body.groups_types.length - 1;
-        var groupType = requestParameters.body.groups_types[matchingGTypeIndex];
-
-        if (groupType.options.sort) {
-
-            requestParameters.body.groups_order = groupType.options.sort.toLocaleLowerCase();
-            requestParameters.body.ordering_mode = groupType.options.sort_settings.mode;
-
-        }
-
         evDataService.setRequestParameters(requestParameters);
 
         var requestId = evDataService.getCurrentRequestId();
 
+        var options = getOptionsForGetList(
+            requestParameters, evDataService
+        );
+
         return new Promise(function (resolve, reject) {
 
-            var entityType = evDataService.getEntityType();
+            groupsService.getList(options, evDataService)
+                .then(
+                    function (data) {
 
-            var options = requestParameters.body;
-            var event = requestParameters.event;
+                        if (requestId !== evDataService.getCurrentRequestId()) {
+                            // do not remove
+                            // Seems that this response is too old, just ignore it
+                            // szhitenev 2023-11-16
+                            return reject("ABORTED_BY_CLIENT");
+                        }
 
+                        var parentGroup = evDataService.getData(requestParameters.id);
+                        var origChildrenLength = parentGroup.results.length;
 
-            groupsService.getList(options, evDataService).then(function (data) {
+                        data.results.map(function (item, index) {
 
-                if (requestId !== evDataService.getCurrentRequestId()) {
-                    // do not remove
-                    // Seems that this response is too old, just ignore it
-                    // szhitenev 2023-11-16
-                    return
-                }
-
-                var reportOptions = evDataService.getReportOptions();
-
-                // console.log('groupsService.getList.data', data)
-
-                var parentGroup = evDataService.getData(requestParameters.id);
-
-                data.results.map(function (item, index) {
-
-                    item.___parentId = requestParameters.id;
-                    item.___group_name = item.___group_name ? item.___group_name : '-';
-                    item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+                            item.___fromData = true;
+                            item.___parentId = requestParameters.id;
+                            item.___group_name = item.___group_name ? item.___group_name : '-';
+                            item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
 
-                    item.___level = parentGroup.___level + 1;
-                    item.___index = index;
+                            item.___level = requestParameters.level;
+                            item.___index = origChildrenLength + index;
 
-                    item.___type = 'group';
+                            item.___type = 'group';
 
-                    item.___id = evRvCommonHelper.getId(item); // order matters
+                            item.___id = evRvCommonHelper.getId(item);
+                            item.results = [];
 
-                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(evDataService, item);
+                            var groupSettings = rvDataHelper.getOrCreateGroupSettings(evDataService, item);
 
-                    if (groupSettings.hasOwnProperty('is_open')) {
-                        item.___is_open = groupSettings.is_open;
+                            //# region `___is_open` property
+                            if (groupSettings.hasOwnProperty('is_open')) {
+                                item.___is_open = groupSettings.is_open;
+                            }
+
+
+                            if (!parentGroup.___is_open) {
+
+                                item.___is_open = false;
+                                groupSettings.is_open = false;
+
+                                rvDataHelper.setGroupSettings(evDataService, item, groupSettings);
+
+                            }
+
+                            var entityType = evDataService.getEntityType();
+                            var viewContext = evDataService.getViewContext();
+
+                            if (viewContext === 'dashboard') {
+                                item.___is_open = true;
+                            }
+
+                            if (entityType === 'transaction-report' && viewContext === 'split_panel') {
+                                item.___is_open = true;
+                            }
+                            //# endregion `___is_open` property
+
+                            const itemPrevIndex = parentGroup.results.findIndex(
+                                chGroup => chGroup.___id === item.___id
+                            );
+
+                            if (itemPrevIndex > -1) { // remove previous version of the group
+                                parentGroup.results.splice(itemPrevIndex, 1);
+                            }
+
+                            parentGroup.results.push(item);
+                            evDataService.setData(item);
+
+                        });
+
+                        evDataService.setData(parentGroup);
+
+                        requestParameters.status = 'loaded';
+
+                        evDataService.setRequestParameters(requestParameters);
+
+                        resolve(data);
+
+                    },
+                    function (e) {
+                        /*
+                        After integrating AbortSignal,
+                        process rejection caused by it in this function
+                        */
+
+                        console.error(
+                            '[rvDataProviderService.getObjects] objectsService.getList rejected',
+                            e
+                        );
+
+                        requestParameters.status = 'error';
+
+                        evDataService.setRequestParameters(requestParameters);
+
+                        reject({
+                            key: "getListError",
+                            error: e
+                        });
+
                     }
+                )
+                .catch(function (error) {
 
+                    console.error('[rvDataProviderService.getGroups] error', error);
 
-                    if (!parentGroup.___is_open) {
+                    requestParameters.status = 'error';
 
-                        item.___is_open = false;
-                        groupSettings.is_open = false;
+                    evDataService.setRequestParameters(requestParameters);
 
-                        rvDataHelper.setGroupSettings(evDataService, item, groupSettings);
+                    reject(error);
 
-                    }
-
-                    var entityType = evDataService.getEntityType();
-                    var viewContext = evDataService.getViewContext();
-
-                    if (viewContext === 'dashboard') {
-                        item.___is_open = true;
-                    }
-
-                    if (entityType === 'transaction-report' && viewContext === 'split_panel') {
-                        item.___is_open = true;
-                    }
-
-                    // console.log('parentGroup.___is_open', parentGroup.___is_open)
-                    // console.log('item.___is_open', item.___is_open)
-
-                    evDataService.setData(item);
-
-                });
-
-                requestParameters.status = 'loaded';
-
-                evDataService.setRequestParameters(requestParameters);
-
-                resolve(data);
-
-            }).catch(function (error) {
-
-                console.error('getGroups.error', error);
-
-                requestParameters.status = 'error';
-
-                evDataService.setRequestParameters(requestParameters);
-
-                reject(error);
-
-            })
+                })
 
         })
 
@@ -253,75 +300,37 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         var requestParameters;
 
+        var requestType = "objects";
         // var id = evRvCommonHelper.getId(item);
         var id = item.___id;
 
-        var parentLevel = parentRequestParameters.groups_level;
+        var parentLevel = parentRequestParameters.level;
+        var level = parentLevel + 1;
 
 
-        var groups_types = evDataHelper.getGroupsTypesToLevel(parentLevel, evDataService);
+        // var groups_types = evDataHelper.getGroupsTypesToLevel(groupLevel, evDataService);
+        // TODO: use `evDataHelper.getGroupsValues()` or `evDataHelper.getGroupsValuesByItem()` and delete another
         var groups_values = evDataHelper.getGroupsValuesByItem(item, evDataService);
-
 
         groups_values.push(item.___group_identifier);
 
-        if (groups.length && parentLevel < groups.length) {
+        var isGroupLevel = parentLevel < groups.length;
+        // var paginationOpts = evDataService.getPagination();
+        var groupIdentifier = item.___group_identifier ? item.___group_identifier : '-';
 
-            requestParameters = {
-                requestType: 'groups',
-                id: id,
-                groups_level: parentLevel + 1, // 0 is for root
-                event: {
-                    ___id: id,
-                    groupName: item.___group_name,
-                    groupId: item.___group_identifier ? item.___group_identifier : '-',
-                    parentGroupId: item.___parentId
-                },
-                pagination: {
-                    page: 1,
-                    count: 0,
-                    page_size: 40,
-                    downloaded: 0
-                },
-                body: {
-                    groups_types: groups_types,
-                    page: 1,
-                    groups_values: groups_values,
-                    groups_order: 'asc'
-                },
-                requestedPages: [1],
-                processedPages: []
-            };
-
-        } else {
-
-            requestParameters = {
-                requestType: 'objects',
-                id: id,
-                groups_level: parentLevel + 1, // 0 is for root
-                event: {
-                    ___id: id,
-                    groupName: item.___group_name,
-                    groupId: item.___group_identifier ? item.___group_identifier : '-',
-                    parentGroupId: item.___parentId
-                },
-                pagination: {
-                    page: 1,
-                    count: 0,
-                    page_size: 40,
-                    downloaded: 0
-                },
-                body: {
-                    groups_types: groups_types,
-                    page: 1,
-                    groups_values: groups_values,
-                    groups_order: 'asc'
-                },
-                requestedPages: [1],
-                processedPages: []
-            };
-
+        if (groups.length && isGroupLevel) {
+            requestType = "groups";
         }
+
+        requestParameters = evDataService.createRequestParameters(
+            requestType,
+            id,
+            item.___parentId,
+            level,
+            item.___group_name,
+            groupIdentifier,
+            {groupsValues: groups_values}
+        )
 
 
         evDataService.setRequestParameters(requestParameters);
@@ -330,80 +339,259 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    function processQueue(evDataService, evEventService) {
+    /**
+     *
+     * @param evDataService {entityViewerDataService}
+     * @param evEventService {entityViewerEventService}
+     * @param [processedRequestParameters=[]] { [evRvRequestParameters]|[] }
+     *
+     * @return {Promise<[evRvRequestParameters]>} - Resolved when all promises in the queue are resolved.
+     * Rejected if an error or rejection happened while processing a promise from the queue.
+     */
+    function processQueue(evDataService, evEventService, processedRequestParameters=[]) {
 
-        if (evDataService.isRequestsQueueEmpty()) {
-            evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-            return;
-        }
+        return new Promise(function (resolve, reject) {
 
-        var requestParameters = evDataService.dequeueDataRequest();
-        executeRequest(evDataService, evEventService, requestParameters);
+            if (evDataService.isRequestsQueueEmpty()) {
+                return resolve(processedRequestParameters);
+            }
+
+            var requestParameters = evDataService.dequeueDataRequest();
+
+            executeRequest(evDataService, evEventService, requestParameters, processedRequestParameters).then(function (processedReqParamsList) {
+                resolve(processedReqParamsList);
+
+            }).catch(function (e) {
+
+                if ( e !== "ABORTED_BY_CLIENT") {
+
+                    console.error(
+                        `[rvDataProviderService.processQueue] ` +
+                        `${evDataService.getCurrentRequestId()} executeRequest error`,
+                        e
+                    );
+
+                    requestParameters.status = 'error';
+                    requestParameters.error = {
+                        origin: "front-end"
+                    };
+
+                    evDataService.setRequestParameters(requestParameters);
+
+                }
+
+                reject({
+                    requestParameters: requestParameters,
+                    error: e,
+                });
+
+            });
+
+        });
 
     }
 
+    /**
+     *
+     * @param evDataService
+     * @param evEventService
+     * @param requestParameters
+     * @return {Promise<unknown>}
+     */
+    function processQueueDispatchEvents(evDataService, evEventService, requestParameters) {
 
+        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
+
+        // Start the process by enqueuing the first request
+        evDataService.enqueueDataRequest(requestParameters);
+
+        // Begin processing the queue
+        return new Promise(function (resolve, reject) {
+
+            processQueue(evDataService, evEventService)
+                .then(function (processedReqParams) {
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+                    resolve(processedReqParams);
+
+                })
+                .catch(function (e) {
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                    reject(e);
+                });
+
+        });
+
+    }
+
+    /**
+     * Enqueue requests based on the response from previous request
+     *
+     * @param evDataService {Object}
+     * @param evEventService {Object}
+     * @param data {Object} - data from previous response
+     * @param parentRequestParameters {Object}
+     */
     function enqueueNewRequests(evDataService, evEventService, data, parentRequestParameters,) {
         // Based on the response 'data', decide what new requests to enqueue
         // Example: If 'data' contains groups, enqueue a request for each group
         data.results.forEach(item => {
             if (item.___is_open) {
                 var newRequestParameters = createRequestParameters(evDataService, evEventService, item, parentRequestParameters);
+
                 evDataService.enqueueDataRequest(newRequestParameters);
             }
         });
     }
 
-    function executeRequest(evDataService, evEventService, requestParameters) {
-        if (requestParameters.requestType === 'groups') {
+    /**
+     *
+     * @param error {*} - data about an error from a catch function
+     * @param evDataService {entityViewerDataService}
+     * @param requestParametersId {String}
+     * @param processedRequestParameters { [evRvRequestParameters]|[] }
+     * @param resolveCb {Function} - callback function to resolve promise of
+     * `executeObjectRequest` or `executeRequest`
+     * @param rejectCb {Function} - callback function to reject promise of
+     * `executeObjectRequest` or `executeRequest`
+    */
+    function processGetItemsError(error, evDataService, requestParametersId, processedRequestParameters, resolveCb, rejectCb) {
 
-            getGroups(requestParameters, evDataService, evEventService).then(function (data) {
+        if (error === "ABORTED_BY_CLIENT") {
+            rejectCb(error);
+        }
+        else if (error && error.key === "getListError") {
+            /*
+             In case of an error getting data from backend
+             requestParameters updated inside `getObjects()` or `getObjects()`
+            */
+            var reqParams = evDataService.getRequestParameters(requestParametersId);
+            processedRequestParameters.push(reqParams);
 
-                requestParameters.pagination.count = data.count;
-                requestParameters.pagination.downloaded = requestParameters.pagination.downloaded + data.results.length;
-                evDataService.setRequestParameters(requestParameters)
-
-                enqueueNewRequests(evDataService, evEventService, data, requestParameters);
-
-                processQueue(evDataService, evEventService)
-
-            }).catch(function (e) {
-                console.error(
-                    `[rvDataProviderService.executeRequest] ` +
-                    `${evDataService.getCurrentRequestId()} getGroups error`,
-                    e
-                );
-            });
-
-        } else {
-
-            getObjects(requestParameters, evDataService, evEventService).then(function (data) {
-
-                requestParameters.pagination.count = data.count;
-                requestParameters.pagination.downloaded = requestParameters.pagination.downloaded + data.results.length;
-
-                evDataService.setRequestParameters(requestParameters)
-
-                // enqueueNewRequests(evDataService, evEventService, data, requestParameters);
-                processQueue(evDataService, evEventService)
-
-            }).catch(function (e) {
-                console.error(
-                    `[rvDataProviderService.executeRequest] ` +
-                    `${evDataService.getCurrentRequestId()} getObjects error`,
-                    e
-                );
-            });
+            resolveCb(processedRequestParameters);
 
         }
+        else {
+            // Probably a front-end error
+            console.error(
+                `[rvDataProviderService.executeObjectRequest] ` +
+                `${evDataService.getCurrentRequestId()} error`,
+                error
+            );
+
+            rejectCb(error);
+
+        }
+
     }
 
+    /**
+     * Must be called only inside `executeRequest()`.
+     * @see executeRequest
+     *
+     * @param evDataService { entityViewerDataService }
+     * @param evEventService { entityViewerEventService }
+     * @param requestParameters { evRvRequestParameters }
+     * @param processedRequestParameters { [evRvRequestParameters]|[] }
+     *
+     * @returns { Promise<[evRvRequestParameters]> } - array of request parameters for resolved requests
+     */
+    function executeObjectRequest(evDataService, evEventService, requestParameters, processedRequestParameters) {
+
+        return new Promise(function (resolve, reject) {
+
+            getObjects(requestParameters, evDataService, evEventService)
+                .then(function (data) {
+
+                    requestParameters.pagination.count = data.count;
+                    requestParameters.pagination.downloaded = requestParameters.pagination.downloaded + data.results.length;
+
+                    evDataService.setRequestParameters(requestParameters);
+                    processedRequestParameters.push(requestParameters);
+
+                    // enqueueNewRequests(evDataService, evEventService, data, requestParameters);
+                    processQueue(evDataService, evEventService, processedRequestParameters)
+                        .then(function (processedReqParamsList) {
+                            resolve(processedReqParamsList);
+                        }).catch(function (e) {
+                            reject(e);
+                        })
+
+                })
+                .catch(function (e) {
+                    processGetItemsError(e, evDataService, requestParameters.id, processedRequestParameters, resolve, reject);
+                });
+
+        })
+
+    }
+
+    /**
+     * Must be called only inside `processQueue()`.
+     * @see processQueue
+     *
+     * @param evDataService
+     * @param evEventService
+     * @param requestParameters { evRvRequestParameters }
+     * @param processedRequestParameters { [evRvRequestParameters]|[] }
+     *
+     * @return {Promise<[evRvRequestParameters]>} - array of request parameters for resolved requests
+     */
+    function executeRequest(evDataService, evEventService, requestParameters, processedRequestParameters) {
+
+        return new Promise(function (resolve, reject) {
+
+            if (requestParameters.requestType === 'groups') {
+
+                getGroups(requestParameters, evDataService, evEventService)
+                    .then(function (data) {
+
+                        requestParameters.pagination.count = data.count;
+                        requestParameters.pagination.downloaded = requestParameters.pagination.downloaded + data.results.length;
+                        evDataService.setRequestParameters(requestParameters);
+
+                        processedRequestParameters.push(requestParameters);
+
+                        // enqueue requests for the next level of groups or objects
+                        enqueueNewRequests(evDataService, evEventService, data, requestParameters);
+
+                        processQueue(evDataService, evEventService, processedRequestParameters)
+                            .then(function (processedReqParams) {
+                                resolve(processedReqParams);
+                            }).catch(function (e) {
+                                reject(e);
+                            })
+
+                    })
+                    .catch(function (e) {
+                        processGetItemsError(e, evDataService, requestParameters.id, processedRequestParameters, resolve, reject);
+                    });
+
+            }
+            else {
+                // `processQueue()` called inside
+                executeObjectRequest(evDataService, evEventService, requestParameters, processedRequestParameters)
+                    .then(function (processedReqParams) {
+                        resolve(processedReqParams);
+                    })
+                    .catch(function (e) { reject(e); });
+            }
+
+        });
+
+    }
+
+    /**
+     *
+     * @param evDataService {Object}
+     * @param evEventService {Object}
+     * @returns {Promise<void>} - returns a promise of the processQueue function
+     */
     var createDataStructure = function (evDataService, evEventService) {
         console.log('rv.createDataStructure')
 
         evDataService.resetData();
         evDataService.resetRequestParameters();
-
 
         evDataService.incrementCurrentRequestId();
 
@@ -418,173 +606,239 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
 
         evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
-        // Start the process by enqueuing the first request
-        evDataService.enqueueDataRequest(defaultRootRequestParameters);
-
-        // Begin processing the queue
-        processQueue(evDataService, evEventService);
-
+        return processQueueDispatchEvents(evDataService, evEventService, defaultRootRequestParameters);
 
     };
 
     /**
-     * @function
      *
-     * @param requestParameters
-     * @param evDataService
-     * @param evEventService
-     * @returns {Promise<unknown>}
+     * @return {Promise<void>}
      */
-    var updateDataStructureByRequestParameters = function (evDataService, evEventService, requestParameters) {
+    const updateDataStructureByMultipleRequestParameters = async function (evDataService, evEventService, requestParametersList) {
 
-        // console.log('updateDataStructureByRequestParameters.requestParameters', requestParameters);
-
-        injectRegularFilters(requestParameters, evDataService, evEventService);
+        const promiseQueue = new QueuePromisesService();
+        let lastPromise;
 
         evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
-        evDataService.enqueueDataRequest(requestParameters);
+        requestParametersList.forEach((requestParameters, index) => {
 
-        // Begin processing the queue
-        processQueue(evDataService, evEventService);
+            if (index === requestParametersList.length - 1) { // last
+
+                lastPromise = promiseQueue.enqueue(
+                    async function () {
+
+                        let result, error;
+
+                        try {
+
+                            result = await updateDataStructureByRequestParameters(
+                                evDataService,
+                                evEventService,
+                                requestParameters
+                            )
+
+                        } catch (e) {
+                            error = e;
+                        }
+
+                        evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+                        if (error) {
+                            throw error;
+                        }
+
+                        return result;
+
+                    }
+                )
+
+            }
+            else {
+
+                promiseQueue.enqueue(
+                    function () {
+                        return updateDataStructureByRequestParameters(evDataService, evEventService, requestParameters)
+                    }
+                )
+
+            }
+
+        });
+
+        return lastPromise;
+
+    }
+
+    /**
+     * Inject filters into request parameters and load data
+     *
+     * @param requestParameters { evRvRequestParameters } - object with options for a request
+     * @param evDataService {entityViewerDataService}
+     * @param evEventService {entityViewerEventService}
+     * @returns {Promise<unknown>} - Resolved when request parameters in the queue are resolved.
+     * Rejected if an error or rejection happened while processing a request parameter from the queue.
+     */
+    var updateDataStructureByRequestParameters = function (evDataService, evEventService, requestParameters) {
+
+        return processQueueDispatchEvents(evDataService, evEventService, requestParameters);
 
     };
 
+    /**
+     * Update data using active request parameters
+     *
+     * @param evDataService
+     * @param evEventService
+     */
     var updateDataStructure = function (evDataService, evEventService) {
 
         var requestParameters = evDataService.getActiveRequestParameters();
 
-        injectRegularFilters(requestParameters, evDataService, evEventService);
-
-        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
-
-        evDataService.enqueueDataRequest(requestParameters);
-
-        // Begin processing the queue
-        processQueue(evDataService, evEventService);
+        return updateDataStructureByRequestParameters(evDataService, evEventService, requestParameters);
 
     };
 
-    var sortObjects = function (evDataService, evEventService) {
+    /**
+     * Helper function for functions `sortObjects` and `sortGroupType`.
+     * Resets parameters for pagination of request parameters that will be used
+     * for sorting.
+     * @see sortObjects
+     * @see sortGroupType
+     *
+     * @param groupsList { [{}] } - groups whose children will be sorted
+     * @param evDataService { entityViewerDataService }
+     * @return { [evRvRequestParameters] } - request parameters for requesting
+     * sorted objects or groups
+     */
+    const getRequestParametersListForSorting = function (groupsList, evDataService) {
 
-        evDataService.resetOnlyItems();
-
-        var activeColumnSort = evDataService.getActiveColumnSort();
-        var level = evDataService.getGroups().length;
-
-        var levelGroups = evDataHelper.getGroupsByLevel(level, evDataService);
         var requestsParameters = evDataService.getAllRequestParameters();
-        var levelRequestParameters = [];
+        var reqParamsList = [];
 
-        Object.keys(requestsParameters).forEach(function (key) {
+        Object.values(requestsParameters).forEach(function (rParams) {
 
-            levelGroups.forEach(function (group) {
+            const isSortingReqParam = groupsList.some(
+                group => group.___id === rParams.id
+            );
 
-                if (group.___id === requestsParameters[key].id) {
+            if (isSortingReqParam) {
 
-                    //# region apply sorting settings
-                    requestsParameters[key].body.page = 1;
-                    requestsParameters[key].body.ordering = activeColumnSort.key;
-                    requestsParameters[key].body.ordering_mode = activeColumnSort.options.sort_settings.mode
+                rParams = evDataService.resetRequestParametersPages(rParams);
 
-                    evDataService.setRequestParameters(requestsParameters[key]);
-                    //# endregion Apply sorting settings
+                evDataService.setRequestParameters(rParams);
+                reqParamsList.push(rParams);
 
-                    levelRequestParameters.push(requestsParameters[key]);
+            }
 
-                }
-
-            });
-
-        });
-
-        var promises = [];
-
-        levelRequestParameters.forEach(function (requestParameters) { // get sorted content
-            promises.push(getObjects(requestParameters, evDataService, evEventService));
-        });
-
-        Promise.all(promises).then(function () {
-            evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-
-        }).catch(function() {
-            evEventService.dispatchEvent(evEvents.DATA_LOAD_ERROR);
         })
 
+        return reqParamsList;
+
+    }
+
+    const sortObjects = function (evDataService, evEventService) {
+
+        // var activeColumnSort = evDataService.getActiveColumnSort();
+        const level = evDataService.getGroups().length;
+
+        const levelGroups = evDataHelper.getGroupsByLevel(level, evDataService);
+
+        evDataService.resetAllObjects();
+
+        const requestParametersList = getRequestParametersListForSorting(levelGroups, evDataService);
+
+        return updateDataStructureByMultipleRequestParameters(evDataService, evEventService, requestParametersList);
+
     };
 
-    var sortGroupType = function (evDataService, evEventService, signalDataLoadEnd) {
+    /**
+     *
+     * @param evDataService {entityViewerDataService}
+     * @param evEventService {entityViewerEventService}
+     * @param signalDataLoadEnd
+     */
+    const sortGroupType = function (evDataService, evEventService, signalDataLoadEnd) {
 
-        var activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
+        /** @type {Object} */
+        const activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
 
         console.log('sortGroupType.activeGroupTypeSort', activeGroupTypeSort);
 
-        var groupsTypes = evDataService.getGroups();
+        const groupsTypes = evDataService.getGroups();
 
-        // level of a parent used, because sorting applies to an array inside 'result' property of a parent
-        var parentLevel = groupsTypes.findIndex(function (item) {
+        // Level of a parent used, because sorting applies to an array inside 'result' property of a parent.
+        // Because 0 level reserved for the root group, an index of a group equals to a level of its parent group.
+        let parentLevel = groupsTypes.findIndex(function (item) {
             return item.key === activeGroupTypeSort.key;
         });
 
-        if (parentLevel === -1) {
+        if (parentLevel < 0) {
             parentLevel = 0;
         }
-
-
         console.log('sortGroupType.parentLevel', parentLevel);
 
-        var groups = evDataHelper.getGroupsByLevel(parentLevel, evDataService);
+        let groupsWithChildrenToSort = [];
 
-        var requestsParameters = evDataService.getAllRequestParameters();
-        var requestParametersForUnfoldedGroups = [];
+        //# region Reset groups and objects affected by sorting and assemble `groupsWithChildrenToSort`
+        evDataService.resetAllObjects();
 
-        Object.keys(requestsParameters).forEach(function (key) {
+        let dataList = evDataService.getDataAsList();
+        let data = evDataService.getData();
 
-            groups.forEach(function (group) {
+        dataList.forEach(item => {
 
-                if (group.___id === requestsParameters[key].id) {
-                    requestParametersForUnfoldedGroups.push(requestsParameters[key]);
+            if (item.___type === 'group') {
+
+                if (item.___level === parentLevel) {
+
+                    data[item.___id].results = [];
+                    groupsWithChildrenToSort.push(item);
+
+                } else if (item.___level > parentLevel) {
+
+                    delete data[item.___id];
+                    evDataService.deleteRequestParameters(item.___id);
+
                 }
 
-            })
-
-        });
-
-        // should be called after requestParametersForUnfoldedGroups assembled
-        evDataService.resetOnlyGroups();
-
-        groups.forEach(function (group) {
-
-            group.results = [];
-
-            evDataService.setData(group)
-
-        });
-
-        var promises = [];
-
-        requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
-            promises.push(getGroups(requestParameters, evDataService, evEventService));
-        });
-
-        return new Promise(function (resolve, reject) {
-
-            Promise.all(promises).then(function (data) {
-
-                if (signalDataLoadEnd !== false) {
-                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-                }
-
-                resolve();
-
-            }).catch(function (error) {
-                evEventService.dispatchEvent(evEvents.DATA_LOAD_ERROR);
-                reject(error)
-            })
+            }
 
         })
+
+        evDataService.setAllData(data);
+        //# endregion
+
+        // const groupsWithChildrenToSort = evDataHelper.getGroupsByLevel(parentLevel, evDataService);
+
+        /*const allReqParams = evDataService.getAllRequestParameters();
+        const requestParametersForUnfoldedGroups = [];
+
+        Object.values(allReqParams).forEach(rParams => {
+
+            const isReqParamForUnfolded = groupsWithChildrenToSort.some(
+                group => group.___id === rParams.id
+            );
+
+            if (isReqParamForUnfolded) {
+
+                rParams.pagination.page = 1;
+                rParams.pagination.count = 0;
+                rParams.pagination.downloaded = 0;
+
+                rParams.requestedPages = [1];
+
+                evDataService.setRequestParameters(rParams);
+                requestParametersForUnfoldedGroups.push(rParams);
+
+            }
+
+        });*/
+
+        const sortingRequestParametersList = getRequestParametersListForSorting(groupsWithChildrenToSort, evDataService);
+
+        return updateDataStructureByMultipleRequestParameters(evDataService, evEventService, sortingRequestParametersList);
 
     };
 
@@ -600,3 +854,4 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
     }
 
 }
+

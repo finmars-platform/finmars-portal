@@ -224,6 +224,11 @@
 
         }
 
+        vm.onShowModulesChange = function () {
+            vm.currentPage = 1;
+
+            vm.getData();
+        }
 
         vm.getData = function () {
 
@@ -242,14 +247,14 @@
                     page: vm.currentPage,
                     filters: vm.filters,
                     sort: {
-                        direction: "DESC",
-                        key: "created"
+                        direction: "ASC",
+                        key: "name"
                     }
                 }).then(function (data) {
 
                     vm.generatePages(data);
 
-                    vm.items = data.results.sort((a, b) => a.name.localeCompare(b.name));
+                    vm.items = data.results;
                     vm.count = data.count;
 
                     vm.items.forEach(function (remoteItem) {

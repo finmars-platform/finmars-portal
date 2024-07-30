@@ -959,16 +959,18 @@
 
             var match = true;
 
-            var filter_types = requestParameters[key].body.groups_types.map(function (item) {
+            /*var filter_types = requestParameters[key].body.groups_types.map(function (item) {
                 return item.key
-            });
+            });*/
+            var groupTypes = evDataHelper.getGroupsTypesToLevel(requestParameters[key].level, evDataService);
+            var filtersKeys = groupTypes.map(gType => gType.key);
 
             var filter_values = requestParameters[key].body.groups_values;
 
             if (filter_values.length) {
                 filter_values.forEach(function (value, index) {
 
-                    if (resultItem[filter_types[index]] !== value) {
+                    if (resultItem[filtersKeys[index]] !== value) {
                         match = false
                     }
 
@@ -976,7 +978,7 @@
                 })
             } else {
 
-                if (filter_types.length) {
+                if (filtersKeys.length) {
                     match = false;
                 }
             }
