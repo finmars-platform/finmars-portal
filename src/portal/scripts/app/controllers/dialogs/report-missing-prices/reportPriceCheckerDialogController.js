@@ -8,6 +8,8 @@
     var convertReportHelper = require('../../../helpers/converters/convertReportHelper');
     var downloadFileHelper = require('../../../helpers/downloadFileHelper');
     var scheduleService = require('../../../services/scheduleService').default;
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService').default;
+    var pricingPolicyService = require('../../../services/pricingPolicyService').default;
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -151,38 +153,53 @@
         }
 
         vm.runPricing = function () {
+            var reportOptions = vm.evDataService.getReportOptions();
+            var entityType = vm.evDataService.getEntityType();
 
-            vm.schedules.forEach(function (item) {
+            data = {
 
-                var reportOptions = vm.evDataService.getReportOptions();
-                var entityType = vm.evDataService.getEntityType();
+            }
 
-                item.data = {
-
-                }
-
-                if (entityType === 'balance-report') {
-                    item.data.report_date = reportOptions.report_date
-                }
-
-                if (entityType === 'pl-report') {
-                    item.data.pl_first_date = reportOptions.pl_first_date
-                }
-
-                if (entityType === 'transaction-report') {
-                    item.data.begin_date = reportOptions.begin_date
-                    item.data.end_date = reportOptions.end_date
-                }
-
-                scheduleService.runSchedule(item.id, item).then(function (data) {
-
-                    toastNotificationService.success('Success. Schedule ' + item.name + ' is being processed');
+            if (entityType === 'balance-report') {
+                data.date_from = vm.data.missingPricesData.report_date
+                data.date_to = vm.data.missingPricesData.report_date
+                data.pricing_policies = [reportOptions.pricing_policy]
+                data.currencies = [vm.data.missingPricesData.report_currency_object.user_code]
+                data.instruments = Array.from(
+                  new Set(
+                    vm.data.missingPricesData.item_instruments.map((missingData) => {
+                        return missingData.user_code;
+                    })
+                  )
+                );
+            }
 
 
-                })
+            if (entityType === 'pl-report') {
+                data.date_from = vm.data.missingPricesData.pl_first_date
+                data.date_to = vm.data.missingPricesData.report_date
+                data.pricing_policies = [reportOptions.pricing_policy]
+                data.currencies = [vm.data.missingPricesData.report_currency_object.user_code]
+                data.instruments = Array.from(
+                  new Set(
+                    vm.data.missingPricesData.item_instruments.map((missingData) => {
+                        return missingData.user_code;
+                    })
+                  )
+                );
+            }
 
+            // if (entityType === 'transaction-report') {
+            //     data.begin_date = reportOptions.begin_date
+            //     data.end_date = reportOptions.end_date
+            // }
+
+            pricingPolicyService.runPricing(data).then(function (data) {
+                // TODO pricingv2 task card to show progress
+                toastNotificationService.success('Success. Schedule  is being processed');
+
+                $mdDialog.hide({status: 'disagree'});
             })
-
         }
 
         vm.schedules = [];

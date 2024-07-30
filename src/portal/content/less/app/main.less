@@ -1458,7 +1458,7 @@ table.centered tbody tr td {
 }
 
 thead {
-  border-bottom: 1px solid #d0d0d0;
+  border-bottom: 1px solid var(--table-border-color);
 }
 
 td,
@@ -2300,6 +2300,7 @@ md-menu-content md-menu.md-menu {
 md-input-container .md-placeholder,
 md-input-container label:not(.md-no-float):not(.md-container-ignore) {
   pointer-events: initial;
+  color: var(--secondary-color);
 }
 
 #side-menu-Report li:last-child {
@@ -3289,7 +3290,7 @@ md-checkbox.md-indeterminate .md-icon:after {
 .chip-div {
   position: relative;
   height: 28px;
-  background-color: rgba(255, 219, 208, .5);
+  background-color: var(--state-active-background-color);
   border-radius: 16px;
   padding: 6px 12px;
   margin: 0 4px;
@@ -4296,4 +4297,7 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+.pricing-policy .custom-input-container {
+  margin-top: 20px;
 }
