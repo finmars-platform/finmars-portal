@@ -1,6 +1,7 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+const {default: pricingPolicyService} = require("../../services/pricingPolicyService");
 (function () {
 
     'use strict';
@@ -30,7 +31,7 @@
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
-    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, globalDataService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entity, data) {
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, globalDataService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entity, data, configurationService) {
 
         var vm = this;
 
@@ -40,9 +41,12 @@
 
         vm.processing = false;
 
-        vm.readyStatus = {permissions: true, entity: false, layout: false};
+        vm.readyStatus = {permissions: true, entity: false, layout: false, content: false};
 
         vm.entity = {$_isValid: true};
+
+        vm.entity.pricing_policies = vm.entity.pricing_policies ?? [];
+
         vm.dataConstructorLayout = {};
         vm.dcLayoutHasBeenFixed = false;
 
@@ -493,6 +497,78 @@
             });
 
         };
+
+        vm.getPricingPolicies = function () {
+
+            pricingPolicyService.getList().then(function (data) {
+
+                vm.pricingPolicies = data.results;
+                $scope.$apply();
+
+            })
+
+        }
+
+        vm.getPricingConfigurations = function () {
+
+            configurationService.getList({
+                pageSize: 1000,
+                page: 1,
+                filters: {
+                    type: "pricing"
+                },
+                sort: {
+                    direction: "DESC",
+                    key: "created"
+                }
+            }).then(function (data) {
+
+                vm.pricingModules = data.results;
+
+                vm.pricingModules = vm.pricingModules.map(function (item) {
+                    item._id = item.id;
+                    item.id = item.configuration_code;
+                    return item
+                })
+                vm.readyStatus.content = true;
+
+                $scope.$apply();
+
+            });
+
+        }
+
+        vm.configurePricingModule = function ($event, item) {
+
+            // TODO force entity save before open module configuration iframe dialog
+
+            $mdDialog.show({
+                controller: 'ConfigurePricingModuleDialogController as vm',
+                templateUrl: 'views/dialogs/configure-pricing-module-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        instrument: vm.entity,
+                        instrumentPricingPolicy: item
+                    }
+                }
+            })
+
+        }
+
+        vm.addPricingPolicy = function () {
+            vm.entity.pricing_policies.push({})
+        }
+
+        vm.removePricingPolicy = function (item) {
+            vm.entity.pricing_policies = vm.entity.pricing_policies.filter(function(policy) {
+                return policy !== item;
+            });
+        }
 
         vm.getCurrentMasterUser = function () {
 
@@ -1612,21 +1688,21 @@
 
         };
 
-        vm.getEntityPricingSchemes = function () {
-
-            if (vm.entityType === 'currency') {
-                vm.getCurrencyPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument-type') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-        };
+        // vm.getEntityPricingSchemes = function () {
+        //
+        //     if (vm.entityType === 'currency') {
+        //         vm.getCurrencyPricingSchemes();
+        //     }
+        //
+        //     if (vm.entityType === 'instrument') {
+        //         vm.getInstrumentPricingSchemes();
+        //     }
+        //
+        //     if (vm.entityType === 'instrument-type') {
+        //         vm.getInstrumentPricingSchemes();
+        //     }
+        //
+        // };
 
         // Instrument tab Exposure start
 
@@ -1896,7 +1972,8 @@
             /* if (vm.fixedAreaPopup.fields) {
 				originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
 			} */
-
+            vm.getPricingConfigurations();
+            vm.getPricingPolicies();
         };
 
         vm.init();

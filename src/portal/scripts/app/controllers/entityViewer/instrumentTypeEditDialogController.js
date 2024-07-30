@@ -1080,23 +1080,23 @@
 
         };
 
-        vm.getInstrumentPricingSchemes = function () {
-
-            instrumentPricingSchemeService.getList().then(function (data) {
-
-                vm.instrumentPricingSchemes = data.results;
-
-                vm.generateInstrumentAttributeTypesByValueTypes();
-
-                console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.getEntityPricingSchemes = vm.getInstrumentPricingSchemes;
+        // vm.getInstrumentPricingSchemes = function () {
+        //
+        //     instrumentPricingSchemeService.getList().then(function (data) {
+        //
+        //         vm.instrumentPricingSchemes = data.results;
+        //
+        //         vm.generateInstrumentAttributeTypesByValueTypes();
+        //
+        //         console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
+        //
+        //         $scope.$apply();
+        //
+        //     })
+        //
+        // };
+        //
+        // vm.getEntityPricingSchemes = vm.getInstrumentPricingSchemes;
 
         /* vm.pricingSchemeChange = function ($event, item) {
 
