@@ -160,8 +160,8 @@
                     page: vm.currentPage,
                     filters: vm.filters,
                     sort: {
-                        direction: "DESC",
-                        key: "created"
+                        direction: "ASC",
+                        key: "name"
                     }
                 }).then(function (data) {
 

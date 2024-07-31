@@ -44,6 +44,8 @@
                 $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
                 $scope.viewContext = $scope.evDataService.getViewContext();
 
+                const dialogContainersWrap = document.querySelector('.dialog-containers-wrap');
+
                 // filter area always shown inside dashboard
                 if ($scope.viewContext === "dashboard") {
                     $scope.areFiltersOpened = true;
@@ -251,7 +253,7 @@
                  */
                 vm.getChipTextElem = function (filterName, filterValues, filterType) {
 
-                    let filterVal = filterValues || "";
+                    let filterVal = "";
 
                     switch (filterType) {
                         case 'from_to':
@@ -270,8 +272,13 @@
                             const formattedDates = filterValues.map(date => moment(date).format('YYYY-MM-DD'));
                             filterVal = formattedDates.join(', ');
                             break;
+
                         default:
-                            filterVal = filterVal[0]
+                            // at this point `filterValues` likely contains an array
+                            if ( filterValues && (filterValues[0] || filterValues[0] === 0) ) {
+                                filterVal = filterValues[0];
+                            }
+
                     }
 
                     if (typeof filterVal === "string") {
@@ -501,6 +508,7 @@
                         $mdDialog.show({
                             controller: controllerName,
                             templateUrl: templateUrl,
+                            parent: dialogContainersWrap,
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: $scope.attributeDataService,
@@ -515,7 +523,7 @@
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
                             templateUrl: 'views/directives/groupTable/g-modal-view.html',
-                            parent: document.querySelector('.dialog-containers-wrap'),
+                            parent: dialogContainersWrap,
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: $scope.attributeDataService,

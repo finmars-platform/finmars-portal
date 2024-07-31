@@ -101,31 +101,40 @@
             <tr data-ng-repeat="item in vm.entity.pricing_policies">
 
                 <td>
-                    <dropdown-select label="Pricing Policy"
-                                     model="item.pricing_policy_id"
-                                     placeholder-text="Pricing Policy"
-                                     menu-options="vm.pricingPolicies"
-                                     small-options="{tooltipText: 'Pricing Policy'}"
-                                     style="width: 306px">
+                    <div data-ng-if="!vm.pricingPolicies?.length">
+                        <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                            <progress-circular diameter="50"></progress-circular>
+                        </div>
+                    </div>
+                    <dropdown-select
+                        class="pricing-policy"
+                        label="Pricing Policy"
+                        model="item.pricing_policy_id"
+                        placeholder-text="Pricing Policy"
+                        menu-options="vm.pricingPolicies"
+                        small-options="{tooltipText: 'Pricing Policy'}"
+                        style="width: 306px; margin-top: 24px">
                     </dropdown-select>
                 </td>
 
                 <td>
-                    <dropdown-select label="Pricing Module"
-                                     model="item.target_pricing_schema_user_code"
-                                     placeholder-text="Pricing Module"
-                                     menu-options="vm.pricingModules"
-                                     small-options="{tooltipText: 'Pricing Module'}"
-                                     style="width: 306px">
+                    <dropdown-select
+                        class="pricing-policy"
+                        label="Pricing Module"
+                        model="item.target_pricing_schema_user_code"
+                        placeholder-text="Pricing Module"
+                        menu-options="vm.pricingModules"
+                        small-options="{tooltipText: 'Pricing Module'}"
+                        style="width: 306px">
                     </dropdown-select>
                 </td>
 
                 <td>
-                    <md-button class="outline-button" data-ng-click="vm.configurePricingModule($event, item)">Configure</md-button>
+                    <md-button data-ng-if="item.target_pricing_schema_user_code" class="outline-button m-t-20" data-ng-click="vm.configurePricingModule($event, item)">Configure</md-button>
                 </td>
 
                 <td>
-                    <md-button class="outline-button" data-ng-click="vm.removePricingPolicy(item)">&times;</md-button>
+                    <md-button class="outline-button m-t-20" data-ng-click="vm.removePricingPolicy(item)">&times;</md-button>
                 </td>
 
             </tr>

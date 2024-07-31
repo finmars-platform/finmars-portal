@@ -23,7 +23,8 @@
     overflow-y: auto;
     height: 100%;
     box-sizing: border-box;
-
+    background: var(--page-background-color);
+    border-left: 1px solid var(--table-border-color);
   }
 
   .alert-sidenav-wrapper-inner-alerts {
@@ -260,11 +261,14 @@ button.md-raised.alert-card-footer-send.md-button {
   right: 8px;
   top: 8px;
   cursor: pointer;
+  height: 24px;
 
   opacity: .2;
 
   &:hover {
     opacity: .5;
+    background: var(--state-active-background-color);
+    border-radius: 50%;
   }
 }
 

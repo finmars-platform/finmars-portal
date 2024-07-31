@@ -1,4 +1,4 @@
-<div>
+<div class="context-menu-container">
 
     <div layout="row" layout-align="space-between center" class="context-menu-option">
         <div>
@@ -31,7 +31,7 @@
                 </ng-md-icon>
             </md-button>
 
-            <md-button class="md-raised "
+            <md-button class="md-raised close-context-menu-btn"
                        data-ng-click="deleteOption($event, parent, index)">
                 <ng-md-icon icon="close">
                     <md-tooltip md-direction="bottom">Delete Option</md-tooltip>
@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <div style="padding-left: 80px; background: #f1f1f1;">
+    <div class="sub-context-menu">
         <div data-ng-repeat="subitem in item.items | orderBy: 'order' track by $index"
              layout="row">
 

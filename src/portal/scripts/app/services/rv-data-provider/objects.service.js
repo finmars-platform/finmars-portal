@@ -1,9 +1,6 @@
-import evRvCommonHelper from "../../helpers/ev-rv-common.helper";
-import queryParamsHelper from "../../helpers/queryParamsHelper";
-
-var filterService = require('./filter.service');
-var sortService = require('./sort.service');
-var metaHelper = require('../../helpers/meta.helper')
+var filterService = require('./filter.service').default;
+var sortService = require('./sort.service').default;
+var metaHelper = require('../../helpers/meta.helper').default;
 
 export default function (entityResolverService) {
 
@@ -11,7 +8,7 @@ export default function (entityResolverService) {
     var items = [];
     var itemsCache = [];
 
-    var getBackendList = function (options, entityViewerDataService) {
+    /*var getBackendList = function (options, entityViewerDataService) {
 
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
@@ -24,7 +21,7 @@ export default function (entityResolverService) {
         reportOptions.page = options.page
         reportOptions.page_size = options.page_size
 
-        reportOptions.frontend_request_options = options
+        reportOptions.frontend_request_options = options.frontend_request_options;
         reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns() // used for subtotals in groups, but not used for rows
         reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
 
@@ -88,7 +85,7 @@ export default function (entityResolverService) {
 
         })
 
-    }
+    }*/
 
     var getFrontendList = function (entityType, options, entityViewerDataService) {
 
@@ -199,15 +196,53 @@ export default function (entityResolverService) {
 
     }
 
-    var getList = function (options, entityViewerDataService) {
+    const getList = async function (options, entityViewerDataService) {
 
-        return getBackendList(options, entityViewerDataService)
-        // Frontend is deprecated since 2023-09-10
-        // if (window.location.href.indexOf('v2=true') !== -1) {
-        //     return getBackendList(entityType, options, entityViewerDataService)
-        // } else {
-        //     return getFrontendList(entityType, options, entityViewerDataService)
-        // }
+        var entityType = entityViewerDataService.getEntityType();
+        var reportOptions = entityViewerDataService.getReportOptions();
+        var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
+        var activeColumnSort = entityViewerDataService.getActiveColumnSort();
+
+        if (entityType === "transaction-report") {
+            reportOptions.filters = entityViewerDataService.getFilters();
+        }
+
+        reportOptions.page = options.page
+        reportOptions.page_size = options.page_size
+
+        reportOptions.frontend_request_options = options.frontend_request_options;
+        reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns() // used for subtotals in groups, but not used for rows
+        reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
+
+        console.log('getBackendList.activeColumnSort', activeColumnSort);
+
+        // TODO: move sorting outside of objectsService.getList. Pass it inside an argument `options`.
+        if (activeColumnSort && activeColumnSort.options && activeColumnSort.options.sort) {
+            reportOptions.frontend_request_options['items_order'] = activeColumnSort.options.sort.toLowerCase();
+            reportOptions.frontend_request_options['ordering'] = activeColumnSort.key;
+        }
+
+        // TODO: apply `filter_settings` to `options` inside to rv-data-provider.service
+        reportOptions.frontend_request_options['filter_settings'] = filterService.getFiltersForBackend(entityViewerDataService);
+
+
+        const data = await entityResolverService.getListReportItems(entityType, reportOptions)
+
+        console.log('getListReportGroups.data.items', data.items);
+
+        // Important, needs to optimize backend reports
+        // report_instance_id is saved report, so no need to recalcualte whole report
+        // just regroup or refilter
+        // to reset report_instance_id, just set it to null
+        reportOptions.report_instance_id = data.report_instance_id;
+        entityViewerDataService.setReportOptions(reportOptions);
+
+        return {
+            next: null,
+            previous: null,
+            count: data.count,
+            results: JSON.parse(JSON.stringify(data.items))
+        };
 
     };
 

@@ -1,0 +1,79 @@
+<div data-ng-controller="PricingManagePageController as vm">
+
+    <h1 class="p-l-24">Run pricing</h1>
+    <div data-ng-if="vm.readyStatus.content" class="flex-column m-t-20">
+
+        <div class="p-l-12">
+
+            <md-input-container>
+                <label for="">Date from</label>
+                <zh-date-picker data-date-value="vm.item.date_from"></zh-date-picker>
+            </md-input-container>
+
+            <md-input-container>
+                <label for="">Date to</label>
+                <zh-date-picker data-date-value="vm.item.date_to"></zh-date-picker>
+            </md-input-container>
+
+        </div>
+
+        <div class="flex-row m-b-13 p-l-24">
+
+            <div class="p-r-8 m-t-20" style="width: 260px">
+                <two-fields-multiselect
+                        data-title="Pricing Policy"
+                        data-items="vm.pricingPolicies"
+                        data-model="vm.pricingModel"
+                        data-selected-items-indication="chips"
+                        class="table-filter-input-container"
+                >
+                </two-fields-multiselect>
+            </div>
+
+            <div class="p-r-8 m-t-20" style="width: 260px">
+                <two-fields-multiselect
+                        data-title="Instruments"
+                        data-items="vm.instruments"
+                        data-model="vm.instrumentModel"
+                        data-selected-items-indication="chips"
+                        class="table-filter-input-container"
+                >
+                </two-fields-multiselect>
+            </div>
+
+            <div class="p-r-8 m-t-20" style="width: 260px">
+                <two-fields-multiselect
+                        data-title="Currencies"
+                        data-items="vm.currencies"
+                        data-model="vm.currencyModel"
+                        data-selected-items-indication="chips"
+                        class="table-filter-input-container"
+                >
+                </two-fields-multiselect>
+            </div>
+            <div class="p-r-8 m-t-20" style="width: 260px">
+                <two-fields-multiselect
+                        data-title="Instrument Types"
+                        data-items="vm.instrumentTypes"
+                        data-model="vm.instrumentTypeModel"
+                        data-selected-items-indication="chips"
+                        class="table-filter-input-container"
+                >
+                </two-fields-multiselect>
+            </div>
+            <div class="p-0 m-20" style="width: 260px">
+                <md-input-container class="p-0">
+                    <md-button
+                            class="md-raised {{vm.item.date_from && vm.item.date_to && (vm.pricingModel.length ||
+                             vm.instrumentModel.length || vm.currencyModel.length) ? '' : 'disabled-btn'}}"
+                            ng-click="vm.runPricing()"
+                            style="margin-right:20px;"
+                    >
+                        Run Pricing
+                    </md-button>
+                </md-input-container>
+            </div>
+        </div>
+    </div>
+
+</div>
