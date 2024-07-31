@@ -9,6 +9,10 @@
         return explorerRepository.listFiles(path);
     };
 
+    var searchFiles = function (path) {
+        return explorerRepository.searchFiles(path);
+    };
+
     var viewFile = function (path) {
         return explorerRepository.viewFile(path);
     }
@@ -41,6 +45,7 @@
 
     module.exports = {
         listFiles: listFiles,
+        searchFiles: searchFiles,
         viewFile: viewFile,
         deleteFile: deleteFile,
         createFolder: createFolder,
