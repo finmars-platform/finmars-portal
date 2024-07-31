@@ -6,9 +6,9 @@
     'use strict';
 
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService').default;
-    var pricingPolicyService = require('../../../services/pricingPolicyService').default;;
-
-
+    var pricingPolicyService = require('../../../services/pricingPolicyService').default;
+    var scheduleService = require('../../../services/scheduleService').default;
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService').default;
     module.exports = function runPricingCurrencyDialogController($scope, $mdDialog, globalDataService, data) {
 
         console.log('runPricingCurrencyDialogController.data', data);
@@ -35,38 +35,27 @@
         };
 
         vm.agree = function () {
+            vm.dataObject = {};
+            vm.dataObject.date_from =  vm.item.price_date_from;
+            vm.dataObject.date_to = vm.item.price_date_to;
+            vm.dataObject.pricing_policies = []
+            vm.dataObject.instruments = []
 
-            vm.item.configuration_code = configurationCode;
-            vm.item.type = 3; // Created By Currency
-            vm.item.name = 'name_placeholder'; // backend will reassign this property
-            vm.item.user_code = 'user_code_placeholder'; // backend will reassign this property
-
-            vm.item.currency_filters = vm.currency.user_code;
-
-            vm.item.pricing_policy_filters = [];
+            vm.dataObject.currencies = [vm.currency.user_code];
 
             Object.keys(vm.pricingPolicyFilter).forEach(function (key) {
 
                 if (vm.pricingPolicyFilter[key]) {
-                    vm.item.pricing_policy_filters.push(key);
+                    vm.dataObject.pricing_policies.push(key);
                 }
 
             });
 
-            if (vm.item.pricing_policy_filters) {
-                vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.join(',');
-            }
+            pricingPolicyService.runPricing(vm.dataObject).then(function (data) {
+                // TODO pricingv2 task card to show progress
+                toastNotificationService.success('Success. Schedule  is being processed');
 
-
-            pricingProcedureService.create(vm.item).then(function (data) {
-
-                vm.item = data;
-
-                pricingProcedureService.runProcedure(data.id, data).then(function (data) {
-
-                    $mdDialog.hide({status: 'agree'});
-
-                });
+                $mdDialog.hide({status: 'disagree'});
             })
 
         };

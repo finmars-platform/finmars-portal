@@ -545,6 +545,12 @@
                 controller: 'PricingPolicyPageController as vm'
             })
 
+              .state('app.portal.pricing-manage', {
+                  url: '/pricing-manage',
+                  templateUrl: 'views/pages/pricing-manage-page-view.html',
+                  controller: 'PricingManagePageController as vm'
+              })
+
             .state('app.portal.portfolio-bundle', {
                 url: '/portfolio-bundle',
                 templateUrl: 'views/pages/portfolio-bundle-page-view.html',

@@ -13,17 +13,15 @@
         <md-input-container style="width: 160px; padding-top: 6px;">
 
             <md-checkbox ng-model="vm.showModules"
-                         ng-change="vm.getData()"
+                         ng-change="vm.onShowModulesChange()"
                          aria-label="">
                 Show Modules
             </md-checkbox>
 
         </md-input-container>
 
-        <div data-ng-if="vm.activeTaskId" style="position: absolute; right: 10px; z-index: 1; background: #fff;">
-
-            <task-card task-id="vm.activeTaskId"></task-card>
-
+        <div data-ng-if="vm.activeTaskId" class="popup-marketplace">
+            <task-card style="margin: 0;" task-id="vm.activeTaskId"></task-card>
         </div>
 
 

@@ -15,7 +15,7 @@ const gridTableEvents = require('../../../services/gridTableEvents');
 
 const metaHelper = require('../../../helpers/meta.helper');
 
-export default function InstrmentTypePricingTabController($scope, $mdDialog) {
+export default function InstrmentTypePricingTabController($scope, $mdDialog, configurationService) {
 
 	var vm = this;
 
@@ -446,13 +446,133 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 
 	};
 
-	const getInstrumentPricingSchemes = instrumentPricingSchemeService.getList().then(data => {
-		vm.instrumentPricingSchemes =  data.results;
-	});
+	// const getInstrumentPricingSchemes = instrumentPricingSchemeService.getList().then(data => {
+	// 	vm.instrumentPricingSchemes =  data.results;
+	// });
 
 	const getInstrAttributeTypes = attributeTypeService.getList('instrument', {pageSize: 1000}).then(function (data) {
 		vm.instrAttributeTypes = data.results;
 	});
+
+	vm.runPricingInstrument = function ($event) {
+
+		$mdDialog.show({
+			controller: 'RunPricingInstrumentDialogController as vm',
+			templateUrl: 'views/dialogs/pricing/run-pricing-instrument-dialog-view.html',
+			parent: document.querySelector('.dialog-containers-wrap'),
+			targetEvent: $event,
+			clickOutsideToClose: false,
+			preserveScope: true,
+			autoWrap: true,
+			skipHide: true,
+			multiple: true,
+			locals: {
+				data: {
+					instrument: vm.entity,
+					contextData: vm.contextData
+				}
+
+			}
+		}).then(function (res) {
+
+			if (res.status === 'agree') {
+
+				$mdDialog.show({
+					controller: 'InfoDialogController as vm',
+					templateUrl: 'views/info-dialog-view.html',
+					parent: document.querySelector('.dialog-containers-wrap'),
+					targetEvent: $event,
+					clickOutsideToClose: false,
+					preserveScope: true,
+					autoWrap: true,
+					skipHide: true,
+					multiple: true,
+					locals: {
+						info: {
+							title: 'Success',
+							description: "Pricing Process Initialized."
+						}
+					}
+				});
+
+			}
+
+		});
+
+	};
+
+	vm.addPricingPolicy = function () {
+		vm.entity.pricing_policies.push({})
+	}
+
+	vm.removePricingPolicy = function (item) {
+		vm.entity.pricing_policies = vm.entity.pricing_policies.filter(function(policy) {
+			return policy !== item;
+		});
+	}
+
+	vm.getPricingConfigurations = function () {
+
+		configurationService.getList({
+			pageSize: 1000,
+			page: 1,
+			filters: {
+				type: "pricing"
+			},
+			sort: {
+				direction: "DESC",
+				key: "created"
+			}
+		}).then(function (data) {
+
+			vm.pricingModules = data.results;
+
+			vm.pricingModules = vm.pricingModules.map(function (item) {
+				item._id = item.id;
+				item.id = item.configuration_code;
+				return item
+			})
+
+			vm.readyStatus = true;
+
+			$scope.$apply();
+
+		});
+
+	}
+
+	vm.getPricingPolicies = function () {
+
+		pricingPolicyService.getList().then(function (data) {
+
+			vm.pricingPolicies = data.results;
+			$scope.$apply();
+
+		})
+
+	}
+
+	vm.configurePricingModule = function ($event, item) {
+
+		// TODO force entity save before open module configuration iframe dialog
+
+		$mdDialog.show({
+			controller: 'ConfigurePricingModuleDialogController as vm',
+			templateUrl: 'views/dialogs/configure-pricing-module-dialog-view.html',
+			parent: document.querySelector('.dialog-containers-wrap'),
+			targetEvent: $event,
+			preserveScope: true,
+			autoWrap: true,
+			skipHide: true,
+			locals: {
+				data: {
+					instrument: vm.entity,
+					instrumentPricingPolicy: item
+				}
+			}
+		})
+
+	}
 
 	vm.init = function () {
 
@@ -460,8 +580,10 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 		vm.pricingPoliciesGridTableEventService = new GridTableEventService();
 
 		initGridTableEvents(); */
-
-		Promise.all([getInstrumentPricingSchemes, getInstrAttributeTypes]).then(function () {
+		vm.getPricingConfigurations();
+		vm.getPricingPolicies();
+		// Promise.all([getInstrumentPricingSchemes, getInstrAttributeTypes]).then(function () {
+		Promise.all([getInstrAttributeTypes]).then(function () {
 
 			generateInstrumentAttributeTypesByValueTypes();
 			/* formatDataForPricingGridTable();
