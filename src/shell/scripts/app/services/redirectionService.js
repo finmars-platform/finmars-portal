@@ -24,6 +24,7 @@ export default function () {
 			'app.profile': profileUrl,
 			'app.portal.reports.performance-report': urlBeginning + '/v/reports/performance',
 			'app.portal.settings.users-groups': urlBeginning + '/v/settings/permissions',
+			'app.portal.settings.vault-record': urlBeginning + '/v/settings/vault-record',
 		};
 
 
