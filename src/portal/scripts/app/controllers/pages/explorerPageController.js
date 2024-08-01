@@ -47,14 +47,41 @@
             vm.propertyName = propertyName;
         };
 
-        vm.breadcrumbsNavigation = function ($index) {
+        $scope.$watch(function() {
+            return vm.searchTerm;
+        }, function(newVal, oldVal) {
+            if (newVal !== oldVal) {
+                vm.search(newVal);
+            }
+        });
 
-            if ($index === -1) {
-                vm.currentPath = []
-            } else {
-                vm.currentPath = vm.currentPath.filter(function (item, index) {
-                    return index <= $index;
+        vm.search = async function(query) {
+
+            if (query.length) {
+                explorerService.searchFiles(query).then(function (data) {
+
+                    vm.items = data.results;
+                    vm.processing = false;
+
+                    $scope.$apply();
                 })
+            } else {
+                vm.listFiles();
+            }
+        };
+
+        vm.breadcrumbsNavigation = function ($index, filePath = null) {
+
+            if (filePath) {
+                vm.currentPath = filePath.split('/')
+            } else {
+                if ($index === -1) {
+                    vm.currentPath = []
+                } else {
+                    vm.currentPath = vm.currentPath.filter(function (item, index) {
+                        return index <= $index;
+                    })
+                }
             }
 
             // vm.listFiles();
@@ -158,27 +185,10 @@
 
             vm.currentPath.push(item.name);
 
-            window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
+            const url = '#!/explorer/' + vm.currentPath.join('/');
 
-            if (item.name.indexOf('.ipynb') !== -1) {
-
-
-                vm.fileEditorLoading = true;
-
-                vm.downloadAndOpenPlaybook();
-
-            } else {
-
-                vm.fileEditor = {};
-
-                vm.showEditor = true;
-
-                vm.fileEditorLoading = true;
-
-                vm.downloadAndEdit();
-
-            }
-
+            window.open(url, '_blank');
+            vm.currentPath.pop();
         }
 
         // DRAFT STARTED
@@ -990,7 +1000,11 @@
 
                     } else {
 
+                        vm.fileEditor = {};
+
                         vm.showEditor = true;
+
+                        vm.fileEditorLoading = true;
 
                         vm.downloadAndEdit();
 
