@@ -77,6 +77,17 @@
                 "name": "Nominal Position size",
                 "value_type": 20
             },
+
+            {
+                "key": "period_start_position_size",
+                "name": "Position size (Period start)",
+                "value_type": 20
+            },
+            {
+                "key": "period_start_nominal_position_size",
+                "name": "Nominal Position size (Period Start)",
+                "value_type": 20
+            },
             {
                 "key": "pricing_currency",
                 "name": "Pricing Currency",
