@@ -215,6 +215,13 @@
                                 </div>
 
                             </th>
+
+                            <th>
+                                <div layout="row">
+                                    <md-button>Path</md-button>
+                                </div>
+                            </th>
+
                             <th>
                                 <div layout="row">
                                     <md-button data-ng-click="vm.sortBy('modified')">Date Modified</md-button>
@@ -262,7 +269,7 @@
                         <tbody>
 
 
-                        <tr data-ng-repeat="item in vm.items | filter: {name: vm.searchTerm} | orderBy:vm.propertyName:vm.reverse"
+                        <tr data-ng-repeat="item in vm.items | orderBy:vm.propertyName:vm.reverse"
                             class="explorer-{{::item.type}} explorer-item">
 
                             <td style="width: 10px">
@@ -304,6 +311,29 @@
 
                                 </div>
 
+                            </td>
+                            <td>
+                                <div data-ng-if="!vm.searchTerm.length">
+                                    <div data-ng-repeat="path in vm.currentPath track by $index">
+
+                                        <span
+                                                data-ng-click="vm.breadcrumbsNavigation($index)"
+                                                class="explorer-path-item"
+                                        >{{path}}</span>
+
+                                        <span class="cursor-default explorer-path-divider"
+                                              data-ng-if="$index < vm.currentPath.length - 1">/</span>
+
+                                    </div>
+                                </div>
+                                <div data-ng-if="vm.searchTerm.length">
+                                    <div data-ng-if="vm.searchTerm.length">
+                                        <span
+                                                data-ng-click="vm.breadcrumbsNavigation($index, item.file_path)"
+                                                class="explorer-path-item"
+                                        >{{item.file_path}}</span>
+                                    </div>
+                                </div>
                             </td>
 
                             <td title="{{::item.modified}}">
