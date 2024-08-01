@@ -57,7 +57,8 @@
         var balanceAttrsComp = [
             'name', 'short_name', 'user_code', 'item_type_name',
             'pricing_currency.name', 'pricing_currency.short_name', 'pricing_currency.user_code',
-            'position_size',
+            'position_size', 'nominal_position_size',
+            'period_start_position_size', 'period_start_nominal_position_size',
             'instrument_pricing_currency_fx_rate', 'instrument_accrued_currency_fx_rate', 'net_cost_price_loc', 'market_value', 'market_value_loc', 'market_value_percent',
             'exposure', 'exposure_percent', 'exposure_loc', 'instrument_principal_price', 'instrument_accrued_price', 'detail',
 
