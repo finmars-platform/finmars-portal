@@ -4,8 +4,8 @@
 
 'use strict';
 
-const pricingPolicyService = require('../../../services/pricingPolicyService').default;;
-const instrumentTypeService = require('../../../services/instrumentTypeService')
+const pricingPolicyService = require('../../../services/pricingPolicyService').default;
+const instrumentTypeService = require('../../../services/instrumentTypeService').default;
 const instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
 const attributeTypeService = require('../../../services/attributeTypeService');
 
@@ -15,7 +15,7 @@ const gridTableEvents = require('../../../services/gridTableEvents');
 
 const metaHelper = require('../../../helpers/meta.helper');
 
-export default function InstrmentTypePricingTabController($scope, $mdDialog, configurationService) {
+export default function InstrmentTypePricingTabController($scope, $mdDialog, configurationService, toastNotificationService) {
 
 	var vm = this;
 
@@ -557,6 +557,18 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog, con
 
 		})
 
+	}
+
+	vm.applyPricing = function () {
+		const data = {
+			mode: 'overwrite',
+			fields_to_update: ["pricing_policies"]
+		}
+		instrumentTypeService.applyPricing(vm.entity.id, data).then(function () {
+			toastNotificationService.success(vm.entity.name + ' apply is successfully');
+		}).catch(function () {
+			toastNotificationService.error('Something went wrong');
+		});
 	}
 
 	vm.configurePricingModule = function ($event, item) {

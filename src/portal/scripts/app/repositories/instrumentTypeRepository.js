@@ -68,6 +68,26 @@
             })
     };
 
+  var applyPricing = function (id, data) {
+
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
+
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/instruments/instrument-type/' + id + '/apply/',
+      {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }
+      )
+  };
+
     var create = function (data) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -223,7 +243,8 @@
 
         updatePricing: updatePricing,
 
-        bookInstrument: bookInstrument
+        bookInstrument: bookInstrument,
+        applyPricing: applyPricing,
     }
 
 }());

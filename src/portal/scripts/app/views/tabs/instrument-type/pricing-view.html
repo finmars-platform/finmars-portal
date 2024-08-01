@@ -64,9 +64,15 @@
                             placeholder-text="ID for Price Downloading">
                 </text-input>
             </div>
-            <div class="p-r-8" style="width: 306px;">
+            <div class="p-r-8" style="width: 120px;">
                 <md-button class="md-raised md-primary" data-ng-if="vm.entity.id"
                            data-ng-click="vm.runPricingInstrument($event)">Run Pricing
+                </md-button>
+            </div>
+
+            <div class="p-r-8" style="width: 106px;">
+                <md-button class="md-raised md-primary" data-ng-if="vm.entity.id"
+                           data-ng-click="vm.applyPricing($event)">Apply
                 </md-button>
             </div>
 
