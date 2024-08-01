@@ -104,6 +104,7 @@
         vm.homepageUrl = redirectionService.getUrlByState('app.portal.home');
         vm.performanceUrl = redirectionService.getUrlByState('app.portal.reports.performance-report');
         vm.permissionsUrl = redirectionService.getUrlByState('app.portal.settings.users-groups');
+        vm.vaultRecordUrl = redirectionService.getUrlByState('app.portal.settings.vault-record');
         vm.getVueUrl = redirectionService.getUrl;
 
         /* Old sidemenu */

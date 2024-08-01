@@ -70,7 +70,7 @@
             vm.hasEnabledStatus = false;
         }
 
-        vm.readyStatus = vm.sharedLogic.readyStatusObj;
+        vm.readyStatus = {...vm.sharedLogic.readyStatusObj, modules: false, content: false, policies: false};
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -1877,6 +1877,7 @@
                     item.id = item.configuration_code;
                     return item
                 })
+                vm.readyStatus.modules = true;
 
                 $scope.$apply();
 
@@ -1889,6 +1890,7 @@
             pricingPolicyService.getList().then(function (data) {
 
                 vm.pricingPolicies = data.results;
+                vm.readyStatus.policies = true;
                 $scope.$apply();
 
             })
@@ -2225,6 +2227,7 @@
             });
             vm.getPricingPolicies();
             vm.getPricingConfigurations();
+            vm.readyStatus.content = true;
         };
 
         vm.init();

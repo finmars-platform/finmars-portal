@@ -21,7 +21,11 @@
 
         var vm = this;
 
-        vm.readyStatus = false;
+        vm.readyStatus = {
+            content: false,
+            policies: false,
+            modules: false
+        };
         vm.instrumentPricingSchemes = null;
 
         vm.entity = $scope.$parent.vm.entity;
@@ -126,7 +130,7 @@
 
                 console.log('vm.pricingModules ', vm.pricingModules);
 
-                vm.readyStatus = true;
+                vm.readyStatus.modules = true;
 
                 $scope.$apply();
 
@@ -139,6 +143,7 @@
             pricingPolicyService.getList().then(function (data) {
 
                 vm.pricingPolicies = data.results;
+                vm.readyStatus.policies = true;
                 $scope.$apply();
 
             })
@@ -171,7 +176,7 @@
 
             vm.getPricingConfigurations();
             vm.getPricingPolicies();
-
+            vm.readyStatus.content = true;
 
         };
 
