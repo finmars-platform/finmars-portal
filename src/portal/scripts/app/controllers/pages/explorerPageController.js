@@ -31,6 +31,7 @@
         vm.showHiddenFiles = false;
         vm.showWorkflow = false;
         vm.showEditor = false;
+        vm.exportTaskId = null;
 
         vm.fileEditor = {}
         vm.fileEditorLoading = false;
@@ -73,7 +74,8 @@
         vm.breadcrumbsNavigation = function ($index, filePath = null) {
 
             if (filePath) {
-                vm.currentPath = filePath.split('/')
+                vm.currentPath = filePath.split('/');
+                vm.currentPath = vm.currentPath.filter(element => !element.includes("space"));
             } else {
                 if ($index === -1) {
                     vm.currentPath = []
@@ -177,14 +179,26 @@
 
         }
 
+        vm.sync = async function () {
+            const res = await explorerService.sync();
+            vm.exportTaskId = res.task_id;
+        }
         vm.editFile = function ($event, item, $mdMenu) {
 
             if ($mdMenu) {
                 $mdMenu.close()
             }
 
-            vm.currentPath.push(item.name);
-
+            const filePath = item.file_path.split('/');
+            vm.currentPath = filePath.filter(element => element !== "");
+            const hasSpace = vm.currentPath.some(element => element.includes('space'));
+            if (hasSpace) {
+                vm.currentPath = vm.currentPath.filter(element => !element.includes("space"));
+            }
+            const hasFileName = vm.currentPath.some(element => element.includes(item.name));
+            if (!hasFileName) {
+                vm.currentPath.push(item.name);
+            }
             const url = '#!/explorer/' + vm.currentPath.join('/');
 
             window.open(url, '_blank');
