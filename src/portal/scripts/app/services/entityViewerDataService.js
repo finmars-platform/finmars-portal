@@ -2281,7 +2281,6 @@
         }
 
         function incrementCurrentRequestId() {
-
             data.currentRequestId = data.currentRequestId + 1;
         }
 
@@ -2293,7 +2292,7 @@
         /** @type {getCurrentRequestId} */
         function getCurrentRequestId() {
 
-            return data.currentRequestId
+            return data.currentRequestId;
 
         }
 
