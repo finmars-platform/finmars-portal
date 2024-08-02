@@ -112,7 +112,6 @@
                 }
 
                 function renderReportViewer() {
-
                     console.log('renderReportViewer');
 
                     var begin = Date.now();
@@ -478,6 +477,10 @@
                     // progressBar.style.display = 'none';
 
                     if ( errorWhileLoadingData() ) {
+
+                        scope.evDataService.setDataLoadStatus(true);
+
+                        scope.dataLoadStatus = true;
 
                         scope.error = true;
 
