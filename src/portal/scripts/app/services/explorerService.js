@@ -42,6 +42,9 @@
         return explorerRepository.downloadFile(data)
     }
 
+    var sync = function () {
+        return explorerRepository.sync()
+    }
 
     module.exports = {
         listFiles: listFiles,
@@ -52,7 +55,8 @@
         deleteFolder: deleteFolder,
         uploadFiles: uploadFiles,
         downloadZip: downloadZip,
-        downloadFile: downloadFile
+        downloadFile: downloadFile,
+        sync: sync,
     }
 
 
