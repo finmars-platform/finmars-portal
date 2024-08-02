@@ -2,8 +2,8 @@
 
     'use strict';
 
-    var rvDataHelper = require('../helpers/rv-data.helper').default;
     var renderHelper = require('../helpers/render.helper');
+    var evHelperService = require('../services/entityViewerHelperService').default;
 
     var reportViewerMatrixHelper = require('../helpers/report-viewer-matrix.helper');
 
@@ -562,17 +562,28 @@
 
                     return new Promise(function (resolve, reject) {
 
+                        var abscissaAttrMockup = {
+                            "key": scope.matrixSettings.abscissa, // columns
+                            "name": scope.matrixSettings.abscissa,
+                            "value_type": 10
+                        };
+
+                        var abscissaGroupType = evHelperService.getTableAttrInFormOf("group", abscissaAttrMockup);
+
+                        var ordinateAttrMockup = {
+                            "key": scope.matrixSettings.ordinate,
+                            "name": scope.matrixSettings.ordinate,
+                            "value_type": 10
+                        };
+
+                        var ordinateGroupType = evHelperService.getTableAttrInFormOf("group", ordinateAttrMockup);
+
 
                         var options = {
-
-                            groups_types: [{
-                                "key": scope.matrixSettings.abscissa, // columns
-                                "name": scope.matrixSettings.abscissa,
-                                "value_type": 10
-                            }]
-
+                            frontend_request_options: {
+                                groups_types: [{...abscissaGroupType}]
+                            }
                         }
-                        var entityType = scope.evDataService.getEntityType();
 
                         groupsService.getList(options, scope.evDataService).then(function (data) {
 
@@ -600,19 +611,13 @@
                             firstLevelGroups.forEach(function (group) {
 
                                 options = {
-                                    groups_types: [
-                                        {
-                                            "key": scope.matrixSettings.abscissa,
-                                            "name": scope.matrixSettings.abscissa,
-                                            "value_type": 10
-                                        },
-                                        {
-                                            "key": scope.matrixSettings.ordinate,
-                                            "name": scope.matrixSettings.ordinate,
-                                            "value_type": 10
-                                        },
-                                    ],
-                                    groups_values: [group.___group_identifier]
+                                    frontend_request_options: {
+                                        groups_types: [
+                                            {...abscissaGroupType},
+                                            {...ordinateGroupType},
+                                        ],
+                                        groups_values: [group.___group_identifier]
+                                    }
                                 }
 
                                 promises.push(groupsService.getList(options, scope.evDataService))
