@@ -45,6 +45,9 @@
                     <span data-ng-if="vm.showHiddenFiles">Hide Invisible Files</span>
 
                 </md-button>
+                <md-button class="md-primary md-raised" data-ng-click="vm.sync()">
+                    Sync
+                </md-button>
 
                 <div data-ng-if="vm.selectedCount" layout="row" style="align-items: center">
                     Selected: {{vm.selectedCount}}
@@ -514,6 +517,9 @@
 
             </div>
 
+        </div>
+        <div data-ng-if="vm.exportTaskId" style="position: absolute; top: 50px; right: 10px; z-index: 1; background: var(--dialog-background-color);">
+            <task-card task-id="vm.exportTaskId"></task-card>
         </div>
 
     </div>

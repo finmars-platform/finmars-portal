@@ -207,6 +207,23 @@
         })
     };
 
+  var sync = function () {
+
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
+
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/sync/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        }
+    })
+  };
+
 
 
 
@@ -219,7 +236,8 @@
         deleteFolder: deleteFolder,
         uploadFiles: uploadFiles,
         downloadZip: downloadZip,
-        downloadFile: downloadFile
+        downloadFile: downloadFile,
+        sync: sync
     }
 
 }());
