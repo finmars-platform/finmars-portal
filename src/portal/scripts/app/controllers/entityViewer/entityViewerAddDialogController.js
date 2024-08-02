@@ -41,7 +41,14 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
 
         vm.processing = false;
 
-        vm.readyStatus = {permissions: true, entity: false, layout: false, content: false};
+        vm.readyStatus = {
+            permissions: true,
+            entity: false,
+            layout: false,
+            content: false,
+            modules: false,
+            policies: false
+        };
 
         vm.entity = {$_isValid: true};
 
@@ -503,6 +510,7 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
             pricingPolicyService.getList().then(function (data) {
 
                 vm.pricingPolicies = data.results;
+                vm.readyStatus.policies = true;
                 $scope.$apply();
 
             })
@@ -530,7 +538,7 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
                     item.id = item.configuration_code;
                     return item
                 })
-                vm.readyStatus.content = true;
+                vm.readyStatus.modules = true;
 
                 $scope.$apply();
 
@@ -1974,6 +1982,8 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
 			} */
             vm.getPricingConfigurations();
             vm.getPricingPolicies();
+
+            vm.readyStatus.content = true;
         };
 
         vm.init();
