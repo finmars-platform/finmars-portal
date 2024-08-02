@@ -4,8 +4,8 @@
 
 'use strict';
 
-const pricingPolicyService = require('../../../services/pricingPolicyService').default;;
-const instrumentTypeService = require('../../../services/instrumentTypeService')
+const pricingPolicyService = require('../../../services/pricingPolicyService').default;
+const instrumentTypeService = require('../../../services/instrumentTypeService').default;
 const instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
 const attributeTypeService = require('../../../services/attributeTypeService');
 
@@ -15,13 +15,17 @@ const gridTableEvents = require('../../../services/gridTableEvents');
 
 const metaHelper = require('../../../helpers/meta.helper');
 
-export default function InstrmentTypePricingTabController($scope, $mdDialog, configurationService) {
+export default function InstrmentTypePricingTabController($scope, $mdDialog, configurationService, toastNotificationService) {
 
 	var vm = this;
 
 	// const gridTableHelperService = new GridTableHelperService();
 
-	vm.readyStatus = false;
+	vm.readyStatus = {
+		content: false,
+		policies: false,
+		modules: false
+	};
 	vm.instrumentPricingSchemes = null;
 
 	vm.entity = $scope.$parent.vm.entity;
@@ -30,6 +34,8 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog, con
 	vm.pricingConditions = $scope.$parent.vm.pricingConditions;
 
 	//region Inherit from a parent controller
+
+	vm.entity.pricing_policies = vm.entity.pricing_policies ?? [];
 
 	vm.attributeTypesByValueTypes = $scope.$parent.vm.attributeTypesByValueTypes; // Parent controller can be entityViewerEditDialogController, entityViewerAddDialogController, instrumentTypeEditDialogController, instrumentTypeAddDialogController
 	// Methods below are located one level above because of currency entity viewer
@@ -533,7 +539,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog, con
 				return item
 			})
 
-			vm.readyStatus = true;
+			vm.readyStatus.modules = true;
 
 			$scope.$apply();
 
@@ -546,10 +552,23 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog, con
 		pricingPolicyService.getList().then(function (data) {
 
 			vm.pricingPolicies = data.results;
+			vm.readyStatus.policies = true;
 			$scope.$apply();
 
 		})
 
+	}
+
+	vm.applyPricing = function () {
+		const data = {
+			mode: 'overwrite',
+			fields_to_update: ["pricing_policies"]
+		}
+		instrumentTypeService.applyPricing(vm.entity.id, data).then(function () {
+			toastNotificationService.success(vm.entity.name + ' apply is successfully');
+		}).catch(function () {
+			toastNotificationService.error('Something went wrong');
+		});
 	}
 
 	vm.configurePricingModule = function ($event, item) {
@@ -589,7 +608,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog, con
 			/* formatDataForPricingGridTable();
 
 			vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData); */
-			vm.readyStatus = true;
+			vm.readyStatus.content = true;
 
 		});
 

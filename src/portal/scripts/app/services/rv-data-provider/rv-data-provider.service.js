@@ -56,7 +56,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                             // do not remove
                             // Seems that this response is too old, just ignore it
                             // szhitenev 2023-11-16
-                            return reject("ABORTED_BY_CLIENT");
+                            return reject({key: "REQUEST_IRRELEVANT"});
                         }
 
                         var parentGroup = evDataService.getData(requestParameters.id);
@@ -180,7 +180,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                             // do not remove
                             // Seems that this response is too old, just ignore it
                             // szhitenev 2023-11-16
-                            return reject("ABORTED_BY_CLIENT");
+                            return reject({key: "REQUEST_IRRELEVANT"});
                         }
 
                         var parentGroup = evDataService.getData(requestParameters.id);
@@ -363,7 +363,11 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
             }).catch(function (e) {
 
-                if ( e !== "ABORTED_BY_CLIENT") {
+                if (e && e.key === "REQUEST_IRRELEVANT") {
+
+                    requestParameters.status = 'aborted';
+
+                } else {
 
                     console.error(
                         `[rvDataProviderService.processQueue] ` +
@@ -379,6 +383,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     evDataService.setRequestParameters(requestParameters);
 
                 }
+
+                evDataService.setRequestParameters(requestParameters);
 
                 reject({
                     requestParameters: requestParameters,
@@ -416,7 +422,14 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 })
                 .catch(function (e) {
-                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+                    var requestWasNotAborted = !e || typeof e !== "object" ||
+                        e.key !== "REQUEST_IRRELEVANT";
+
+                    if (requestWasNotAborted) {
+                        evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                    }
+
                     reject(e);
                 });
 
@@ -457,7 +470,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
     */
     function processGetItemsError(error, evDataService, requestParametersId, processedRequestParameters, resolveCb, rejectCb) {
 
-        if (error === "ABORTED_BY_CLIENT") {
+        if (error && error.key === "REQUEST_IRRELEVANT") {
             rejectCb(error);
         }
         else if (error && error.key === "getListError") {

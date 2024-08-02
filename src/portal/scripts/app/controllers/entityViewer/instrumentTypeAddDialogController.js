@@ -1099,23 +1099,23 @@
 
         };
 
-        vm.getInstrumentPricingSchemes = function () {
+        // vm.getInstrumentPricingSchemes = function () {
+        //
+        //     instrumentPricingSchemeService.getList().then(function (data) {
+        //
+        //         vm.instrumentPricingSchemes = data.results;
+        //
+        //         console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
+        //
+        //         vm.generateInstrumentAttributeTypesByValueTypes();
+        //
+        //         $scope.$apply();
+        //
+        //     })
+        //
+        // };
 
-            instrumentPricingSchemeService.getList().then(function (data) {
-
-                vm.instrumentPricingSchemes = data.results;
-
-                console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
-
-                vm.generateInstrumentAttributeTypesByValueTypes();
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.getEntityPricingSchemes = vm.getInstrumentPricingSchemes
+        // vm.getEntityPricingSchemes = vm.getInstrumentPricingSchemes
 
 		//region Instrument Type Layout Settings tab start
 		vm.instrLayoutsFromItype = [];
