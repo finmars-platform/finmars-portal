@@ -605,7 +605,7 @@ export default (function () {
     // portal.controller('PricingPoliciesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/pricingPoliciesTabController')]);
     portal.controller('InstrumentPricingTabController', ['$scope', '$mdDialog', 'gridTableHelperService', 'configurationService', require('./app/controllers/tabs/instrument/instrumentPricingTabController')]);
     portal.controller('ConfigurePricingModuleDialogController', ['$scope', '$mdDialog', '$sce', 'globalDataService', 'data', require('./app/controllers/dialogs/configurePricingModuleDialogController')]);
-    portal.controller('InstrumentTypePricingTabController', ['$scope', '$mdDialog', 'configurationService', instrumentTypePricingTabController]);
+    portal.controller('InstrumentTypePricingTabController', ['$scope', '$mdDialog', 'configurationService', 'toastNotificationService', instrumentTypePricingTabController]);
     portal.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
     portal.controller('ManualPricingFormulasTabController', ['$scope', 'fieldResolverService', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 
