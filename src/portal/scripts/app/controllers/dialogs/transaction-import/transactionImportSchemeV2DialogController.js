@@ -1,5 +1,6 @@
 const importTransactionService = require("../../../services/import/importTransactionService");
 const {default: metaHelper} = require("../../../helpers/meta.helper");
+const {default: ScrollHelper} = require("../../../helpers/scrollHelper");
 /**
  * Created by szhitenev on 07.02.2023.
  */
@@ -10,6 +11,8 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
     const metaService = require('../../../services/metaService').default;
     const metaHelper = require('../../../helpers/meta.helper').default;
 
+    const ScrollHelper = require('../../../helpers/scrollHelper').default;
+
     module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, transactionImportSchemeService, importSchemesMethodsService, data) {
 
         const vm = this;
@@ -17,6 +20,9 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
         if (!data || typeof data !== 'object') {
             throw `Invalid data passed as 'data'. Expected an object got: ${data}`;
         }
+
+        const schemeInputsScrollHelper = new ScrollHelper();
+        const calculatedInputsScrollHelper = new ScrollHelper();
 
         const dialogsWrapElem = document.querySelector('.dialog-containers-wrap');
         const ttypeNotFoundErrorMsg = "⚠️ Transaction Type is not found";
@@ -494,22 +500,26 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
         vm.addSchemeInput = function () {
 
-            var fieldsLength = vm.schemeInputs.length;
+            /*var fieldsLength = vm.schemeInputs.length;
             var lastFieldNumber;
             var nextFieldNumber;
             if (fieldsLength === 0) {
                 nextFieldNumber = 1;
             } else {
+
                 lastFieldNumber = parseInt(vm.schemeInputs[fieldsLength - 1].column);
-                if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
+
+                if ( Number.isNaN(lastFieldNumber) ) {
                     lastFieldNumber = 0
                 }
+
                 nextFieldNumber = lastFieldNumber + 1;
-            }
+
+            }*/
 
             vm.schemeInputs.push({
                 name: '',
-                column: nextFieldNumber,
+                column: vm.schemeInputs.length,
                 frontOptions: {
                     key: metaHelper.generateUniqueId(vm.schemeInputs.length)
                 }
@@ -519,7 +529,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
         vm.addCalculatedInput = function () {
 
-            var fieldsLength = vm.calculatedInputs.length;
+            /*var fieldsLength = vm.calculatedInputs.length;
             var lastFieldNumber;
             var nextFieldNumber;
             if (fieldsLength === 0) {
@@ -530,11 +540,11 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
                     lastFieldNumber = 0
                 }
                 nextFieldNumber = lastFieldNumber + 1;
-            }
+            }*/
 
             vm.calculatedInputs.push({
                 name: '',
-                column: nextFieldNumber,
+                column: vm.calculatedInputs.length,
                 frontOptions: {
                     key: metaHelper.generateUniqueId(vm.calculatedInputs.length)
                 }
@@ -585,6 +595,193 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
         vm.removeRuleScenario = function (item, $index) {
             vm.ruleScenarios.splice($index, 1);
         };
+
+        const updateColumns = function (item, index) {
+            item.column = index + 1;
+            return item;
+        };
+
+        //# region Drag and drop
+        const drakeDropHandler = function (elem, nextSiblings, itemsList) {
+
+            // var draggedItemOrder = parseInt(elem.dataset.itemKey);
+            const draggedItemKey = elem.dataset.itemKey;
+            let draggedItemIndex;
+
+            const itemToInsert = itemsList.find((item, index) => {
+
+                if (item.frontOptions.key === draggedItemKey) {
+                    draggedItemIndex = index;
+                    return true;
+                }
+
+                return false;
+            });
+
+            /*let siblingItemKey = null;
+
+            if (nextSiblings) {
+                siblingItemKey = elem.dataset.itemKey;
+            }*/
+            itemsList.splice(draggedItemIndex, 1);
+
+            if (nextSiblings) {
+
+                let siblingKey = nextSiblings.dataset.itemKey;
+
+                /*for (var i = 0; i < vm.selectorValues.value.length; i++) {
+                    if (vm.selectorValues.value[i].order === siblingItemOrder) {
+
+                        vm.selectorValues.value.splice(i, 0, rowToInsert);
+                        break;
+
+                    }
+                }*/
+                const siblingIndex = itemsList.findIndex(
+                    item => item.frontOptions.key === siblingKey
+                );
+
+                itemsList.splice(siblingIndex, 0, itemToInsert);
+
+            } else {
+                itemsList.push(itemToInsert);
+            }
+
+            itemsList = itemsList.map(updateColumns);
+
+            return itemsList;
+
+        };
+
+        /**
+         *
+         * @param drake {Object} - instance of dragula
+         * @param scrollHelper {Object} - instance of scrollHelper
+         * @param onDropCallback {Function}
+         */
+        const initDrakeEventListeners = function (drake, scrollHelper, onDropCallback) {
+
+            drake.on('drag', function () {
+                scrollHelper.enableDnDWheelScroll();
+            });
+
+            drake.on('drop', onDropCallback);
+
+            drake.on('dragend', function (elem) {
+                scrollHelper.disableDnDWheelScroll();
+            });
+
+        };
+
+        let dragIconGrabbed = false;
+
+        var turnOffDragging = function () {
+            dragIconGrabbed = false;
+        };
+
+        vm.turnOnDragging = function () {
+            dragIconGrabbed = true;
+            document.body.addEventListener('mouseup', turnOffDragging, {once: true});
+        };
+
+        /**
+         *
+         * @param queryString {String} - filter terms
+         * @return {boolean}
+         */
+        var canRowBeMoved = function (queryString) {
+            // Drag and drop forbidden while filter is active
+            if (dragIconGrabbed && !queryString) {
+                return true;
+            }
+
+            return false;
+        };
+
+        vm.schemeInputsDragAndDrop = {
+            init: function () {
+
+                schemeInputsScrollHelper.setDnDScrollElem(
+                    document.querySelector('.schemeInputsScrollableElem')
+                );
+
+                this.dragulaInit();
+                this.initEventListeners();
+
+            },
+
+            initEventListeners: function () {
+
+                const drake = this.dragula;
+
+                function onDropHandler (elem, target, source, nextSiblings) {
+                    vm.schemeInputs = drakeDropHandler(elem, nextSiblings, vm.schemeInputs);
+                }
+
+                initDrakeEventListeners(drake, schemeInputsScrollHelper, onDropHandler);
+
+            },
+
+            dragulaInit: function () {
+
+                const containers = [
+                    document.querySelector('.schemeInputsDragulaContainer')
+                ];
+
+                this.dragula = dragula(containers, {
+                    moves: function () {
+                        return canRowBeMoved(vm.schemeInputsQuery)
+                    },
+                    revertOnSpill: true
+                })
+            },
+
+            destroy: function() {
+                this.dragula.destroy();
+            }
+        }
+
+        vm.calculatedInputsDragAndDrop = {
+            init: function () {
+
+                calculatedInputsScrollHelper.setDnDScrollElem(
+                    document.querySelector('.calculatedInputsScrollableElem')
+                );
+
+                this.dragulaInit();
+                this.initEventListeners();
+
+            },
+
+            initEventListeners: function () {
+                const drake = this.dragula;
+                function onDropHandler (elem, target, source, nextSiblings) {
+                    vm.calculatedInputs = drakeDropHandler(elem, nextSiblings, vm.calculatedInputs);
+                }
+
+                initDrakeEventListeners(drake, calculatedInputsScrollHelper, onDropHandler);
+
+            },
+
+            dragulaInit: function () {
+
+                const containers = [
+                    document.querySelector('.calculatedInputsDragulaContainer')
+                ];
+
+                this.dragula = dragula(containers, {
+                    moves: function () {
+                        return canRowBeMoved(vm.calculatedInputsQuery);
+                    },
+                    revertOnSpill: true
+                })
+            },
+
+            destroy: function() {
+                this.dragula.destroy();
+            }
+        };
+        //# endregion Drag and drop
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -1053,6 +1250,11 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
         };
 
         init();
+
+        $scope.$on("$destroy", function () {
+            vm.schemeInputsDragAndDrop.destroy();
+            vm.calculatedInputsDragAndDrop.destroy();
+        });
 
     };
 

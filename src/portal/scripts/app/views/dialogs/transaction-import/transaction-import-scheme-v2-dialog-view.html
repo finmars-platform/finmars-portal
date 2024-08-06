@@ -250,7 +250,7 @@
                                 <div class="flex-row height-100 transaction-import-scheme-v2-cards-holder">
 
                                     <!-- Imported Columns-->
-                                    <md-card class="flex-1-1-100 transaction-import-scheme-v2-file-inputs-holder">
+                                    <md-card class="flex-1-1-100 transaction-import-scheme-v2-file-inputs-holder schemeInputsScrollableElem">
                                         <md-card-content>
 
                                             <div class="transaction-import-scheme-v2-card-header">
@@ -260,75 +260,60 @@
                                                        class="transaction-import-scheme-v2-card-header-search">
                                             </div>
 
-                                            <div data-ng-repeat="item in vm.schemeInputs | filter: vm.filterSchemeInputs as results track by item.frontOptions.key"
-                                                 class="rows-container transaction-import-scheme-v2-file-input"
-                                            >
+                                            <div class="schemeInputsDragulaContainer" data-ng-init="vm.schemeInputsDragAndDrop.init()">
+                                                <div data-ng-repeat="item in vm.schemeInputs | filter: vm.filterSchemeInputs as results track by item.frontOptions.key"
+                                                     data-item-key="{{item.frontOptions.key}}"
+                                                     class="transaction-import-scheme-v2-rows-container transaction-import-scheme-v2-file-input"
+                                                >
 
-                                                <!--<md-input-container style="position: relative; width: 50px">
+                                                    <div class="top-left-drag-icon"
+                                                         data-ng-mousedown="vm.turnOnDragging()">
+                                                        <is-draggable-sign></is-draggable-sign>
+                                                    </div>
 
-                                                    <input class="no-input-arrows"
-                                                           type="number"
-                                                           ng-model="item.column"
-                                                           aria-label="provider field column number">
-                                                </md-input-container>-->
-                                                <div>
-                                                    <number-input data-model="item.column"
-                                                                  data-small-options="vm.inputsOpts"></number-input>
-                                                </div>
+                                                    <md-card class="row-card">
+                                                        <!--<div>
+                                                            <number-input data-model="item.column"
+                                                                          data-small-options="vm.inputsOpts"></number-input>
+                                                        </div>-->
 
-                                                <!--<md-input-container class="transaction-import-scheme-input-container">
+                                                        <div class="transaction-import-scheme-input-container">
+                                                            <text-input data-model="item.column_name"
+                                                                        data-label="Column name"
+                                                                        data-small-options="vm.inputsOpts"></text-input>
+                                                        </div>
 
-                                                    <input type="text"
-                                                           placeholder="column name"
-                                                           data-ng-model="item.column_name"
-                                                           aria-label="provider field name">
-                                                </md-input-container>-->
-                                                <div class="transaction-import-scheme-input-container">
-                                                    <text-input data-model="item.column_name"
-                                                                data-label="Column name"
-                                                                data-small-options="vm.inputsOpts"></text-input>
-                                                </div>
+                                                        <div class="transaction-import-scheme-input-container">
+                                                            <text-input data-model="item.name"
+                                                                        data-label="name"
+                                                                        data-small-options="vm.inputsOpts"
+                                                                        data-on-blur-callback="vm.setSchemeInputExpression(item)"></text-input>
+                                                        </div>
 
-                                                <!--<md-input-container class="transaction-import-scheme-input-container">
-                                                    <input type="text"
-                                                           data-ng-model="item.name"
-                                                           placeholder="name"
-                                                           ng-blur="vm.setProviderFieldExpression(item)"
-                                                           aria-label="provider field name">
-                                                </md-input-container>-->
-                                                <div class="transaction-import-scheme-input-container">
-                                                    <text-input data-model="item.name"
-                                                                data-label="name"
-                                                                data-small-options="vm.inputsOpts"
-                                                                data-on-blur-callback="vm.setSchemeInputExpression(item)"></text-input>
-                                                </div>
+                                                        <div class="transaction-import-scheme-input-container">
+                                                            <base-input data-indicator-button-icon="functions"
+                                                                        data-model="item.name_expr"
+                                                                        data-small-options="vm.exprInputOpts"
+                                                                        data-ng-click="vm.openSchemeInputExpressionBuilder(item, $event)"
+                                                                        class="calc-input-expr"
+                                                            ></base-input>
+                                                        </div>
 
-                                                <!--<div data-ng-click="vm.openSchemeInputExpressionBuilder(item, $event)"
-                                                     class="transaction-import-scheme-v2-calculated-input-expression">
-                                                    {{item.name_expr}}
-                                                </div>-->
-                                                <div class="transaction-import-scheme-input-container">
-                                                    <base-input data-indicator-button-icon="functions"
-                                                                data-model="item.name_expr"
-                                                                data-small-options="vm.exprInputOpts"
-                                                                data-ng-click="vm.openSchemeInputExpressionBuilder(item, $event)"
-                                                                class="calc-input-expr"
-                                                    ></base-input>
-                                                </div>
+                                                        <div class="p-l-8">
+                                                            <md-button data-ng-click="vm.removeSchemeInput(item, $index)"
+                                                                       class="action-btn m-0 outline-button">
+                                                                <span class="material-icons">close</span>
+                                                            </md-button>
+                                                        </div>
 
-                                                <div class="p-l-8">
-                                                    <md-button data-ng-click="vm.removeSchemeInput(item, $index)"
-                                                               class="action-btn m-0 outline-button">
-                                                        <span class="material-icons">close</span>
-                                                    </md-button>
-                                                </div>
+                                                        <div data-ng-if="item.dryRunResult">
 
-                                                <div data-ng-if="item.dryRunResult">
+                                                            <span class="dry-run-result-value">{{item.dryRunResult}}</span>
 
-                                                    <span class="dry-run-result-value">{{item.dryRunResult}}</span>
+                                                        </div>
+                                                    </md-card>
 
                                                 </div>
-
                                             </div>
 
                                             <div>
@@ -340,7 +325,7 @@
                                     </md-card>
 
                                     <!-- Calculated Variables-->
-                                    <md-card class="flex-1-1-100 transaction-import-scheme-v2-calculated-inputs-holder">
+                                    <md-card class="flex-1-1-100 transaction-import-scheme-v2-calculated-inputs-holder calculatedInputsScrollableElem">
                                         <md-card-content>
 
                                             <div class="transaction-import-scheme-v2-card-header">
@@ -350,73 +335,59 @@
                                                        class="transaction-import-scheme-v2-card-header-search">
                                             </div>
 
-                                            <div data-ng-repeat="item in vm.calculatedInputs | filter: vm.filterCalculatedInputs as results track by item.frontOptions.key"
-                                                 class="rows-container transaction-import-scheme-v2-calculated-input"
-                                            >
+                                            <div class="calculatedInputsDragulaContainer" data-ng-init="vm.calculatedInputsDragAndDrop.init()">
+                                                <div data-ng-repeat="item in vm.calculatedInputs | filter: vm.filterCalculatedInputs as results track by item.frontOptions.key"
+                                                     data-item-key="{{item.frontOptions.key}}"
+                                                     class="transaction-import-scheme-v2-rows-container transaction-import-scheme-v2-calculated-input"
+                                                >
 
-                                                <!--<md-input-container
-                                                        class="transaction-import-scheme-input-container">
-                                                    <input type="text"
-                                                           data-ng-model="item.name"
-                                                           placeholder="name"
-                                                           ng-blur="vm.onCalculatedInputNameBlur(item)"
-                                                           aria-label="provider field name">
-                                                </md-input-container>-->
-                                                <div class="transaction-import-scheme-input-container">
-                                                    <text-input data-model="item.name"
-                                                                data-label="Name"
-                                                                data-small-options="vm.inputsOpts"
-                                                                data-on-blur-callback="vm.onCalculatedInputNameBlur(item)"></text-input>
-                                                </div>
-
-
-                                                <!--<div flex style="margin-right: 2px;">
-
-                                                    <div
-                                                            ng-click="vm.openCalcFieldFxBtnExprBuilder(item, $event)"
-                                                            name=""
-                                                            class="transaction-import-scheme-v2-calculated-input-expression"
-                                                    >
-                                                        {{item.name_expr}}
+                                                    <div class="top-left-drag-icon"
+                                                         data-ng-mousedown="vm.turnOnDragging()">
+                                                        <is-draggable-sign></is-draggable-sign>
                                                     </div>
 
-                                                    <md-tooltip
-                                                            data-ng-show="item.frontOptions && item.frontOptions.noNameExpr"
-                                                            md-direction="top"
-                                                            class="error-tooltip">No expression defined for the
-                                                        calculated variable.
-                                                    </md-tooltip>
-                                                </div>-->
-                                                <div class="transaction-import-scheme-input-container">
-                                                    <base-input data-indicator-button-icon="functions"
-                                                                data-is-readonly="true"
-                                                                data-model="item.name_expr"
-                                                                data-ng-click="vm.openCalcFieldFxBtnExprBuilder(item, $event)"
-                                                                data-small-options="vm.exprInputOpts"
-                                                                class="calc-input-expr"
-                                                    ></base-input>
+                                                    <md-card class="row-card">
 
-                                                    <md-tooltip
-                                                            data-ng-if="item.frontOptions && item.frontOptions.noNameExpr"
-                                                            data-md-direction="top"
-                                                            class="error-tooltip">
-                                                        No expression defined for the calculated variable.
-                                                    </md-tooltip>
+                                                        <div class="transaction-import-scheme-input-container">
+                                                            <text-input data-model="item.name"
+                                                                        data-label="Name"
+                                                                        data-small-options="vm.inputsOpts"
+                                                                        data-on-blur-callback="vm.onCalculatedInputNameBlur(item)"></text-input>
+                                                        </div>
+
+                                                        <div class="transaction-import-scheme-input-container">
+                                                            <base-input data-indicator-button-icon="functions"
+                                                                        data-is-readonly="true"
+                                                                        data-model="item.name_expr"
+                                                                        data-ng-click="vm.openCalcFieldFxBtnExprBuilder(item, $event)"
+                                                                        data-small-options="vm.exprInputOpts"
+                                                                        class="calc-input-expr"
+                                                            ></base-input>
+
+                                                            <md-tooltip
+                                                                    data-ng-if="item.frontOptions && item.frontOptions.noNameExpr"
+                                                                    data-md-direction="top"
+                                                                    class="error-tooltip">
+                                                                No expression defined for the calculated variable.
+                                                            </md-tooltip>
+                                                        </div>
+
+                                                        <div class="p-l-8">
+                                                            <md-button data-ng-click="vm.removeCalculatedInput($index)"
+                                                                       class="action-btn m-0 outline-button">
+                                                                <span class="material-icons">close</span>
+                                                            </md-button>
+                                                        </div>
+
+                                                        <div data-ng-if="item.dryRunResult" class="p-l-8">
+
+                                                            <span class="dry-run-result-value">{{item.dryRunResult}}</span>
+
+                                                        </div>
+
+                                                    </md-card>
+
                                                 </div>
-
-                                                <div class="p-l-8">
-                                                    <md-button data-ng-click="vm.removeCalculatedInput($index)"
-                                                               class="action-btn m-0 outline-button">
-                                                        <span class="material-icons">close</span>
-                                                    </md-button>
-                                                </div>
-
-                                                <div data-ng-if="item.dryRunResult" class="p-l-8">
-
-                                                    <span class="dry-run-result-value">{{item.dryRunResult}}</span>
-
-                                                </div>
-
                                             </div>
 
                                             <div>
