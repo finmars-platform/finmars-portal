@@ -1130,7 +1130,11 @@
 			}).then(function (res) {
 
 				if (res.status === 'agree') {
-					metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, {status: 'delete'});
+
+					if (viewModel.openedIn !== "webpage") {
+						metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, {status: 'delete'});
+					}
+
 				}
 
 			})

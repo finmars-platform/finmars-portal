@@ -225,6 +225,25 @@
                     layoutUserCode: null,
                 }
             })
+            .state('app.portal.data.instrument-edition', {
+                url: '/instrument/:userCode',
+                templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
+                controller: 'EntityViewerEditDialogController as vm',
+                resolve: {
+                    entityType: function () {
+                        return "instrument"
+                    },
+                    entityId: function () {
+                        return null
+                    },
+                    data: ["$transition$", function ($transition$) {
+                        return {
+                            userCode: $transition$.params().userCode,
+                            openedIn: "webpage",
+                        }
+                    }]
+                }
+            })
             .state('app.portal.data.generated-event', {
                 url: '/generated-event',
                 templateUrl: 'views/data/data-generated-event-view.html',
