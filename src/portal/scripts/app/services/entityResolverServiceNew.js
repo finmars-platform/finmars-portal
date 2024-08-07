@@ -413,6 +413,52 @@ export default function (instrumentService, transactionTypeService, priceHistory
         }
     };
 
+    async function processGetByUcProm(getPromise, entityType) {
+
+        try {
+            const res = await getPromise;
+
+            if (res.results.length > 1) {
+
+                throw new Error(
+                    "[entityResolverServiceNew getByUserCode] " +
+                    `Error getting ${entityType} ` +
+                    `Expected 0 or 1 object got: ${res.results.length}`
+                )
+
+            }
+
+            return res.results[0];
+
+        } catch (e) {
+            throw e;
+        }
+
+    }
+
+    const getByUserCode = async function (entityType, userCode) {
+
+        const opts = {
+            filters: {
+                // user_code__exact: userCode
+                user_code: userCode
+            }
+        }
+
+        switch (entityType) {
+            case "instrument":
+                return processGetByUcProm( instrumentService.getList(opts) );
+                break;
+
+            default:
+                throw new Error(
+                    "[entityResolverServiceNew getByUserCode] " +
+                    `Can not resolve entityType: ${entityType}`
+                )
+        }
+
+    }
+
     var create = function (entityType, entity) {
 
 
@@ -1168,6 +1214,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
         getList: getList,
         getListLight: getListLight,
         getByKey: getByKey,
+        getByUserCode: getByUserCode,
         create: create,
         update: update,
         deleteByKey: deleteByKey,

@@ -57,6 +57,31 @@
 
         vm.entityId = entityId;
 
+        vm.entityUserCode = null;
+
+        if (data) {
+
+            if (typeof data !== "object") {
+
+                throw new Error(
+                    "Invalid value inside 'data' for " +
+                    "entityViewerEditDialogController. Expected an 'object' got: " +
+                    `${typeof data} ${data}`
+                )
+
+            }
+
+            vm.entityUserCode = data.userCode;
+
+        }
+
+        if ( Number.isNaN(vm.entityId) &&
+            (!vm.entityUserCode || typeof vm.entityUserCode !== "string") ) {
+
+            throw new Error("No valid 'id' or 'user_code' provided")
+
+        }
+
         vm.entity = {$_isValid: true};
         vm.dataConstructorLayout = {};
         vm.dcLayoutHasBeenFixed = false;
@@ -483,23 +508,13 @@
                 options: []
             };
 
-            var duplicateOpt = {
-                icon: 'content_copy',
-                name: 'Duplicate',
-                classes: 'divider-bottom'
-            }
+            if (vm.openedIn !== "webpage" && vm.entityType !== 'portfolio-register') {
 
-            /*if (['price-history', 'currency-history', 'transaction'].includes(vm.entityType)) {
-
-                duplicateOpt.isDisabled = !vm.entity.is_enabled || !vm.hasEditPermission;
-                duplicateOpt.onClick = function (option, _$popup) {
-
-                    _$popup.cancel();
-                    vm.copy('big-drawer');
-
-                };
-
-            } else {
+                var duplicateOpt = {
+                    icon: 'content_copy',
+                    name: 'Duplicate',
+                    classes: 'divider-bottom'
+                }
 
                 duplicateOpt.isDisabled = !vm.hasEditPermission;
                 duplicateOpt.onClick = function (option, _$popup) {
@@ -509,17 +524,7 @@
 
                 };
 
-            }*/
 
-            duplicateOpt.isDisabled = !vm.hasEditPermission;
-            duplicateOpt.onClick = function (option, _$popup) {
-
-                _$popup.cancel();
-                vm.copy(vm.openedIn);
-
-            };
-
-            if (vm.entityType !== 'portfolio-register') {
                 data.options.push(duplicateOpt);
             }
 
@@ -577,7 +582,13 @@
         vm.footerPopupData = null;
 
         vm.copy = function (windowType) {
+
+            if (windowType === "webpage") {
+                return;
+            }
+
             vm.sharedLogic.copy(windowType, 'EntityViewerAddDialogController');
+
         };
 
         /* vm.getFormLayout = async function () {
@@ -752,7 +763,12 @@
             vm.readyStatus.layout = false;
             vm.readyStatus.entity = false;
 
-            vm.entity = await entityResolverService.getByKey(vm.entityType, vm.entityId)
+            if (vm.entityId) {
+                vm.entity = await entityResolverService.getByKey(vm.entityType, vm.entityId);
+
+            } else {
+                vm.entity = await entityResolverService.getByUserCode(vm.entityType, vm.entityUserCode);
+            }
 
             vm.draftUserCode = vm.generateUserCodeForDraft();
 

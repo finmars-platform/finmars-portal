@@ -1,0 +1,63 @@
+<div data-ng-if="vm.checkReadyStatus()"
+     class="flex-row flex-c-space-between width-100"
+     data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
+
+    <div class="flex-row flex-i-center">
+        <h2 data-ng-if="vm.hasEditPermission && vm.entityType !== 'transaction'" class="big-drawer-header-h">Edit {{vm.entityTypeSlug()}}</h2>
+
+        <h2 data-ng-if="vm.hasEditPermission && vm.entityType === 'transaction'"
+            class="big-drawer-header-h">
+            <span>Edit Transaction</span>
+            <span>| Code: <span class="text-bold" data-ng-bind="vm.entity.transaction_code"></span></span>
+            <span data-ng-if="vm.entity.complex_transaction_object.transaction_unique_code"
+            >| Complex Transaction Unique Code: <span class="text-bold" data-ng-bind="vm.entity.complex_transaction_object.transaction_unique_code"></span>
+                    </span>
+        </h2>
+
+        <h2 data-ng-if="!vm.hasEditPermission" class="big-drawer-header-h">View {{vm.entityTypeSlug()}}</h2>
+
+        <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">
+            <ng-md-icon icon="lock" size="24">
+                    <md-tooltip md-direction="bottom">You don't have permission to edit this form</md-tooltip>
+            </ng-md-icon>
+        </span>
+
+        <div data-ng-if="vm.processing" layout="row" class="m-l-16 big-drawer-header-processing">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                <progress-circular diameter="20"></progress-circular>
+            </div>
+            — Processing
+        </div>
+    </div>
+
+    <div class="flex-row flex-i-center p-r-16">
+        <div data-ng-if="vm.entityType === 'instrument'">
+
+            <div data-ng-if="
+                        vm.entity.instrument_type_object.user_code.endsWith('stock') ||
+                        vm.entity.instrument_type_object.user_code.endsWith('bond')
+                    "
+                 class="instrument-refresh-from-database-button">
+
+                <md-button class="material-icons small-button-icon"
+                           data-ng-disabled="vm.processing"
+                           data-ng-click="vm.updateLocalInstrument()">
+                    autorenew
+                </md-button>
+
+                <md-tooltip data-md-direction="bottom">
+                    Refresh Instrument from Finmars© Database
+                </md-tooltip>
+
+            </div>
+
+        </div>
+
+        <draft-button data-user-code="vm.draftUserCode"
+                      data-on-export-to-draft-callback="vm.exportToDraft($event)"
+                      data-on-draft-apply-callback="vm.applyDraft(event, data)"
+                      class="position-static"></draft-button>
+    </div>
+
+
+</div>
