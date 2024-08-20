@@ -444,11 +444,11 @@
 
                                     <div class="calendar-event-detail-field">
                                         <span class="calendar-event-detail-field-definition">Start Date</span>:
-                                        {{task.created | date:'yyyy-MM-dd' : 'UTC'}}
+                                        {{task.created_at | date:'yyyy-MM-dd' : 'UTC'}}
                                     </div>
                                     <div class="calendar-event-detail-field">
                                         <span class="calendar-event-detail-field-definition">Start Time</span>:
-                                        {{task.created | date:'HH:mm' : 'UTC'}}
+                                        {{task.created_at | date:'HH:mm' : 'UTC'}}
                                     </div>
 
                                     <div class="calendar-event-detail-field">
