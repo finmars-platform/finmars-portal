@@ -376,7 +376,7 @@
                     vm.activeTask.result_object = JSON.stringify(vm.activeTask.result_object, null, 4);
 
                     if (vm.activeTask.finished_at) {
-                        const date1 = new Date(vm.activeTask.created);
+                        const date1 = new Date(vm.activeTask.created_at);
                         const date2 = new Date(vm.activeTask.finished_at);
                         const diffTime = Math.abs(date2 - date1);
 
@@ -738,7 +738,7 @@
         vm.formatTask = function (item) {
 
             if (item.finished_at) {
-                const date1 = new Date(item.created);
+                const date1 = new Date(item.created_at);
                 const date2 = new Date(item.finished_at);
                 const diffTime = Math.abs(date2 - date1);
 
@@ -746,7 +746,7 @@
                 item.finished_at_pretty = moment(new Date(item.finished_at)).format('HH:mm:ss');
             }
 
-            item.created_date = moment(new Date(item.created)).format('YYYY-MM-DD');
+            item.created_date = moment(new Date(item.created_at)).format('YYYY-MM-DD');
 
 
             item.options_object = JSON.stringify(item.options_object, null, 4);
@@ -812,7 +812,7 @@
                 filters: getFiltersData(vm.filters),
                 sort: {
                     direction: "DESC",
-                    key: "created"
+                    key: "created_at"
                 }
             }).then(function (data) {
 
