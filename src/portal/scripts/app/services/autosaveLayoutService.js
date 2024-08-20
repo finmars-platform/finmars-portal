@@ -53,7 +53,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
 
                 // const pingData = await uiService.pingListLayoutByKey(cachedLayout.id);
                 layout.id = cachedLayout.id;
-                layout.modified = cachedLayout.modified;
+                layout.modified_at = cachedLayout.modified_at;
 
                 const options = {
                     filters: {
@@ -64,7 +64,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
                 const llData = await uiService.getListLayoutLight(entityType, options);
 
                 if (llData.results.length && !uiService.isCachedLayoutActual(cachedLayout, llData.results[0])) {
-                    layout.modified = llData.results[0].modified;
+                    layout.modified_at = llData.results[0].modified_at;
                 }
 
                 uiService.updateListLayout(layout.id, layout).then(updatedLayoutData => {
@@ -94,7 +94,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
                 if (llData.results.length) {
 
                     layout.id = llData.results[0].id;
-                    layout.modified = llData.results[0].modified;
+                    layout.modified_at = llData.results[0].modified_at;
 
                     uiService.updateListLayout(layout.id, layout).then(function (updatedLayoutData) {
                         resolve(updatedLayoutData);
@@ -150,7 +150,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
             layout = JSON.parse(angular.toJson(layout));
 
             delete layout.id;
-            delete layout.modified;
+            delete layout.modified_at;
 
             layout.name = "Autosave";
 
@@ -175,7 +175,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
 
             /*            setTimeout(function () {
 
-                            layout.modified = Date.now();
+                            layout.modified_at = Date.now();
 
                             evDataService.setListLayout(layout);
                             evDataService.setActiveLayoutConfiguration({layoutConfig: layout});

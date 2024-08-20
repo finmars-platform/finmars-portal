@@ -618,7 +618,7 @@
 
                         vm.localInstruments = vm.localInstruments.map(function (item) {
 
-                            item.pretty_date = moment(item.modified).format("DD.MM.YYYY");
+                            item.pretty_date = moment(item.modified_at).format("DD.MM.YYYY");
 
                             item.frontOptions = {
                                 type: 'local',

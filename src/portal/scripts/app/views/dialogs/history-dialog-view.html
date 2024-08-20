@@ -24,7 +24,7 @@
                                                    data-ng-click="vm.updateSelected(item)"
                                                    value="{{item.id}}">
                                             {{item['user_code']}} changed by {{item.member_object.username}} at
-                                            {{item.created | date: 'yyyy-MM-dd HH:mm:ss'}}
+                                            {{item.created_at | date: 'yyyy-MM-dd HH:mm:ss'}}
                                         </md-option>
                                     </md-select>
                                 </md-input-container>
@@ -58,7 +58,7 @@
 
                                 <div class="history-dialog-revision-json">
                                     <h2>Revision from
-                                        {{vm.activeHistoryRecord.created | date: 'yyyy-MM-dd HH:mm:ss'}}</h2>
+                                        {{vm.activeHistoryRecord.created_at | date: 'yyyy-MM-dd HH:mm:ss'}}</h2>
                                     <div class="ace-editor-2">{{vm.activeHistoryRecord.data_pretty}}</div>
                                 </div>
                             </div>
