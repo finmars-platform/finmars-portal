@@ -116,8 +116,8 @@
                             activeLayoutData.name = res.data.name;
                             listLayout.user_code = res.data.user_code;
                             activeLayoutData.user_code = res.data.user_code;
-                            listLayout.modified = data.modified;
-                            activeLayoutData.modified = data.modified;
+                            listLayout.modified_at = data.modified_at;
+                            activeLayoutData.modified_at = data.modified_at;
 
                             dashboardDataService.setListLayout(listLayout);
                             dashboardDataService.setData(activeLayoutData);
@@ -230,8 +230,8 @@
 
                         listLayout.is_default = true;
                         activeLayoutData.is_default = true;
-                        listLayout.modified = updatedData.modified;
-                        activeLayoutData.modified = updatedData.modified;
+                        listLayout.modified_at = updatedData.modified_at;
+                        activeLayoutData.modified_at = updatedData.modified_at;
 
                         dashboardDataService.setListLayout(listLayout);
                         dashboardDataService.setData(activeLayoutData);

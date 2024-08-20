@@ -228,7 +228,7 @@
                     filters: vm.filters,
                     sort: {
                         direction: "DESC",
-                        key: "created"
+                        key: "created_at"
                     }
                 }).then(function (data) {
 
@@ -240,9 +240,9 @@
 
                     vm.items = vm.items.map(function (item) {
 
-                        item.created_pretty = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
-                        item.created_date_pretty = moment(new Date(item.created)).format('YYYY-MM-DD');
-                        item.created_time_pretty = moment(new Date(item.created)).format('HH:mm');
+                        item.created_pretty = moment(new Date(item.created_at)).format('DD-MM-YYYY HH:mm');
+                        item.created_date_pretty = moment(new Date(item.created_at)).format('YYYY-MM-DD');
+                        item.created_time_pretty = moment(new Date(item.created_at)).format('HH:mm');
 
                         item.content_type_pretty = metaContentTypesService.findEntityByContentType(item.content_type)
 

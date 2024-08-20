@@ -168,7 +168,7 @@
                 filters: filters,
                 sort: {
                     direction: "DESC",
-                    key: "created"
+                    key: "created_at"
                 }
             }).then(function (data) {
 
@@ -179,7 +179,7 @@
 
                 vm.systemMessages = vm.systemMessages.map(function (item) {
 
-                    item.verbose_created = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
+                    item.verbose_created = moment(new Date(item.created_at)).format('DD-MM-YYYY HH:mm');
 
                     if (item.type === 1) {
                         item.verbose_type = 'Information'

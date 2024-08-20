@@ -92,8 +92,8 @@
 
                     }).sort(function (first, second) {
 
-                        var firstDate = new Date(first.modified);
-                        var secondDate = new Date(second.modified);
+                        var firstDate = new Date(first.modified_at);
+                        var secondDate = new Date(second.modified_at);
 
                         if (firstDate === secondDate) {
                             return 0;

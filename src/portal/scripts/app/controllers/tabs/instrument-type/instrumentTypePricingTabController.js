@@ -527,7 +527,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog, con
 			},
 			sort: {
 				direction: "DESC",
-				key: "created"
+				key: "created_at"
 			}
 		}).then(function (data) {
 

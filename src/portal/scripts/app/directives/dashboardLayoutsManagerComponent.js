@@ -124,7 +124,7 @@
 					targetLayout.is_default = true;
 
                     uiService.updateDashboardLayout(targetLayout.id, targetLayout).then(async function (data) {
-                        scope.dashboardDataService.updateModifiedDate(data.modified);
+                        scope.dashboardDataService.updateModifiedDate(data.modified_at);
                         toastNotificationService.success("Dashboard Layout is set as default");
 
                     });
@@ -141,7 +141,7 @@
                     uiService.updateDashboardLayout(scope.layout.id, scope.layout).then(function (data) {
 
                         toastNotificationService.success("Dashboard Layout is Saved")
-                        scope.dashboardDataService.updateModifiedDate(data.modified);
+                        scope.dashboardDataService.updateModifiedDate(data.modified_at);
 
                         scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
@@ -190,7 +190,7 @@
                             scope.layout.configuration_code = res.data.configuration_code;
 
                             uiService.updateDashboardLayout(scope.layout.id, scope.layout).then(async function (data) {
-                                scope.dashboardDataService.updateModifiedDate(data.modified);
+                                scope.dashboardDataService.updateModifiedDate(data.modified_at);
                                 toastNotificationService.success("Dashboard Layout is renamed")
 
                             });
