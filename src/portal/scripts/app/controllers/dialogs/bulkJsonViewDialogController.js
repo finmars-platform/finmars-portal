@@ -70,12 +70,12 @@
                         delete obj['procedure_modified_datetime']
                     }
 
-                    if (key === 'created') {
-                        delete obj.created
+                    if (key === 'created_at') {
+                        delete obj.created_at
                     }
 
-                    if (key === 'modified') {
-                        delete obj.modified
+                    if (key === 'modified_at') {
+                        delete obj.modified_at
                     }
 
                     if (obj.hasOwnProperty(key + '_object')) {
