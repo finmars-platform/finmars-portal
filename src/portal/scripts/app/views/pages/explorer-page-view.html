@@ -227,12 +227,12 @@
 
                             <th>
                                 <div layout="row">
-                                    <md-button data-ng-click="vm.sortBy('modified')">Date Modified</md-button>
-                                    <div ng-show="vm.propertyName === 'modified'">
+                                    <md-button data-ng-click="vm.sortBy('modified_at')">Date Modified</md-button>
+                                    <div ng-show="vm.propertyName === 'modified_at'">
                                         <span class="material-icons" ng-show="vm.reverse">arrow_drop_down</span>
                                         <span class="material-icons" ng-show="!vm.reverse">arrow_drop_up</span>
                                     </div>
-                                    <div ng-show="vm.propertyName !== 'modified'" style="width: 24px;">
+                                    <div ng-show="vm.propertyName !== 'modified_at'" style="width: 24px;">
                                         &nbsp;
                                     </div>
                                 </div>
@@ -339,8 +339,8 @@
                                 </div>
                             </td>
 
-                            <td title="{{::item.modified}}">
-                                {{::item.modified | date: 'yyyy-MM-dd HH:mm:ss'}}
+                            <td title="{{::item.modified_at}}">
+                                {{::item.modified_at | date: 'yyyy-MM-dd HH:mm:ss'}}
                             </td>
 
                             <td title="{{::item.size}}">

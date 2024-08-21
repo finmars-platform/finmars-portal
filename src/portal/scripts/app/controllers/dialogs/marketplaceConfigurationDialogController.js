@@ -169,7 +169,7 @@
                     filters: {configuration_code: vm.item.configuration_code, channel: vm.channel},
                     sort: {
                         direction: "DESC",
-                        key: "created"
+                        key: "created_at"
                     }
                 }
             ).then(function (data) {

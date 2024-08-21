@@ -40,7 +40,7 @@
                             if (data.results.length) {
 
                                 scope.draft = data.results[0];
-                                scope.lastUpdate = scope.getLastUpdated(scope.draft.modified);
+                                scope.lastUpdate = scope.getLastUpdated(scope.draft.modified_at);
 
 
                             } else {
@@ -88,7 +88,7 @@
 
                                 scope.draft = data;
 
-                                scope.lastUpdate = scope.getLastUpdated(scope.draft.modified);
+                                scope.lastUpdate = scope.getLastUpdated(scope.draft.modified_at);
 
                                 scope.readyStatus.draft = true;
 
@@ -112,7 +112,7 @@
 
                                 scope.draft = data;
 
-                                scope.lastUpdate = scope.getLastUpdated(scope.draft.modified);
+                                scope.lastUpdate = scope.getLastUpdated(scope.draft.modified_at);
 
                                 scope.readyStatus.draft = true;
 

@@ -328,12 +328,12 @@
 
                         <div class="task-detail-field">
                             <span class="task-detail-field-definition">Start Date</span>:
-                            {{vm.activeTask.created | date:'yyyy-MM-dd' : 'UTC'}}
+                            {{vm.activeTask.created_at | date:'yyyy-MM-dd' : 'UTC'}}
                         </div>
                         <div class="task-detail-field">
                             <span class="task-detail-field-definition">Start Time</span>:
-                            {{vm.activeTask.created | date:'HH:mm:ss' : 'UTC'}}
-                            <md-tooltip md-direction="bottom">{{vm.activeTask.created}}</md-tooltip>
+                            {{vm.activeTask.created_at | date:'HH:mm:ss' : 'UTC'}}
+                            <md-tooltip md-direction="bottom">{{vm.activeTask.created_at}}</md-tooltip>
                         </div>
 
                         <div class="task-detail-field"
