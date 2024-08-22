@@ -1137,14 +1137,11 @@
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
                                         </li>
-
                                         <li>
-                                            <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.portal.marketplace">
+                                            <a href="{{ vm.getVueUrl('/marketplace') }}"
+                                               class="md-button sidemenu-btn">
                                                 <span class="side-nav-title">Marketplace</span>
-                                                <span class="md-visually-hidden"
-                                                      data-ng-if="isSelected()">current page</span>
-                                            </md-button>
+                                            </a>
                                         </li>
 
                                     </ul>
