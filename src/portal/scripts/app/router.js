@@ -908,11 +908,6 @@
                     }
                 }
             })
-            .state('app.portal.marketplace', {
-                url: '/marketplace',
-                templateUrl: 'views/pages/marketplace-page-view.html',
-                controller: 'MarketplacePageController as vm'
-            })
             .state('app.portal.vault', {
                 url: '/vault',
                 templateUrl: 'views/pages/vault-page-view.html',
