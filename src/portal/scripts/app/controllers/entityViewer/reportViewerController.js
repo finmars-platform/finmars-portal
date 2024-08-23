@@ -90,22 +90,13 @@
             });
 
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
-
-                // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-                // rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                // rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                // Frontend is deprecated since 2023-09-10
-                // if (window.location.href.indexOf('v2=true') !== -1) {
-                //     rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                // } else {
-                //     rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-                // }
-
+                // DEPRECATED. Use instead event CREATE_TABLE.
+                vm.entityViewerEventService.dispatchEvent(evEvents.CREATE_TABLE);
             });
 
             vm.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+
+                reportHelper.onCreateTableEvent(vm.entityViewerDataService, vm.entityViewerEventService, pricesCheckerService)
 
                 vm.entityViewerDataService.resetTableContent(true);
 
