@@ -107,6 +107,28 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     }
 
+    const loadWhiteLabelDefault = function () {
+
+        return new Promise(function (resolve, _reject) {
+
+            uiService.loadThemeSettingsDefault().then(function (data) {
+                let themeSettings = null
+
+                if (Array.isArray(data)) {
+                    themeSettings = data[0]
+                } else {
+                    themeSettings = data
+                }
+
+                uiService.installTheme(themeSettings)
+                resolve();
+
+            });
+
+        });
+
+    };
+
     const init = function () {
 
         middlewareService.onToggleWarningsSideNav(function () {
@@ -124,6 +146,7 @@ export default function ($scope, $state, authorizerService, usersService, global
         }
 
         promises.push(getMemberData());
+        promises.push(loadWhiteLabelDefault());
 
         Promise.all(promises).then(resData => {
 
