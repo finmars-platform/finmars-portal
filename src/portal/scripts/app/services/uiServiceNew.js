@@ -837,6 +837,18 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
 
     };
 
+    // White label
+
+    const loadThemeSettingsDefault = function () {
+        return uiRepository.loadThemeSettingsDefault();
+    };
+
+    const installTheme = function (options) {
+        globalDataService.setWhiteLabel(options);
+
+        return uiRepository.installTheme(options);
+    };
+
     /** @module uiService */
     return {
         isCachedLayoutActual: isCachedLayoutActual,
@@ -939,6 +951,9 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
 
         getDefaultMemberLayout: getDefaultMemberLayout,
         updateMemberLayout: updateMemberLayout,
+
+        loadThemeSettingsDefault: loadThemeSettingsDefault,
+        installTheme: installTheme,
 
     }
 
