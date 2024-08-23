@@ -347,8 +347,14 @@
             });
 
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
+                // DEPRECATED. Use instead event CREATE_TABLE.
+                vm.entityViewerEventService.dispatchEvent(evEvents.CREATE_TABLE);
+            });
 
-                // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+            vm.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+
+                vm.entityViewerDataService.resetTableContent(true);
+
                 rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
             });

@@ -427,6 +427,13 @@
             });
 
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
+                // DEPRECATED. Use instead event CREATE_TABLE.
+                vm.entityViewerEventService.dispatchEvent(evEvents.CREATE_TABLE);
+            });
+
+            vm.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+
+                reportHelper.onCreateTableEvent(vm.entityViewerDataService, vm.entityViewerEventService, pricesCheckerService)
 
                 var reportOptions = vm.entityViewerDataService.getReportOptions()
                 if (reportOptions) {
@@ -436,7 +443,6 @@
 
                 vm.entityViewerDataService.resetTableContent(true);
                 rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
             });
 

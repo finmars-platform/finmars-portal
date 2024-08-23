@@ -63,7 +63,8 @@
                 }; */
                 scope.refreshTable = function () {
                     scope.processing = true;
-                    scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    // scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    scope.evEventService.dispatchEvent(evEvents.CREATE_TABLE);
                 };
 
                 //region Chips
