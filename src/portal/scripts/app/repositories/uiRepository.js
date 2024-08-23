@@ -926,6 +926,55 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
             getRequestParams('PUT', ui));
     };
 
+    // White label
+
+    var loadThemeSettingsDefault = async function () {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'system/whitelabel?is_default=true',
+            getRequestParams('GET'));
+    }
+
+    var installTheme = async function (themeSettings) {
+
+        if (themeSettings?.theme_css_url) {
+            setCssFile(themeSettings)
+        }
+
+        if (themeSettings?.custom_css) {
+            setCustomCss(themeSettings)
+        }
+
+        if (themeSettings?.favicon_url) {
+            setFavicon(themeSettings)
+        }
+    }
+    var setCustomCss = async function (themeSettings) {
+        let styleElement = document.createElement('style')
+        styleElement.innerHTML = themeSettings.custom_css
+        document.head.appendChild(styleElement)
+    }
+    var setFavicon = async function (themeSettings) {
+        let link = document.querySelector("link[rel~='icon']")
+
+        if (!link) {
+            link = document.createElement('link')
+            link.rel = 'icon'
+            document.head.appendChild(link)
+        }
+
+        link.href = themeSettings.favicon_url
+    }
+    var setCssFile = async function (themeSettings) {
+        let link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = themeSettings.theme_css_url
+
+        document.head.appendChild(link)
+    }
+
     return {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -1026,6 +1075,9 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
         getDefaultMemberLayout: getDefaultMemberLayout,
         updateMemberLayout: updateMemberLayout,
+
+        installTheme: installTheme,
+        loadThemeSettingsDefault: loadThemeSettingsDefault,
 
     }
 
