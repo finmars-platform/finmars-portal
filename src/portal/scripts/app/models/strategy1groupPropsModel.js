@@ -31,6 +31,24 @@
                 "key": "user_code",
                 "name": "User code",
                 "value_type": 10
+            },
+            {
+                "key": "created_at",
+                "name": "Created At",
+                "value_type": 40,
+                "readonly": true
+            },
+            {
+                "key": "modified_at",
+                "name": "Modified At",
+                "value_type": 40,
+                "readonly": true
+            },
+            {
+                "key": "deleted_at",
+                "name": "Delete At",
+                "value_type": 40,
+                "readonly": true
             }
         ]
     };
