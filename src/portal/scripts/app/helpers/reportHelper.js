@@ -1,6 +1,7 @@
 /**
  * Created by szhitenev on 13.02.2017.
  */
+import evEvents from "../services/entityViewerEvents";
 
 const modelService = require('../services/modelService');
 /**
@@ -1162,6 +1163,31 @@ export default function (expressionService) {
 
     };
 
+    /**
+     *
+     * @param evDataService {entityViewerDataService}
+     * @param evEventService {entityViewerEventService}
+     * @param pricesCheckerService {Object} - pricesCheckerService.js singleton
+     */
+    var onCreateTableEvent = function (evDataService, evEventService, pricesCheckerService) {
+
+        const eventIndex = evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+            const reportOptions = evDataService.getReportOptions();
+
+            pricesCheckerService.fetchPricesErrors(reportOptions).then(function (data) {
+
+                evDataService.setMissingPrices(data);
+                evEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END);
+
+            })
+
+            evEventService.removeEventListener(evEvents.DATA_LOAD_END, eventIndex);
+
+        });
+
+    }
+
     return {
         convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
@@ -1172,6 +1198,8 @@ export default function (expressionService) {
 
         getDateProperties: getDateProperties,
         getReportDate: getReportDate,
+
+        onCreateTableEvent: onCreateTableEvent,
     }
 
 }
