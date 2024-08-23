@@ -1,12 +1,11 @@
-const importTransactionService = require("../../../services/import/importTransactionService");
-const {default: metaHelper} = require("../../../helpers/meta.helper");
-const {default: ScrollHelper} = require("../../../helpers/scrollHelper");
 /**
  * Created by szhitenev on 07.02.2023.
  */
 (function () {
 
     'use strict';
+
+    const importTransactionService = require("../../../services/import/importTransactionService");
 
     const metaService = require('../../../services/metaService').default;
     const metaHelper = require('../../../helpers/meta.helper').default;
@@ -596,82 +595,7 @@ const {default: ScrollHelper} = require("../../../helpers/scrollHelper");
             vm.ruleScenarios.splice($index, 1);
         };
 
-        const updateColumns = function (item, index) {
-            item.column = index + 1;
-            return item;
-        };
-
         //# region Drag and drop
-        const drakeDropHandler = function (elem, nextSiblings, itemsList) {
-
-            // var draggedItemOrder = parseInt(elem.dataset.itemKey);
-            const draggedItemKey = elem.dataset.itemKey;
-            let draggedItemIndex;
-
-            const itemToInsert = itemsList.find((item, index) => {
-
-                if (item.frontOptions.key === draggedItemKey) {
-                    draggedItemIndex = index;
-                    return true;
-                }
-
-                return false;
-            });
-
-            /*let siblingItemKey = null;
-
-            if (nextSiblings) {
-                siblingItemKey = elem.dataset.itemKey;
-            }*/
-            itemsList.splice(draggedItemIndex, 1);
-
-            if (nextSiblings) {
-
-                let siblingKey = nextSiblings.dataset.itemKey;
-
-                /*for (var i = 0; i < vm.selectorValues.value.length; i++) {
-                    if (vm.selectorValues.value[i].order === siblingItemOrder) {
-
-                        vm.selectorValues.value.splice(i, 0, rowToInsert);
-                        break;
-
-                    }
-                }*/
-                const siblingIndex = itemsList.findIndex(
-                    item => item.frontOptions.key === siblingKey
-                );
-
-                itemsList.splice(siblingIndex, 0, itemToInsert);
-
-            } else {
-                itemsList.push(itemToInsert);
-            }
-
-            itemsList = itemsList.map(updateColumns);
-
-            return itemsList;
-
-        };
-
-        /**
-         *
-         * @param drake {Object} - instance of dragula
-         * @param scrollHelper {Object} - instance of scrollHelper
-         * @param onDropCallback {Function}
-         */
-        const initDrakeEventListeners = function (drake, scrollHelper, onDropCallback) {
-
-            drake.on('drag', function () {
-                scrollHelper.enableDnDWheelScroll();
-            });
-
-            drake.on('drop', onDropCallback);
-
-            drake.on('dragend', function (elem) {
-                scrollHelper.disableDnDWheelScroll();
-            });
-
-        };
 
         let dragIconGrabbed = false;
 
@@ -715,10 +639,14 @@ const {default: ScrollHelper} = require("../../../helpers/scrollHelper");
                 const drake = this.dragula;
 
                 function onDropHandler (elem, target, source, nextSiblings) {
-                    vm.schemeInputs = drakeDropHandler(elem, nextSiblings, vm.schemeInputs);
+                    vm.schemeInputs = importSchemesMethodsService.drakeDropHandler(
+                        elem, nextSiblings, vm.schemeInputs
+                    );
                 }
 
-                initDrakeEventListeners(drake, schemeInputsScrollHelper, onDropHandler);
+                importSchemesMethodsService.initDrakeEventListeners(
+                    drake, schemeInputsScrollHelper, onDropHandler
+                );
 
             },
 
@@ -756,10 +684,14 @@ const {default: ScrollHelper} = require("../../../helpers/scrollHelper");
             initEventListeners: function () {
                 const drake = this.dragula;
                 function onDropHandler (elem, target, source, nextSiblings) {
-                    vm.calculatedInputs = drakeDropHandler(elem, nextSiblings, vm.calculatedInputs);
+                    vm.calculatedInputs = importSchemesMethodsService.drakeDropHandler(
+                        elem, nextSiblings, vm.calculatedInputs
+                    );
                 }
 
-                initDrakeEventListeners(drake, calculatedInputsScrollHelper, onDropHandler);
+                importSchemesMethodsService.initDrakeEventListeners(
+                    drake, calculatedInputsScrollHelper, onDropHandler
+                );
 
             },
 

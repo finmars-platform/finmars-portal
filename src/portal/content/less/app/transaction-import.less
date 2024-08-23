@@ -142,40 +142,6 @@ md-dialog.transaction-scheme-manager-dialog-view-v2 {
     }
   }
 
-  .calc-input-expr {
-    cursor: pointer;
-
-    .custom-input-container {
-      .custom-input:not([disabled]) {
-        cursor: pointer;
-      }
-
-      .custom-input-indicator-btn:not([disabled]):hover {
-        opacity: 1;
-      }
-    }
-
-
-    &:hover {
-      opacity: .7;
-    }
-    /*cursor: pointer;
-    border: 1px solid var(--table-border-color);
-
-    resize: none;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 4px;
-    white-space: pre;
-    max-width: 400px;
-    min-width: 400px;
-    overflow: hidden;
-
-    &:hover {
-      opacity: .7;
-    }*/
-  }
-
   .action-btn {
     display: flex;
     min-width: 0;
@@ -362,4 +328,24 @@ md-dialog.transaction-scheme-manager-dialog-view-v2 {
    max-content for HTML element with dryRunResult.*/
   grid-template-columns: 240px 240px 44px max-content;
   .transaction-import-scheme-v2-row-mixin();
+}
+
+.import-scheme-calc-input-expr {
+  /* Also used by simple entity import scheme */
+  cursor: pointer;
+
+  .custom-input-container {
+    .custom-input:not([disabled]) {
+      cursor: pointer;
+    }
+
+    .custom-input-indicator-btn:not([disabled]):hover {
+      opacity: 1;
+    }
+  }
+
+
+  &:hover {
+    opacity: .7;
+  }
 }

@@ -232,6 +232,79 @@
 
         /************ < Add edit transaction import scheme > ************/
 
+        //# region Drag and drop
+        /**
+         *
+         * @param elem {HTMLElement} - dropped element
+         * @param nextSiblings {HTMLElement} - nextSibling from handler function for
+         * the "drop" event of dragula
+         * @param itemsList {Array} - an array of items that is changed by drag and drop
+         * @return {Array} - an array changed by drag and drop
+         */
+        var drakeDropHandler = function (elem, nextSiblings, itemsList) {
+
+            function updateColumns (item, index) {
+                item.column = index + 1;
+                return item;
+            }
+
+            // var draggedItemOrder = parseInt(elem.dataset.itemKey);
+            const draggedItemKey = elem.dataset.itemKey;
+            let draggedItemIndex;
+
+            const itemToInsert = itemsList.find((item, index) => {
+
+                if (item.frontOptions.key === draggedItemKey) {
+                    draggedItemIndex = index;
+                    return true;
+                }
+
+                return false;
+            });
+
+            itemsList.splice(draggedItemIndex, 1);
+
+            if (nextSiblings) {
+
+                let siblingKey = nextSiblings.dataset.itemKey;
+
+                const siblingIndex = itemsList.findIndex(
+                    item => item.frontOptions.key === siblingKey
+                );
+
+                itemsList.splice(siblingIndex, 0, itemToInsert);
+
+            } else {
+                itemsList.push(itemToInsert);
+            }
+
+            itemsList = itemsList.map(updateColumns);
+
+            return itemsList;
+
+        };
+
+        /**
+         *
+         * @param drake {Object} - instance of dragula
+         * @param scrollHelper {Object} - instance of scrollHelper
+         * @param onDropCallback {Function}
+         */
+        const initDrakeEventListeners = function (drake, scrollHelper, onDropCallback) {
+
+            drake.on('drag', function () {
+                scrollHelper.enableDnDWheelScroll();
+            });
+
+            drake.on('drop', onDropCallback);
+
+            drake.on('dragend', function () {
+                scrollHelper.disableDnDWheelScroll();
+            });
+
+        };
+        //# endregion Drag and drop
+
         return {
             setProviderFieldExpression: setProviderFieldExpression,
             setCalculatedFieldExpression: setCalculatedFieldExpression,
@@ -244,7 +317,10 @@
 
             openCalcFieldFxBtnExprBuilder: openCalcFieldFxBtnExprBuilder,
             onTTypeCalcFielNamedBlur: onTTypeCalcFielNamedBlur,
-            getCalcFieldFxBtnClasses: getCalcFieldFxBtnClasses
+            getCalcFieldFxBtnClasses: getCalcFieldFxBtnClasses,
+
+            drakeDropHandler: drakeDropHandler,
+            initDrakeEventListeners: initDrakeEventListeners,
         }
 
     }
