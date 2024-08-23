@@ -7,6 +7,11 @@
 
     var getAttributes = function () {
         return [
+            {
+                "key": "id",
+                "name": "ID",
+                "value_type": 20
+            },
             //{
             //    "key": "name",
             //    "name": "Name",

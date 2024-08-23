@@ -8,6 +8,11 @@
     var getAttributes = function () {
         return [
             {
+                "key": "id",
+                "name": "ID",
+                "value_type": 20
+            },
+            {
                 "key": "name",
                 "name": "Name",
                 "value_type": 10
@@ -386,13 +391,31 @@
                 "key": "user_date_5",
                 "name": "User Date 5",
                 "value_type": 10
-            }
+            },
 
             //{
             //    "key": "book_transaction_layout",
             //    "name": "Book transaction Layout",
             //    "value_type": 10
             //}
+            {
+                "key": "created_at",
+                "name": "Created At",
+                "value_type": 40,
+                "readonly": true
+            },
+            {
+                "key": "modified_at",
+                "name": "Modified At",
+                "value_type": 40,
+                "readonly": true
+            },
+            {
+                "key": "deleted_at",
+                "name": "Delete At",
+                "value_type": 40,
+                "readonly": true
+            }
         ]
     };
 

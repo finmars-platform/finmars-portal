@@ -9,7 +9,7 @@ export default function () {
         member: null,
         memberLayout: null,
         user: null,
-
+        whiteLabel: null,
     };
 
     let iframeMode = false; // used when app inside iframe
@@ -184,6 +184,14 @@ export default function () {
 
     }
 
+    const getWhiteLabel = function () {
+        return data.whiteLabel
+    }
+
+    const setWhiteLabel = function (whiteLabel) {
+        data.whiteLabel = whiteLabel
+    }
+
     return {
         setCurrentMasterUserStatus: setCurrentMasterUserStatus,
         doUserHasCurrentMasterUser: doUserHasCurrentMasterUser,
@@ -205,6 +213,9 @@ export default function () {
 
         setIframeMode: setIframeMode,
         insideIframe: insideIframe,
+
+        getWhiteLabel: getWhiteLabel,
+        setWhiteLabel: setWhiteLabel,
 
         getDefaultConfigurationCode: getDefaultConfigurationCode,
 

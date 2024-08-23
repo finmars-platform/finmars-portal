@@ -8,6 +8,11 @@
     var getAttributes = function () {
         return [
             {
+                "key": "id",
+                "name": "ID",
+                "value_type": 20
+            },
+            {
                 "key": "name",
                 "name": "Name",
                 "value_type": 10
@@ -45,6 +50,24 @@
                 "key": "object_permissions",
                 "name": "Object permissions",
                 "value_type": "mc_field"
+            },
+            {
+                "key": "created_at",
+                "name": "Created At",
+                "value_type": 40,
+                "readonly": true
+            },
+            {
+                "key": "modified_at",
+                "name": "Modified At",
+                "value_type": 40,
+                "readonly": true
+            },
+            {
+                "key": "deleted_at",
+                "name": "Delete At",
+                "value_type": 40,
+                "readonly": true
             }
         ]
     };
