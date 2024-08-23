@@ -596,6 +596,7 @@
                                 return {
                                     index: index,
                                     key: item.___group_identifier,
+                                    name: item.___group_name,
                                     total: item.subtotal[scope.matrixSettings.value_key]
                                 }
                             })
