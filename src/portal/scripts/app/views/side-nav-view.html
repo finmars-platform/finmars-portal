@@ -2,12 +2,12 @@
     <md-toolbar md-scroll-shrink>
         <div class="md-toolbar-tools">
             <div class="sidenav-logo-wrapper">
-                <img src="portal/content/img/logo.png"
+                <img ng-src="{{vm.getLogo()}}"
                      data-ng-if="!vm.isThemeInDarkMode()"
                      alt=""
                      height="40"
                      class="sidenav-logo">
-                <img src="portal/content/img/logo-dark.png"
+                <img ng-src="{{vm.getLogo()}}"
                      data-ng-if="vm.isThemeInDarkMode()"
                      alt=""
                      height="40"
@@ -1139,7 +1139,7 @@
                                         </li>
                                         <li>
                                             <a href="{{ vm.getVueUrl('/marketplace') }}"
-                                               class="md-button sidemenu-btn">
+                                               class="md-button sidenav-dropdown-menu-btn">
                                                 <span class="side-nav-title">Marketplace</span>
                                             </a>
                                         </li>
@@ -1218,14 +1218,20 @@
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
-
-                            <a href="{{vm.vaultRecordUrl}}">
-                                <md-button class="sidemenu-btn">
-                                    <span class="side-nav-title">Vault Record</span>
-                                </md-button>
-                            </a>
-
-
+                            <li>
+                                <a href="{{vm.vaultRecordUrl}}">
+                                    <md-button class="sidemenu-btn">
+                                        <span class="side-nav-title">Vault Record</span>
+                                    </md-button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ vm.getVueUrl('/system/settings/general') }}">
+                                    <md-button class="sidemenu-btn">
+                                        <span class="side-nav-title">White Label</span>
+                                    </md-button>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
