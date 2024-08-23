@@ -3,6 +3,7 @@
 // import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
 // import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
 
+const evEvents = require("../services/entityViewerEvents");
 (function () {
 
     var CommonDialogsService = require("../../../../shell/scripts/app/services/commonDialogsService").default;
@@ -61,6 +62,33 @@
 
         };
 
+        const setEventListeners = function () {
+
+            if (viewModel.entityType !== 'transaction-report') {
+
+                viewModel.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function() {
+
+                    const eventIndex = viewModel.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        const reportOptions = viewModel.entityViewerDataService.getReportOptions();
+
+                        pricesCheckerService.fetchPricesErrors(reportOptions).then(function (data) {
+
+                            viewModel.entityViewerDataService.setMissingPrices(data);
+                            viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END);
+
+                        })
+
+                        viewModel.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, eventIndex);
+
+                    });
+
+                });
+
+            }
+
+        }
+
         const putUseFromAboveFiltersFirst = function () { // needed for already existing rv layouts
 
             let allFilters = viewModel.entityViewerDataService.getFilters();
@@ -108,6 +136,8 @@
 
         };
 
+
+
         const onSetLayoutEnd = () => {
 
             viewModel.readyStatus.layout = true;
@@ -117,7 +147,7 @@
 
             if (entityType !== 'transaction-report') {
 
-                pricesCheckerService.check(reportOptions).then(function (data) {
+                /*pricesCheckerService.check(reportOptions).then(function (data) {
 
                     data.items = data.items.map(function (item) {
 
@@ -157,7 +187,13 @@
 
                     viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END);
 
-                });
+                });*/
+                pricesCheckerService.fetchPricesErrors(reportOptions).then(function (data) {
+
+                    viewModel.entityViewerDataService.setMissingPrices(data);
+                    viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END);
+
+                })
 
             }
 
@@ -378,7 +414,7 @@
 
         };
 
-        //region Execute actions from report viewer table
+        //# region Execute actions from report viewer table
 
         var updateTableAfterEntityChanges = function (res) {
 
@@ -995,10 +1031,12 @@
 
             }
         }
+        //# endregion Execute actions from report viewer table
 
         return {
             setLayoutDataForView: setLayoutDataForView,
             downloadAttributes: downloadAttributes,
+            setEventListeners: setEventListeners,
             applyDatesFromAnotherLayout: applyDatesFromAnotherLayout,
             calculateReportDatesExprs: calculateReportDatesExprs,
             onSetLayoutEnd: onSetLayoutEnd,
