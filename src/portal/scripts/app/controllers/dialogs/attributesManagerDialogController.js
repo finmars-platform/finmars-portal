@@ -14,6 +14,7 @@
         vm.showHidden = false;
 
         var choices = metaService.getDynamicAttrsValueTypesCaptions();
+        var dialogContainerWrapElem = document.querySelector('.dialog-containers-wrap');
         vm.attrs = [];
 
         vm.entityType = data.entityType;
@@ -52,7 +53,7 @@
             $mdDialog.show({
                 controller: 'AttributeTypeDialogController as vm',
                 templateUrl: 'views/attribute-type-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogContainerWrapElem,
                 targetEvent: ev,
                 multiple: true,
                 locals: {
@@ -99,7 +100,7 @@
             $mdDialog.show({
                 controller: 'ClassificationEditorDialogController as vm',
                 templateUrl: 'views/classification-editor-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogContainerWrapElem,
                 targetEvent: ev,
                 multiple: true,
                 locals: {
@@ -108,28 +109,29 @@
                         entityType: vm.entityType
                     }
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
+            })
+            .then(function (res) {
+                    if (res.status === 'agree') {
+                        console.log("res", res.data);
 
-                    res.data.classifier.classifiers = res.data.classifier.children.map(setName);
+                        res.data.classifier.classifiers = res.data.classifier.children.map(setName);
 
-                    attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier).then(function () {
+                        attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier).then(function () {
 
-                        attributesWereChanged = true;
-                        vm.getList();
+                            attributesWereChanged = true;
+                            vm.getList();
 
-                    });
-                }
-            });
-        };
+                        });
+                    }
+                });
+            };
 
         vm.openClassifierMapping = function ($event, item) {
             console.log("import classifier item", item);
             $mdDialog.show({
                 controller: 'EntityTypeClassifierMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogContainerWrapElem,
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -148,7 +150,7 @@
             $mdDialog.show({
                 controller: 'ClassifierImportDialogController as vm',
                 templateUrl: 'views/dialogs/classifier-import-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogContainerWrapElem,
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -168,7 +170,7 @@
             $mdDialog.show({
                 controller: 'ClassifierExportDialogController as vm',
                 templateUrl: 'views/dialogs/classifier-export-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogContainerWrapElem,
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -187,7 +189,7 @@
             $mdDialog.show({
                 controller: 'AttributeTypeDialogController as vm',
                 templateUrl: 'views/attribute-type-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogContainerWrapElem,
                 targetEvent: ev,
                 multiple: true,
                 locals: {
@@ -252,7 +254,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogContainerWrapElem,
                 targetEvent: ev,
                 clickOutsideToClose: false,
                 locals: {
@@ -273,7 +275,7 @@
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
-                                parent: document.querySelector('.dialog-containers-wrap'),
+                                parent: dialogContainerWrapElem,
                                 targetEvent: ev,
                                 clickOutsideToClose: false,
                                 multiple: true,
@@ -310,7 +312,7 @@
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
-                    parent: document.querySelector('.dialog-containers-wrap'),
+                    parent: dialogContainerWrapElem,
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     locals: {
@@ -330,7 +332,7 @@
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
-                                parent: document.querySelector('.dialog-containers-wrap'),
+                                parent: dialogContainerWrapElem,
                                 targetEvent: $event,
                                 clickOutsideToClose: false,
                                 multiple: true,
