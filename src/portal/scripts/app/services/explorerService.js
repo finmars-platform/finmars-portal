@@ -46,6 +46,10 @@
         return explorerRepository.sync()
     }
 
+    var move = function (data) {
+        return explorerRepository.move(data)
+    }
+
     module.exports = {
         listFiles: listFiles,
         searchFiles: searchFiles,
@@ -57,6 +61,7 @@
         downloadZip: downloadZip,
         downloadFile: downloadFile,
         sync: sync,
+        move: move,
     }
 
 
