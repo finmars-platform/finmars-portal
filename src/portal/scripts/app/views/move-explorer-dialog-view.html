@@ -1,0 +1,24 @@
+<md-dialog aria-label="move-explorer-dialog"
+           class="classifier-editor-dialog-view draggable-dialog"
+           drag-dialog>
+    <md-toolbar>
+        <dialog-header
+                title="Move Editor"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
+    </md-toolbar>
+    <md-dialog-content>
+        <div layout="row">
+            <div id="jstree_explorer" style="width: 100%; overflow: hidden"></div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
