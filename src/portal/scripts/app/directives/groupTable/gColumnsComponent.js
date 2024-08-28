@@ -205,13 +205,6 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     scope.selectSubtotalType(column, 1);
 
-                    // scope.evDataService.resetTableContent(scope.isReport);
-
-                    // because we need go to backend to recalculate subtotals
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
                 }
 
                 function onSubtotalWeightedClick(column) {
@@ -227,12 +220,8 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     }
 
-                    // scope.evDataService.resetTableContent(scope.isReport);
-
-                    // because we need go to backend to recalculate subtotals
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    // column = applySubtotalType(column, 2);
+                    scope.selectSubtotalType(column, 2);
 
                 }
 
@@ -249,12 +238,8 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     }
 
-                    // scope.evDataService.resetTableContent(scope.isReport);
-
-                    // because we need go to backend to recalculate subtotals
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    // applySubtotalType(column, 6);
+                    scope.selectSubtotalType(column, 6);
 
                 }
 
@@ -1081,9 +1066,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                     scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
                 };
 
-                scope.selectSubtotalType = function (column, type) {
-
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                const applySubtotalType = function (column, type) {
 
                     if (!column.hasOwnProperty('report_settings')) {
                         column.report_settings = {};
@@ -1097,8 +1080,19 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     makePopupDataForColumns(scope.columns);
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+                    // TODO: reload only relevant column instead of a whole table
+                    dispatchCreateTableD();
+
+                    return column;
+
+                };
+
+                scope.selectSubtotalType = function (column, type) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    column = applySubtotalType(column, type);
+
                 };
 
                 function getSubtotalFormula(column) {
