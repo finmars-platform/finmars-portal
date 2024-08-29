@@ -528,14 +528,34 @@
 
     var validateDateField = function (value, fieldAttr) {
 
-        if (!value) {
+        function validateEmpty() {
 
-            value = null;
+            var errorMsg = 'Field should contain date in YYYY-MM-DD format.';
+
+            if ( fieldAttr.allow_null || fieldAttr.readonly ) {
+
+                if (value === null) {
+                    return false;
+                }
+
+                errorMsg = "Field should contain date in YYYY-MM-DD format " +
+                    "or 'null'. It contains: " + value;
+
+            }
 
             return {
                 fieldName: fieldAttr.verbose_name || fieldAttr.name,
-                message: 'Field should contain date in YYYY-MM-DD format.'
+                message: errorMsg
             };
+
+        }
+
+        if (!value) {
+
+            // value = null;
+
+            return validateEmpty();
+
 
         } else if (!moment(value, 'YYYY-MM-DD', true).isValid()) {
 
@@ -888,6 +908,7 @@
                 if (['procedure_modified_datetime', 'maturity_date', 'first_cash_flow_date', 'first_transaction_date'].indexOf(key) === -1) {
                     validateEvField(key, fieldValue, entityAttr, tabs, fixedFieldsAttrs, entityType, errors);
                 }
+
             }
 
         });
