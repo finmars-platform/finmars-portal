@@ -2340,6 +2340,47 @@
         }
     };
 
+    /**
+     *
+     * @param vm {Object}
+     * @param toggleLockStatusCb {Function}
+     * @return {{onClick: onClick, readonly icon: (string), readonly name: (string), readonly isDisabled: *}|boolean|string}
+     *
+     * @memberof module:entityEditorHelper
+     */
+    function getLockMenuOption(vm, toggleLockStatusCb) {
+        return {
+            get icon() {
+
+                if (vm.entity.is_locked) {
+                    return "lock_open"
+                }
+
+                return "lock_outline";
+
+            },
+            get name() {
+                if (vm.entity.is_locked) {
+                    return "Unlock"
+                }
+
+                return "Lock"
+            },
+            get isDisabled() {
+                return vm.entity.is_canceled ||
+                    !vm.hasEditPermission ||
+                    vm.processing;
+            },
+
+            onClick: function (option, _$popup) {
+                _$popup.cancel();
+
+                toggleLockStatusCb();
+
+            }
+        }
+    }
+
     /** @module entityEditorHelper */
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
@@ -2368,7 +2409,9 @@
         generateAttributesFromLayoutFields: generateAttributesFromLayoutFields,
         fixCustomTabs: fixCustomTabs,
 
-        instrumentTypeAttrValueMapper: instrumentTypeAttrValueMapper
+        instrumentTypeAttrValueMapper: instrumentTypeAttrValueMapper,
+
+        getLockMenuOption: getLockMenuOption,
     }
 
 }());
