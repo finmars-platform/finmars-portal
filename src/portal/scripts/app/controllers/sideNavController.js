@@ -653,11 +653,11 @@
         }
 
         vm.getLogo = function () {
-            if (vm.isThemeInDarkMode) {
-                return vm.themeSettings?.logo_dark_url || 'portal/content/img/logo-dark.png'
-            } else {
-                return vm.themeSettings?.logo_light_url || 'portal/content/img/logo.png'
-            }
+            return vm.themeSettings?.logo_light_url || 'portal/content/img/logo.png'
+        }
+
+        vm.getLogoDark = function () {
+            return vm.themeSettings?.logo_dark_url || 'portal/content/img/logo-dark.png'
         }
 
         vm.init = function () {
