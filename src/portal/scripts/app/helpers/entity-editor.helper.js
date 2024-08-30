@@ -532,7 +532,11 @@
 
             var errorMsg = 'Field should contain date in YYYY-MM-DD format.';
 
-            if ( fieldAttr.allow_null || fieldAttr.readonly ) {
+            if (fieldAttr.readonly) {
+                return false;
+            }
+
+            if (fieldAttr.allow_null) {
 
                 if (value === null) {
                     return false;
