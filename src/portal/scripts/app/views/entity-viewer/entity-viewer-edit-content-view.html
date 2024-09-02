@@ -2,11 +2,11 @@
 <!--Now I develop new design for: instruments, ... -->
 <!--When all entities will have new design, we can rename entity-viewer-universal-edit-content-view.html to entity-viewer-edit-content-view -->
 
-<div ng-if="vm.readyStatus.entity">
+<div data-ng-if="vm.readyStatus.entity">
 
-    <div ng-if="vm.fixedFieldsAttributes.length > 0"
+    <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
          class="entity-editor-fixed-area"
-         data-ng-class="{'disabled-element': !vm.entity.is_enabled && vm.hasEnabledStatus}">
+         data-ng-class="{'disabled-element': vm.isFormDisabled()}">
 
         <div class="entity-editor-fa-row">
 
@@ -49,7 +49,7 @@
                                     data-user-code-disabled="vm.ucDisabled"
                                     data-value-to-show="vm.nameToShow"
                                     data-event-service="vm.enfEventService"
-                                    data-is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                                    data-is-disabled="vm.isFormDisabled()"
                                     data-editing="true"
                                     data-on-value-to-show-change="vm.onNameToShowChange()"></entity-names-field>
             </div>
@@ -67,13 +67,13 @@
 
                 <dropdown-select
                         data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
-                        label="{{vm.typeFieldLabel}}"
-                        model="vm.entity[vm.typeFieldName]"
-                        placeholder-text="{{vm.typeFieldLabel}}"
-                        menu-options="vm.typeSelectorOptions"
-                        small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
-                        on-change-callback="vm.typeSelectorChange()"
-                        is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                        data-label="{{vm.typeFieldLabel}}"
+                        data-model="vm.entity[vm.typeFieldName]"
+                        data-placeholder-text="{{vm.typeFieldLabel}}"
+                        data-menu-options="vm.typeSelectorOptions"
+                        data-small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
+                        data-on-change-callback="vm.typeSelectorChange()"
+                        data-is-disabled="vm.isFormDisabled()"
                         class="ev-editor-field">
                 </dropdown-select>
 
@@ -82,9 +82,9 @@
                              data-item="vm.entity.group"
                              data-entity-type="vm.groupSelectorEntityType"
                              data-options="vm.groupSelectorOptions"
-                             event-signal="vm.fixedAreaEventObj.event"
-                             small-options="{notNull: true}"
-                             is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                             data-event-signal="vm.fixedAreaEventObj.event"
+                             data-small-options="{notNull: true}"
+                             data-is-disabled="vm.isFormDisabled()"
                              class="ev-editor-field"></crud-select>
 
                 <crud-select
@@ -93,9 +93,9 @@
                         data-item="vm.entity.subgroup"
                         data-entity-type="vm.groupSelectorEntityType"
                         data-options="vm.groupSelectorOptions"
-                        event-signal="vm.fixedAreaEventObj.event"
-                        small-options="{notNull: true}"
-                        is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                        data-event-signal="vm.fixedAreaEventObj.event"
+                        data-small-options="{notNull: true}"
+                        data-is-disabled="vm.isFormDisabled()"
                         class="ev-editor-field"></crud-select>
 
                 <!--<div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
@@ -112,13 +112,13 @@
                  class="fa-field3">-->
             <div class="fa-field3"
                  data-ng-class="vm.getFaField3Classes()">
-                <dropdown-select label="Status"
-                                 model="vm.entityStatus"
-                                 placeholder-text="System List"
-                                 menu-options="vm.statusSelectorOptions"
-                                 small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
-                                 on-change-callback="vm.entityStatusChanged()"
-                                 is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                <dropdown-select data-label="Status"
+                                 data-model="vm.entityStatus"
+                                 data-placeholder-text="System List"
+                                 data-menu-options="vm.statusSelectorOptions"
+                                 data-small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                                 data-on-change-callback="vm.entityStatusChanged()"
+                                 data-is-disabled="vm.isFormDisabled()"
                                  class="ev-editor-field"></dropdown-select>
             </div>
 
@@ -140,7 +140,7 @@
 
                 <md-tab-body>
                     <md-content class="md-padding p-t-26"
-                                ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
+                                data-ng-class="{'locked-tab-overlay': vm.isFormDisabled()}">
                         <div layout="row"
                              data-ng-repeat="row in vm.range(tab.layout.rows)"
                              class="entity-editor-row">
@@ -173,19 +173,14 @@
 
                 <md-tab-body>
                     <md-content class="md-padding p-t-26"
-                                ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
+                                data-ng-class="{'locked-tab-overlay': vm.isFormDisabled()}">
                         <div data-ng-include="tab.templateUrl"></div>
                     </md-content>
                 </md-tab-body>
             </md-tab>
 
-            <md-tab data-ng-if="vm.checkPermissions() && vm.canManagePermissions"
+            <!--<md-tab data-ng-if="vm.checkPermissions() && vm.canManagePermissions"
                     md-active="vm.activeTab === 'permissions'">
-
-                <!--                        Victor 2020.10.28 Permission label move to md-menu-->
-                <!--                         <md-tab-label>
-                                            <span class="colored-tab">Permissions</span>
-                                        </md-tab-label>-->
 
                 <md-tab-body>
                     <md-content class="md-padding p-t-26">
@@ -322,7 +317,7 @@
                         </md-content>
                     </md-content>
                 </md-tab-body>
-            </md-tab>
+            </md-tab>-->
 
         </md-tabs>
 

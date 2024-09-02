@@ -1142,7 +1142,7 @@
                     },
                 },
 
-                {
+                /*{
                     get icon() {
                         if (vm.entity.is_locked === true) {
                             return "lock_open"
@@ -1169,7 +1169,8 @@
                         vm.toggleLockStatus();
 
                     },
-                },
+                },*/
+                entityEditorHelper.getLockMenuOption(vm, vm.toggleLockStatus),
 
                 {
                     get icon() {
