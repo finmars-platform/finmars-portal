@@ -125,14 +125,16 @@
             },
             {
                 "key": "created_at",
-                "name": "Created",
-                "value_type": 40
+                "name": "Created At",
+                "value_type": 80,
+                "readonly": true
             },
 
             {
                 "key": "modified_at",
                 "name": "Modified",
-                "value_type": 40
+                "value_type": 80,
+                "readonly": true
             },
             {
                 "key": "share_price_calculation_type",
