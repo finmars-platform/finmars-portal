@@ -323,11 +323,12 @@
             })
         }
 
-        vm.move = function ($event) {
+        vm.move = function ($event, item = undefined) {
 
-            var itemsToMove = vm.items.filter(function (item) {
+            var itemsToMove = [item] ?? vm.items.filter(function (item) {
                 return item.selected;
-            })
+            });
+
             const paths = [];
             let isFile = false;
             $mdDialog.show({
@@ -584,8 +585,6 @@
         vm.selectItem = function ($event, item) {
 
             item.selected = !item.selected;
-
-            console.log(" vm.selectItem item", item)
 
             var allSelected = true;
 
