@@ -325,7 +325,7 @@
 
         vm.move = function ($event, item = undefined) {
 
-            var itemsToMove = [item] ?? vm.items.filter(function (item) {
+            var itemsToMove = item ? [item] : vm.items.filter(function (item) {
                 return item.selected;
             });
 
