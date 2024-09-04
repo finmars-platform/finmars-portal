@@ -224,6 +224,24 @@
     })
   };
 
+  var rename = function (data) {
+
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
+
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/rename/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+  };
+
 
 
 
@@ -237,7 +255,8 @@
         uploadFiles: uploadFiles,
         downloadZip: downloadZip,
         downloadFile: downloadFile,
-        sync: sync
+        sync: sync,
+        rename: rename,
     }
 
 }());

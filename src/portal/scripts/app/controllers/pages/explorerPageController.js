@@ -323,9 +323,9 @@
             })
         }
 
-        vm.deleteSelected = function ($event) {
+        vm.deleteSelected = function ($event, item = undefined) {
 
-            var itemsToDelete = vm.items.filter(function (item) {
+            var itemsToDelete = item ? [item] : vm.items.filter(function (item) {
                 return item.selected;
             })
 
@@ -994,6 +994,34 @@
                 return extension || null; // If there's no extension, return null
             }
         }
+
+
+        vm.rename = function ($event, item) {
+            var name = JSON.parse(JSON.stringify(item.name));
+
+            $mdDialog.show({
+                controller: 'RenameDialogController as vm',
+                templateUrl: 'views/dialogs/rename-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        name: name
+                    }
+                }
+
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    let path = vm.currentPath.join('/').length ?  vm.currentPath.join('/') + '/' + name : name;
+                    explorerService.rename({path: path, new_name: res.name}).then(function (data) {
+                       vm.exportTaskId = data.task_id;
+                       console.log('explorerService.rename' ,data)
+                        $scope.$apply();
+                    })
+                }
+            })
+        }
+
 
         vm.init = function () {
 
