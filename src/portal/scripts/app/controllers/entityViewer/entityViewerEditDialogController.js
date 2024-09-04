@@ -842,8 +842,7 @@
         vm.delete = vm.sharedLogic.deleteEntity;
 
         vm.isFormDisabled = () => {
-            return !vm.entity.is_enabled && vm.hasEnabledStatus ||
-                vm.entity.is_locked;
+            return !vm.entity.is_enabled && vm.hasEnabledStatus;
         }
 
         vm.toggleEnableStatus = function () {
