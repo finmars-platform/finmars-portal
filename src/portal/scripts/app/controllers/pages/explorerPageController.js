@@ -20,7 +20,7 @@
     module.exports = function explorerController($scope, $state, $stateParams, $sce, authorizerService, globalDataService, $mdDialog) {
 
         var vm = this;
-
+        var throttleTimeout;
         vm.items = [];
 
         vm.reverse = true;
@@ -42,6 +42,13 @@
         vm.filesStatus = [];
 
         vm.searchTerm = '';
+        vm.currentPage = 1;
+        vm.currentPageForFailes = 1;
+        vm.currentPageForSearch = 1;
+        vm.pageSize = 5;
+        vm.pages = [];
+        vm.totalPages = 0;
+        vm.hideItemsCount = 0;
 
         vm.sortBy = function (propertyName) {
             vm.reverse = (vm.propertyName === propertyName) ? !vm.reverse : false;
@@ -58,17 +65,30 @@
 
         vm.search = async function(query) {
 
-            if (query.length) {
-                explorerService.searchFiles(query).then(function (data) {
-
-                    vm.items = data.results;
-                    vm.processing = false;
-
-                    $scope.$apply();
-                })
-            } else {
-                vm.listFiles();
+            if (throttleTimeout) {
+                clearTimeout(throttleTimeout);
             }
+
+            throttleTimeout = setTimeout(function() {
+
+                if (query.length) {
+                    vm.hideItemsCount = 0;
+                    vm.currentPage = vm.currentPageForSearch;
+                    explorerService.searchFiles({
+                        pageSize: vm.pageSize,
+                        page: vm.currentPageForSearch,
+                        query: query
+                    }).then(function(data) {
+                        vm.generatePages(data);
+                        vm.items = data.results;
+                        vm.processing = false;
+
+                        $scope.$apply();
+                    });
+                } else {
+                    vm.listFiles();
+                }
+            }, 300);
         };
 
         vm.breadcrumbsNavigation = function ($index, filePath = null) {
@@ -579,9 +599,15 @@
 
             vm.processing = true;
             vm.selectedCount = 0;
+            vm.currentPage = vm.currentPageForFailes;
+            explorerService.listFiles({
+                pageSize: vm.pageSize,
+                page: vm.currentPageForFailes,
+                path: vm.currentPath.join('/')
+            }).then(function (data) {
+                vm.generatePages(data);
 
-            explorerService.listFiles(vm.currentPath.join('/')).then(function (data) {
-
+                let itemsCountBefore = data.results.length;
                 vm.items = data.results;
 
                 vm.items = vm.items.filter(function (item) {
@@ -594,8 +620,13 @@
 
                     return result
 
-                })
+                });
 
+                let itemsCountAfter = vm.items.length;
+
+                vm.hideItemsCount = itemsCountBefore - itemsCountAfter;
+
+                console.log('vm.hideItemsCount', vm.hideItemsCount)
                 vm.processing = false;
 
                 $scope.$apply();
@@ -1038,6 +1069,133 @@
             vm.member = globalDataService.getMember();
 
         };
+
+      vm.generatePages = function (data) {
+
+        vm.totalPages = Math.ceil(data.count / vm.pageSize)
+
+        vm.pages = []
+
+        for (var i = 1; i <= vm.totalPages; i = i + 1) {
+          vm.pages.push({
+            number: i,
+            caption: i.toString()
+          })
+
+        }
+
+
+
+        if (vm.totalPages > 10) {
+
+          vm.currentPageIndex = 0;
+
+          vm.pages.forEach(function (item, index) {
+
+            if (vm.currentPage === item.number) {
+              vm.currentPageIndex = index;
+            }
+
+          })
+
+          vm.pages = vm.pages.filter(function (item, index) {
+
+            if (index < 2 || index > vm.totalPages - 3) {
+              return true
+            }
+
+            if (index === vm.currentPageIndex) {
+              return true
+            }
+
+            if (index > vm.currentPageIndex - 3 && index < vm.currentPageIndex) {
+              return true
+            }
+
+            if (index < vm.currentPageIndex + 3 && index > vm.currentPageIndex) {
+              return true
+            }
+
+            return false
+
+          })
+
+          for (var i = 0; i < vm.pages.length; i = i + 1) {
+
+            var j = i + 1;
+
+            if (j < vm.pages.length) {
+
+              if (vm.pages[j].number && vm.pages[i].number) {
+                if (vm.pages[j].number - vm.pages[i].number > 1) {
+
+
+                  vm.pages.splice(i + 1, 0, {
+                    caption: '...'
+                  })
+
+                }
+              }
+
+            }
+
+          }
+
+
+        }
+
+      }
+
+        vm.openPreviousPage = function () {
+
+            if (vm.searchTerm.length) {
+
+                vm.currentPageForSearch = vm.currentPageForSearch - 1;
+                vm.search(vm.searchTerm);
+
+            } else {
+
+                vm.currentPageForFailes = vm.currentPageForFailes - 1;
+                vm.listFiles();
+
+            }
+
+        }
+
+        vm.openNextPage = function () {
+
+            if (vm.searchTerm.length) {
+
+                vm.currentPageForSearch = vm.currentPageForSearch + 1;
+                vm.search(vm.searchTerm);
+
+            } else {
+
+                vm.currentPageForFailes = vm.currentPageForFailes + 1;
+                vm.listFiles();
+
+            }
+
+        }
+
+        vm.openPage = function (page) {
+
+            if (page.number) {
+
+                if (vm.searchTerm.length) {
+
+                    vm.currentPageForSearch = page.number;
+                    vm.search(vm.searchTerm);
+
+                } else {
+
+                    vm.currentPageForFailes = page.number;
+                    vm.listFiles();
+
+                }
+            }
+
+        }
 
         vm.init();
 
