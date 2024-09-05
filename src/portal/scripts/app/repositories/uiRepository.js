@@ -933,7 +933,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'system/whitelabel?is_default=true',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'system/whitelabel/?is_default=true',
             getRequestParams('GET'));
     }
 

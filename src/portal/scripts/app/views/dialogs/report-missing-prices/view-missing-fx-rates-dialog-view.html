@@ -55,7 +55,6 @@
 
                         <tr>
                             <th>Currency Name</th>
-                            <th>Short Name</th>
                             <th>User Code</th>
                             <th></th>
                             <th></th>
@@ -66,9 +65,8 @@
                     <tbody>
 
                         <tr data-ng-repeat="item in vm.items">
-                            <td>{{item.currency_object.name}}</td>
-                            <td>{{item.currency_object.short_name}}</td>
-                            <td>{{item.currency_object.user_code}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.user_code}}</td>
                             <td><md-button class="" data-ng-click="vm.viewCurrency($event, item)">View Currency</md-button></td>
                             <td><md-button class="" data-ng-click="vm.addFXRate($event, item)">Add FX Rate</md-button></td>
                         </tr>
