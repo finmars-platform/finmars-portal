@@ -50,6 +50,10 @@
         return explorerRepository.rename(data)
     }
 
+    var move = function (data) {
+        return explorerRepository.move(data)
+    }
+
     module.exports = {
         listFiles: listFiles,
         searchFiles: searchFiles,
@@ -62,6 +66,7 @@
         downloadFile: downloadFile,
         sync: sync,
         rename: rename,
+        move: move,
     }
 
 
