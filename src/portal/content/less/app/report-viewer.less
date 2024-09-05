@@ -665,6 +665,20 @@
 .g-filters .g-filters-right-part-bottom-panel {
   display: flex;
   justify-content: flex-end;
+  .refresh-button-with-progress {
+    display: flex;
+    justify-content: end;
+    width: 60px;
+    align-items: center;
+
+    .md-button {
+      min-width: 60px;
+    }
+
+    progress-circular {
+      margin-right: 8px;
+    }
+  }
 }
 .g-filters .g-filters-right-part-top-panel {
   height: 20px;
