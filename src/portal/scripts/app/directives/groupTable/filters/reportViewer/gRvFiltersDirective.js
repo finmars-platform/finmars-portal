@@ -336,6 +336,7 @@
 
                 scope.openViewConstructor = gFiltersVm.openViewConstructor;
 
+
                 scope.openCustomFieldsManager = function ($event) {
 
                     $mdDialog.show({
@@ -559,6 +560,8 @@
                         scope.processing = false;
 
                         scope.reportOptions = scope.evDataService.getReportOptions(); // for refresh tooltip -> auth time
+
+                        scope.prettyReportCreatedAt = moment(new Date(scope.reportOptions.created_at)).format('YYYY/MM/DD HH:mm');
 
                     })
 

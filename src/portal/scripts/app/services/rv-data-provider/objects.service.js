@@ -231,6 +231,7 @@ export default function (entityResolverService) {
         console.log('getListReportGroups.data.items', data.items);
 
         reportOptions.report_instance_id = data.report_instance_id;
+        reportOptions.created_at = data.created_at;
         entityViewerDataService.setReportOptions(reportOptions);
 
         return {
