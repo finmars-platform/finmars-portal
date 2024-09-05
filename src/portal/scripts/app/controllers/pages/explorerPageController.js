@@ -325,9 +325,15 @@
 
         vm.deleteSelected = function ($event, item = undefined) {
 
-            var itemsToDelete = item ? [item] : vm.items.filter(function (item) {
-                return item.selected;
-            })
+            var itemsToDelete = [];
+
+            if (item) {
+                itemsToDelete = [item];
+            } else {
+                itemsToDelete = vm.items.filter(function (item) {
+                    return item.selected;
+                })
+            }
 
             var names = itemsToDelete.map(function (item) {
                 return item.name
@@ -1012,10 +1018,14 @@
 
             }).then(function (res) {
                 if (res.status === 'agree') {
-                    let path = vm.currentPath.join('/').length ?  vm.currentPath.join('/') + '/' + name : name;
+                    let path = '';
+                    if (vm.currentPath.join('/').length) {
+                        path = vm.currentPath.join('/') + '/' + name;
+                    } else {
+                        path = name;
+                    }
                     explorerService.rename({path: path, new_name: res.name}).then(function (data) {
                        vm.exportTaskId = data.task_id;
-                       console.log('explorerService.rename' ,data)
                         $scope.$apply();
                     })
                 }
