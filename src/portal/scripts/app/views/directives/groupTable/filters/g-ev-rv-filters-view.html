@@ -16,9 +16,9 @@
                 </md-button>-->
                 <md-menu data-ng-if="viewContext !== 'dashboard'">
                     <md-button
-                        class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-                        ng-click="$mdOpenMenu($event)"
-                        ng-disabled="viewContext === 'split_panel'"
+                            class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
+                            ng-click="$mdOpenMenu($event)"
+                            ng-disabled="viewContext === 'split_panel'"
                     >
                         <span class="material-icons">add</span>
                         <md-tooltip data-ng-if="viewContext !== 'split_panel'" md-direction="top">Add</md-tooltip>
@@ -28,7 +28,7 @@
                         <md-menu-item data-ng-repeat="item in addMenu.data.menu.root.items">
                             <md-button data-ng-click="dispatchAddMenuAction($event, item)"
                                        class="g-settings-option-btn">
-                                <span>{{item.name}}</span>
+                                <span>{{ item.name }}</span>
                             </md-button>
                         </md-menu-item>
 
@@ -48,14 +48,14 @@
                            data-ng-click="evAddEntity($event)"
                            data-ng-if="entityType != 'instrument' && entityType != 'instrument-type' && entityType != 'account-type' && entityType != 'transaction-type'">
                     <span class="material-icons">add</span>
-                    <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                    <md-tooltip md-direction="top">ADD {{ evGetEntityNameByState() }}</md-tooltip>
                 </md-button>
 
                 <md-menu data-ng-if="entityType == 'instrument'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons">add</span>
-                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                        <md-tooltip md-direction="top">ADD {{ evGetEntityNameByState() }}</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
@@ -86,7 +86,7 @@
                     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons">add</span>
-                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                        <md-tooltip md-direction="top">ADD {{ evGetEntityNameByState() }}</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
@@ -109,7 +109,7 @@
                     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons">add</span>
-                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                        <md-tooltip md-direction="top">ADD {{ evGetEntityNameByState() }}</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
@@ -132,7 +132,7 @@
                     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons">add</span>
-                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                        <md-tooltip md-direction="top">ADD {{ evGetEntityNameByState() }}</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
@@ -188,240 +188,255 @@
 
     </div>
 
-    <div class="icon-buttons gFiltersRightPart">
+    <div class="g-filters-right-part-holder gFiltersRightPart">
 
-        <div class="refresh-button-with-progress">
-            <progress-circular data-ng-if="processing" diameter="20"></progress-circular>
-            <md-button data-ng-click="refreshTable()"
-                       class="signed-button">
+        <div class="g-filters-right-part-top-panel"
+             data-ng-if="entityType == 'balance-report' || entityType == 'pl-report'">
 
-                <div class="flex-column flex-i-center">
-                    <span class="material-icons">refresh</span>
-                    <span>Refresh</span>
-                    <md-tooltip md-direction="bottom">
-                        <div data-ng-if="isReport">
-                            <div data-ng-if="reportOptions.auth_time">
-                                Auth Time: {{reportOptions.auth_time}}s</br>
-                                Execution Time: {{reportOptions.execution_time}}s</br>
-                                Relation Prefetch Time: {{reportOptions.relation_prefetch_time}}s</br>
-                                Serialization Time: {{reportOptions.serialization_time}}s </br>
-                                Render Time: {{renderTime}}s </br>
-                                Rows downloaded: {{reportOptions.items.length}} </br>
-                            </div>
-                            Refresh Database Filters
-                        </div>
-                        <div data-ng-if="!isReport">
-                            Refresh Database Filters
-                        </div>
+            <div class="report-calculated-at">
+                {{ prettyReportCreatedAt }}
+                <md-tooltip md-direction="bottom">
+                    Calculated At
+                </md-tooltip>
+            </div>
 
-                    </md-tooltip>
-                </div>
-
-            </md-button>
         </div>
 
-        <md-menu data-ng-if="isRootEntityViewer && viewContext != 'dashboard'"
-                 class="full-width">
+        <div class="g-filters-right-part-bottom-panel">
 
-            <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                <div class="flex-column flex-i-center">
-                    <span class="material-icons">view_stream</span>
-                    <span>Split</span>
-                </div>
-            </md-button>
+            <div class="refresh-button-with-progress">
+                <progress-circular data-ng-if="processing" diameter="20"></progress-circular>
+                <md-button data-ng-click="refreshTable()"
+                           class="signed-button">
 
-            <md-menu-content width="4">
+                    <div class="flex-column flex-i-center">
+                        <span class="material-icons">refresh</span>
+                        <span>Refresh</span>
+                        <md-tooltip md-direction="bottom">
+                            <div data-ng-if="isReport">
+                                <div data-ng-if="reportOptions.auth_time">
+                                    Auth Time: {{ reportOptions.auth_time }}s</br>
+                                    Execution Time: {{ reportOptions.execution_time }}s</br>
+                                    Relation Prefetch Time: {{ reportOptions.relation_prefetch_time }}s</br>
+                                    Serialization Time: {{ reportOptions.serialization_time }}s </br>
+                                    Render Time: {{ renderTime }}s </br>
+                                    Rows downloaded: {{ reportOptions.items.length }} </br>
+                                </div>
+                                Refresh Database Filters
+                            </div>
+                            <div data-ng-if="!isReport">
+                                Refresh Database Filters
+                            </div>
 
-                <md-menu-item ng-if="!isReport && entityType !== 'complex-transaction'">
-                    <md-button ng-click="toggleSplitPanel($event, 'permission-editor')"
-                               class="g-settings-option-btn">
+                        </md-tooltip>
+                    </div>
+
+                </md-button>
+            </div>
+
+            <md-menu data-ng-if="isRootEntityViewer && viewContext != 'dashboard'"
+                     class="full-width">
+
+                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                    <div class="flex-column flex-i-center">
+                        <span class="material-icons">view_stream</span>
+                        <span>Split</span>
+                    </div>
+                </md-button>
+
+                <md-menu-content width="4">
+
+                    <md-menu-item ng-if="!isReport && entityType !== 'complex-transaction'">
+                        <md-button ng-click="toggleSplitPanel($event, 'permission-editor')"
+                                   class="g-settings-option-btn">
 
                         <span class="material-icons"
                               ng-show="currentAdditions.type === 'permission-editor'">done</span>
-                        <span class="material-icons"
-                              ng-show="currentAdditions.type !== 'permission-editor'"
-                              style="visibility: hidden;">done</span>
+                            <span class="material-icons"
+                                  ng-show="currentAdditions.type !== 'permission-editor'"
+                                  style="visibility: hidden;">done</span>
 
-                        <span>Open permission editor</span>
-                    </md-button>
-                </md-menu-item>
+                            <span>Open permission editor</span>
+                        </md-button>
+                    </md-menu-item>
 
-                <md-menu-item ng-if="!isReport">
-                    <md-button ng-click="toggleSplitPanel($event, 'editor')" class="g-settings-option-btn">
+                    <md-menu-item ng-if="!isReport">
+                        <md-button ng-click="toggleSplitPanel($event, 'editor')" class="g-settings-option-btn">
 
                         <span class="material-icons"
                               ng-show="currentAdditions.type === 'editor'">done</span>
-                        <span class="material-icons"
-                              ng-show="currentAdditions.type !== 'editor'"
-                              style="visibility: hidden;">done</span>
+                            <span class="material-icons"
+                                  ng-show="currentAdditions.type !== 'editor'"
+                                  style="visibility: hidden;">done</span>
 
-                        <span>Open editor split panel</span>
-                    </md-button>
-                </md-menu-item>
+                            <span>Open editor split panel</span>
+                        </md-button>
+                    </md-menu-item>
 
-                <md-menu-item ng-if="isReport">
-                    <md-button data-ng-click="toggleSplitPanel($event, 'balance-report')"
-                               class="g-settings-option-btn">
+                    <md-menu-item ng-if="isReport">
+                        <md-button data-ng-click="toggleSplitPanel($event, 'balance-report')"
+                                   class="g-settings-option-btn">
 
                         <span class="material-icons"
                               data-ng-show="currentAdditions.type === 'balance-report'">done</span>
-                        <span class="material-icons" data-ng-show="currentAdditions.type !== 'balance-report'"
-                              style="visibility: hidden;">done</span>
+                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'balance-report'"
+                                  style="visibility: hidden;">done</span>
 
-                        <span>Open Balance Report view panel</span>
+                            <span>Open Balance Report view panel</span>
 
-                    </md-button>
-                </md-menu-item>
+                        </md-button>
+                    </md-menu-item>
 
-                <md-menu-item ng-if="isReport">
-                    <md-button data-ng-click="toggleSplitPanel($event, 'pl-report')"
-                               class="g-settings-option-btn">
+                    <md-menu-item ng-if="isReport">
+                        <md-button data-ng-click="toggleSplitPanel($event, 'pl-report')"
+                                   class="g-settings-option-btn">
 
                         <span class="material-icons"
                               data-ng-show="currentAdditions.type === 'pl-report'">done</span>
-                        <span class="material-icons" data-ng-show="currentAdditions.type !== 'pl-report'"
-                              style="visibility: hidden;">done</span>
+                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'pl-report'"
+                                  style="visibility: hidden;">done</span>
 
-                        <span>Open P&L Report view panel</span>
+                            <span>Open P&L Report view panel</span>
 
-                    </md-button>
-                </md-menu-item>
+                        </md-button>
+                    </md-menu-item>
 
-                <md-menu-item ng-if="isReport">
-                    <md-button data-ng-click="toggleSplitPanel($event, 'transaction-report')"
-                               class="g-settings-option-btn">
+                    <md-menu-item ng-if="isReport">
+                        <md-button data-ng-click="toggleSplitPanel($event, 'transaction-report')"
+                                   class="g-settings-option-btn">
 
                         <span class="material-icons"
                               data-ng-show="currentAdditions.type === 'transaction-report'">done</span>
-                        <span class="material-icons" data-ng-show="currentAdditions.type !== 'transaction-report'"
-                              style="visibility: hidden;">done</span>
+                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'transaction-report'"
+                                  style="visibility: hidden;">done</span>
 
-                        <span>Open Transaction Report view panel</span>
+                            <span>Open Transaction Report view panel</span>
 
-                    </md-button>
-                </md-menu-item>
+                        </md-button>
+                    </md-menu-item>
 
-            </md-menu-content>
+                </md-menu-content>
 
-        </md-menu>
+            </md-menu>
 
-        <!--
-        <md-menu class="full-width" data-ng-if="isRootEntityViewer && isReport && viewContext != 'dashboard'">
-            <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+            <!--
+            <md-menu class="full-width" data-ng-if="isRootEntityViewer && isReport && viewContext != 'dashboard'">
+                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                    <div class="flex-column flex-i-center">
+                        <span class="material-icons">view_module</span>
+                        <span>Matrix</span>
+                    </div>
+                </md-button>
+
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button data-ng-click="toggleMatrix($event)" class="g-settings-option-btn">
+
+                            <span class="material-icons" data-ng-show="viewContext === 'matrix'">done</span>
+                            <span class="material-icons" data-ng-show="viewContext !== 'matrix'"
+                                  style="visibility: hidden;">done</span>
+
+                            <span>Open Matrix</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+            -->
+
+            <md-menu>
+                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                    <div class="flex-column flex-i-center">
+                        <span class="material-icons">upgrade</span>
+                        <span>Export</span>
+                    </div>
+                </md-button>
+
+                <md-menu-content width="4">
+                    <md-menu-item ng-if="isReport">
+                        <md-button data-ng-click="exportAsPdf($event)" class="g-settings-option-btn">
+                            <span>Export to PDF</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button data-ng-click="exportAsCSV()" class="g-settings-option-btn">
+                            <span>Export to CSV</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button data-ng-click="exportAsExcel()" class="g-settings-option-btn">
+                            <span>Export to Excel</span>
+                        </md-button>
+                    </md-menu-item>
+
+
+                    <md-menu-item>
+                        <md-button data-ng-click="copyReport()" class="g-settings-option-btn">
+                            <span>Copy all to buffer</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button data-ng-click="copySelectedToBuffer()" class="g-settings-option-btn">
+                            <span>Copy selected to buffer</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+            <md-menu>
+                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                    <div class="flex-column flex-i-center">
+                        <span class="material-icons">more_vert</span>
+                        <span>More</span>
+                    </div>
+                </md-button>
+
+                <md-menu-content width="4">
+
+                    <md-menu-item>
+                        <md-button data-ng-click="openViewConstructor($event)" class="g-settings-option-btn">
+                            <span>View Constructor</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item data-ng-if="entityType !== 'complex-transaction'">
+                        <md-button data-ng-click="openCustomFieldsManager($event)" class="g-settings-option-btn">
+                            <span>Custom Columns</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item data-ng-if="entityType !== 'complex-transaction'">
+                        <md-button data-ng-click="clearCacheForReport($event)" class="g-settings-option-btn">
+                            <span>Recalculate Report (Clear Cache)</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <!--                <md-menu-item ng-if="isReport">-->
+                    <!--                    <md-button data-ng-click="toggleAutoRefresh()" class="g-settings-option-btn">-->
+                    <!--                        <span data-ng-if="rvAutoRefresh">Disable Auto Refresh</span>-->
+                    <!--                        <span data-ng-if="!rvAutoRefresh">Enable Auto Refresh</span>-->
+                    <!--                    </md-button>-->
+                    <!--                </md-menu-item>-->
+
+                    <md-menu-item data-ng-if="inputFormEditorBtn">
+                        <md-button data-ng-click="openInputFormEditor($event)" class="g-settings-option-btn">
+                            <span>Edit form</span>
+                        </md-button>
+                    </md-menu-item>
+
+                </md-menu-content>
+            </md-menu>
+
+            <md-button class="signed-button" data-ng-if="viewContext == 'dashboard'" ng-click="onSettingsClick()">
                 <div class="flex-column flex-i-center">
-                    <span class="material-icons">view_module</span>
-                    <span>Matrix</span>
+                    <span class="material-icons">settings</span>
+                    <span>Settings</span>
                 </div>
-            </md-button> 
 
-            <md-menu-content width="4">
-                <md-menu-item>
-                    <md-button data-ng-click="toggleMatrix($event)" class="g-settings-option-btn">
-
-                        <span class="material-icons" data-ng-show="viewContext === 'matrix'">done</span>
-                        <span class="material-icons" data-ng-show="viewContext !== 'matrix'"
-                              style="visibility: hidden;">done</span>
-
-                        <span>Open Matrix</span>
-                    </md-button>
-                </md-menu-item>
-            </md-menu-content>
-        </md-menu> 
-        -->
-
-        <md-menu>
-            <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                <div class="flex-column flex-i-center">
-                    <span class="material-icons">upgrade</span>
-                    <span>Export</span>
-                </div>
             </md-button>
 
-            <md-menu-content width="4">
-                <md-menu-item ng-if="isReport">
-                    <md-button data-ng-click="exportAsPdf($event)" class="g-settings-option-btn">
-                        <span>Export to PDF</span>
-                    </md-button>
-                </md-menu-item>
-
-                <md-menu-item>
-                    <md-button data-ng-click="exportAsCSV()" class="g-settings-option-btn">
-                        <span>Export to CSV</span>
-                    </md-button>
-                </md-menu-item>
-
-                <md-menu-item>
-                    <md-button data-ng-click="exportAsExcel()" class="g-settings-option-btn">
-                        <span>Export to Excel</span>
-                    </md-button>
-                </md-menu-item>
-
-
-                <md-menu-item>
-                    <md-button data-ng-click="copyReport()" class="g-settings-option-btn">
-                        <span>Copy all to buffer</span>
-                    </md-button>
-                </md-menu-item>
-                <md-menu-item>
-                    <md-button data-ng-click="copySelectedToBuffer()" class="g-settings-option-btn">
-                        <span>Copy selected to buffer</span>
-                    </md-button>
-                </md-menu-item>
-            </md-menu-content>
-        </md-menu>
-
-        <md-menu>
-            <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                <div class="flex-column flex-i-center">
-                    <span class="material-icons">more_vert</span>
-                    <span>More</span>
-                </div>
-            </md-button>
-
-            <md-menu-content width="4">
-
-                <md-menu-item>
-                    <md-button data-ng-click="openViewConstructor($event)" class="g-settings-option-btn">
-                        <span>View Constructor</span>
-                    </md-button>
-                </md-menu-item>
-
-                <md-menu-item data-ng-if="entityType !== 'complex-transaction'">
-                    <md-button data-ng-click="openCustomFieldsManager($event)" class="g-settings-option-btn">
-                        <span>Custom Columns</span>
-                    </md-button>
-                </md-menu-item>
-
-                <md-menu-item data-ng-if="entityType !== 'complex-transaction'">
-                    <md-button data-ng-click="clearCacheForReport($event)" class="g-settings-option-btn">
-                        <span>Recalculate Report (Clear Cache)</span>
-                    </md-button>
-                </md-menu-item>
-
-                <!--                <md-menu-item ng-if="isReport">-->
-                <!--                    <md-button data-ng-click="toggleAutoRefresh()" class="g-settings-option-btn">-->
-                <!--                        <span data-ng-if="rvAutoRefresh">Disable Auto Refresh</span>-->
-                <!--                        <span data-ng-if="!rvAutoRefresh">Enable Auto Refresh</span>-->
-                <!--                    </md-button>-->
-                <!--                </md-menu-item>-->
-
-                <md-menu-item data-ng-if="inputFormEditorBtn">
-                    <md-button data-ng-click="openInputFormEditor($event)" class="g-settings-option-btn">
-                        <span>Edit form</span>
-                    </md-button>
-                </md-menu-item>
-
-            </md-menu-content>
-        </md-menu>
-
-        <md-button class="signed-button" data-ng-if="viewContext == 'dashboard'" ng-click="onSettingsClick()">
-            <div class="flex-column flex-i-center">
-                <span class="material-icons">settings</span>
-                <span>Settings</span>
-            </div>
-
-        </md-button>
-
+        </div>
     </div>
 
 </div>
