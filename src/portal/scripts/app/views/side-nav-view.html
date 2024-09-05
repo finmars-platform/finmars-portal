@@ -1232,6 +1232,20 @@
                                     </md-button>
                                 </a>
                             </li>
+                            <li>
+                                <md-button class="sidemenu-btn"
+                                           ui-sref="app.portal.balance-report-instance">
+                                    <span class="side-nav-title">Balance Report Instance</span>
+                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                                </md-button>
+                            </li>
+                            <li>
+                                <md-button class="sidemenu-btn"
+                                           ui-sref="app.portal.pl-report-instance">
+                                    <span class="side-nav-title">PL Report Instance</span>
+                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                                </md-button>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -1275,7 +1289,7 @@
             <!--                Session Remaining Time: {{vm.remainingTimePretty}}-->
             <!--            </div>-->
 
-            <a href="https://finmars.com" target="_blank" class="finmars-site-link">© {{vm.currentYear}} Finmars
+            <a href="https://finmars.com" target="_blank" class="finmars-site-link">© {{ vm.currentYear }} Finmars
                 SCSA</a>
 
         </div>

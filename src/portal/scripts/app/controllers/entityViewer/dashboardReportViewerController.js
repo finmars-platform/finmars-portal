@@ -289,9 +289,6 @@
 
                             vm.entityViewerDataService.resetTableContent(true);
 
-                            if (reportOptions) {
-                                reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
-                            }
 
                             vm.entityViewerDataService.setReportOptions(reportOptions);
                             vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
