@@ -323,6 +323,48 @@
             })
         }
 
+        vm.move = function ($event, item = undefined) {
+
+            var itemsToMove = [];
+
+            if (item) {
+                itemsToMove = [item];
+            } else {
+                itemsToMove = vm.items.filter(function (item) {
+                    return item.selected;
+                });
+            }
+
+            const paths = [];
+            let isFile = false;
+            $mdDialog.show({
+                controller: 'MoveExplorerDialogController as vm',
+                templateUrl: 'views/move-explorer-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    let moveToPath = res.data.path;
+                    itemsToMove.forEach((item) => {
+                        if (item.type === 'file') {
+                            paths.push(item.file_path);
+                            isFile = true;
+                        }
+                    })
+                    if (isFile) {
+                        explorerService.move({target_directory_path: moveToPath, paths}).then(function (data) {
+                            vm.exportTaskId = data.task_id;
+                            $scope.$apply();
+                        })
+                    }
+                }
+            });
+
+        }
+
         vm.deleteSelected = function ($event, item = undefined) {
 
             var itemsToDelete = [];
@@ -555,8 +597,6 @@
         vm.selectItem = function ($event, item) {
 
             item.selected = !item.selected;
-
-            console.log(" vm.selectItem item", item)
 
             var allSelected = true;
 
