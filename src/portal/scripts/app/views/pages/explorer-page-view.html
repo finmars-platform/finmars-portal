@@ -380,6 +380,11 @@
                                             <md-button class="" data-ng-click="vm.editFile($event, item)">Edit
                                             </md-button>
                                         </md-menu-item>
+                                        <md-menu-item>
+                                            <md-button class="" data-ng-click="vm.rename($event, item)">
+                                                Rename
+                                            </md-button>
+                                        </md-menu-item>
                                         <!--                                        <md-menu-item>-->
                                         <!--                                            <md-button class="" data-ng-click="vm.renameFile($mdMenu, $event, item)">Rename-->
                                         <!--                                            </md-button>-->
@@ -387,6 +392,27 @@
                                         <md-menu-item>
                                             <md-button class="" data-ng-click="vm.downloadFile($event, item)">
                                                 Download
+                                            </md-button>
+                                        </md-menu-item>
+                                    </md-menu-content>
+
+                                </md-menu>
+
+                                <md-menu data-ng-if="item.type == 'dir'">
+
+                                    <md-button class="md-icon-button explorer-item-menu-button"
+                                               data-ng-click="$mdOpenMenu($event)">
+                                        <md-icon>more_vert</md-icon>
+                                    </md-button>
+
+                                    <md-menu-content>
+                                        <md-menu-item>
+                                            <md-button class="" data-ng-click="vm.rename($event, item)">
+                                                Rename
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item>
+                                            <md-button class="md-warn" data-ng-click="vm.deleteSelected($event, item)">Delete
                                             </md-button>
                                         </md-menu-item>
                                     </md-menu-content>
