@@ -150,10 +150,12 @@
         } else if (obj.is_canceled) {
             result = 'cancelIcon';
 
-        } else if (obj.is_locked) {
+        }
+        /*else if (obj.is_locked) {
             result = 'lock2Icon';
 
-        } else if (obj.is_deleted) {
+        }*/
+        else if (obj.is_deleted) {
             result = 'deletedIcon';
 
         } else if (obj.hasOwnProperty('is_enabled') && !obj.is_enabled) {

@@ -46,6 +46,10 @@
         return explorerRepository.sync()
     }
 
+    var rename = function (data) {
+        return explorerRepository.rename(data)
+    }
+
     var move = function (data) {
         return explorerRepository.move(data)
     }
@@ -61,6 +65,7 @@
         downloadZip: downloadZip,
         downloadFile: downloadFile,
         sync: sync,
+        rename: rename,
         move: move,
     }
 
