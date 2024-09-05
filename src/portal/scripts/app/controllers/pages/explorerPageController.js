@@ -325,9 +325,15 @@
 
         vm.move = function ($event, item = undefined) {
 
-            var itemsToMove = item ? [item] : vm.items.filter(function (item) {
-                return item.selected;
-            });
+            var itemsToMove = [];
+
+            if (item) {
+                itemsToMove = [item];
+            } else {
+                itemsToMove = vm.items.filter(function (item) {
+                    return item.selected;
+                });
+            }
 
             const paths = [];
             let isFile = false;
