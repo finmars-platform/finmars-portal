@@ -30,39 +30,39 @@ export default function (cookieService, xhrService) {
 
         const data = await check(reportOptions);
 
-        data.items = data.items.map(function (item) {
-
-            if (item.type === 'missing_principal_pricing_history' || item.type === 'missing_accrued_pricing_history') {
-
-                data.item_instruments.forEach(function (instrument) {
-
-                    if (item.id === instrument.id) {
-                        item.instrument_object = instrument;
-                    }
-
-                })
-
-            }
-
-            if (item.type === 'fixed_calc' || item.type === 'stl_cur_fx' || item.type === 'missing_instrument_currency_fx_rate') {
-
-                data.item_currencies.forEach(function (currency) {
-
-                    if (item.transaction_currency_id === currency.id) {
-                        item.currency_object = currency;
-                    }
-
-                    if (item.id === currency.id) {
-                        item.currency_object = currency;
-                    }
-
-                })
-
-            }
-
-            return item
-
-        });
+        // data.items = data.items.map(function (item) {
+        //
+        //     if (item.type === 'missing_principal_pricing_history' || item.type === 'missing_accrued_pricing_history') {
+        //
+        //         data.item_instruments.forEach(function (instrument) {
+        //
+        //             if (item.id === instrument.id) {
+        //                 item.instrument_object = instrument;
+        //             }
+        //
+        //         })
+        //
+        //     }
+        //
+        //     if (item.type === 'fixed_calc' || item.type === 'stl_cur_fx' || item.type === 'missing_instrument_currency_fx_rate') {
+        //
+        //         data.item_currencies.forEach(function (currency) {
+        //
+        //             if (item.transaction_currency_id === currency.id) {
+        //                 item.currency_object = currency;
+        //             }
+        //
+        //             if (item.id === currency.id) {
+        //                 item.currency_object = currency;
+        //             }
+        //
+        //         })
+        //
+        //     }
+        //
+        //     return item
+        //
+        // });
 
         return data;
 

@@ -58,17 +58,11 @@
                                 Instrument Name
                             </th>
                             <th>
-                                Short Name
-                            </th>
-                            <th>
                                 User Code
                             </th>
-                            <th>
-                                Pricing Scheme
-                            </th>
                             <th></th>
                             <th></th>
-                            <th></th>
+<!--                            <th></th>-->
                         </tr>
 
                     </thead>
@@ -77,16 +71,10 @@
 
                         <tr data-ng-repeat="item in vm.items">
                             <td>
-                                {{item.instrument_object.name}}
+                                {{item.name}}
                             </td>
                             <td>
-                                {{item.instrument_object.short_name}}
-                            </td>
-                            <td>
-                                {{item.instrument_object.user_code}}
-                            </td>
-                            <td>
-                                {{item.pricing_user_code}}
+                                {{item.user_code}}
                             </td>
                             <td>
                                 <md-button class="" data-ng-click="vm.viewInstrument($event, item)">View Instrument</md-button>
@@ -94,9 +82,9 @@
                             <td>
                                 <md-button class="" data-ng-click="vm.addPriceHistory($event, item)">Add Price</md-button>
                             </td>
-                            <td>
-                                <md-button class="" data-ng-click="vm.viewPositions($event, item)">View Positions</md-button>
-                            </td>
+<!--                            <td>-->
+<!--                                <md-button class="" data-ng-click="vm.viewPositions($event, item)">View Positions</md-button>-->
+<!--                            </td>-->
 
                         </tr>
 
