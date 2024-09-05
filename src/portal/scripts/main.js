@@ -839,6 +839,8 @@ export default (function () {
 
 
     portal.controller('PricingPolicyPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingPolicyPageController')]);
+    portal.controller('BalanceReportInstancePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/balanceReportInstancePageController')]);
+    portal.controller('PlReportInstancePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/plReportInstancePageController')]);
     portal.controller('PricingManagePageController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/pages/pricingManagePageController')]);
     portal.controller('PortfolioBundlePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/portfolioBundlePageController')]);
     portal.controller('PricingSchemePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingSchemePageController')]);

@@ -610,10 +610,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         var reportOptions = evDataService.getReportOptions();
 
-        if (reportOptions) {
-            reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
-        }
-
         evDataService.setReportOptions(reportOptions);
 
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();

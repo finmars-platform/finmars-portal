@@ -544,6 +544,16 @@
                 templateUrl: 'views/pages/pricing-policy-page-view.html',
                 controller: 'PricingPolicyPageController as vm'
             })
+            .state('app.portal.balance-report-instance', {
+                url: '/balance-report-instance',
+                templateUrl: 'views/pages/balance-report-instance-page-view.html',
+                controller: 'BalanceReportInstancePageController as vm'
+            })
+            .state('app.portal.pl-report-instance', {
+                url: '/pl-report-instance',
+                templateUrl: 'views/pages/pl-report-instance-page-view.html',
+                controller: 'PlReportInstancePageController as vm'
+            })
 
               .state('app.portal.pricing-manage', {
                   url: '/pricing-manage',

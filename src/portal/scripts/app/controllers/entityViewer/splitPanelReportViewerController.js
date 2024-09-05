@@ -403,9 +403,7 @@
             vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
                 var reportOptions = vm.entityViewerDataService.getReportOptions()
-                if (reportOptions) {
-                    reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
-                }
+
                 vm.entityViewerDataService.setReportOptions(reportOptions);
 
                 vm.entityViewerDataService.resetTableContent(true);
@@ -436,9 +434,7 @@
                 reportHelper.onCreateTableEvent(vm.entityViewerDataService, vm.entityViewerEventService, pricesCheckerService)
 
                 var reportOptions = vm.entityViewerDataService.getReportOptions()
-                if (reportOptions) {
-                    reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
-                }
+
                 vm.entityViewerDataService.setReportOptions(reportOptions);
 
                 vm.entityViewerDataService.resetTableContent(true);

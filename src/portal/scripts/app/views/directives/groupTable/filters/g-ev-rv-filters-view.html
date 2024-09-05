@@ -392,6 +392,12 @@
                     </md-button>
                 </md-menu-item>
 
+                <md-menu-item data-ng-if="entityType !== 'complex-transaction'">
+                    <md-button data-ng-click="clearCacheForReport($event)" class="g-settings-option-btn">
+                        <span>Recalculate Report (Clear Cache)</span>
+                    </md-button>
+                </md-menu-item>
+
                 <!--                <md-menu-item ng-if="isReport">-->
                 <!--                    <md-button data-ng-click="toggleAutoRefresh()" class="g-settings-option-btn">-->
                 <!--                        <span data-ng-if="rvAutoRefresh">Disable Auto Refresh</span>-->
