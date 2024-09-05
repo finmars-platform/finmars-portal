@@ -8,6 +8,7 @@ const evEvents = require("../services/entityViewerEvents");
 
     var CommonDialogsService = require("../../../../shell/scripts/app/services/commonDialogsService").default;
     var localStorageService = require("../../../../shell/scripts/app/services/localStorageService");
+    var transactionTypeService = require('../services/transactionTypeService');
 
     const evEvents = require('../services/entityViewerEvents');
 
@@ -66,7 +67,7 @@ const evEvents = require("../services/entityViewerEvents");
 
             if (viewModel.entityType !== 'transaction-report') {
 
-                viewModel.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function() {
+                viewModel.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
 
                     const eventIndex = viewModel.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
@@ -135,7 +136,6 @@ const evEvents = require("../services/entityViewerEvents");
             viewModel.entityViewerDataService.setRowTypeFilters(rowTypeFiltersData);
 
         };
-
 
 
         const onSetLayoutEnd = () => {
@@ -257,8 +257,6 @@ const evEvents = require("../services/entityViewerEvents");
                         // if (!viewModel.matrixSettings) {
                         //     rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
                         // }
-
-
 
 
                     } else {
@@ -575,14 +573,14 @@ const evEvents = require("../services/entityViewerEvents");
             const activeRowExist = activeRowIndex > -1;
 
             if (viewModel.entityType !== 'transaction-report' &&
-                (!reportOptions.pricing_policy || typeof reportOptions.pricing_policy !== 'string') ) {
+                (!reportOptions.pricing_policy || typeof reportOptions.pricing_policy !== 'string')) {
 
                 toastNotificationService.clientError(
                     "Invalid 'Pricing Policy' inside Report options",
                 );
 
                 throw "Error [rvSharedLogicHelper.executeRowAction] invalid value inside " +
-                    `reportOptions.pricing_policy ${reportOptions.pricing_policy}`;
+                `reportOptions.pricing_policy ${reportOptions.pricing_policy}`;
 
             }
 
@@ -667,8 +665,7 @@ const evEvents = require("../services/entityViewerEvents");
 
                     editEntity(actionData.event, locals);
 
-                }
-                else if (action === 'edit_price') { // TODO: hide option for transaction report
+                } else if (action === 'edit_price') { // TODO: hide option for transaction report
 
                     var filters = {
                         instrument: actionData.object['instrument.id'],
@@ -682,7 +679,7 @@ const evEvents = require("../services/entityViewerEvents");
                         if (data.results.length) {
 
                             if (data.results.length > 1) {
-                                throw `${ getTooManyError("priceHistoryService", data.results.length) }`;
+                                throw `${getTooManyError("priceHistoryService", data.results.length)}`;
                             }
 
                             var item = data.results[0];
@@ -721,8 +718,7 @@ const evEvents = require("../services/entityViewerEvents");
                     })
 
 
-                }
-                else if (action === 'edit_fx_rate') {
+                } else if (action === 'edit_fx_rate') {
 
                     var filters = {
                         currency: actionData.object['currency.id'],
@@ -778,8 +774,7 @@ const evEvents = require("../services/entityViewerEvents");
 
                     })
 
-                }
-                else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
+                } else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
 
                     var filters = {
                         currency: actionData.object['instrument.accrued_currency.id'],
@@ -806,8 +801,7 @@ const evEvents = require("../services/entityViewerEvents");
 
                             editEntity(actionData.event, locals);
 
-                        }
-                        else {
+                        } else {
 
                             const warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
@@ -828,8 +822,7 @@ const evEvents = require("../services/entityViewerEvents");
 
                     })
 
-                }
-                else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
+                } else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
 
                     var filters = {
                         currency: actionData.object['instrument.pricing_currency.id'],
@@ -856,8 +849,7 @@ const evEvents = require("../services/entityViewerEvents");
 
                             editEntity(actionData.event, locals);
 
-                        }
-                        else {
+                        } else {
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
@@ -877,8 +869,7 @@ const evEvents = require("../services/entityViewerEvents");
 
                     })
 
-                }
-                else if (action === 'book_transaction') {
+                } else if (action === 'book_transaction') {
 
                     var locals = {
                         entityType: 'complex-transaction',
@@ -897,8 +888,7 @@ const evEvents = require("../services/entityViewerEvents");
 
                     createEntity(locals);
 
-                }
-                else if (action === 'book_transaction_specific') {
+                } else if (action === 'book_transaction_specific') {
 
                     // const contextData = getContextDataForRowAction(reportOptions, actionData.object);
                     const contextData = await rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType, pricingPolicyService);
@@ -912,13 +902,22 @@ const evEvents = require("../services/entityViewerEvents");
                     };
 
                     if (actionData && actionData.id) {
-                        locals.entity.transaction_type = actionData.id
+
+                        const data = await transactionTypeService.getList({
+                            filters: {
+                                user_code: actionData.id
+                            }
+                        })
+                        const ttypes = data.results
+
+                        if (ttypes.length) {
+                            locals.entity.transaction_type = ttypes[0].id
+                        }
                     }
 
                     createEntity(locals);
 
-                }
-                else if (action === 'rebook_transaction') {
+                } else if (action === 'rebook_transaction') {
 
                     var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
 
@@ -930,8 +929,7 @@ const evEvents = require("../services/entityViewerEvents");
 
                     editEntity(actionData.event, locals);
 
-                }
-                else if ( action === 'copy_transaction' ) {
+                } else if (action === 'copy_transaction') {
 
                     var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
 
