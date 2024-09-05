@@ -323,11 +323,17 @@
             })
         }
 
-        vm.deleteSelected = function ($event) {
+        vm.deleteSelected = function ($event, item = undefined) {
 
-            var itemsToDelete = vm.items.filter(function (item) {
-                return item.selected;
-            })
+            var itemsToDelete = [];
+
+            if (item) {
+                itemsToDelete = [item];
+            } else {
+                itemsToDelete = vm.items.filter(function (item) {
+                    return item.selected;
+                })
+            }
 
             var names = itemsToDelete.map(function (item) {
                 return item.name
@@ -994,6 +1000,38 @@
                 return extension || null; // If there's no extension, return null
             }
         }
+
+
+        vm.rename = function ($event, item) {
+            var name = JSON.parse(JSON.stringify(item.name));
+
+            $mdDialog.show({
+                controller: 'RenameDialogController as vm',
+                templateUrl: 'views/dialogs/rename-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        name: name
+                    }
+                }
+
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    let path = '';
+                    if (vm.currentPath.join('/').length) {
+                        path = vm.currentPath.join('/') + '/' + name;
+                    } else {
+                        path = name;
+                    }
+                    explorerService.rename({path: path, new_name: res.name}).then(function (data) {
+                       vm.exportTaskId = data.task_id;
+                        $scope.$apply();
+                    })
+                }
+            })
+        }
+
 
         vm.init = function () {
 
