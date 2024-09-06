@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var plReportInstanceService = require('../../services/plReportInstanceService').default;;
+    var plReportInstanceService = require('../../services/plReportInstanceService').default;
+    ;
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -18,7 +19,10 @@
 
             plReportInstanceService.getList({pageSize: 1000}).then(function (data) {
 
-                vm.items = data.results;
+                vm.items = data.results.map(function (item) {
+                    item.settings = JSON.stringify(JSON.parse(item.settings), null, 4)
+                    return item
+                });
 
                 vm.readyStatus.content = true;
 
@@ -28,7 +32,7 @@
 
         };
 
-        vm.deleteItem = function($event, item, $index){
+        vm.deleteItem = function ($event, item, $index) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
