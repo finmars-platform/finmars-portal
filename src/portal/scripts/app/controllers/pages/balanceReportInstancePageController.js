@@ -18,7 +18,10 @@
 
             balanceReportInstanceService.getList({pageSize: 1000}).then(function (data) {
 
-                vm.items = data.results;
+                vm.items = data.results.map(function (item) {
+                    item.settings = JSON.stringify(JSON.parse(item.settings), null, 4)
+                    return item
+                });
 
                 vm.readyStatus.content = true;
 

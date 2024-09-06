@@ -30,9 +30,7 @@
                     {{item.unique_key}}
                 </td>
 
-                <td>
-                    {{item.settings}}
-                </td>
+                <td><div style="white-space: pre; padding: 8px;">{{ item.settings }}</div></td>
 
                 <td>
                     <md-button class="" data-ng-click="vm.deleteItem($event, item, $index)">Delete
