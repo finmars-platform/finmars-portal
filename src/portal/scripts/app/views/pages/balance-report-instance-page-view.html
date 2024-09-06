@@ -7,13 +7,13 @@
             <thead>
             <tr>
                 <th>
-                    Name
+                    ID
                 </th>
                 <th>
-                    Unique Code
+                    Unique Key
                 </th>
 
-                <th>Unique Key</th>
+                <th>Settings</th>
                 <th></th>
             </tr>
             </thead>
@@ -23,15 +23,15 @@
             <tr data-ng-repeat="item in vm.items track by $index">
 
                 <td>
-                    {{item.name}}
-                </td>
-
-                <td>
-                    {{item.user_code}}
+                    {{item.id}}
                 </td>
 
                 <td>
                     {{item.unique_key}}
+                </td>
+
+                <td>
+                    {{item.settings}}
                 </td>
 
                 <td>
