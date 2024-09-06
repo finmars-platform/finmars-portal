@@ -6,14 +6,15 @@
 
             <thead>
             <tr>
+
                 <th>
-                    Name
-                </th>
-                <th>
-                    Unique Code
+                    ID
                 </th>
                 <th>
                     Unique Key
+                </th>
+                <th>
+                    Settings
                 </th>
                 <th></th>
             </tr>
@@ -24,15 +25,16 @@
             <tr data-ng-repeat="item in vm.items track by $index">
 
                 <td>
-                    {{ item.name }}
+                    {{ item.id }}
                 </td>
 
-                <td>
-                    {{ item.user_code }}
-                </td>
 
                 <td>
                     {{ item.unique_key }}
+                </td>
+
+                <td>
+                    {{ item.settings }}
                 </td>
 
                 <td>
