@@ -1,6 +1,7 @@
 /**
  * Created by vzubr on 02.12.2020.
  * */
+const evEvents = require("../../services/entityViewerEvents");
 (function () {
 
     'use strict';

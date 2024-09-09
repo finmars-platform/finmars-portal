@@ -8,6 +8,11 @@
     var getAttributes = function () {
         return [
             {
+                "key": "id",
+                "name": "ID",
+                "value_type": 20
+            },
+            {
                 "key": "portfolio",
                 "name": "Portfolio",
                 "value_content_type": "portfolios.portfolio",
@@ -119,15 +124,17 @@
                 "allow_null": false
             },
             {
-                "key": "created",
-                "name": "Created",
-                "value_type": 40
+                "key": "created_at",
+                "name": "Created At",
+                "value_type": 80,
+                "readonly": true
             },
 
             {
-                "key": "modified",
+                "key": "modified_at",
                 "name": "Modified",
-                "value_type": 40
+                "value_type": 80,
+                "readonly": true
             },
             {
                 "key": "share_price_calculation_type",

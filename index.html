@@ -21,22 +21,22 @@
 <!--    <h3>Sorry, web application is not suitable for small mobile devices</h3>-->
 <!--</div>-->
 
-<script>
-    // Check the current URL
-    const currentURL = window.location.href;
+<!--<script>-->
+<!--    // Check the current URL-->
+<!--    const currentURL = window.location.href;-->
 
-    // If the current URL matches the specific URL, load the module
-    if (currentURL.indexOf('local') === -1) {
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.textContent = `
-            import FinmarsWidgets from 'https://finmars.com/v/finmarsWidgets.js';
+<!--    // If the current URL matches the specific URL, load the module-->
+<!--    if (currentURL.indexOf('local') === -1) {-->
+<!--        const script = document.createElement('script');-->
+<!--        script.type = 'module';-->
+<!--        script.textContent = `-->
+<!--            import FinmarsWidgets from 'https://finmars.com/v/finmarsWidgets.js';-->
 
-            window.FinmarsWidgets = FinmarsWidgets
-        `; // Replace with the path to your module file
-        document.head.appendChild(script);
-    }
-</script>
+<!--            window.FinmarsWidgets = FinmarsWidgets-->
+<!--        `; // Replace with the path to your module file-->
+<!--        document.head.appendChild(script);-->
+<!--    }-->
+<!--</script>-->
 
 <!--<script type="application/x-javascript" src="core/scripts/polyfills.min.js?v={hash}"></script>-->
 <!--<script type="application/x-javascript" src="core/scripts/corejs.min.js?v={hash}"></script>-->

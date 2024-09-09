@@ -32,10 +32,6 @@ md-dialog.simple-entity-import-scheme-v2 {
   //  min-height: 32px;
   //}
 
-  .iscm-item {
-    justify-content: space-between;
-  }
-
   .simple-entity-import-scheme-v2-input-expression {
     cursor: pointer;
     border: 1px solid var(--table-border-color);
@@ -52,6 +48,16 @@ md-dialog.simple-entity-import-scheme-v2 {
     &:hover {
       opacity: .7;
     }
+  }
+
+
+}
+
+.simple-entity-import-scheme-rows-container {
+  .iscm-item {
+    display: flex;
+    justify-content: space-between;
+    min-width: 0;
   }
 
   .fields-holder {

@@ -8,6 +8,11 @@
     var getAttributes = function () {
         return [
             {
+                "key": "id",
+                "name": "ID",
+                "value_type": 20
+            },
+            {
                 "key": "name",
                 "name": "Name",
                 "value_type": 10
@@ -35,6 +40,24 @@
                 "value_content_type": "strategies.strategy2group",
                 "code": "user_code"
             },*/
+            {
+                "key": "created_at",
+                "name": "Created At",
+                "value_type": 80,
+                "readonly": true
+            },
+            {
+                "key": "modified_at",
+                "name": "Modified At",
+                "value_type": 80,
+                "readonly": true
+            },
+            {
+                "key": "deleted_at",
+                "name": "Delete At",
+                "value_type": 40,
+                "readonly": true
+            }
         ]
     };
 

@@ -150,10 +150,12 @@
         } else if (obj.is_canceled) {
             result = 'cancelIcon';
 
-        } else if (obj.is_locked) {
+        }
+        /*else if (obj.is_locked) {
             result = 'lock2Icon';
 
-        } else if (obj.is_deleted) {
+        }*/
+        else if (obj.is_deleted) {
             result = 'deletedIcon';
 
         } else if (obj.hasOwnProperty('is_enabled') && !obj.is_enabled) {
@@ -276,7 +278,7 @@
                     rawTextResult = statusData[statusKey];
 
                 }
-                else if(column.key === 'procedure_modified_datetime' || column.key === 'created' || column.key === 'modified') {
+                else if(column.key === 'procedure_modified_datetime' || column.key === 'created_at' || column.key === 'modified_at') {
 
                     rawTextResult = moment(obj[column.key]).format('YYYY-MM-DD HH:mm:ss')
 

@@ -2,12 +2,12 @@
     <md-toolbar md-scroll-shrink>
         <div class="md-toolbar-tools">
             <div class="sidenav-logo-wrapper">
-                <img src="portal/content/img/logo.png"
+                <img ng-src="{{vm.getLogo()}}"
                      data-ng-if="!vm.isThemeInDarkMode()"
                      alt=""
                      height="40"
                      class="sidenav-logo">
-                <img src="portal/content/img/logo-dark.png"
+                <img ng-src="{{vm.getLogoDark()}}"
                      data-ng-if="vm.isThemeInDarkMode()"
                      alt=""
                      height="40"
@@ -1137,14 +1137,11 @@
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
                                         </li>
-
                                         <li>
-                                            <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.portal.marketplace">
+                                            <a href="{{ vm.getVueUrl('/marketplace') }}"
+                                               class="md-button sidenav-dropdown-menu-btn">
                                                 <span class="side-nav-title">Marketplace</span>
-                                                <span class="md-visually-hidden"
-                                                      data-ng-if="isSelected()">current page</span>
-                                            </md-button>
+                                            </a>
                                         </li>
 
                                     </ul>
@@ -1221,14 +1218,34 @@
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
-
-                            <a href="{{vm.vaultRecordUrl}}">
-                                <md-button class="sidemenu-btn">
-                                    <span class="side-nav-title">Vault Record</span>
+                            <li>
+                                <a href="{{vm.vaultRecordUrl}}">
+                                    <md-button class="sidemenu-btn">
+                                        <span class="side-nav-title">Vault Record</span>
+                                    </md-button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ vm.getVueUrl('/system/settings/general') }}">
+                                    <md-button class="sidemenu-btn">
+                                        <span class="side-nav-title">White Label</span>
+                                    </md-button>
+                                </a>
+                            </li>
+                            <li>
+                                <md-button class="sidemenu-btn"
+                                           ui-sref="app.portal.balance-report-instance">
+                                    <span class="side-nav-title">Balance Report Instance</span>
+                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
-                            </a>
-
-
+                            </li>
+                            <li>
+                                <md-button class="sidemenu-btn"
+                                           ui-sref="app.portal.pl-report-instance">
+                                    <span class="side-nav-title">PL Report Instance</span>
+                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                                </md-button>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -1247,7 +1264,7 @@
 
 
     <!--            <div>{{version.app}}:{{version.version}}-->
-    <!--                <md-tooltip md-direction="top">{{version.notes}}&nbsp;{{version.modified | date: 'yyyy-MM-dd HH:mm'}}-->
+    <!--                <md-tooltip md-direction="top">{{version.notes}}&nbsp;{{version.modified_at | date: 'yyyy-MM-dd HH:mm'}}-->
     <!--                </md-tooltip>-->
     <!--            </div>-->
 
@@ -1272,7 +1289,7 @@
             <!--                Session Remaining Time: {{vm.remainingTimePretty}}-->
             <!--            </div>-->
 
-            <a href="https://finmars.com" target="_blank" class="finmars-site-link">© {{vm.currentYear}} Finmars
+            <a href="https://finmars.com" target="_blank" class="finmars-site-link">© {{ vm.currentYear }} Finmars
                 SCSA</a>
 
         </div>

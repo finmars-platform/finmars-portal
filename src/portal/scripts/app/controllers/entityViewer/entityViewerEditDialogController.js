@@ -534,6 +534,16 @@
                 onClick: vm.editAsJson
             });
 
+            if ( vm.entity.hasOwnProperty('is_locked') ) {
+                /*
+                getLockMenuOption uses: vm.entity.is_locked, vm.entity.is_canceled,
+                vm.hasEditPermission, vm.processing
+                */
+                data.options.push(
+                    entityEditorHelper.getLockMenuOption(vm, vm.toggleLockStatus)
+                )
+            }
+
             data.options.push({
                 icon: "list",
                 name: "Edit Form",
@@ -847,16 +857,20 @@
         // vm.delete = function ($event) {
         vm.delete = vm.sharedLogic.deleteEntity;
 
+        vm.isFormDisabled = () => {
+            return !vm.entity.is_enabled && vm.hasEnabledStatus;
+        }
+
         vm.toggleEnableStatus = function () {
 
             vm.entity.is_enabled = !vm.entity.is_enabled;
 
-            var tesOpt = vm.footerPopupData.options.find(function (option) {
+            var enableOpt = vm.footerPopupData.options.find(function (option) {
                 return option.key === 'toggle_enable_status';
             });
 
-            tesOpt.icon = vm.entity.is_enabled ? "not_interested" : "check_circle";
-            tesOpt.name = vm.entity.is_enabled ? "Disable" : "Enable";
+            enableOpt.icon = vm.entity.is_enabled ? "not_interested" : "check_circle";
+            enableOpt.name = vm.entity.is_enabled ? "Disable" : "Enable";
 
             entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
 
@@ -869,6 +883,23 @@
                 });
             })
 
+
+        };
+
+        vm.toggleLockStatus = function () {
+
+            vm.entity.is_locked = !vm.entity.is_locked;
+
+            entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
+
+                result.is_locked = vm.entity.is_locked;
+
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+                    getEntityStatus();
+
+                    $scope.$apply();
+                });
+            })
 
         };
 
@@ -1882,7 +1913,7 @@
                 },
                 sort: {
                     direction: "DESC",
-                    key: "created"
+                    key: "created_at"
                 }
             }).then(function (data) {
 

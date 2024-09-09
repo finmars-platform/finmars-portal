@@ -21,6 +21,8 @@
             access: false
         };
 
+        vm.themeSettings = null
+
         vm.accessSectionTable = {
             history: true,
             journal: true,
@@ -650,6 +652,14 @@
 
         }
 
+        vm.getLogo = function () {
+            return vm.themeSettings?.logo_light_url || 'portal/content/img/logo.png'
+        }
+
+        vm.getLogoDark = function () {
+            return vm.themeSettings?.logo_dark_url || 'portal/content/img/logo-dark.png'
+        }
+
         vm.init = function () {
 
             if (!window.system_errors) {
@@ -671,6 +681,8 @@
             vm.isThemeInDarkMode = function () {
                 return globalDataService.isThemeInDarkMode();
             }
+
+            vm.themeSettings = globalDataService.getWhiteLabel()
 
 
             // if (toastr) {

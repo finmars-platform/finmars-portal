@@ -3,10 +3,12 @@
 // import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
 // import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
 
+const evEvents = require("../services/entityViewerEvents");
 (function () {
 
     var CommonDialogsService = require("../../../../shell/scripts/app/services/commonDialogsService").default;
     var localStorageService = require("../../../../shell/scripts/app/services/localStorageService");
+    var transactionTypeService = require('../services/transactionTypeService');
 
     const evEvents = require('../services/entityViewerEvents');
 
@@ -61,6 +63,33 @@
 
         };
 
+        const setEventListeners = function () {
+
+            if (viewModel.entityType !== 'transaction-report') {
+
+                viewModel.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+
+                    const eventIndex = viewModel.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        const reportOptions = viewModel.entityViewerDataService.getReportOptions();
+
+                        pricesCheckerService.fetchPricesErrors(reportOptions).then(function (data) {
+
+                            viewModel.entityViewerDataService.setMissingPrices(data);
+                            viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END);
+
+                        })
+
+                        viewModel.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, eventIndex);
+
+                    });
+
+                });
+
+            }
+
+        }
+
         const putUseFromAboveFiltersFirst = function () { // needed for already existing rv layouts
 
             let allFilters = viewModel.entityViewerDataService.getFilters();
@@ -108,6 +137,7 @@
 
         };
 
+
         const onSetLayoutEnd = () => {
 
             viewModel.readyStatus.layout = true;
@@ -117,7 +147,7 @@
 
             if (entityType !== 'transaction-report') {
 
-                pricesCheckerService.check(reportOptions).then(function (data) {
+                /*pricesCheckerService.check(reportOptions).then(function (data) {
 
                     data.items = data.items.map(function (item) {
 
@@ -157,7 +187,13 @@
 
                     viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END);
 
-                });
+                });*/
+                pricesCheckerService.fetchPricesErrors(reportOptions).then(function (data) {
+
+                    viewModel.entityViewerDataService.setMissingPrices(data);
+                    viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END);
+
+                })
 
             }
 
@@ -221,8 +257,6 @@
                         // if (!viewModel.matrixSettings) {
                         //     rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
                         // }
-
-
 
 
                     } else {
@@ -378,7 +412,7 @@
 
         };
 
-        //region Execute actions from report viewer table
+        //# region Execute actions from report viewer table
 
         var updateTableAfterEntityChanges = function (res) {
 
@@ -539,14 +573,14 @@
             const activeRowExist = activeRowIndex > -1;
 
             if (viewModel.entityType !== 'transaction-report' &&
-                (!reportOptions.pricing_policy || typeof reportOptions.pricing_policy !== 'string') ) {
+                (!reportOptions.pricing_policy || typeof reportOptions.pricing_policy !== 'string')) {
 
                 toastNotificationService.clientError(
                     "Invalid 'Pricing Policy' inside Report options",
                 );
 
                 throw "Error [rvSharedLogicHelper.executeRowAction] invalid value inside " +
-                    `reportOptions.pricing_policy ${reportOptions.pricing_policy}`;
+                `reportOptions.pricing_policy ${reportOptions.pricing_policy}`;
 
             }
 
@@ -631,8 +665,7 @@
 
                     editEntity(actionData.event, locals);
 
-                }
-                else if (action === 'edit_price') { // TODO: hide option for transaction report
+                } else if (action === 'edit_price') { // TODO: hide option for transaction report
 
                     var filters = {
                         instrument: actionData.object['instrument.id'],
@@ -646,7 +679,7 @@
                         if (data.results.length) {
 
                             if (data.results.length > 1) {
-                                throw `${ getTooManyError("priceHistoryService", data.results.length) }`;
+                                throw `${getTooManyError("priceHistoryService", data.results.length)}`;
                             }
 
                             var item = data.results[0];
@@ -685,8 +718,7 @@
                     })
 
 
-                }
-                else if (action === 'edit_fx_rate') {
+                } else if (action === 'edit_fx_rate') {
 
                     var filters = {
                         currency: actionData.object['currency.id'],
@@ -742,8 +774,7 @@
 
                     })
 
-                }
-                else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
+                } else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
 
                     var filters = {
                         currency: actionData.object['instrument.accrued_currency.id'],
@@ -770,8 +801,7 @@
 
                             editEntity(actionData.event, locals);
 
-                        }
-                        else {
+                        } else {
 
                             const warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
@@ -792,8 +822,7 @@
 
                     })
 
-                }
-                else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
+                } else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
 
                     var filters = {
                         currency: actionData.object['instrument.pricing_currency.id'],
@@ -820,8 +849,7 @@
 
                             editEntity(actionData.event, locals);
 
-                        }
-                        else {
+                        } else {
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
@@ -841,8 +869,7 @@
 
                     })
 
-                }
-                else if (action === 'book_transaction') {
+                } else if (action === 'book_transaction') {
 
                     var locals = {
                         entityType: 'complex-transaction',
@@ -861,8 +888,7 @@
 
                     createEntity(locals);
 
-                }
-                else if (action === 'book_transaction_specific') {
+                } else if (action === 'book_transaction_specific') {
 
                     // const contextData = getContextDataForRowAction(reportOptions, actionData.object);
                     const contextData = await rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType, pricingPolicyService);
@@ -876,13 +902,22 @@
                     };
 
                     if (actionData && actionData.id) {
-                        locals.entity.transaction_type = actionData.id
+
+                        const data = await transactionTypeService.getList({
+                            filters: {
+                                user_code: actionData.id
+                            }
+                        })
+                        const ttypes = data.results
+
+                        if (ttypes.length) {
+                            locals.entity.transaction_type = ttypes[0].id
+                        }
                     }
 
                     createEntity(locals);
 
-                }
-                else if (action === 'rebook_transaction') {
+                } else if (action === 'rebook_transaction') {
 
                     var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
 
@@ -894,8 +929,7 @@
 
                     editEntity(actionData.event, locals);
 
-                }
-                else if ( action === 'copy_transaction' ) {
+                } else if (action === 'copy_transaction') {
 
                     var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
 
@@ -995,10 +1029,12 @@
 
             }
         }
+        //# endregion Execute actions from report viewer table
 
         return {
             setLayoutDataForView: setLayoutDataForView,
             downloadAttributes: downloadAttributes,
+            setEventListeners: setEventListeners,
             applyDatesFromAnotherLayout: applyDatesFromAnotherLayout,
             calculateReportDatesExprs: calculateReportDatesExprs,
             onSetLayoutEnd: onSetLayoutEnd,

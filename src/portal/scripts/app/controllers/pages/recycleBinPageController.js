@@ -350,7 +350,7 @@
                 filters: vm.filters,
                 sort: {
                     direction: "DESC",
-                    key: "created"
+                    key: "created_at"
                 }
             }).then(function (data) {
 
@@ -362,7 +362,7 @@
 
                 vm.items.forEach(function (item) {
 
-                    item.modified_datetime_prettty = moment(new Date(item.modified)).format('DD-MM-YYYY HH:mm');
+                    item.modified_datetime_prettty = moment(new Date(item.modified_at)).format('DD-MM-YYYY HH:mm');
 
                 })
 
