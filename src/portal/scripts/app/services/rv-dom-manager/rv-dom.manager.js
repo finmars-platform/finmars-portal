@@ -1060,7 +1060,8 @@ export default function (toastNotificationService, transactionTypeService, price
 
     var initEventDelegation = async function (elem, evDataService, evEventService, usersService, globalDataService) {
 
-        const ttypes = await getAllTTypes();
+        // const ttypes = await getAllTTypes(); # TODO szhitenev, consider other approach, it too slow
+        const ttypes = []
         const contextMenu = await getContextMenu();
 
         elem.addEventListener('click', function (event) {
@@ -1745,14 +1746,16 @@ export default function (toastNotificationService, transactionTypeService, price
 
             if (item.action === 'book_transaction_specific') {
 
-                item.id = getContextMenuTtypeId(ttypes, item);
+                ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.action_data + '"'
 
-                if (item.id) {
-                    ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
-                } else {
-                    additional_text = ' (Not Found)';
-                    is_disabled = 'disabled-context-menu';
-                }
+                // item.id = getContextMenuTtypeId(ttypes, item);
+                //
+                // if (item.id) {
+                //     ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
+                // } else {
+                //     additional_text = ' (Not Found)';
+                //     is_disabled = 'disabled-context-menu';
+                // }
 
             } else if (item.action === 'mark_row') {
                 ttype_specific_attr = ' data-ev-dropdown-action-data-color="' + item.action_data + '"'

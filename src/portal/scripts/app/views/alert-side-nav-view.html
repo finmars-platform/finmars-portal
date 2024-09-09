@@ -82,7 +82,7 @@
 
             <div class="alert-card-content">
                 <div class="alert-card-title">{{alert.title}}</div>
-                <div class="alert-card-created">{{alert.created | date:'HH:MM'}}</div>
+                <div class="alert-card-created">{{alert.created_at | date:'HH:MM'}}</div>
                 <div class="alert-card-description">{{alert.description}}</div>
             </div>
 
@@ -105,7 +105,7 @@
                         <div class="alert-card-comment-comment">
                             {{comment.comment}}
 
-                            <div class="alert-card-comment-comment-time">{{comment.created | date:'HH:MM'}}</div>
+                            <div class="alert-card-comment-comment-time">{{comment.created_at | date:'HH:MM'}}</div>
 
                         </div>
                     </div>

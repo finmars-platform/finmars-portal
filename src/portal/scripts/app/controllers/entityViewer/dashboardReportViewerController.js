@@ -289,9 +289,6 @@
 
                             vm.entityViewerDataService.resetTableContent(true);
 
-                            if (reportOptions) {
-                                reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
-                            }
 
                             vm.entityViewerDataService.setReportOptions(reportOptions);
                             vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
@@ -347,8 +344,14 @@
             });
 
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
+                // DEPRECATED. Use instead event CREATE_TABLE.
+                vm.entityViewerEventService.dispatchEvent(evEvents.CREATE_TABLE);
+            });
 
-                // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+            vm.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+
+                vm.entityViewerDataService.resetTableContent(true);
+
                 rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
             });

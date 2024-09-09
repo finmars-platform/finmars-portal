@@ -11,10 +11,10 @@
         </a>
 
         <div class="task-card-started-at">
-            Started at: <b>{{task.created | date:'HH:mm:ss' : 'UTC'}}</b>
+            Started at: <b>{{task.created_at | date:'HH:mm:ss' : 'UTC'}}</b>
             <md-tooltip class="tooltip_2"
                         md-direction="bottom">
-                {{task.created}}
+                {{task.created_at}}
             </md-tooltip>
         </div>
 

@@ -157,7 +157,7 @@
                     filters: filters,
                     sort: {
                         direction: "DESC",
-                        key: "created"
+                        key: "created_at"
                     }
                 }).then(function (data) {
 
@@ -209,7 +209,7 @@
                     filters: filters,
                     sort: {
                         direction: "DESC",
-                        key: "created"
+                        key: "created_at"
                     }
                 }).then(function (data) {
 
@@ -303,7 +303,7 @@
 
         vm.getStartedAt = function (item) {
 
-            return new Date(item.created).toLocaleDateString() + ' ' + new Date(item.created).toLocaleTimeString()
+            return new Date(item.created_at).toLocaleDateString() + ' ' + new Date(item.created_at).toLocaleTimeString()
 
         };
 

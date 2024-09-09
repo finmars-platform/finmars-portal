@@ -1,3 +1,10 @@
+@tisRowItemGap: 4px;
+
+.transaction-import-scheme-v2-row-mixin() {
+  align-items: center;
+  column-gap: @tisRowItemGap;
+}
+
 .transaction-import-error-holder {
   width: 100%;
   overflow: auto;
@@ -107,37 +114,15 @@ md-dialog.transaction-scheme-manager-dialog-view-v2 {
     margin-bottom: 10px;
   }
 
-  .rows-container {
-    margin: 8px 0;
-    padding: 8px 0;
-  }
-
-  @tisRowItemGap: 4px;
-
   .row-item-margins {
     margin: 0 @tisRowItemGap;
-  }
-
-  .row-grid-mixin() {
-    align-items: center;
-    column-gap: @tisRowItemGap;
   }
 
   .row-error {
     margin-top: 4px;
   }
 
-  .transaction-import-scheme-v2-file-input {
-    /*width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;*/
-    display: grid;
-    /*Static width used so that items stay aligned when showing dryRunResult
-     max-content for HTML element with dryRunResult*/
-    grid-template-columns: 50px repeat(3, 160px) 44px max-content;
-    .row-grid-mixin();
-  }
+
 
   .transaction-import-scheme-v2-calculated-input-expression {
     cursor: pointer;
@@ -155,48 +140,6 @@ md-dialog.transaction-scheme-manager-dialog-view-v2 {
     &:hover {
       opacity: .7;
     }
-  }
-
-  .calc-input-expr {
-    cursor: pointer;
-
-    .custom-input-container {
-      .custom-input:not([disabled]) {
-        cursor: pointer;
-      }
-
-      .custom-input-indicator-btn:not([disabled]):hover {
-        opacity: 1;
-      }
-    }
-
-
-    &:hover {
-      opacity: .7;
-    }
-    /*cursor: pointer;
-    border: 1px solid var(--table-border-color);
-
-    resize: none;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 4px;
-    white-space: pre;
-    max-width: 400px;
-    min-width: 400px;
-    overflow: hidden;
-
-    &:hover {
-      opacity: .7;
-    }*/
-  }
-
-  .transaction-import-scheme-v2-calculated-input {
-    display: grid;
-    /*Without static width items are unaligned when showing dryRunResult.
-     max-content for HTML element with dryRunResult.*/
-    grid-template-columns: 240px 240px 44px max-content;
-    .row-grid-mixin();
   }
 
   .action-btn {
@@ -254,7 +197,7 @@ md-dialog.transaction-scheme-manager-dialog-view-v2 {
     .scenario-row {
       display: grid;
       grid-template-columns: minmax(160px, 1fr) 100px minmax(160px, 1fr) minmax(200px, 2fr) 136px;
-      .row-grid-mixin();
+      .transaction-import-scheme-v2-row-mixin();
     }
   }
 
@@ -326,9 +269,6 @@ md-dialog.transaction-scheme-manager-dialog-view-v2 {
 
   }
 
-  .transaction-import-scheme-input-container {
-  }
-
   .transaction-import-scheme-v2-file-inputs-holder {
 
     .transaction-import-scheme-v2-calculated-input-expression {
@@ -355,4 +295,57 @@ md-dialog.transaction-scheme-manager-dialog-view-v2 {
   }
 
 
+}
+
+.transaction-import-scheme-v2-rows-container {
+  position: relative;
+
+  .top-left-drag-icon {
+    left: 0;
+  }
+
+  .row-card {
+    margin: 8px 0;
+    padding: 8px 0 8px 20px;
+  }
+}
+
+.transaction-import-scheme-v2-file-input .row-card {
+  /*width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;*/
+  display: grid;
+  /*Static width used so that items stay aligned when showing dryRunResult
+   max-content for HTML element with dryRunResult*/
+  grid-template-columns: repeat(3, 160px) 44px max-content;
+  .transaction-import-scheme-v2-row-mixin();
+}
+
+.transaction-import-scheme-v2-calculated-input .row-card {
+  display: grid;
+  /*Without static width items are unaligned when showing dryRunResult.
+   max-content for HTML element with dryRunResult.*/
+  grid-template-columns: 240px 240px 44px max-content;
+  .transaction-import-scheme-v2-row-mixin();
+}
+
+.import-scheme-calc-input-expr {
+  /* Also used by simple entity import scheme */
+  cursor: pointer;
+
+  .custom-input-container {
+    .custom-input:not([disabled]) {
+      cursor: pointer;
+    }
+
+    .custom-input-indicator-btn:not([disabled]):hover {
+      opacity: 1;
+    }
+  }
+
+
+  &:hover {
+    opacity: .7;
+  }
 }

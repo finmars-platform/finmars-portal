@@ -130,7 +130,7 @@
                     	if (listLayout.id && listLayout.id === data.id) {
 
                     		listLayout.name = data.name;
-							listLayout.modified = data.name;
+							listLayout.modified_at = data.name;
 							entityViewerDataService.setListLayout(listLayout);
 
 							/* if (isRootEntityViewer) {
@@ -262,9 +262,9 @@
                 if (listLayout.id === layoutData.id) { // if active layout made default
 
                     listLayout.is_default = true;
-                    listLayout.modified = data.modified;
+                    listLayout.modified_at = data.modified_at;
                     activeLayoutConfig.is_default = true;
-                    activeLayoutConfig.modified = data.modified;
+                    activeLayoutConfig.modified_at = data.modified_at;
 
                     entityViewerDataService.setListLayout(listLayout);
                     entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});

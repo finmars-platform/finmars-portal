@@ -519,6 +519,7 @@ export default (function () {
     portal.controller('AttributeTypeDialogController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/attributeTypeDialogController')]);
     portal.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classificationEditorDialogController')]);
     portal.controller('CustomFieldsConfigDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldsConfigDialogController')]);
+    portal.controller('MoveExplorerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/moveExplorerDialogController')]);
 
     portal.controller('EntityTypeMappingDialogController', ['$scope', '$mdDialog', 'mapItem', require('./app/controllers/dialogs/entityTypeMappingDialogController')]);
     portal.controller('EntityTypeClassifierMappingDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/entityTypeClassifierMappingDialogController')]);
@@ -838,6 +839,8 @@ export default (function () {
 
 
     portal.controller('PricingPolicyPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingPolicyPageController')]);
+    portal.controller('BalanceReportInstancePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/balanceReportInstancePageController')]);
+    portal.controller('PlReportInstancePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/plReportInstancePageController')]);
     portal.controller('PricingManagePageController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/pages/pricingManagePageController')]);
     portal.controller('PortfolioBundlePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/portfolioBundlePageController')]);
     portal.controller('PricingSchemePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingSchemePageController')]);

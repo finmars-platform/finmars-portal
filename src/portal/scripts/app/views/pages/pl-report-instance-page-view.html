@@ -1,0 +1,58 @@
+<div class="p-24">
+
+    <div data-ng-if="vm.readyStatus.content">
+
+        <table>
+
+            <thead>
+            <tr>
+
+                <th>
+                    ID
+                </th>
+                <th>
+                    Unique Key
+                </th>
+                <th>
+                    Settings
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr data-ng-repeat="item in vm.items track by $index">
+
+                <td>
+                    {{ item.id }}
+                </td>
+
+
+                <td>
+                    {{ item.unique_key }}
+                </td>
+
+                <td><div style="white-space: pre; padding: 8px;">{{ item.settings }}</div></td>
+
+                <td>
+                    <md-button class="" data-ng-click="vm.deleteItem($event, item, $index)">Delete
+                    </md-button>
+                </td>
+
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.content">
+        <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+</div>

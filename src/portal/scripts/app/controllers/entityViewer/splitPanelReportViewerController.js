@@ -403,9 +403,7 @@
             vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
                 var reportOptions = vm.entityViewerDataService.getReportOptions()
-                if (reportOptions) {
-                    reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
-                }
+
                 vm.entityViewerDataService.setReportOptions(reportOptions);
 
                 vm.entityViewerDataService.resetTableContent(true);
@@ -427,16 +425,20 @@
             });
 
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
+                // DEPRECATED. Use instead event CREATE_TABLE.
+                vm.entityViewerEventService.dispatchEvent(evEvents.CREATE_TABLE);
+            });
+
+            vm.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+
+                reportHelper.onCreateTableEvent(vm.entityViewerDataService, vm.entityViewerEventService, pricesCheckerService)
 
                 var reportOptions = vm.entityViewerDataService.getReportOptions()
-                if (reportOptions) {
-                    reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
-                }
+
                 vm.entityViewerDataService.setReportOptions(reportOptions);
 
                 vm.entityViewerDataService.resetTableContent(true);
                 rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
             });
 

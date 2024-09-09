@@ -147,6 +147,10 @@
                     },
                     revertOnSpill: true
                 })
+            },
+
+            destroy: function () {
+                this.dragula.destroy();
             }
         };
 
@@ -220,6 +224,11 @@
         };
 
         init();
+
+        $scope.$on("$destroy", function () {
+            vm.dragAndDrop.destroy();
+        });
+
     }
 
 }());

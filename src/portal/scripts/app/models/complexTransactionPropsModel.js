@@ -8,6 +8,11 @@
     var getAttributes = function () {
         return [
             {
+                "key": "id",
+                "name": "ID",
+                "value_type": 20
+            },
+            {
                 "key": "code",
                 "name": "Code",
                 "value_type": 20

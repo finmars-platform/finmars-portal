@@ -22,24 +22,24 @@
             vm.entityType = vm.evDataService.getEntityType();
             vm.layout = vm.evDataService.getListLayout()
 
-            vm.items = vm.items.map(function (item) {
-
-                item.instrument_object.pricing_policies.forEach(function (policy) {
-
-                    if (policy.pricing_policy === vm.reportOptions.pricing_policy) {
-
-                        if (policy.pricing_scheme_object) {
-                            item.pricing_user_code = policy.pricing_scheme_object.name;
-                        }
-                        
-                        item.pricing_scheme = policy.pricing_scheme;
-                    }
-
-                });
-
-                return item
-
-            })
+            // vm.items = vm.items.map(function (item) {
+            //
+            //     item.instrument_object.pricing_policies.forEach(function (policy) {
+            //
+            //         if (policy.pricing_policy === vm.reportOptions.pricing_policy) {
+            //
+            //             if (policy.pricing_scheme_object) {
+            //                 item.pricing_user_code = policy.pricing_scheme_object.name;
+            //             }
+            //
+            //             item.pricing_scheme = policy.pricing_scheme;
+            //         }
+            //
+            //     });
+            //
+            //     return item
+            //
+            // })
 
         };
 
