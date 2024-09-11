@@ -103,6 +103,12 @@
                 layoutData.data.state = {}
             }
 
+            if (!layoutData.data.state.hasOwnProperty('meta')) {
+                layoutData.data.state['meta'] = {}
+            }
+
+            layoutData.data.state['meta']['origin'] = 'finmars';
+
             layoutData.data.state[user_code] = output
 
         }
