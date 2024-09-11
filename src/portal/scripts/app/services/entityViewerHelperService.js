@@ -435,7 +435,7 @@
 
     /**
      * Turn table attribute into group, column or filter
-     * @param {string} form - In what form get attribute. Can be 'column', 'group', 'filter'.
+     * @param {string} form - In what form get attribute. values: 'column', 'group', 'filter'.
      * @param {object} attrInstance - Object with attribute data on which attribute form will be based
      * @memberOf module:entityViewerHelperService
      * @return {object} Return attribute in form of group, column or filter
@@ -959,16 +959,18 @@
 
             var match = true;
 
-            var filter_types = requestParameters[key].body.groups_types.map(function (item) {
+            /*var filter_types = requestParameters[key].body.groups_types.map(function (item) {
                 return item.key
-            });
+            });*/
+            var groupTypes = evDataHelper.getGroupsTypesToLevel(requestParameters[key].level, evDataService);
+            var filtersKeys = groupTypes.map(gType => gType.key);
 
             var filter_values = requestParameters[key].body.groups_values;
 
             if (filter_values.length) {
                 filter_values.forEach(function (value, index) {
 
-                    if (resultItem[filter_types[index]] !== value) {
+                    if (resultItem[filtersKeys[index]] !== value) {
                         match = false
                     }
 
@@ -976,7 +978,7 @@
                 })
             } else {
 
-                if (filter_types.length) {
+                if (filtersKeys.length) {
                     match = false;
                 }
             }

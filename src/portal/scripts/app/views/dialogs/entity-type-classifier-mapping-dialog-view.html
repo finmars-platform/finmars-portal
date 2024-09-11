@@ -25,20 +25,20 @@
                                 data-ng-show="vm.sort === 'name'"
                                 data-ng-class="{reverse: vm.direction}"></span></div>
                         <div flex="10">
-                            <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                            <span class="material-icons cursor-pointer" data-ng-click="vm.toggleQuery()">search</span>
                         </div>
                     </div>
                     <div layout="row" style="margin-bottom: 20px" data-ng-if="vm.queryStatus"
                          class="filter-row-holder">
                         <div flex="50">
                             <md-input-container>
-                                <ng-md-icon icon="search"></ng-md-icon>
+                                <span class="material-icons">search</span>
                                 <input type="text" data-ng-model="vm.query.mapping.value">
                             </md-input-container>
                         </div>
                         <div flex="50">
                             <md-input-container>
-                                <ng-md-icon icon="search"></ng-md-icon>
+                                <span class="material-icons">search</span>
                                 <input type="text" data-ng-model="vm.query.name">
                             </md-input-container>
                         </div>

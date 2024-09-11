@@ -45,6 +45,10 @@
 	    return instrumentTypeRepository.bookInstrument(instrument_type_id)
     }
 
+  const applyPricing = function(id, data) {
+    return instrumentTypeRepository.applyPricing(id, data);
+  };
+
     module.exports = {
         getList: getList,
         getListLight: getListLight,
@@ -59,7 +63,8 @@
         updatePricing: updatePricing,
 
 
-        bookInstrument: bookInstrument
+        bookInstrument: bookInstrument,
+        applyPricing: applyPricing
     }
 
 

@@ -31,6 +31,7 @@
         vm.showHiddenFiles = false;
         vm.showWorkflow = false;
         vm.showEditor = false;
+        vm.exportTaskId = null;
 
         vm.fileEditor = {}
         vm.fileEditorLoading = false;
@@ -47,14 +48,42 @@
             vm.propertyName = propertyName;
         };
 
-        vm.breadcrumbsNavigation = function ($index) {
+        $scope.$watch(function() {
+            return vm.searchTerm;
+        }, function(newVal, oldVal) {
+            if (newVal !== oldVal) {
+                vm.search(newVal);
+            }
+        });
 
-            if ($index === -1) {
-                vm.currentPath = []
-            } else {
-                vm.currentPath = vm.currentPath.filter(function (item, index) {
-                    return index <= $index;
+        vm.search = async function(query) {
+
+            if (query.length) {
+                explorerService.searchFiles(query).then(function (data) {
+
+                    vm.items = data.results;
+                    vm.processing = false;
+
+                    $scope.$apply();
                 })
+            } else {
+                vm.listFiles();
+            }
+        };
+
+        vm.breadcrumbsNavigation = function ($index, filePath = null) {
+
+            if (filePath) {
+                vm.currentPath = filePath.split('/');
+                vm.currentPath = vm.currentPath.filter(element => !element.includes("space"));
+            } else {
+                if ($index === -1) {
+                    vm.currentPath = []
+                } else {
+                    vm.currentPath = vm.currentPath.filter(function (item, index) {
+                        return index <= $index;
+                    })
+                }
             }
 
             // vm.listFiles();
@@ -150,35 +179,30 @@
 
         }
 
+        vm.sync = async function () {
+            const res = await explorerService.sync();
+            vm.exportTaskId = res.task_id;
+        }
         vm.editFile = function ($event, item, $mdMenu) {
 
             if ($mdMenu) {
                 $mdMenu.close()
             }
 
-            vm.currentPath.push(item.name);
-
-            window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
-
-            if (item.name.indexOf('.ipynb') !== -1) {
-
-
-                vm.fileEditorLoading = true;
-
-                vm.downloadAndOpenPlaybook();
-
-            } else {
-
-                vm.fileEditor = {};
-
-                vm.showEditor = true;
-
-                vm.fileEditorLoading = true;
-
-                vm.downloadAndEdit();
-
+            const filePath = item.file_path.split('/');
+            vm.currentPath = filePath.filter(element => element !== "");
+            const hasSpace = vm.currentPath.some(element => element.includes('space'));
+            if (hasSpace) {
+                vm.currentPath = vm.currentPath.filter(element => !element.includes("space"));
             }
+            const hasFileName = vm.currentPath.some(element => element.includes(item.name));
+            if (!hasFileName) {
+                vm.currentPath.push(item.name);
+            }
+            const url = '#!/explorer/' + vm.currentPath.join('/');
 
+            window.open(url, '_blank');
+            vm.currentPath.pop();
         }
 
         // DRAFT STARTED
@@ -299,11 +323,59 @@
             })
         }
 
-        vm.deleteSelected = function ($event) {
+        vm.move = function ($event, item = undefined) {
 
-            var itemsToDelete = vm.items.filter(function (item) {
-                return item.selected;
-            })
+            var itemsToMove = [];
+
+            if (item) {
+                itemsToMove = [item];
+            } else {
+                itemsToMove = vm.items.filter(function (item) {
+                    return item.selected;
+                });
+            }
+
+            const paths = [];
+            let isFile = false;
+            $mdDialog.show({
+                controller: 'MoveExplorerDialogController as vm',
+                templateUrl: 'views/move-explorer-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    let moveToPath = res.data.path;
+                    itemsToMove.forEach((item) => {
+                        if (item.type === 'file') {
+                            paths.push(item.file_path);
+                            isFile = true;
+                        }
+                    })
+                    if (isFile) {
+                        explorerService.move({target_directory_path: moveToPath, paths}).then(function (data) {
+                            vm.exportTaskId = data.task_id;
+                            $scope.$apply();
+                        })
+                    }
+                }
+            });
+
+        }
+
+        vm.deleteSelected = function ($event, item = undefined) {
+
+            var itemsToDelete = [];
+
+            if (item) {
+                itemsToDelete = [item];
+            } else {
+                itemsToDelete = vm.items.filter(function (item) {
+                    return item.selected;
+                })
+            }
 
             var names = itemsToDelete.map(function (item) {
                 return item.name
@@ -525,8 +597,6 @@
         vm.selectItem = function ($event, item) {
 
             item.selected = !item.selected;
-
-            console.log(" vm.selectItem item", item)
 
             var allSelected = true;
 
@@ -971,6 +1041,38 @@
             }
         }
 
+
+        vm.rename = function ($event, item) {
+            var name = JSON.parse(JSON.stringify(item.name));
+
+            $mdDialog.show({
+                controller: 'RenameDialogController as vm',
+                templateUrl: 'views/dialogs/rename-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        name: name
+                    }
+                }
+
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    let path = '';
+                    if (vm.currentPath.join('/').length) {
+                        path = vm.currentPath.join('/') + '/' + name;
+                    } else {
+                        path = name;
+                    }
+                    explorerService.rename({path: path, new_name: res.name}).then(function (data) {
+                       vm.exportTaskId = data.task_id;
+                        $scope.$apply();
+                    })
+                }
+            })
+        }
+
+
         vm.init = function () {
 
             vm.resolveWorkflowIframeUrl();
@@ -990,7 +1092,11 @@
 
                     } else {
 
+                        vm.fileEditor = {};
+
                         vm.showEditor = true;
+
+                        vm.fileEditorLoading = true;
 
                         vm.downloadAndEdit();
 

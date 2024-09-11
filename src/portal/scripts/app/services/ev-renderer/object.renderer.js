@@ -150,10 +150,12 @@
         } else if (obj.is_canceled) {
             result = 'cancelIcon';
 
-        } else if (obj.is_locked) {
+        }
+        /*else if (obj.is_locked) {
             result = 'lock2Icon';
 
-        } else if (obj.is_deleted) {
+        }*/
+        else if (obj.is_deleted) {
             result = 'deletedIcon';
 
         } else if (obj.hasOwnProperty('is_enabled') && !obj.is_enabled) {
@@ -219,12 +221,11 @@
                 }
 
                 if (column.value_type === 10 && item.value_string) {
-                    rawTextResult = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
-
+                    rawTextResult = renderHelper.formatStringForCell(rawTextResult);
                 }
 
                 if (column.value_type === 30 && item.classifier_object) {
-                    rawTextResult = item.classifier_object.name;
+                    rawTextResult = stringHelper.escapeHtml(item.classifier_object.name);
                 }
 
                 if (column.value_type === 40 && item.value_date) {
@@ -277,14 +278,14 @@
                     rawTextResult = statusData[statusKey];
 
                 }
-                else if(column.key === 'procedure_modified_datetime' || column.key === 'created' || column.key === 'modified') {
+                else if(column.key === 'procedure_modified_datetime' || column.key === 'created_at' || column.key === 'modified_at') {
 
                     rawTextResult = moment(obj[column.key]).format('YYYY-MM-DD HH:mm:ss')
 
                 }
                 else {
 
-                    var aElem = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
+                    var aElem = renderHelper.formatStringForCell( obj[column.key] );
 
                     return {
                         html_result: aElem,

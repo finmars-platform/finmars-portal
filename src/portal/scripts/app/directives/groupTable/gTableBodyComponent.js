@@ -30,7 +30,10 @@
                 evEventService: '=',
                 rootWrapElement: '=',
                 contentWrapElement: '=',
-                workareaWrapElement: '='
+                workareaWrapElement: '=',
+
+                // optional. May not exist if columnArea is turned off.
+                columnsScrollableAreaElement: '=',
             },
             /*            template: '<div>' +
                             '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
@@ -45,8 +48,8 @@
 
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
+                // var columnsScrollableAreaElem = scope.workareaWrapElement.querySelector('.g-scrollable-area');
                 // var progressBar = elem[0].querySelector('.ev-progressbar');
-
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
 
                 var elements = {
@@ -85,8 +88,30 @@
 
                 };
 
-                function renderReportViewer() {
+                function calculateElemsAndScrolls () {
 
+                    /* calculateElemsWrapsSizes() must be called before
+                     * calculateScroll() at least after webpage loaded the first time.
+                     * */
+                    evRvDomManagerService.calculateTableElementsSizes(
+                        scope.rootWrapElement,
+                        scope.contentWrapElement,
+                        scope.workareaWrapElement,
+                        viewportElem,
+                        contentElem,
+                        scope.columnsScrollableAreaElement,
+                        scope.evDataService,
+                    );
+
+                    if (scope.isReport) {
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                    } else {
+                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+                    }
+
+                }
+
+                function renderReportViewer() {
                     console.log('renderReportViewer');
 
                     var begin = Date.now();
@@ -99,6 +124,7 @@
                     rvDataHelper.syncLevelFold(scope.evDataService);
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService, globalDataService);
+
                     flatList.shift(); // remove root group
 
                     flatList = flatList.filter(function (item) {
@@ -388,14 +414,14 @@
 
                 var calculateElemsWrapsSizes = function () {
 
-                    evRvDomManagerService.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
+                    /*evRvDomManagerService.calculateContentWrapHeight(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
                     // for vertical split panel contentWrapElem width calculated by gWidthAlignerComponent.js
                     // horizontal split panel contentWrapElem take all available width
                     if (isRootEntityViewer) {
                         evRvDomManagerService.calculateContentWrapWidth(elements.rootWrapElem, elements.contentWrapElem, scope.evDataService);
                     }
 
-                    evRvDomManagerService.calculateWorkareaWrapWidth(elements.contentWrapElem, elements.workareaWrapElem, scope.evDataService);
+                    evRvDomManagerService.calculateWorkareaWrapWidth(elements.contentWrapElem, elements.workareaWrapElem, scope.evDataService);*/
 
                 }
 
@@ -448,8 +474,21 @@
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     console.log("gTableBodyComponent DATA_LOAD_END");
-
                     // progressBar.style.display = 'none';
+
+                    if ( errorWhileLoadingData() ) {
+
+                        scope.evDataService.setDataLoadStatus(true);
+
+                        scope.dataLoadStatus = true;
+
+                        scope.error = true;
+
+                        return setTimeout(function () {
+                            scope.$apply();
+                        }, 0)
+
+                    }
 
                     contentElem.style.opacity = '1';
 
@@ -462,7 +501,6 @@
                     }
 
                     scope.evDataService.setDataLoadStatus(true);
-                    const requestParamsList = scope.evDataService.getRequestParametersAsList();
 
                     scope.dataLoadStatus = true;
                     scope.error = false;
@@ -490,7 +528,15 @@
 
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
-                    calculateElemsWrapsSizes();
+                    evRvDomManagerService.calculateTableElementsSizes(
+                        scope.rootWrapElement,
+                        scope.contentWrapElement,
+                        scope.workareaWrapElement,
+                        viewportElem,
+                        contentElem,
+                        scope.columnsScrollableAreaElement,
+                        scope.evDataService,
+                    );
 
                     updateTableContent();
 
@@ -507,13 +553,7 @@
 
                 scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
 
-                    calculateElemsWrapsSizes();
-
-                    if (scope.isReport) {
-                        rvDomManager.calculateScroll(elements, scope.evDataService);
-                    } else {
-                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                    }
+                    calculateElemsAndScrolls();
 
                     scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
@@ -557,7 +597,8 @@
                 }
 
                 /**
-                 * Check whether error occurred while trying to load root group
+                 * Check whether error occurred while trying to load root group.
+                 * In that case there is no data to show, so show an error message.
                  *
                  * @return {boolean} - true if error occurred
                  */
@@ -565,7 +606,7 @@
 
                     const requestParamsList = scope.evDataService.getRequestParametersAsList();
 
-                    const rootRequestParam = requestParamsList.find(rp => rp.groups_level === 1);
+                    const rootRequestParam = requestParamsList.find(rp => rp.level === 1);
 
                     if (!rootRequestParam) {
                         return false;
@@ -612,11 +653,11 @@
 
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
-                        calculateElemsWrapsSizes();
+                        calculateElemsAndScrolls();
 
                         if (scope.isReport) {
 
-                            rvDomManager.calculateScroll(elements, scope.evDataService);
+                            // rvDomManager.calculateScroll(elements, scope.evDataService);
 
                             rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService, usersService, globalDataService);
                             // rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
@@ -655,9 +696,10 @@
                                 cellContentOverflow();
                             });*/
 
-                        } else {
+                        }
+                        else {
 
-                            evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+                            // evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
                             evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService, usersService, globalDataService);
                             evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
@@ -669,6 +711,10 @@
                             }
 
                         }
+
+                        const componentStatuses = scope.evDataService.getComponentsStatuses();
+                        componentStatuses.tableBody = true;
+                        scope.evDataService.setComponentsStatuses(componentStatuses);
 
                         scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 

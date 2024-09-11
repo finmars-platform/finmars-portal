@@ -169,8 +169,6 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     }
 
-                    delete scope.reportOptions.report_instance_id
-
                     console.log('dashboard.matrix.scope.reportOptions', scope.reportOptions);
 
                     scope.entityViewerDataService.setReportOptions(scope.reportOptions); // settings empty object

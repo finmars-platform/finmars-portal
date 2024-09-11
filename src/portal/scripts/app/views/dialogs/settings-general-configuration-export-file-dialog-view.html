@@ -120,8 +120,7 @@
                                      aria-label="checkbox">
                         </md-checkbox>
                         <span data-ng-class="{'used-dynamic-attrs': child.countOfUsages__, 'child-with-icon': vm.checkForTextIcon(item.entity, child)}">
-                            <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)" icon="folder" fill="#000"
-                                        size="20"></ng-md-icon>
+                             <span data-ng-if="vm.checkForTextIcon(item.entity, child)" class="material-icons" style="font-size: 20px; color: #000">folder</span>
                             {{vm.getItemName(child)}}
                             <span data-ng-if="child.countOfUsages__">(<b>{{child.countOfUsages__}}</b>)</span>
                         </span>

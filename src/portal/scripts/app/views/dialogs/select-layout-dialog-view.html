@@ -59,13 +59,13 @@
                                      class="bookmarks-layout-row"
                                      ng-class="{ 'selected-bookmark-layout': vm.isSelectedLayout(item.id)}">
 
-                                    <ng-md-icon ng-if="item.hasUseFromAboveFilter"
-                                                icon="flag"
-                                                size="17"
-                                                class="bookmarks-use-from-above-indicator">
+                                    <span
+                                        data-ng-if="item.hasUseFromAboveFilter"
+                                        class="material-icons bookmarks-use-from-above-indicator"
+                                        style="font-size: 17px;"
+                                    >flag
                                         <md-tooltip class="tooltip_2" md-direction="top">Has Linked to Selection filter</md-tooltip>
-                                    </ng-md-icon>
-
+                                    </span>
                                     <div data-ng-click="vm.selectLayout(item)">
                                         <span data-ng-bind="item.name"></span>
                                     </div>

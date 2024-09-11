@@ -1,3 +1,4 @@
+const {default: evRvCommonHelper} = require("../../helpers/ev-rv-common.helper");
 (function () {
 
     'use strict';
@@ -13,16 +14,49 @@
 
     var metaService = require('../../services/metaService').default;
 
+    const createRequestParameters = function (requestType, id, parentId, level, evDataService) {
+
+        var currentGroupName = evDataHelper.getGroupNameFromParent(id, parentId, evDataService);
+        var currentGroupIdentifier = evDataHelper.getGroupIdentifierFromParent(id, parentId, evDataService);
+
+        // TODO: use `evDataHelper.getGroupsValues()` or `evDataHelper.getGroupsValuesByItem()` and delete another
+        var groupsValues = evDataHelper.getGroupsValues(id, parentId, evDataService);
+
+        return evDataService.createRequestParameters(
+            requestType,
+            id,
+            parentId,
+            level,
+            currentGroupName,
+            currentGroupIdentifier,
+            {groupsValues}
+        )
+
+    }
+
+    /**
+     * Load new groups. E.g. when unfolding a group
+     *
+     * @param {String} groupHashId
+     * @param {String} parentGroupHashId
+     * @param {Object} evDataService
+     * @param { entityViewerEventService } evEventService
+     */
     var requestGroups = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
 
-        var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
+        /*var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
         var currentGroupIdentifier = evDataHelper.getGroupIdentifierFromParent(groupHashId, parentGroupHashId, evDataService);
 
-        var pagination = evDataService.getPagination();
+        var groupsLevel = 1;
+
+        if (parentGroupHashId) {
+            var parentRequestParameters = evDataService.getRequestParameters(parentGroupHashId);
+            groupsLevel = parentRequestParameters.level + 1;
+        }
 
         var event = {
+            ___id: groupHashId,
             parentGroupId: parentGroupHashId,
-            groupId: groupHashId,
             groupName: currentGroupName,
             groupIdentifier: currentGroupIdentifier
         };
@@ -30,28 +64,40 @@
         var requestParameters = {
             requestType: 'groups',
             id: groupHashId,
-            pagination: {
-                page: 1,
-                page_size: pagination.page_size,
-                count: 1
-            },
             event: {
                 ___id: groupHashId,
                 parentGroupId: parentGroupHashId,
-                groupId: groupHashId,
                 groupName: currentGroupName,
                 groupIdentifier: currentGroupIdentifier
 
             },
             body: {
-                groups_types: evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService),
+                // TODO: use `evDataHelper.getGroupsValues()` or `evDataHelper.getGroupsValuesByItem()` and delete another
                 groups_values: evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService),
-                page_size: pagination.page_size,
-                page: 1
             },
+            pagination: {
+                page: 1,
+                get page_size() {
+                    return evDataService.getPagination().page_size;
+                },
+                count: 1,
+                downloaded: 0,
+            },
+            level: groupsLevel,
             requestedPages: [1],
             processedPages: []
-        };
+        };*/
+
+        var level = 1;
+
+        if (parentGroupHashId) {
+            var parentRequestParameters = evDataService.getRequestParameters(parentGroupHashId);
+            level = parentRequestParameters.level + 1;
+        }
+
+        var requestParameters = createRequestParameters(
+            "groups", groupHashId, parentGroupHashId, level, evDataService
+        );
 
         // console.log('requestParameters', requestParameters);
 
@@ -66,43 +112,66 @@
     var requestObjects = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
 
         console.log('Request objects');
-
+        /*
+            Cases of calling requestObjects:
+            1) Group was unselected and then selected again. Objects are already
+            loaded and relevant. Can be used as they are.
+            2) Group selected for the first time.
+            evDataService.getRequestParameters returns default request parameters.
+            Objects are needed to load.
+            3) Number of group types changed, but parents of the group remain to be
+            the same. `___id` of the group remains the same.
+            `evDataService.getRequestParameters` returns outdated request parameters.
+         */
         var requestParameters = evDataService.getRequestParameters(groupHashId);
 
-        var groupTypes = evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService);
         var groupValues = evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService);
-        var pagination = evDataService.getPagination();
-
 
         var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
+
         var currentGroupIdentifier = evDataHelper.getGroupIdentifierFromParent(groupHashId, parentGroupHashId, evDataService);
 
-        if (!requestParameters) {
-            requestParameters = {};
+        /* if (!requestParameters) {
+            requestParameters = {
+                requestedPages: [1]
+            };
+        } */
+        var reqParamDoesNotExistOrOutdated = !evDataService.isRequestParametersExist(groupHashId) ||
+            requestParameters.requestType !== "objects";
+
+        if (reqParamDoesNotExistOrOutdated) {
+
+            requestParameters.requestType = 'objects';
+            requestParameters.id = groupHashId;
+
+            var parentReqParams = evDataService.getRequestParameters(parentGroupHashId);
+            requestParameters.level = parentReqParams.level + 1;
+
+            requestParameters.event = {
+                ...requestParameters.event,
+                ___id: groupHashId,
+                parentGroupId: parentGroupHashId,
+
+                groupName: currentGroupName,
+                groupIdentifier: currentGroupIdentifier
+            }
+
+            requestParameters.requestedPages = [1];
+            requestParameters.processedPages = [];
+            requestParameters = evDataService.resetRequestParametersPages(requestParameters);
+
+            /*requestParameters.body = {
+                groups_values: groupValues,
+            };*/
+            requestParameters.body = {
+                ...requestParameters.body,
+                groups_values: groupValues,
+            };
+
+            evDataService.setRequestParameters(requestParameters);
+
         }
 
-        requestParameters.requestType = 'objects';
-        requestParameters.id = groupHashId;
-
-        requestParameters.event = {
-            ___id: groupHashId,
-            parentGroupId: parentGroupHashId,
-            groupId: groupHashId,
-
-            groupName: currentGroupName,
-            groupIdentifier: currentGroupIdentifier
-        };
-
-        requestParameters.requestedPages = [1];
-
-        requestParameters.body = {
-            groups_types: groupTypes,
-            groups_values: groupValues,
-            page_size: pagination.page_size,
-            page: 1
-        };
-
-        evDataService.setRequestParameters(requestParameters);
         evDataService.setActiveRequestParametersId(requestParameters.id);
 
         evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
@@ -518,10 +587,10 @@
 
                 var total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
 
-                if (requestParameters.body.page < total_pages) {
+                if (requestParameters.pagination.page < total_pages) {
 
-                    if (!requestParameters.body.page) {
-                        requestParameters.body.page = 1;
+                    if (!requestParameters.pagination.page) {
+                        requestParameters.pagination.page = 1;
                         requestParameters.requestedPages = [1]
                     }
 
@@ -530,9 +599,8 @@
 
                     if (isLoadMoreButtonPressed) {
 
-                        requestParameters.body.page = requestParameters.body.page + 1;
                         requestParameters.pagination.page = requestParameters.pagination.page + 1;
-                        requestParameters.requestedPages.push(requestParameters.body.page);
+                        requestParameters.requestedPages.push(requestParameters.pagination.page);
 
                         evDataService.setRequestParameters(requestParameters);
                         evDataService.setActiveRequestParametersId(requestParameters.id);
@@ -543,9 +611,8 @@
 
                         requestParameters.loadAll = true;
 
-                        requestParameters.body.page = requestParameters.body.page + 1;
                         requestParameters.pagination.page = requestParameters.pagination.page + 1;
-                        requestParameters.requestedPages.push(requestParameters.body.page);
+                        requestParameters.requestedPages.push(requestParameters.pagination.page);
 
                         evDataService.setRequestParameters(requestParameters);
 
@@ -580,10 +647,10 @@
 
             var total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
 
-            if (requestParameters.body.page < total_pages) {
+            if (requestParameters.pagination.page < total_pages) {
 
-                if (!requestParameters.body.page) {
-                    requestParameters.body.page = 1;
+                if (!requestParameters.pagination.page) {
+                    requestParameters.pagination.page = 1;
                     requestParameters.requestedPages = [1]
                 }
 
@@ -592,9 +659,8 @@
 
                 if (isLoadMoreButtonPressed) {
 
-                    requestParameters.body.page = requestParameters.body.page + 1;
                     requestParameters.pagination.page = requestParameters.pagination.page + 1;
-                    requestParameters.requestedPages.push(requestParameters.body.page);
+                    requestParameters.requestedPages.push(requestParameters.pagination.page);
 
                     evDataService.setRequestParameters(requestParameters);
                     evDataService.setActiveRequestParametersId(requestParameters.id);
@@ -605,9 +671,8 @@
 
                     requestParameters.loadAll = true;
 
-                    requestParameters.body.page = requestParameters.body.page + 1;
                     requestParameters.pagination.page = requestParameters.pagination.page + 1;
-                    requestParameters.requestedPages.push(requestParameters.body.page);
+                    requestParameters.requestedPages.push(requestParameters.pagination.page);
 
                     evDataService.setRequestParameters(requestParameters);
 
@@ -1367,7 +1432,19 @@
 
     };*/
 
-    var calculateScroll = function (elements, evDataService, evScrollManager) {
+    /**
+     *
+     * @param elements {Object}
+     * @param elements.viewportElem {HTMLDivElement} - `.ev-viewport`
+     * @param elements.contentElem {HTMLDivElement} - `.ev-content`
+     * @param elements.workareaWrapElem {HTMLDivElement} - `.g-workarea-wrap`
+     * @param elements.contentWrapElem {HTMLDivElement} - `.g-content-wrap`
+     * @param elements.rootWrapElem {HTMLDivElement} - `.g-wrapper.g-root-wrapper`
+     * @param elements.leftPanelElem {HTMLDivElement} - `.gEvLeftPanelHolder`
+     * @param evDataService {Object}
+     * @param evScrollManager {Object} - instance of `/ev-dom-manager/ev-scroll.manager.js`
+     */
+    const calculateScroll = function (elements, evDataService, evScrollManager) {
 
         evScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
         evScrollManager.setContentElem(elements.contentElem); // .ev-content
@@ -1461,11 +1538,11 @@
             evScrollManager.setViewportWidth(viewportWidth);
         }
 
-        var paddingTop = calculatePaddingTop(evDataService);
         var totalHeight = calculateTotalHeight(evDataService);
 
         evScrollManager.setContentElemHeight(totalHeight);
-        // evScrollManager.setContentElemPaddingTop(paddingTop);
+
+        evRvDomManagerService.calculateContentWidth(evDataService, false, viewportWidth, evScrollManager.getContentElem());
 
     };
 

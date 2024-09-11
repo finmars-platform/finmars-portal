@@ -615,7 +615,7 @@
     }
 
     .report-grand-total-bg {
-      background: #fff;
+      background: rgba(0, 0, 0, 0.02);
 
       //font-family: 'Roboto-Bold', 'Roboto Bold', 'Roboto', sans-serif;
       font-weight: 700;
@@ -656,4 +656,40 @@
   border: 1px solid var(--primary-color);;
   border-radius: 50%;
   padding: 2px;
+}
+
+.g-filters .g-filters-right-part-holder {
+  flex: 0 0 252px;
+  flex-direction: column;
+}
+.g-filters .g-filters-right-part-bottom-panel {
+  display: flex;
+  justify-content: flex-end;
+  .refresh-button-with-progress {
+    display: flex;
+    justify-content: end;
+    width: 60px;
+    align-items: center;
+
+    .md-button {
+      min-width: 60px;
+    }
+
+    progress-circular {
+      margin-right: 8px;
+    }
+  }
+}
+.g-filters .g-filters-right-part-top-panel {
+  height: 20px;
+  text-align: right;
+  margin-bottom: 4px;
+}
+.g-filters .report-calculated-at {
+  font-size: 12px;
+  background: var(--card-background-color);
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  box-sizing: border-box;
 }

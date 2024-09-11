@@ -8,9 +8,7 @@
             <h1 class="entity-data-constructor-title">
                 <span class="ec-entity-type">
                     {{vm.entityType}}
-                    <ng-md-icon icon="chevron_right"
-                                size="24"
-                                style="fill:#8B8B8B;"></ng-md-icon>
+                    <span class="material-icons" style="font-size: 24px; color: #8B8B8B;">chevron_right</span>
                 </span>
                 INPUT FORM EDITOR
             </h1>
@@ -158,12 +156,12 @@
                                         </md-input-container>
                                         <md-button class="ec-tab-btn"
                                                    data-ng-click="vm.saveEditedTab(tab)">
-                                            <ng-md-icon icon="save"></ng-md-icon>
+                                            <span class="material-icons">save</span>
                                         </md-button>
                                         <md-button class="ec-tab-btn"
                                                    data-ng-click="vm.toggleEditTab(tab, 'back', $index)"
                                                    aria-label="input form editor tab edition toggle">
-                                            <ng-md-icon icon="cancel"></ng-md-icon>
+                                            <span class="material-icons">cancel</span>
                                         </md-button>
                                     </div>
                                 </md-tab-label>

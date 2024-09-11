@@ -199,7 +199,7 @@
                         <md-tab-body>
 
                             <!-- Scheme Body -->
-                            <div layout="row" class="height-100" style="overflow: auto">
+                            <div layout="row" class="height-100 overflow-auto schemeTabScrollableElem">
                                 <!--  Scheme Sidebar -->
                                 <div layout="column" style="min-width: 40%">
 
@@ -210,54 +210,55 @@
                                                 <h3 style="padding-left: 10px; margin: 0">Calculated Columns</h3>
                                             </div>
 
-                                            <div data-ng-repeat="item in vm.scheme.calculated_inputs track by $index">
-                                                <div class="fields-holder" layout="row">
-                                                    <div class="iscm-item" layout="row">
-                                                        <span style="position: relative; top: 8px">#</span>
-                                                        <md-input-container style="position: relative">
-                                                            <!--<label for="">Number</label>-->
-                                                            <input class="no-input-arrows"
-                                                                   type="number"
-                                                                   ng-model="item.column"
-                                                                   aria-label="provider field column number">
-                                                        </md-input-container>
+                                            <div class="calculatedInputsDragulaContainer" data-ng-init="vm.calculatedInputsDragAndDrop.init()">
+                                                <div data-ng-repeat="item in vm.scheme.calculated_inputs track by item.frontOptions.key"
+                                                     data-item-key="{{item.frontOptions.key}}"
+                                                     class="simple-entity-import-scheme-rows-container position-relative">
 
-                                                        <md-input-container>
-                                                            <!--<label for="">Name</label>-->
-                                                            <input type="text"
-                                                                   data-ng-model="item.name"
-                                                                   ng-blur="vm.onCalculatedFieldNameBlur(item)"
-                                                                   aria-label="provider field name">
-                                                        </md-input-container>
+                                                    <div class="top-left-drag-icon"
+                                                         data-ng-mousedown="vm.turnOnDragging()">
+                                                        <is-draggable-sign></is-draggable-sign>
                                                     </div>
 
-                                                    <div>
-                                                        <md-button ng-click="vm.removeCalculatedField(item, $index)"
-                                                                   class=""
-                                                                   style="min-width: 40px;">x
-                                                        </md-button>
-                                                    </div>
+                                                    <md-card class="p-l-24">
+                                                        <div class="fields-holder flex-row">
+                                                            <div class="iscm-item">
 
-                                                    <div>
-                                                        <md-button class=""
-                                                                   ng-click="vm.openCalcFieldFxBtnExprBuilder(item, $event)"
-                                                                   data-ng-class="vm.getCalcFieldFxBtnClasses(item)"
-                                                                   style="min-width: 40px;">f(x)
-                                                        </md-button>
+                                                                <div>
+                                                                    <text-input data-model="item.name"
+                                                                                data-label="name"
+                                                                                data-on-blur-callback="vm.onCalculatedFieldNameBlur(item)"></text-input>
+                                                                </div>
+                                                            </div>
 
-                                                        <md-tooltip
-                                                                data-ng-show="item.frontOptions && item.frontOptions.noNameExpr"
-                                                                md-direction="top"
-                                                                class="error-tooltip">No expression defined for the
-                                                            calculated
-                                                            variable.
-                                                        </md-tooltip>
-                                                    </div>
+                                                            <div>
+                                                                <md-button data-ng-click="vm.openCalcFieldFxBtnExprBuilder(item, $event)"
+                                                                           data-ng-class="vm.getCalcFieldFxBtnClasses(item)"
+                                                                           style="min-width: 40px;">f(x)
+                                                                </md-button>
+
+                                                                <md-tooltip
+                                                                        data-ng-show="item.frontOptions && item.frontOptions.noNameExpr"
+                                                                        data-md-direction="top"
+                                                                        class="error-tooltip">
+                                                                    No expression defined for the calculated variable.
+                                                                </md-tooltip>
+                                                            </div>
+
+                                                            <div>
+                                                                <md-button class="outline-button"
+                                                                           data-ng-click="vm.removeCalculatedField(item, $index)"
+                                                                           style="min-width: 40px; line-height: 1;">x
+                                                                </md-button>
+                                                            </div>
+                                                        </div>
+                                                    </md-card>
+
                                                 </div>
                                             </div>
 
                                             <div layout="row">
-                                                <md-button class="" ng-click="vm.addCalculatedField()">
+                                                <md-button data-ng-click="vm.addCalculatedField()">
                                                     Add field
                                                 </md-button>
                                             </div>
@@ -272,7 +273,71 @@
                                                 <h3 style="padding-left: 10px; margin: 0">Imported Columns</h3>
                                             </div>
 
-                                            <div data-ng-repeat="item in vm.scheme.csv_fields track by $index">
+                                            <div class="csvFieldsDragulaContainer" data-ng-init="vm.csvFieldsDragAndDrop.init()">
+                                                <div data-ng-repeat="item in vm.scheme.csv_fields track by item.frontOptions.key"
+                                                     data-item-key="{{item.frontOptions.key}}"
+                                                     class="simple-entity-import-scheme-rows-container position-relative">
+
+                                                    <div class="top-left-drag-icon"
+                                                         data-ng-mousedown="vm.turnOnDragging()">
+                                                        <is-draggable-sign></is-draggable-sign>
+                                                    </div>
+
+                                                    <md-card class="p-l-24">
+                                                        <div class="fields-holder flex-row">
+                                                            <div class="iscm-item">
+
+                                                                <div style="min-width: 40px;">
+                                                                    <text-input data-model="item.column_name"
+                                                                                data-label="column name"></text-input>
+                                                                </div>
+
+                                                                <div style="min-width: 40px;">
+                                                                    <text-input data-model="item.name"
+                                                                                data-label="name"
+                                                                                data-on-blur-callback="vm.setProviderFieldExpression(item)"></text-input>
+                                                                </div>
+                                                            </div>
+
+                                                            <!--<div
+                                                                    ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
+                                                                    ng-class="vm.checkForUserExpr(item)"
+                                                                    class="simple-entity-import-scheme-v2-input-expression">{{item.name_expr}}</div>
+                                                            -->
+
+                                                            <div style="min-width: 400px; flex-basis: 400px;">
+                                                                <base-input data-indicator-button-icon="functions"
+                                                                            data-is-readonly="true"
+                                                                            data-model="item.name_expr"
+                                                                            data-ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
+                                                                            data-small-options="vm.exprInputOpts"
+                                                                            class="import-scheme-calc-input-expr"
+                                                                ></base-input>
+                                                            </div>
+
+
+                                                            <!--<div>
+                                                                <md-button style="min-width: 40px;"
+                                                                           data-ng-click="vm.removeCsvField(item, $index)"
+                                                                           class="outline-button"
+                                                                           style="line-height: 1">x
+                                                                </md-button>
+                                                            </div>-->
+
+                                                            <div style="flex: 0 0 56px;">
+                                                                <md-button class="outline-button"
+                                                                           data-ng-click="vm.removeCsvField(item, $index)"
+                                                                           style="min-width: 40px; line-height: 1;">x
+                                                                </md-button>
+                                                            </div>
+                                                        </div>
+                                                    </md-card>
+
+                                                </div>
+                                            </div>
+                                            <!--<div data-ng-repeat="item in vm.scheme.csv_fields track by item.frontOptions.key"
+                                                 data-item-key="{{item.frontOptions.key}}"
+                                                 class="position-relative p-l-24">
                                                 <div class="fields-holder" layout="row">
                                                     <div class="iscm-item" layout="row">
                                                         <md-input-container style="width: 22px;">
@@ -282,7 +347,7 @@
                                                                    aria-label="index">
                                                         </md-input-container>
                                                         <md-input-container>
-                                                            <!--<label for="">Name</label>-->
+                                                            &lt;!&ndash;<label for="">Name</label>&ndash;&gt;
                                                             <input type="text"
                                                                    data-ng-model="item.column_name"
                                                                    placeholder="column name"
@@ -308,7 +373,7 @@
                                                         </md-button>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </md-card-content>
                                     </md-card>
 
@@ -332,10 +397,10 @@
                                             <div layout="column">
 
                                                 <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
-                                                >
+                                                     class="simple-entity-import-scheme-rows-container">
                                                     <div class="fields-holder" layout="row"
                                                          data-ng-if="item.system_property_key">
-                                                        <div class="iscm-item width-100" layout="row">
+                                                        <div class="iscm-item width-100">
                                                             <md-input-container
                                                                     style="width: 160px;"
                                                                     aria-label="select with filter">
@@ -374,10 +439,11 @@
                                             <div layout="column">
 
                                                 <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
+                                                     class="simple-entity-import-scheme-rows-container"
                                                 >
                                                     <div class="fields-holder" layout="row"
                                                          data-ng-if="item.attribute_user_code">
-                                                        <div class="iscm-item width-100" layout="row">
+                                                        <div class="iscm-item width-100">
 
                                                             <md-input-container
                                                                     style="width: 160px;"

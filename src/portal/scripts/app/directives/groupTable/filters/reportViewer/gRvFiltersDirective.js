@@ -3,6 +3,8 @@
     'use strict';
 
     const evEvents = require('../../../../services/entityViewerEvents');
+    const balanceReportInstanceService = require('../../../../services/balanceReportInstanceService');
+    const plReportInstanceService = require('../../../../services/plReportInstanceService');
 
     // const EventService = require('../../../../services/eventService');
 
@@ -63,7 +65,8 @@
                 }; */
                 scope.refreshTable = function () {
                     scope.processing = true;
-                    scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    // scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    scope.evEventService.dispatchEvent(evEvents.CREATE_TABLE);
                 };
 
                 //region Chips
@@ -333,6 +336,7 @@
 
                 scope.openViewConstructor = gFiltersVm.openViewConstructor;
 
+
                 scope.openCustomFieldsManager = function ($event) {
 
                     $mdDialog.show({
@@ -353,6 +357,52 @@
                     });
 
                 };
+
+                scope.clearCacheForReport = function ($event) {
+
+                    let reportOptions = scope.evDataService.getReportOptions();
+                    console.log('clearCacheForReport.reportOptions', reportOptions);
+
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
+                        parent: document.querySelector('.dialog-containers-wrap'),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: "Are you sure you want to Recalculate Report? It will take time to Recalculate."
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true
+                    }).then(async function (res) {
+                            console.log('res', res);
+                            if (res.status === 'agree') {
+
+                                let entityType = scope.evDataService.getEntityType();
+
+                                if (entityType === 'balance-report') {
+
+                                    await balanceReportInstanceService.deleteByKey(reportOptions.report_instance_id)
+                                    scope.refreshTable();
+                                }
+                                if (entityType === 'pl-report') {
+
+                                    await plReportInstanceService.deleteByKey(reportOptions.report_instance_id)
+                                    scope.refreshTable();
+
+                                }
+
+                            }
+
+                        }
+                    )
+
+                }
 
                 scope.toggleAutoRefresh = function () {
 
@@ -510,6 +560,8 @@
                         scope.processing = false;
 
                         scope.reportOptions = scope.evDataService.getReportOptions(); // for refresh tooltip -> auth time
+
+                        scope.prettyReportCreatedAt = moment(new Date(scope.reportOptions.created_at)).format('YYYY/MM/DD HH:mm');
 
                     })
 

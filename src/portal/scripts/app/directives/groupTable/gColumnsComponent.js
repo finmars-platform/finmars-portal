@@ -44,6 +44,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                 scope.isReport = scope.evDataService.isEntityReport();
 
                 scope.entityType = scope.evDataService.getEntityType();
+                scope.gTableBodyReady = false;
                 scope.dataIsLoading = false;
                 scope.rowStatusFilterIcon = `<span class="material-icons">star_outline</span>`;
 
@@ -204,13 +205,6 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     scope.selectSubtotalType(column, 1);
 
-                    // scope.evDataService.resetTableContent(scope.isReport);
-
-                    // because we need go to backend to recalculate subtotals
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
                 }
 
                 function onSubtotalWeightedClick(column) {
@@ -226,12 +220,8 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     }
 
-                    // scope.evDataService.resetTableContent(scope.isReport);
-
-                    // because we need go to backend to recalculate subtotals
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    // column = applySubtotalType(column, 2);
+                    scope.selectSubtotalType(column, 2);
 
                 }
 
@@ -248,12 +238,8 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     }
 
-                    // scope.evDataService.resetTableContent(scope.isReport);
-
-                    // because we need go to backend to recalculate subtotals
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    // applySubtotalType(column, 6);
+                    scope.selectSubtotalType(column, 6);
 
                 }
 
@@ -583,7 +569,6 @@ const utilsHelper = require("../../helpers/utils.helper");
                 };
 
                 const signalSortChange = function (columnOrGroup) {
-
                     /* *
                         * For some reason dispatch evEvents.DATA_LOAD_START from
                         * ev-data-provider.service -> getObjects() do not register.
@@ -1081,9 +1066,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                     scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
                 };
 
-                scope.selectSubtotalType = function (column, type) {
-
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                const applySubtotalType = function (column, type) {
 
                     if (!column.hasOwnProperty('report_settings')) {
                         column.report_settings = {};
@@ -1097,8 +1080,19 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     makePopupDataForColumns(scope.columns);
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+                    // TODO: reload only relevant column instead of a whole table
+                    dispatchCreateTableD();
+
+                    return column;
+
+                };
+
+                scope.selectSubtotalType = function (column, type) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    column = applySubtotalType(column, type);
+
                 };
 
                 function getSubtotalFormula(column) {
@@ -2830,6 +2824,28 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                 };
 
+                const waitForTableBodyReadiness = function() {
+
+                    const componentsStatuses = scope.evDataService.getComponentsStatuses();
+                    scope.gTableBodyReady = componentsStatuses.tableBody;
+
+                    if (!scope.gTableBodyReady) {
+
+                        const tscIndex = scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, function () {
+
+                            const componentsStatuses = scope.evDataService.getComponentsStatuses();
+                            scope.gTableBodyReady = componentsStatuses.tableBody;
+
+                            if (scope.gTableBodyReady) {
+                                scope.evEventService.removeEventListener(evEvents.TABLE_SIZES_CALCULATED, tscIndex);
+                            }
+
+                        });
+
+                    }
+
+                }
+
                 const init = function () {
 
                     evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns);
@@ -2866,6 +2882,13 @@ const utilsHelper = require("../../helpers/utils.helper");
                     scope.rowFilterColor = evSettings.row_type_filter;
 
                     initEventListeners();
+
+                    const componentsStatuses = scope.evDataService.getComponentsStatuses();
+                    componentsStatuses.columnArea = true;
+                    scope.evDataService.setComponentsStatuses(componentsStatuses);
+                    scope.evEventService.dispatchEvent(evEvents.COLUMN_AREA_READY);
+
+                    waitForTableBodyReadiness();
 
                 };
 

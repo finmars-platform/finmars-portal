@@ -60,16 +60,17 @@
                  ng-dblclick="vm.openLayout(item, $event)"
                  ng-click="vm.selectLayout(item, $event)">
                 <div layout="row" class="ll-name">
-                    <ng-md-icon ng-if="item.hasUseFromAboveFilter"
-                                icon="flag"
-                                size="17"
-                                class="ll-use-from-above-indicator">
+                    <span
+                            ng-if="item.hasUseFromAboveFilter"
+                            class="material-icons ll-use-from-above-indicator"
+                            style="font-size: 17px;"
+                    >flag
                         <md-tooltip class="tooltip_2" md-direction="top">Has Linked to Selection filter</md-tooltip>
-                    </ng-md-icon>
+                    </span>
                     <span ng-bind="item.name"></span>
                     <span data-ng-if="item.origin_for_global_layout" style="padding-left: 10px; position: relative; top: -3px;">
                         <md-tooltip md-direction="top">Layout is used for sharing</md-tooltip>
-                        <ng-md-icon icon="people" size="24"></ng-md-icon>
+                        <span class="material-icons" style="font-size: 24px;">people</span>
                     </span>
                 </div>
 
@@ -85,16 +86,16 @@
                     </md-button>-->
                     <md-button class="md-button ll-delete-btn" ng-click="vm.renameLayout($event, item, $index)">
                         <md-tooltip md-direction="top">Rename</md-tooltip>
-                        <ng-md-icon icon="mode_edit" size="24"></ng-md-icon>
+                        <span class="material-icons" style="font-size: 24px;">mode_edit</span>
                     </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.setAsDefault($event, item, $index)">
                         <md-tooltip md-direction="top">Set as default</md-tooltip>
-                        <ng-md-icon ng-hide="vm.isDefaultLayout(item)" icon="star_border" size="24"></ng-md-icon>
-                        <ng-md-icon ng-hide="!vm.isDefaultLayout(item)" icon="star" size="24"></ng-md-icon>
+                        <span ng-hide="vm.isDefaultLayout(item)" class="material-icons" style="font-size: 24px">star_border</span>
+                        <span ng-hide="!vm.isDefaultLayout(item)" class="material-icons" style="font-size: 24px">star</span>
                     </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.deleteItem($event, item, $index)">
                         <md-tooltip md-direction="top">Delete</md-tooltip>
-                        <ng-md-icon icon="delete" size="24"></ng-md-icon>
+                        <span class="material-icons" style="font-size: 24px;">delete</span>
                     </md-button>
                 </div>
             </div>
@@ -115,8 +116,8 @@
                     <div class="md-button ll-delete-btn"></div>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.setAsDefault($event, vm.autosaveLayout, $index)">
                         <md-tooltip md-direction="top">Set as default</md-tooltip>
-                        <ng-md-icon ng-hide="vm.isDefaultLayout(vm.autosaveLayout)" icon="star_border" size="24"></ng-md-icon>
-                        <ng-md-icon ng-hide="!vm.isDefaultLayout(vm.autosaveLayout)" icon="star" size="24"></ng-md-icon>
+                        <span ng-hide="vm.isDefaultLayout(vm.autosaveLayout)" class="material-icons" style="font-size: 24px">star_border</span>
+                        <span ng-hide="!vm.isDefaultLayout(vm.autosaveLayout)" class="material-icons" style="font-size: 24px">star</span>
                     </md-button>
                     <div class="md-button ll-delete-btn"></div>
                 </div>

@@ -207,7 +207,7 @@ export default function (entityResolverService, reportHelper) {
                         obj = Object.assign({}, data);
 
                         obj.___group_name = event.groupName ? event.groupName : '-';
-                        obj.___group_identifier = event.groupId ? event.groupId : '-';
+                        obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
 
                         obj.___is_open = true;
                         // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
@@ -326,7 +326,7 @@ export default function (entityResolverService, reportHelper) {
                             obj = Object.assign({}, data);
                             obj.___group_name = event.groupName ? event.groupName : '-';
                             // obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
-                            obj.___group_identifier = event.groupId ? event.groupId : '-';
+                            obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
                             obj.___is_open = true;
                             // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -418,11 +418,11 @@ export default function (entityResolverService, reportHelper) {
             requestParameters = {
                 requestType: 'groups',
                 id: id,
-                groups_level: level + 1, // 0 is for root
+                level: level + 1,
                 event: {
                     ___id: id,
                     groupName: item.___group_name,
-                    groupId: item.___group_identifier ? item.___group_identifier : '-',
+                    groupIdentifier: item.___group_identifier ? item.___group_identifier : '-',
                     parentGroupId: item.___parentId
                 },
                 body: {
@@ -438,11 +438,11 @@ export default function (entityResolverService, reportHelper) {
             requestParameters = {
                 requestType: 'objects',
                 id: id,
-                groups_level: level + 1, // 0 is for root
+                level: level + 1,
                 event: {
                     ___id: id,
                     groupName: item.___group_name,
-                    groupId: item.___group_identifier ? item.___group_identifier : '-',
+                    groupIdentifier: item.___group_identifier ? item.___group_identifier : '-',
                     parentGroupId: item.___parentId
                 },
                 body: {
@@ -654,7 +654,7 @@ export default function (entityResolverService, reportHelper) {
 
                     requestsParameters[key].event.___id = group.___id;
                     requestsParameters[key].event.groupName = group.___group_name;
-                    requestsParameters[key].event.groupId = group.___group_identifier;
+                    requestsParameters[key].event.groupIdentifier = group.___group_identifier;
                     requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);
@@ -744,7 +744,7 @@ export default function (entityResolverService, reportHelper) {
 
                     requestsParameters[key].event.___id = group.___id;
                     requestsParameters[key].event.groupName = group.___group_name;
-                    requestsParameters[key].event.groupId = group.___group_identifier;
+                    requestsParameters[key].event.groupIdentifier = group.___group_identifier;
                     requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);

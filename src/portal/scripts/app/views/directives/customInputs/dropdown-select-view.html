@@ -66,10 +66,11 @@
                                     class="{{button.classes}} custom-input-custom-btn"
                                     data-ng-click="callFnForCustomBtn($event, button.action)">
                                 {{button.caption}}
-                                <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
-                                                        size="24"
-                                                        icon="{{button.iconObj.icon}}"
-                                                        class="ci-custom-btn-icon"></ng-md-icon>
+
+                                <span data-ng-if="button.iconObj.type === 'angularjs-material'"
+                                      style="font-size: 24px;"
+                                      class="material-icons ci-custom-btn-icon"
+                                >{{button.iconObj.icon}}</span>
 
                                 <span data-ng-if="
                                         button.iconObj &&

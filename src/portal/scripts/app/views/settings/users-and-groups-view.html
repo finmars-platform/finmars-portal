@@ -28,7 +28,7 @@
                         <td class="members-groups-delete">
                             <md-button data-ng-if="!member.is_owner" class="members-groups-delete-btn"
                                        data-ng-click="vm.deleteMember($event, member)">
-                                <ng-md-icon icon="close" style="fill:#000000;" size="20"></ng-md-icon>
+                                <span class="material-icons" style="font-size: 20px; color: #000000;">close</span>
                             </md-button>
                         </td>
                     </tr>
@@ -64,7 +64,7 @@
                             <md-button class="members-groups-delete-btn"
                                        data-ng-if="item.status !== 1"
                                        data-ng-click="vm.deleteInvite($event, item)">
-                                <ng-md-icon icon="close" style="fill:#000000;" size="20"></ng-md-icon>
+                                <span class="material-icons" style="font-size: 20px; color: #000000;">close</span>
                             </md-button>
                         </td>
                     </tr>
@@ -111,7 +111,7 @@
                         <td class="members-groups-delete">
                             <md-button data-ng-if="group.role != 1" class="members-groups-delete-btn"
                                        data-ng-click="vm.deleteGroup($event, group)">
-                                <ng-md-icon icon="close" style="fill:#000000;" size="20"></ng-md-icon>
+                                <span class="material-icons" style="font-size: 20px; color: #000000;">close</span>
                             </md-button>
                         </td>
                     </tr>

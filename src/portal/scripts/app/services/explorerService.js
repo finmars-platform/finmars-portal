@@ -9,6 +9,10 @@
         return explorerRepository.listFiles(path);
     };
 
+    var searchFiles = function (path) {
+        return explorerRepository.searchFiles(path);
+    };
+
     var viewFile = function (path) {
         return explorerRepository.viewFile(path);
     }
@@ -38,16 +42,31 @@
         return explorerRepository.downloadFile(data)
     }
 
+    var sync = function () {
+        return explorerRepository.sync()
+    }
+
+    var rename = function (data) {
+        return explorerRepository.rename(data)
+    }
+
+    var move = function (data) {
+        return explorerRepository.move(data)
+    }
 
     module.exports = {
         listFiles: listFiles,
+        searchFiles: searchFiles,
         viewFile: viewFile,
         deleteFile: deleteFile,
         createFolder: createFolder,
         deleteFolder: deleteFolder,
         uploadFiles: uploadFiles,
         downloadZip: downloadZip,
-        downloadFile: downloadFile
+        downloadFile: downloadFile,
+        sync: sync,
+        rename: rename,
+        move: move,
     }
 
 

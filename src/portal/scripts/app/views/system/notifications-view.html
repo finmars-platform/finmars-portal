@@ -32,9 +32,12 @@
                         {{item.message}}
                     </div>
                     <div>
-                        <ng-md-icon style="cursor: pointer" class="am-attr-card__status" data-ng-if="!item.read_date"
-                                    data-ng-click="vm.markAsRead(item)"
-                                    icon="visibility"></ng-md-icon>
+                        <span
+                            data-ng-if="!item.read_date"
+                            data-ng-click="vm.markAsRead(item)"
+                            class="material-icons cursor-pointer am-attr-card__status"
+                            >visibility
+                        </span>
                     </div>
                 </div>
             </div>

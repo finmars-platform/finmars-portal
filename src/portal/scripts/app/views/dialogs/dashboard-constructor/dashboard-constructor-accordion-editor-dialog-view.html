@@ -48,19 +48,19 @@
 
                                                         <md-button class="ec-tab-btn md-raised md-warn"
                                                                    data-ng-click="vm.deleteAccordion($event, tab, $index)">
-                                                            <ng-md-icon icon="delete" class="ng-scope"></ng-md-icon>
+                                                            <span class="material-icons ng-scope">delete</span>
                                                         </md-button>
 
                                                         <md-button class="ec-tab-btn md-raised"
                                                                    data-ng-click="vm.increaseAccordion($event, item)"
                                                                    data-ng-disabled="vm.isNextSlotAnAccordion(item, tab)">
-                                                            <ng-md-icon icon="expand_more" size="16"></ng-md-icon>
+                                                            <span class="material-icons ng-scope" style="font-size: 16px;">expand_more</span>
                                                         </md-button>
 
                                                         <md-button class="ec-tab-btn md-raised"
                                                                    data-ng-click="vm.decreaseAccordion($event, item)"
                                                                    data-ng-disabled="item.from == item.to - 1">
-                                                            <ng-md-icon icon="expand_less" size="16"></ng-md-icon>
+                                                            <span class="material-icons ng-scope" style="font-size: 16px;">expand_less</span>
                                                         </md-button>
                                                     </div>
 
@@ -112,15 +112,15 @@
                                         <div class="accordion-constructor-empty-cell-holder p-8" layout="row">
 
                                             <div class="dashboard-constructor-empty-cell m-8">
-                                                <ng-md-icon icon="add_circle"></ng-md-icon>
+                                                <span class="material-icons">add_circle</span>
                                             </div>
 
                                             <div class="dashboard-constructor-empty-cell m-8" style="opacity: .5">
-                                                <ng-md-icon icon="add_circle"></ng-md-icon>
+                                                <span class="material-icons">add_circle</span>
                                             </div>
 
                                             <div class="dashboard-constructor-empty-cell m-8" style="opacity: .2">
-                                                <ng-md-icon icon="add_circle"></ng-md-icon>
+                                                <span class="material-icons">add_circle</span>
                                             </div>
 
 

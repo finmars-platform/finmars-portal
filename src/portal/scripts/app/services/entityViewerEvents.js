@@ -1,3 +1,7 @@
+/**
+ * @module entityViewerEvents
+ */
+
 module.exports = {
     'COLUMNS_CHANGE': 'COLUMNS_CHANGE',
     'FILTERS_CHANGE': 'FILTERS_CHANGE',
@@ -66,7 +70,13 @@ module.exports = {
 
     'UPDATE_TABLE_VIEWPORT': 'UPDATE_TABLE_VIEWPORT', // recalculate height and width for ev-viewport
     'UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE': 'UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE',
-	'TABLE_SIZES_CALCULATED': 'TABLE_SIZES_CALCULATED',
+
+    /*
+    Called when sizes of the following elements changed: `.g-wrapper.g-root-wrapper`,
+    `.g-workarea-wrap`, `.g-content-wrap`, `.ev-content`, `.ev-viewport`.
+     */
+    'TABLE_SIZES_CALCULATED': 'TABLE_SIZES_CALCULATED',
+    'COLUMN_AREA_READY': 'COLUMN_AREA_READY',
 
 
     'REPORT_OPTIONS_CHANGE': 'REPORT_OPTIONS_CHANGE',

@@ -36,7 +36,7 @@
                 scope.dropdownMenuFilter = '';
                 scope.menuOptions = [];
 
-                var dialogParent;
+                var dialogParent = document.querySelector(".dialog-containers-wrap");
 				/*
 				TIPS
 				scope.smallOptions probable properties
@@ -44,13 +44,11 @@
 					notNull: turn on error mode if field is not filled
 					noIndicatorBtn: whether to show button at the right part of input
 					readonly: making input readonly
-					dialogParent: 'string' - querySelector content for element to insert mdDialog into
 				*/
                 if (scope.smallOptions) {
 
                 	scope.tooltipText = scope.smallOptions.tooltipText;
 					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
-                    dialogParent = scope.smallOptions.dialogParent;
 
                 }
 
@@ -195,22 +193,10 @@
 
                 scope.openSelectorDialog = function ($event) {
 
-                    var parent = angular.element(document.body);
-
-                    if (dialogParent) {
-
-                        var parentElem = document.querySelector(dialogParent);
-
-                        if (parentElem) {
-                            parent = parentElem
-                        }
-
-                    }
-
                     $mdDialog.show({
                         controller: 'ClassifierSelectDialogController as vm',
                         templateUrl: 'views/classifier-select-dialog-view.html',
-                        parent: parent,
+                        parent: dialogParent,
                         targetEvent: $event,
                         preserveScope: true,
                         autoWrap: true,

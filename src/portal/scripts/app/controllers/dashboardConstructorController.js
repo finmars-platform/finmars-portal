@@ -49,6 +49,8 @@
             }
         };
 
+        const dialogContainersWrap = document.querySelector('.dialog-containers-wrap');
+
         vm.selectLayoutType = function (layoutType) {
 
             vm.layout.data.layout_type = layoutType
@@ -153,7 +155,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogContainersWrap,
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -424,7 +426,7 @@
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
-                    parent: document.querySelector('.dialog-containers-wrap'),
+                    parent: dialogContainersWrap,
                     // targetEvent: $event,
                     autoWrap: true,
                     skipHide: true,
@@ -1138,7 +1140,7 @@
 
                 uiService.updateDashboardLayout(layout.id, layout).then(function (data) {
 
-                    vm.layout.modified = data.modified
+                    vm.layout.modified_at = data.modified_at
 
                     toastNotificationService.success('Dashboard layout ' + layout.name + ' was successfully saved');
 
@@ -1304,6 +1306,7 @@
                 controller: dashboardComponentsTypesData[componentType].editorController,
                 templateUrl: dashboardComponentsTypesData[componentType].editorTemplateUrl,
                 targetEvent: $event,
+                parent: dialogContainersWrap,
                 multiple: true,
                 autoWrap: true,
                 skipHide: true,
@@ -1513,7 +1516,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogContainersWrap,
                 targetEvent: $event,
                 autoWrap: true,
                 skipHide: true,

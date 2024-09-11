@@ -12,17 +12,18 @@
     'use strict';
 
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
-    var attributeTypeService = require('../../../services/attributeTypeService');
+    var metaHelper = require('../../../helpers/meta.helper');
 
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
+    var ScrollHelper = require('../../../helpers/scrollHelper').default;
+
 
     var modelService = require('../../../services/modelService');
-
-    var toastNotificationService = require('../../../../../../core/services/toastNotificationService').default;
 
     module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, metaContentTypesService, attributeTypeService, importSchemesMethodsService, data) {
 
         var vm = this;
+
+        const schemeTabScrollHelper = new ScrollHelper();
 
         vm.entityType = undefined;
 
@@ -112,6 +113,33 @@
 
         };
 
+        function formatFieldsForFrontEnd(fieldsList) {
+
+            fieldsList.sort(function (a, b) {
+                if (a.column > b.column) {
+                    return 1;
+                }
+
+                if (a.column < b.column) {
+                    return -1;
+                }
+
+                return 0;
+            })
+
+            fieldsList = fieldsList.map(function (field, index) {
+
+                field.frontOptions = {
+                    key: metaHelper.generateUniqueId(index),
+                }
+
+                return field;
+            })
+
+            return fieldsList;
+
+        }
+
         vm.getItem = function () {
 
             csvImportSchemeService.getByKey(vm.schemeId).then(function (data) {
@@ -125,7 +153,7 @@
                     vm.getAttrs();
                 }
 
-                vm.scheme.csv_fields = vm.scheme.csv_fields.sort(function (a, b) {
+                /*vm.scheme.csv_fields = vm.scheme.csv_fields.sort(function (a, b) {
                     if (a.column > b.column) {
                         return 1;
                     }
@@ -134,9 +162,16 @@
                     }
 
                     return 0;
-                });
+                });*/
+                vm.scheme.calculated_inputs = formatFieldsForFrontEnd(
+                    vm.scheme.calculated_inputs
+                )
 
-                var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
+                vm.scheme.csv_fields = formatFieldsForFrontEnd(
+                    vm.scheme.csv_fields
+                )
+
+                var attrTypes = modelService.getAttributesByContentType(vm.scheme.content_type);
 
 
                 var deprecated_fields = {
@@ -153,36 +188,35 @@
 
                 }
 
-                vm.scheme.entity_fields.map(function (entityField, entityFieldIndex) {
+                vm.scheme.entity_fields = vm.scheme.entity_fields
+                    .map(function (field, index) {
 
-                    if (entityField.system_property_key) {
+                        if (!field.system_property_key) {
+                            return field;
+                        }
 
-                        modelAttributes.forEach(function (attribute) {
-
-                            if (attribute.key === entityField.system_property_key) {
-
-                                if (attribute.value_type === 'mc_field') { // remove multiple relation attributes
-
-                                    vm.scheme.entity_fields.splice(entityFieldIndex, 1)
-
-                                } else {
-
-                                    // console.log('entityField', entityField);
-                                    // console.log('attribute', attribute);
-
-                                    entityField.value_type = attribute.value_type;
-                                    entityField.entity = attribute.value_entity;
-                                    entityField.content_type = attribute.content_type;
-                                    entityField.code = attribute.code;
-                                }
-
-                            }
-
+                        var attrTypeForTheField = attrTypes.find(function (aType) {
+                            return aType.key === field.system_property_key;
                         })
 
-                    }
+                        if (attrTypeForTheField.value_type === "mc_field") {
+                            // remove fields containing multiple relations
+                            return null;
+                        }
 
-                });
+                        field.value_type = attrTypeForTheField.value_type;
+                        field.entity = attrTypeForTheField.value_entity;
+                        field.content_type = attrTypeForTheField.content_type;
+                        field.code = attrTypeForTheField.code;
+
+                        return field;
+
+                    });
+
+                vm.scheme.entity_fields = vm.scheme.entity_fields
+                    .filter(function (field) {
+                        return field;
+                    });
 
                 vm.inputsFunctions = vm.getFunctions();
 
@@ -263,24 +297,18 @@
             return vm.readyStatus.scheme;
         };
 
+        vm.exprInputOpts = {
+            readonly: true
+        }
 
         vm.addCsvField = function () {
-            var fieldsLength = vm.scheme.csv_fields.length;
-            var lastFieldNumber;
-            var nextFieldNumber;
-            if (fieldsLength === 0) {
-                nextFieldNumber = 1;
-            } else {
-                lastFieldNumber = parseInt(vm.scheme.csv_fields[fieldsLength - 1].column);
-                if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
-                    lastFieldNumber = 0
-                }
-                nextFieldNumber = lastFieldNumber + 1;
-            }
 
             vm.scheme.csv_fields.push({
                 name: '',
-                column: nextFieldNumber
+                column: vm.scheme.csv_fields.length,
+                frontOptions: {
+                    key: metaHelper.generateUniqueId(vm.scheme.csv_fields.length),
+                }
             });
 
             vm.inputsFunctions = vm.getFunctions();
@@ -307,10 +335,6 @@
 
         vm.openItemPostProcessScriptExpressionBuilder = function (item, $event) {
             importSchemesMethodsService.openExprBuilder(vm.scheme, 'item_post_process_script', vm, $event);
-        }
-
-        vm.checkForUserExpr = function (item) {
-            return importSchemesMethodsService.checkForUserExpr(item);
         }
 
         vm.makeCopy = function ($event) {
@@ -421,15 +445,19 @@
                     multiple: true
                 })
 
-            } else {
+            }
+            else {
 
                 vm.processing = true;
 
-                if (vm.scheme.id) {
+                var dataToSend = structuredClone(vm.scheme);
+                dataToSend = metaHelper.clearFrontendOptions(dataToSend);
 
-                    csvImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+                if (dataToSend.id) {
 
-                        toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully saved');
+                    csvImportSchemeService.update(dataToSend.id, dataToSend).then(function (data) {
+
+                        toastNotificationService.success("Simple Import Scheme " + dataToSend.user_code + ' was successfully saved');
 
                         vm.processing = false;
 
@@ -455,13 +483,14 @@
 
                     });
 
-                } else {
+                }
+                else {
 
-                    csvImportSchemeService.create(vm.scheme).then(function (data) {
+                    csvImportSchemeService.create(dataToSend).then(function (data) {
 
                         vm.schemeId = data.id;
 
-                        toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully created');
+                        toastNotificationService.success("Simple Import Scheme " + dataToSend.user_code + ' was successfully created');
 
                         vm.processing = false;
 
@@ -586,22 +615,12 @@
 
         vm.addCalculatedField = function () {
 
-            var fieldsLength = vm.scheme.calculated_inputs.length;
-            var lastFieldNumber;
-            var nextFieldNumber;
-            if (fieldsLength === 0) {
-                nextFieldNumber = 1;
-            } else {
-                lastFieldNumber = parseInt(vm.scheme.calculated_inputs[fieldsLength - 1].column);
-                if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
-                    lastFieldNumber = 0
-                }
-                nextFieldNumber = lastFieldNumber + 1;
-            }
-
             vm.scheme.calculated_inputs.push({
                 name: '',
-                column: nextFieldNumber
+                column: vm.scheme.calculated_inputs.length,
+                frontOptions: {
+                    key: metaHelper.generateUniqueId(vm.scheme.calculated_inputs.length),
+                }
             })
 
         };
@@ -630,6 +649,119 @@
             })
 
         }
+
+        //# region Drag and drop
+        let dragIconGrabbed = false;
+
+        var turnOffDragging = function () {
+            dragIconGrabbed = false;
+        };
+
+        vm.turnOnDragging = function () {
+            dragIconGrabbed = true;
+            document.body.addEventListener('mouseup', turnOffDragging, {once: true});
+        };
+
+        /** @return {boolean} */
+        var canRowBeMoved = function () {
+            // Drag and drop forbidden while filter is active
+            if (dragIconGrabbed) {
+                return true;
+            }
+
+            return false;
+        };
+
+        vm.calculatedInputsDragAndDrop = {
+            init: function () {
+
+                schemeTabScrollHelper.setDnDScrollElem(
+                    document.querySelector('.schemeTabScrollableElem')
+                );
+
+                this.dragulaInit();
+                this.initEventListeners();
+
+            },
+
+            initEventListeners: function () {
+                const drake = this.dragula;
+                function onDropHandler (elem, target, source, nextSiblings) {
+                    vm.scheme.calculated_inputs = importSchemesMethodsService.drakeDropHandler(
+                        elem, nextSiblings, vm.scheme.calculated_inputs
+                    );
+                }
+
+                importSchemesMethodsService.initDrakeEventListeners(
+                    drake, schemeTabScrollHelper, onDropHandler
+                );
+
+            },
+
+            dragulaInit: function () {
+
+                const containers = [
+                    document.querySelector('.calculatedInputsDragulaContainer')
+                ];
+
+                this.dragula = dragula(containers, {
+                    moves: function () {
+                        return canRowBeMoved();
+                    },
+                    revertOnSpill: true
+                })
+            },
+
+            destroy: function() {
+                this.dragula.destroy();
+            }
+        };
+
+        vm.csvFieldsDragAndDrop = {
+            init: function () {
+
+                schemeTabScrollHelper.setDnDScrollElem(
+                    document.querySelector('.schemeTabScrollableElem')
+                );
+
+                this.dragulaInit();
+                this.initEventListeners();
+
+            },
+
+            initEventListeners: function () {
+                const drake = this.dragula;
+                function onDropHandler (elem, target, source, nextSiblings) {
+                    vm.scheme.csv_fields = importSchemesMethodsService.drakeDropHandler(
+                        elem, nextSiblings, vm.scheme.csv_fields
+                    );
+                }
+
+                importSchemesMethodsService.initDrakeEventListeners(
+                    drake, schemeTabScrollHelper, onDropHandler
+                );
+
+            },
+
+            dragulaInit: function () {
+
+                const containers = [
+                    document.querySelector('.csvFieldsDragulaContainer')
+                ];
+
+                this.dragula = dragula(containers, {
+                    moves: function () {
+                        return canRowBeMoved();
+                    },
+                    revertOnSpill: true
+                })
+            },
+
+            destroy: function() {
+                this.dragula.destroy();
+            }
+        };
+        //# endregion Drag and drop
 
         // DRAFT STARTED
 

@@ -38,7 +38,7 @@
                             </th>
                             <th>
                                 <md-button class="md-icon-button">
-                                    <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                                    <span class="material-icons" data-ng-click="vm.toggleQuery()">search</span>
                                 </md-button>
                             </th>
                         </tr>
@@ -46,31 +46,31 @@
                         <tr data-ng-if="vm.queryStatus" class="filter-row-holder">
                             <th>
                                 <md-input-container class="no-error-spacer">
-                                    <ng-md-icon icon="search"></ng-md-icon>
+                                    <span class="material-icons">search</span>
                                     <input type="text" data-ng-model="vm.query.transaction_type_name">
                                 </md-input-container>
                             </th>
                             <th>
                                 <md-input-container class="no-error-spacer">
-                                    <ng-md-icon icon="search"></ng-md-icon>
+                                    <span class="material-icons">search</span>
                                     <input type="text" data-ng-model="vm.query.text">
                                 </md-input-container>
                             </th>
                             <th>
                                 <md-input-container class="no-error-spacer">
-                                    <ng-md-icon icon="search"></ng-md-icon>
+                                    <span class="material-icons">search</span>
                                     <input type="text" data-ng-model="vm.query.is_sent_to_pending">
                                 </md-input-container>
                             </th>
                             <th>
                                 <md-input-container class="no-error-spacer">
-                                    <ng-md-icon icon="search"></ng-md-icon>
+                                    <span class="material-icons">search</span>
                                     <input type="text" data-ng-model="vm.query.is_book_automatic">
                                 </md-input-container>
                             </th>
                             <th>
                                 <md-input-container class="no-error-spacer">
-                                    <ng-md-icon icon="search"></ng-md-icon>
+                                    <span class="material-icons">search</span>
                                     <input type="text" data-ng-model="vm.query.button_position">
                                 </md-input-container>
                             </th>
@@ -88,18 +88,15 @@
                             </td>
 
                             <td data-ng-if="!item.editStatus">
-                                <span class="bool-table-view"
-                                      data-ng-if="item.is_sent_to_pending"
-                                      class="e-actions-sent-to-pending-cw">
-                                    <ng-md-icon icon="check_circle"
-                                        size="16"
-                                        style="fill:rgb(0,0,0);"></ng-md-icon></span>
+                                <span class="bool-table-view e-actions-sent-to-pending-cw"
+                                      data-ng-if="item.is_sent_to_pending">
+                                    <span class="material-icons" style="font-size: 16px; color:rgb(0,0,0);">check_circle</span>
+                                </span>
                             </td>
                             <td data-ng-if="!item.editStatus">
                                 <span class="bool-table-view" data-ng-if="item.is_book_automatic">
-                             <ng-md-icon icon="check_circle"
-                                         size="16"
-                                         style="fill:rgb(0,0,0);"></ng-md-icon></span>
+                                    <span class="material-icons" style="font-size: 16px; color:rgb(0,0,0);">check_circle</span>
+                                </span>
                             </td>
                             <td data-ng-if="!item.editStatus">
                                 <div data-ng-bind="item.button_position"
@@ -110,22 +107,22 @@
                                     <!-- Trigger element is a md-button with an icon -->
                                     <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button"
                                                aria-label="Open sample menu">
-                                        <ng-md-icon icon="settings"></ng-md-icon>
+                                        <span class="material-icons">settings</span>
                                     </md-button>
                                     <md-menu-content>
                                         <md-menu-item>
                                             <md-button ng-click="vm.editItem(item)">
-                                                <ng-md-icon icon="mode_edit" style="top: 6px;
-        position: relative;
-        margin-right: 10px;"></ng-md-icon>
+                                                <span class="material-icons" style="top: 6px;
+                                                            position: relative;
+                                                            margin-right: 10px;">edit</span>
                                                 Edit
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item>
                                             <md-button ng-click="vm.deleteItem(item, $index)">
-                                                <ng-md-icon icon="delete" style="top: 6px;
-        position: relative;
-        margin-right: 10px;"></ng-md-icon>
+                                                <span class="material-icons" style="top: 6px;
+                                                            position: relative;
+                                                            margin-right: 10px;">delete</span>
                                                 Delete
                                             </md-button>
                                         </md-menu-item>

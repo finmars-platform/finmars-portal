@@ -62,16 +62,17 @@
                  ng-click="vm.selectLayout(item, $event)">
 <!--                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">-->
                 <div layout="row" class="ll-name">
-                    <ng-md-icon ng-if="item.hasUseFromAboveFilter"
-                                icon="flag"
-                                size="17"
-                                class="ll-use-from-above-indicator">
+                    <span
+                            ng-if="item.hasUseFromAboveFilter"
+                            style="font-size: 17px;"
+                            class="material-icons ll-use-from-above-indicator"
+                    >flag
                         <md-tooltip class="tooltip_2" md-direction="top">Has Linked to Selection filter</md-tooltip>
-                    </ng-md-icon>
+                    </span>
                     <span ng-bind="item.name"></span>
                     <span data-ng-if="item.origin_for_global_layout" style="padding-left: 10px; position: relative; top: -3px;">
                         <md-tooltip md-direction="top">Layout is used for sharing</md-tooltip>
-                        <ng-md-icon icon="people" size="24"></ng-md-icon>
+                        <span class="material-icons" style="font-size: 24px;">people</span>
                     </span>
                 </div>
 
@@ -79,24 +80,24 @@
                     <md-button class="md-button ll-delete-btn" ng-click="vm.pullUpdate($event, item, $index)"
                                data-ng-if="item.sourced_from_global_layout && !item.origin_for_global_layout">
                         <md-tooltip md-direction="top">Update Layout</md-tooltip>
-                        <ng-md-icon icon="file_download" size="24"></ng-md-icon>
+                        <span class="material-icons" style="font-size: 24px;">file_download</span>
                     </md-button>
                     <md-button class="md-button ll-delete-btn" data-ng-if="!item.sourced_from_global_layout || item.origin_for_global_layout" ng-click="vm.shareLayout($event, item, $index)">
                         <md-tooltip md-direction="top">Share Settings</md-tooltip>
-                        <ng-md-icon icon="share" size="24"></ng-md-icon>
+                        <span class="material-icons" style="font-size: 24px;">share</span>
                     </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.renameLayout($event, item, $index)">
                         <md-tooltip md-direction="top">Rename</md-tooltip>
-                        <ng-md-icon icon="mode_edit" size="24"></ng-md-icon>
+                        <span class="material-icons" style="font-size: 24px;">mode_edit</span>
                     </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.setAsDefault($event, item, $index)">
                         <md-tooltip md-direction="top">Set as default</md-tooltip>
-                        <ng-md-icon ng-hide="vm.isDefaultLayout(item)" icon="star_border" size="24"></ng-md-icon>
-                        <ng-md-icon ng-hide="!vm.isDefaultLayout(item)" icon="star" size="24"></ng-md-icon>
+                        <span ng-hide="vm.isDefaultLayout(item)" class="material-icons" style="font-size: 24px;">star_border</span>
+                        <span ng-hide="!vm.isDefaultLayout(item)" class="material-icons" style="font-size: 24px;">star</span>
                     </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.deleteItem($event, item, $index)">
                         <md-tooltip md-direction="top">Delete</md-tooltip>
-                        <ng-md-icon icon="delete" size="24"></ng-md-icon>
+                        <span class="material-icons" style="font-size: 24px;">delete</span>
                     </md-button>
                 </div>
             </div>

@@ -33,9 +33,12 @@
                         <md-option value="3">Monthly</md-option>
                     </md-select>
                 </md-input-container>
-                <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
-                    <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
-                </ng-md-icon>
+                <span class="material-icons tooltip-inline-block" style="font-size: 20px; color: #777777;">info
+                    <md-tooltip class="tooltip_2"
+                                md-direction="top">
+                        tooltip text
+                    </md-tooltip>
+                </span>
             </div>
             <div data-ng-show="vm.cron.periodicity == 2">
                 <div style="padding-left: 14px">
@@ -114,9 +117,12 @@
                     <label for="">Time</label>
                     <mdp-time-picker class="custom-time-picker" data-ng-model="vm.cron.time"></mdp-time-picker>
                 </md-input-container>
-                <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777; margin-left: 8px;">
-                    <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
-                </ng-md-icon>
+                <span class="material-icons tooltip-inline-block" style="font-size: 20px; color: #777777; margin-left: 8px;">info
+                    <md-tooltip class="tooltip_2"
+                                md-direction="top">
+                        tooltip text
+                    </md-tooltip>
+                </span>
 
                 <div>
                     <md-input-container>

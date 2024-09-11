@@ -3,11 +3,9 @@
  * @module ReportViewerDataProviderGroupsService
  */
 import rvSubtotalHelper from "../../helpers/rv-subtotal.service";
-import evRvCommonHelper from "../../helpers/ev-rv-common.helper";
-import queryParamsHelper from "../../helpers/queryParamsHelper";
 
-var filterService = require('./filter.service');
-var sortService = require('./sort.service');
+var filterService = require('./filter.service').default;
+var sortService = require('./sort.service').default;
 
 export default function (entityResolverService) {
 
@@ -241,7 +239,7 @@ export default function (entityResolverService) {
 
     }
 
-    var getBackendList = function (options, entityViewerDataService) {
+    /*var getBackendList = function (options, entityViewerDataService) {
 
         console.log("getBackendList options!", options)
 
@@ -314,26 +312,92 @@ export default function (entityResolverService) {
                 .catch( function (error) { reject(error); } );
         });
 
-    }
+    }*/
 
     /**
      * Get list of groups
-     * @param {string} entityType - string value of entity name (e.g. instrument-type)
      * @param {object} options - set of specific options
-     * @param {object} entityViewerDataService - global data service
-     * @return {boolean} return list of groups
-     * @memberof module:ReportViewerDataProviderGroupsService
+     * @param entityViewerDataService
+     * @return {Promise<Object>} - response data with list of groups inside
      */
     var getList = function (options, entityViewerDataService) {
 
-        return getBackendList(options, entityViewerDataService)
+        console.log("getBackendList options!", options)
 
-        // Frontend is deprecated since 2023-09-10
-        // if (window.location.href.indexOf('v2=true') !== -1) {
-        //     return getBackendList(entityType, options, entityViewerDataService)
-        // } else {
-        //     return getFrontendList(entityType, options, entityViewerDataService)
-        // }
+        var entityType = entityViewerDataService.getEntityType();
+        var reportOptions = entityViewerDataService.getReportOptions();
+
+        console.log("getBackendList!", reportOptions)
+        var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
+
+        if (entityType === "transaction-report") {
+            reportOptions.filters = entityViewerDataService.getFilters();
+        }
+
+        reportOptions.page = options.page
+        reportOptions.page_size = options.page_size
+
+        reportOptions.frontend_request_options = options.frontend_request_options;
+        reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns()
+        reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
+
+        var groupType = reportOptions.frontend_request_options.groups_types.at(-1);
+        // TODO: move sorting outside of groupsService.getList. Pass it here inside an argument `options`.
+        if (groupType.options.sort) {
+            options.frontend_request_options.groups_order = groupType.options.sort.toLocaleLowerCase();
+            options.frontend_request_options.ordering_mode = groupType.options.sort_settings.mode;
+        }
+
+        /*if (!reportOptions.frontend_request_options['filter_settings']) {
+
+            var filters = entityViewerDataService.getFilters();
+
+            reportOptions.frontend_request_options['filter_settings'] = []
+
+            filters.forEach(function (item) {
+
+                if (evRvCommonHelper.isFilterValid(item)) {
+
+                    var key = queryParamsHelper.entityPluralToSingular(item.key);
+
+                    var filterSettings = {
+                        key: key,
+                        filter_type: item.options.filter_type,
+                        exclude_empty_cells: item.options.exclude_empty_cells,
+                        value_type: item.value_type,
+                        value: item.options.filter_values
+                    };
+
+                    reportOptions.frontend_request_options['filter_settings'].push(filterSettings);
+
+                }
+
+            });
+
+        }*/
+        // TODO: apply `filter_settings` to `options` inside to rv-data-provider.service
+        reportOptions.frontend_request_options['filter_settings'] = filterService.getFiltersForBackend(entityViewerDataService);
+
+        return new Promise(function (resolve, reject) {
+
+            entityResolverService.getListReportGroups(entityType, reportOptions).then(function (data) {
+
+                reportOptions.report_instance_id = data.report_instance_id;
+                reportOptions.created_at = data.created_at;
+                entityViewerDataService.setReportOptions(reportOptions);
+
+                var result = {
+                    next: null,
+                    previous: null,
+                    count: data.count,
+                    results: data.items
+                };
+
+                resolve(result);
+
+            })
+                .catch( function (error) { reject(error); } );
+        });
 
     };
 

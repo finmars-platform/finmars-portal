@@ -846,7 +846,7 @@
 
                             uiService.updateListLayout(listLayout.id, listLayout).then(function (updatedLayoutData) {
 
-                                listLayout.modified = updatedLayoutData.modified
+                                listLayout.modified_at = updatedLayoutData.modified_at
                                 scope.evDataService.setListLayout(listLayout);
                                 // Give signal to update layout name in the toolbar
                                 /*if (scope.isRootEntityViewer) {

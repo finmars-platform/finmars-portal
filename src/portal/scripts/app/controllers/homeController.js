@@ -222,7 +222,7 @@
             systemMessageService.getList({
                 sort: {
                     direction: "DESC",
-                    key: "created"
+                    key: "created_at"
                 }
             }).then(function (data) {
 
@@ -246,7 +246,7 @@
                     // TYPE_ERROR = 3
                     // TYPE_SUCCESS = 4
 
-                    item.verbose_created = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
+                    item.verbose_created = moment(new Date(item.created_at)).format('DD-MM-YYYY HH:mm');
 
                     if (item.type === 1) {
                         item.verbose_type = 'Information'

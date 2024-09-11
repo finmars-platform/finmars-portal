@@ -21,6 +21,8 @@
             access: false
         };
 
+        vm.themeSettings = null
+
         vm.accessSectionTable = {
             history: true,
             journal: true,
@@ -104,6 +106,7 @@
         vm.homepageUrl = redirectionService.getUrlByState('app.portal.home');
         vm.performanceUrl = redirectionService.getUrlByState('app.portal.reports.performance-report');
         vm.permissionsUrl = redirectionService.getUrlByState('app.portal.settings.users-groups');
+        vm.vaultRecordUrl = redirectionService.getUrlByState('app.portal.settings.vault-record');
         vm.getVueUrl = redirectionService.getUrl;
 
         /* Old sidemenu */
@@ -649,6 +652,14 @@
 
         }
 
+        vm.getLogo = function () {
+            return vm.themeSettings?.logo_light_url || 'portal/content/img/logo.png'
+        }
+
+        vm.getLogoDark = function () {
+            return vm.themeSettings?.logo_dark_url || 'portal/content/img/logo-dark.png'
+        }
+
         vm.init = function () {
 
             if (!window.system_errors) {
@@ -670,6 +681,8 @@
             vm.isThemeInDarkMode = function () {
                 return globalDataService.isThemeInDarkMode();
             }
+
+            vm.themeSettings = globalDataService.getWhiteLabel()
 
 
             // if (toastr) {

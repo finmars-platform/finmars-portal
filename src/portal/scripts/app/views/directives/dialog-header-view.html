@@ -3,9 +3,13 @@
         <is-draggable-sign></is-draggable-sign>
         <h2 class="display-block position-relative">
             {{title}}
-            <ng-md-icon data-ng-if="tooltip" class="tooltips-sign" icon="info" size="20" style="fill: #fff">
+            <span
+                data-ng-if="tooltip"
+                class="material-icons tooltips-sign"
+                style="font-size: 20px; color: #fff;"
+            >info
                 <md-tooltip md-direction="top">{{tooltip}}</md-tooltip>
-            </ng-md-icon>
+            </span>
             <div data-ng-if="processing" layout="row" class="m-l-16">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
                     <progress-circular diameter="20"></progress-circular>

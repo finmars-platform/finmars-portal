@@ -86,15 +86,23 @@
                                 </md-select>
                             </md-input-container>
 
+                            <md-input-container class="md-block">
+                                <label>Type</label>
+                                <md-select data-ng-model="vm.item.type">
+                                    <md-option value="general">General</md-option>
+                                    <md-option value="ui">UI</md-option>
+                                    <md-option value="pricing">Pricing</md-option>
+                                    <md-option value="workflow">Workflow</md-option>
+                                    <md-option value="app">App</md-option>
+                                </md-select>
+                            </md-input-container>
+
 
                             <md-checkbox ng-model="vm.item.is_primary" aria-label="override">
                                 Is Primary
-                                <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
-                                            style="fill: #777777">
-                                    <md-tooltip class="tooltip_1" md-direction="top">User Fields or other entities will
-                                        be take from Primary Configuration
-                                    </md-tooltip>
-                                </ng-md-icon>
+                                <span class="material-icons tooltip-inline-block" style="font-size: 20px; color: #777777;">info</span>
+                                <md-tooltip class="tooltip_1" md-direction="top">User Fields or other entities will
+                                    be take from Primary Configuration</md-tooltip>
                             </md-checkbox>
 
 
@@ -240,7 +248,7 @@
                                     </p>
                                     <p>
                                         If everything is good, your configuration will appear on <a
-                                            ui-sref="app.portal.marketplace"
+                                            href="{{ vm.getVueUrl('/marketplace') }}"
                                             target="_blank">Marketplace</a>
                                     </p>
 
@@ -293,7 +301,7 @@
 
             &nbsp;
 
-            <md-button class="md-raised md-warn" ng-click="vm.deleteConfiguration($event)"
+            <md-button class="link-button md-button md-ink-ripple" ng-click="vm.deleteConfiguration($event)"
                        data-ng-if="vm.item.id && vm.item.configuration_code != vm.defaultConfigurationCode">
                 Delete
             </md-button>

@@ -37,7 +37,9 @@
 
     var instrumentTypeService = require('../../services/instrumentTypeService').default;
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entityId, data) {
+    const pricingPolicyService = require('../../services/pricingPolicyService').default;
+
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, configurationService, entityType, entityId, data) {
 
         var vm = this;
 
@@ -68,7 +70,7 @@
             vm.hasEnabledStatus = false;
         }
 
-        vm.readyStatus = vm.sharedLogic.readyStatusObj;
+        vm.readyStatus = {...vm.sharedLogic.readyStatusObj, modules: false, content: false, policies: false};
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -527,6 +529,16 @@
                 onClick: vm.editAsJson
             });
 
+            if ( vm.entity.hasOwnProperty('is_locked') ) {
+                /*
+                getLockMenuOption uses: vm.entity.is_locked, vm.entity.is_canceled,
+                vm.hasEditPermission, vm.processing
+                */
+                data.options.push(
+                    entityEditorHelper.getLockMenuOption(vm, vm.toggleLockStatus)
+                )
+            }
+
             data.options.push({
                 icon: "list",
                 name: "Edit Form",
@@ -829,16 +841,20 @@
         // vm.delete = function ($event) {
         vm.delete = vm.sharedLogic.deleteEntity;
 
+        vm.isFormDisabled = () => {
+            return !vm.entity.is_enabled && vm.hasEnabledStatus;
+        }
+
         vm.toggleEnableStatus = function () {
 
             vm.entity.is_enabled = !vm.entity.is_enabled;
 
-            var tesOpt = vm.footerPopupData.options.find(function (option) {
+            var enableOpt = vm.footerPopupData.options.find(function (option) {
                 return option.key === 'toggle_enable_status';
             });
 
-            tesOpt.icon = vm.entity.is_enabled ? "not_interested" : "check_circle";
-            tesOpt.name = vm.entity.is_enabled ? "Disable" : "Enable";
+            enableOpt.icon = vm.entity.is_enabled ? "not_interested" : "check_circle";
+            enableOpt.name = vm.entity.is_enabled ? "Disable" : "Enable";
 
             entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
 
@@ -851,6 +867,23 @@
                 });
             })
 
+
+        };
+
+        vm.toggleLockStatus = function () {
+
+            vm.entity.is_locked = !vm.entity.is_locked;
+
+            entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
+
+                result.is_locked = vm.entity.is_locked;
+
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+                    getEntityStatus();
+
+                    $scope.$apply();
+                });
+            })
 
         };
 
@@ -1607,35 +1640,35 @@
 
         };
 
-        vm.getInstrumentPricingSchemes = function () { // TODO Victor. Must removed after introducing new design with grid table.
-
-            instrumentPricingSchemeService.getList().then(function (data) {
-
-                vm.instrumentPricingSchemes = data.results;
-
-                vm.generateInstrumentAttributeTypesByValueTypes();
-
-                console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
-
-                $scope.$apply();
-
-            })
-
-        };
+        // vm.getInstrumentPricingSchemes = function () { // TODO Victor. Must removed after introducing new design with grid table.
+        //
+        //     instrumentPricingSchemeService.getList().then(function (data) {
+        //
+        //         vm.instrumentPricingSchemes = data.results;
+        //
+        //         vm.generateInstrumentAttributeTypesByValueTypes();
+        //
+        //         console.log('instrumentPricingSchemes', vm.instrumentPricingSchemes);
+        //
+        //         $scope.$apply();
+        //
+        //     })
+        //
+        // };
 
         vm.getEntityPricingSchemes = function () {
 
-            if (vm.entityType === 'currency') {
-                vm.getCurrencyPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument-type') {
-                vm.getInstrumentPricingSchemes();
-            }
+            // if (vm.entityType === 'currency') {
+            //     vm.getCurrencyPricingSchemes();
+            // }
+            //
+            // if (vm.entityType === 'instrument') {
+            //     vm.getInstrumentPricingSchemes();
+            // }
+            //
+            // if (vm.entityType === 'instrument-type') {
+            //     vm.getInstrumentPricingSchemes();
+            // }
 
         };
 
@@ -1843,6 +1876,79 @@
             });
 
         };
+
+        vm.addPricingPolicy = function () {
+            vm.entity.pricing_policies.push({})
+        }
+
+        vm.removePricingPolicy = function (item) {
+            vm.entity.pricing_policies = vm.entity.pricing_policies.filter(function(policy) {
+                return policy !== item;
+            });
+        }
+
+        vm.getPricingConfigurations = function () {
+
+            configurationService.getList({
+                pageSize: 1000,
+                page: 1,
+                filters: {
+                    type: "pricing"
+                },
+                sort: {
+                    direction: "DESC",
+                    key: "created_at"
+                }
+            }).then(function (data) {
+
+                vm.pricingModules = data.results;
+
+                vm.pricingModules = vm.pricingModules.map(function (item) {
+                    item._id = item.id;
+                    item.id = item.configuration_code;
+                    return item
+                })
+                vm.readyStatus.modules = true;
+
+                $scope.$apply();
+
+            });
+
+        }
+
+        vm.getPricingPolicies = function () {
+
+            pricingPolicyService.getList().then(function (data) {
+
+                vm.pricingPolicies = data.results;
+                vm.readyStatus.policies = true;
+                $scope.$apply();
+
+            })
+
+        }
+
+        vm.configurePricingModule = function ($event, item) {
+
+            // TODO force entity save before open module configuration iframe dialog
+
+            $mdDialog.show({
+                controller: 'ConfigurePricingModuleDialogController as vm',
+                templateUrl: 'views/dialogs/configure-pricing-module-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        instrument: vm.entity,
+                        instrumentPricingPolicy: item
+                    }
+                }
+            })
+
+        }
 
         vm.onEntityChange = function (fieldKey) {
 
@@ -2150,6 +2256,9 @@
                 $scope.$apply();
 
             });
+            vm.getPricingPolicies();
+            vm.getPricingConfigurations();
+            vm.readyStatus.content = true;
         };
 
         vm.init();

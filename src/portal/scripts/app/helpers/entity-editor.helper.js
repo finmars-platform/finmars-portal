@@ -528,14 +528,38 @@
 
     var validateDateField = function (value, fieldAttr) {
 
-        if (!value) {
+        function validateEmpty() {
 
-            value = null;
+            var errorMsg = 'Field should contain date in YYYY-MM-DD format.';
+
+            if (fieldAttr.readonly) {
+                return false;
+            }
+
+            if (fieldAttr.allow_null) {
+
+                if (value === null) {
+                    return false;
+                }
+
+                errorMsg = "Field should contain date in YYYY-MM-DD format " +
+                    "or 'null'. It contains: " + value;
+
+            }
 
             return {
                 fieldName: fieldAttr.verbose_name || fieldAttr.name,
-                message: 'Field should contain date in YYYY-MM-DD format.'
+                message: errorMsg
             };
+
+        }
+
+        if (!value) {
+
+            // value = null;
+
+            return validateEmpty();
+
 
         } else if (!moment(value, 'YYYY-MM-DD', true).isValid()) {
 
@@ -888,6 +912,7 @@
                 if (['procedure_modified_datetime', 'maturity_date', 'first_cash_flow_date', 'first_transaction_date'].indexOf(key) === -1) {
                     validateEvField(key, fieldValue, entityAttr, tabs, fixedFieldsAttrs, entityType, errors);
                 }
+
             }
 
         });
@@ -2315,6 +2340,47 @@
         }
     };
 
+    /**
+     *
+     * @param vm {Object}
+     * @param toggleLockStatusCb {Function}
+     * @return {{onClick: onClick, readonly icon: (string), readonly name: (string), readonly isDisabled: *}|boolean|string}
+     *
+     * @memberof module:entityEditorHelper
+     */
+    function getLockMenuOption(vm, toggleLockStatusCb) {
+        return {
+            get icon() {
+
+                if (vm.entity.is_locked) {
+                    return "lock_open"
+                }
+
+                return "lock_outline";
+
+            },
+            get name() {
+                if (vm.entity.is_locked) {
+                    return "Unlock"
+                }
+
+                return "Lock"
+            },
+            get isDisabled() {
+                return vm.entity.is_canceled ||
+                    !vm.hasEditPermission ||
+                    vm.processing;
+            },
+
+            onClick: function (option, _$popup) {
+                _$popup.cancel();
+
+                toggleLockStatusCb();
+
+            }
+        }
+    }
+
     /** @module entityEditorHelper */
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
@@ -2343,7 +2409,9 @@
         generateAttributesFromLayoutFields: generateAttributesFromLayoutFields,
         fixCustomTabs: fixCustomTabs,
 
-        instrumentTypeAttrValueMapper: instrumentTypeAttrValueMapper
+        instrumentTypeAttrValueMapper: instrumentTypeAttrValueMapper,
+
+        getLockMenuOption: getLockMenuOption,
     }
 
 }());

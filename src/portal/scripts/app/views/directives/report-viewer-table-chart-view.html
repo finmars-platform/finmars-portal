@@ -9,8 +9,17 @@
 
                 <span data-ng-click="toggleSort('title_column')" ng-class="{'text-bold': sortKey == 'title_column'}">
 
-                     <ng-md-icon class="table-chart-sort-icon" data-ng-if="sortDirection == 'ASC' && sortKey == 'title_column'" icon="arrow_upwards" size="14"></ng-md-icon>
-                     <ng-md-icon class="table-chart-sort-icon" data-ng-if="sortDirection == 'DESC' && sortKey == 'title_column'" icon="arrow_downward" size="14"></ng-md-icon>
+                    <span
+                        data-ng-if="sortDirection == 'ASC' && sortKey == 'title_column'"
+                        class="material-icons table-chart-sort-icon"
+                        style="font-size: 14px;"
+                    >arrow_upwards</span>
+
+                    <span
+                        data-ng-if="sortDirection == 'DESC' && sortKey == 'title_column'"
+                        class="material-icons table-chart-sort-icon"
+                        style="font-size: 14px;"
+                    >arrow_downward</span>
 
                     {{tableChartSettings.title_column_name}}
                 </span>
@@ -36,8 +45,16 @@
 
                 <span data-ng-click="toggleSort('value_column')" ng-class="{'text-bold': sortKey == 'value_column'}">
 
-                    <ng-md-icon class="table-chart-sort-icon" data-ng-if="sortDirection == 'ASC' && sortKey == 'value_column'" icon="arrow_upwards" size="14"></ng-md-icon>
-                    <ng-md-icon class="table-chart-sort-icon" data-ng-if="sortDirection == 'DESC' && sortKey == 'value_column'" icon="arrow_downward" size="14"></ng-md-icon>
+                    <span
+                        data-ng-if="sortDirection == 'ASC' && sortKey == 'value_column'"
+                        class="material-icons table-chart-sort-icon"
+                        style="font-size: 14px;"
+                    >arrow_upwards</span>
+                    <span
+                        data-ng-if="sortDirection == 'DESC' && sortKey == 'value_column'"
+                        class="material-icons table-chart-sort-icon"
+                        style="font-size: 14px;"
+                    >arrow_downward</span>
 
                     {{tableChartSettings.value_column_name}}
                 </span>
@@ -63,8 +80,16 @@
 
                 <span data-ng-click="toggleSort('percent_column')" ng-class="{'text-bold': sortKey == 'percent_column'}">
 
-                    <ng-md-icon class="table-chart-sort-icon" data-ng-if="sortDirection == 'ASC' && sortKey == 'percent_column'" icon="arrow_upwards" size="14"></ng-md-icon>
-                    <ng-md-icon class="table-chart-sort-icon" data-ng-if="sortDirection == 'DESC' && sortKey == 'percent_column'" icon="arrow_downward" size="14"></ng-md-icon>
+                    <span
+                        data-ng-if="sortDirection == 'ASC' && sortKey == 'percent_column'"
+                        class="material-icons table-chart-sort-icon"
+                        style="font-size: 14px;"
+                    >arrow_upwards</span>
+                    <span
+                        data-ng-if="sortDirection == 'DESC' && sortKey == 'percent_column'"
+                        class="material-icons table-chart-sort-icon"
+                        style="font-size: 14px;"
+                    >arrow_downward</span>
 
                     % {{tableChartSettings.value_column_name}}
 

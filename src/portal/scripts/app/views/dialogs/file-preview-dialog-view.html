@@ -13,9 +13,9 @@
 
             <a ng-click="vm.copyContent(vm.data.content_formatted)" class="copy-text-button"
                data-ng-if="vm.contentType != 'image'">
-                <ng-md-icon icon="content_copy" size="16">
+                <span class="material-icons" style="font-size: 16px">content_copy
                     <md-tooltip class="tooltip_2" md-direction="top">Copy to clipboard</md-tooltip>
-                </ng-md-icon>
+                </span>
             </a>
 
             <div data-ng-if="vm.contentType == 'text'" class="file-preview-content-wrap"

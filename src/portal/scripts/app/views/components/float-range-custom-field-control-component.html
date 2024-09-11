@@ -29,12 +29,12 @@
                 <div flex="10" layout-align="center start" layout="row" style="height: 58px">
                     <div>
                         <md-button class="md-icon-button md-raised {{$ctrl.inputIsFocused ? 'disabled-btn' : ''}}" data-ng-click="$ctrl.addRange(item, $index)">
-                            <ng-md-icon icon="add"></ng-md-icon>
+                            <span class="material-icons">add</span>
                         </md-button>
                     </div>
                     <div data-ng-if="$index !== 0">
                         <md-button class="md-icon-button md-raised" data-ng-click="$ctrl.removeRange($index)">
-                            <ng-md-icon icon="remove"></ng-md-icon>
+                            <span class="material-icons">remove</span>
                         </md-button>
                     </div>
                 </div>
