@@ -22,7 +22,16 @@
 
         vm.agree = function (responseData) {
 
-            vm.dashboardDataService.setLayoutState(JSON.parse(vm.state))
+            let parsedState = JSON.parse(vm.state)
+
+            // TODO update instead of create new
+            if (parsedState) {
+                parsedState['meta'] = {
+                    'origin': 'finmars'
+                }
+            }
+
+            vm.dashboardDataService.setLayoutState(parsedState)
 
             vm.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_STATE_CHANGE);
             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL);
