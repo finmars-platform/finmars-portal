@@ -15,16 +15,17 @@
     var baseUrl = baseUrlService.resolve();
 
 
-    var listFiles = function (path) {
+    var listFiles = function (options) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        if (!path) {
-            path = ''
+        if (!options.path) {
+          options.path = ''
         }
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/explorer/?path=' + path,
+        return xhrService.fetch(
+          baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/explorer/?path=' + options.path + '&page=' + options.page + '&page_size=' + options.pageSize,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -33,16 +34,17 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            })
+            }
+          )
     };
 
-  var searchFiles = function (search) {
+  var searchFiles = function (options) {
 
     var prefix = baseUrlService.getMasterUserPrefix();
     var apiVersion = baseUrlService.getApiVersion();
 
 
-    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/search/?query=' + search,
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/search/?query=' + options.query+ '&page=' + options.page + '&page_size=' + options.pageSize,
         {
             method: 'GET',
             credentials: 'include',
