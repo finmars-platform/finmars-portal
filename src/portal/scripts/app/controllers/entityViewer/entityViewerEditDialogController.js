@@ -45,7 +45,7 @@
 
         vm.entityType = entityType;
 
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
+        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, $state, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
 
         vm.processing = false;
 
@@ -96,8 +96,6 @@
         }
 
         vm.readyStatus = {...vm.sharedLogic.readyStatusObj, modules: false, content: false, policies: false};
-
-        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
         vm.formIsValid = true;
 
@@ -198,9 +196,37 @@
 
         }; */
 
+        //# region Tabs
+        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
+
+        const getTabFromQueryParams = function () {
+
+            const tabToOpenKey = $state.params.tab;
+
+            if (!tabToOpenKey) {
+                return null;
+            }
+
+            const activeTab = vm.entityTabs.find(
+                tabData => tabData.key === tabToOpenKey
+            );
+
+            if (!activeTab) {
+                console.warn(`Could not find a system tab with a key: ${tabToOpenKey}`);
+            }
+
+            return activeTab;
+
+        }
+
         vm.isEntityTabActive = function () {
-            return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
+            return vm.activeTab && vm.entityTabs.includes(vm.activeTab);
         };
+
+        vm.selectTab = function (tabToSelect) {
+            vm.activeTab = vm.sharedLogic.selectTab(tabToSelect);
+        }
+        //# endregion Tabs
 
         vm.getNameToShowValue = function () {
             return vm.entity[vm.nameToShow] || '';
@@ -502,6 +528,8 @@
 
         };
 
+
+
         var getFooterPopupData = function () {
 
             var data = {
@@ -526,6 +554,43 @@
 
 
                 data.options.push(duplicateOpt);
+            }
+
+            /*
+            `if (editEntityStateName)` will be removed after creating
+            router states for editing all entities that use
+            entityViewerEditDialogController
+            */
+            let editEntityStateName;
+
+            try {
+                editEntityStateName = evHelperService.getNameOfStateForEditingEntity($state);
+
+            } catch (e) {}
+
+            if (editEntityStateName) {
+
+                data.options.push({
+                    icon: "link",
+                    name: "Share",
+                    onClick: () => {
+
+                        let options = {
+                            entityId: vm.entityId,
+                            entityUserCode: vm.entity.user_code,
+                        };
+
+                        if (vm.activeTab && vm.activeTab.type === "system_tab") {
+                            options.tab = vm.activeTab.key;
+                        }
+
+                        const editEvStateName = evHelperService.getNameOfStateForEditingEntity($state);
+
+                        evHelperService.copyLinkToEvForm($state, editEvStateName, toastNotificationService, options);
+
+                    }
+                });
+
             }
 
             data.options.push({
@@ -2235,7 +2300,8 @@
 
                 };
 
-            } else {
+            }
+            else {
 
                 vm.statusSelectorOptions = [
                     {
@@ -2275,10 +2341,12 @@
             vm.getPricingPolicies();
             vm.getPricingConfigurations();
             vm.readyStatus.content = true;
+
+            vm.activeTab = getTabFromQueryParams();
+
         };
 
         vm.init();
-
         // Special case for split-panel
         /* $scope.splitPanelInit = function (entityType, entityId) {
             vm.entityType = entityType;

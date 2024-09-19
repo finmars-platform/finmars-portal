@@ -23,7 +23,7 @@
 
         var vm = this;
 
-		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, null, instrumentService, entityResolverService, fieldResolverService, uiService, attributeTypeService);
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, null, null, instrumentService, entityResolverService, fieldResolverService, uiService, attributeTypeService);
 
         vm.entityType = data.entityType;
 

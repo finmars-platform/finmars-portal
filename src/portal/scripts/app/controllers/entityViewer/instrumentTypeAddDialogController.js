@@ -34,7 +34,7 @@
 
         var vm = this;
 
-        var sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
+        var sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, $state, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
 
         vm.processing = false;
 
