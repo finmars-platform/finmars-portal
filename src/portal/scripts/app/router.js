@@ -153,6 +153,28 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.portfolio-edition', {
+                url: '/portfolio/:id?tab',
+                templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
+                controller: 'EntityViewerEditDialogController as vm',
+                reloadOnSearch: false,
+                params: {
+                    tab: null,
+                },
+                resolve: {
+                    entityType: function () {
+                        return "portfolio"
+                    },
+                    entityId: ["$transition$", function ($transition$) {
+                        return $transition$.params().id;
+                    }],
+                    data: function () {
+                        return {
+                            openedIn: "webpage",
+                        }
+                    }
+                }
+            })
             .state('app.portal.data.portfolio-register', {
                 url: '/portfolio-register',
                 templateUrl: 'views/data/data-portfolio-register-view.html',
@@ -226,9 +248,20 @@
                 }
             })
             .state('app.portal.data.instrument-edition', {
-                url: '/instrument/:userCode',
+                url: '/instrument/:userCode?tab',
                 templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
                 controller: 'EntityViewerEditDialogController as vm',
+                reloadOnSearch: false,
+                params: {
+                    userCode: {
+                        type: 'path'
+                    },
+                    tab: {
+                        type: 'query',
+                        value: null,
+                        dynamic: true,
+                    }
+                },
                 resolve: {
                     entityType: function () {
                         return "instrument"

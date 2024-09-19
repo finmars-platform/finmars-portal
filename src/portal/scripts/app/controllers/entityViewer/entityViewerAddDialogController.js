@@ -37,7 +37,7 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
 
         vm.entityType = entityType;
 
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
+        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, $state, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
 
         vm.processing = false;
 

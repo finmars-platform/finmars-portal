@@ -1974,6 +1974,120 @@
         return !['complex-transaction', 'price-history', 'currency-history', 'portfolio-register'].includes(entityType);
     }
 
+    function getNameOfStateForEditingEntity($state) {
+
+        let _stateName = $state.current.name;
+
+        if (_stateName.endsWith("-edition")) {
+            return _stateName;
+        }
+
+        _stateName = _stateName + "-edition";
+
+        const stateDeclaration = $state.get(_stateName);
+
+        if (!stateDeclaration) {
+            throw new Error(
+                "[getNameOfStateForEditingEntity] The following state does not " +
+                `exist ${_stateName}`
+            )
+        }
+
+        return _stateName;
+
+    }
+
+    /**
+     * Copies to clipboard a link to a webpage for editing an entity
+     *
+     * @param {Object} $state - $state from ui router
+     * @param {String} stateName - name of a $state for editing entity viewer
+     * @param {Object} toastNotificationService
+     * @param {
+     *      {
+     *          entityId?: Number,
+     *          entityUserCode?: String,
+     *          tab?: String
+     *      }
+     * } options
+     */
+    function copyLinkToEvForm($state, stateName, toastNotificationService, options={}) {
+
+        if ( !stateName || !stateName.endsWith("-edition") ) {
+
+            throw new Error(
+                "[entityViewerHelperService copyLinkToEvForm] An invalid $state " +
+                "was passed. Expected a $state for edition of entities " +
+                `got: ${stateName}`
+            )
+
+        }
+
+        const stateDeclaration = $state.get(stateName);
+
+        let params = {};
+
+        if ( stateDeclaration.url.includes("/:id") ) {
+
+            if ( Number.isNaN(options.entityId) ) {
+
+                throw new Error(
+                    "[entityViewerHelperService copyLinkToEvForm] An invalid " +
+                    `options.entityId for the $state '${stateName}': ${options.entityId}`
+                )
+
+            }
+
+            params.id = options.entityId;
+
+        }
+        else { // getting entity bu user_code
+
+            if (!options.entityUserCode || typeof options.entityUserCode !== "string") {
+
+                throw new Error(
+                    "[entityViewerHelperService copyLinkToEvForm] An invalid " +
+                    `options.entityUserCode for a $state '${stateName}': ${options.entityUserCode}`
+                )
+
+            }
+
+            params.userCode = options.entityUserCode;
+
+        }
+
+        if (options.tab) params.tab = options.tab;
+
+        const linkToEvForm = $state.href(stateName, params, {absolute: true});
+
+        navigator.clipboard.writeText(linkToEvForm).then(() => {
+
+            toastNotificationService.success(
+                "Link copied to clipboard",
+                "Success",
+                {
+                    onclick: function (event) {
+                        navigator.clipboard.writeText(linkToEvForm)
+                    },
+                }
+            );
+
+        })
+
+        /*$mdDialog.show({
+            controller: "InputsDialogController as vm",
+            templateUrl: "views/dialogs/inputs-dialog-view.html",
+            parent: document.querySelector('.dialog-containers-wrap'),
+            locals: {
+                title: "Copied to clipboard",
+                inputsList: [{model: linkToEvForm}]
+            },
+            multiple: true,
+        })*/
+
+
+    }
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
@@ -2013,6 +2127,8 @@
 
         onPricingSchemeChangeInsidePricingPolicy: onPricingSchemeChangeInsidePricingPolicy,
         isRestorable: isRestorable,
+        copyLinkToEvForm: copyLinkToEvForm,
+        getNameOfStateForEditingEntity: getNameOfStateForEditingEntity,
     }
 
 }());

@@ -130,7 +130,7 @@
 
         <md-tabs md-dynamic-height md-border-bottom class="tabs-colored entity-editor-tabs">
 
-            <md-tab data-ng-repeat="tab in vm.tabs track by tab.name" md-on-select="vm.activeTab = tab">
+            <md-tab data-ng-repeat="tab in vm.tabs track by tab.name" data-md-on-select="vm.selectTab(tab)">
 
                 <md-tab-label>
                     <div class="tab-name-elem evFormUserTabName" data-tab-name="{{tab.name | lowercase}}">
@@ -163,7 +163,7 @@
             </md-tab>
 
             <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)"
-                    md-active="vm.activeTab === tab">
+                    data-md-active="vm.activeTab === tab">
                 <!-- Victor 2020.10.28 EntityTabs labels move to md-menu-->
                 <!--                         <md-tab-label>
                                             <div class="tab-name-elem" data-tab-name="{{tab.label | lowercase}}">

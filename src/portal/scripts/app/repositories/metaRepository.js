@@ -235,9 +235,10 @@
             case 'portfolio':
                 return [
                     {
+                        key: 'performance',
                         label: 'Performance',
                         type: 'system_tab',
-                        templateUrl: 'views/tabs/portfolio/performance-tab-view.html'
+                        templateUrl: 'views/tabs/portfolio/performance-tab-view.html',
                     }
                 ];
             case 'currency':
@@ -255,33 +256,38 @@
             case 'instrument':
                 return [
                     {
+                        key: 'accruals',
                         label: 'Accruals',
                         type: 'system_tab',
-                        templateUrl: 'views/tabs/instrument/accrual-calculation-schedules-view.html'
+                        templateUrl: 'views/tabs/instrument/accrual-calculation-schedules-view.html',
                     },
                     {
+                        key: 'events',
                         label: 'Events',
                         type: 'system_tab',
-                        templateUrl: 'views/tabs/instrument/events-schedules-tab-view.html'
+                        templateUrl: 'views/tabs/instrument/events-schedules-tab-view.html',
                     },
                     {
+                        key: 'exposure',
                         label: 'Exposure',
                         type: 'system_tab',
-                        templateUrl: 'views/tabs/instrument/exposure-view.html'
+                        templateUrl: 'views/tabs/instrument/exposure-view.html',
                     },
                     // {
                     //     label: 'Pricing (old)',
                     //     templateUrl: 'views/tabs/instrument/manual-pricing-formulas-view.html'
                     // },
                     {
+                        key: 'factors',
                         label: 'Factors',
                         type: 'system_tab',
-                        templateUrl: 'views/tabs/instrument/factor-schedule-view.html'
+                        templateUrl: 'views/tabs/instrument/factor-schedule-view.html',
                     },
                     {
+                        key: 'pricing',
                         label: 'Pricing',
                         type: 'system_tab',
-                        templateUrl: 'views/tabs/instrument/pricing-view.html'
+                        templateUrl: 'views/tabs/instrument/pricing-view.html',
                     }
                 ];
             case 'instrument-type':

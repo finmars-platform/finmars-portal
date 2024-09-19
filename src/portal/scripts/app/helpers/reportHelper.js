@@ -3,7 +3,7 @@
  */
 import evEvents from "../services/entityViewerEvents";
 
-const modelService = require('../services/modelService');
+const modelService = require('../services/modelService').default;
 /**
  * Report Viewer Helper.
  * @module reportHelper

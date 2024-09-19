@@ -13,7 +13,7 @@
 
     'use strict';
 
-    module.exports = function (viewModel, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService) {
+    module.exports = function (viewModel, $scope, $mdDialog, $bigDrawer, $state, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService) {
 
         let bigDrawerResizeButton;
 
@@ -46,12 +46,12 @@
 		//region entityTabsMenuTplt
 		const entityTabsMenuTplt =
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
-				'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" ' +
+				'<md-button data-ng-repeat="tab in popupData.viewModel.entityTabs" ' +
 						   'class="entity-tabs-menu-option popup-menu-option" ' +
-						   'ng-class="popupData.viewModel.sharedLogic.getTabBtnClasses(tab)" ' +
-						   'ng-click="popupData.viewModel.activeTab = tab">' +
+						   'data-ng-class="popupData.viewModel.sharedLogic.getTabBtnClasses(tab)" ' +
+						   'data-ng-click="popupData.viewModel.selectTab(tab)">' +
 					'<span>{{tab.label}}</span>' +
-					'<div ng-if="popupData.viewModel.sharedLogic.isTabWithErrors(tab)" class="tab-option-error-icon">' +
+					'<div data-ng-if="popupData.viewModel.sharedLogic.isTabWithErrors(tab)" class="tab-option-error-icon">' +
 						'<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
 					'</div>' +
 				'</md-button>' +
@@ -713,12 +713,13 @@
 		};
 
 
-		/**
+		/*
+		/!**
 		 *
 		 * @param entityType - entitType of relation selector (e.g. instrument type selector for instrument)
 		 * @returns {Promise<unknown>} - returns array of entities on resolve and error object on reject
-		 */
-		/* const getGroupSelectorOptions = function (entityType) {
+		 *!/
+		 const getGroupSelectorOptions = function (entityType) {
 
 			let resData = {};
 			let options = {pageSize: 1000, page: 1};
@@ -1131,7 +1132,15 @@
 
 				if (res.status === 'agree') {
 
-					if (viewModel.openedIn !== "webpage") {
+					if (viewModel.openedIn === "webpage") {
+						// redirect to a matching entity viewer
+
+						let evStateName = $state.current.name;
+						evStateName = evStateName.slice(0, -8); // slice '-edition' part
+
+						$state.go(evStateName);
+
+					} else {
 						metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, {status: 'delete'});
 					}
 
@@ -1439,6 +1448,34 @@
 			}
 
 			return result;
+
+		};
+
+		/**
+		 *
+		 * @param {Object} tabToSelect
+		 */
+		const selectTab = function (tabToSelect) {
+
+			viewModel.activeTab = tabToSelect;
+
+			if (viewModel.openedIn === "webpage") {
+
+				let tabKey = null;
+
+				if (viewModel.activeTab.type === "system_tab") {
+					tabKey = viewModel.activeTab.key;
+				}
+
+				$state.go(
+					$state.current.name,
+					{tab: tabKey},
+					{reload: false, location: 'replace'}
+				);
+
+			}
+
+			return viewModel.activeTab;
 
 		};
 
@@ -1825,6 +1862,7 @@
 
 			isTabWithErrors: isTabWithErrors,
 			getTabBtnClasses: getTabBtnClasses,
+			selectTab: selectTab,
 
 			exposureCalculationModelSelectorOptions: instrumentService.exposureCalculationModelsList,
 			longUnderlyingExposureSelectorOptions: instrumentService.longUnderlyingExposureList,

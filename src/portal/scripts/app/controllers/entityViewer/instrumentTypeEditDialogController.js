@@ -36,7 +36,7 @@
 
         var vm = this;
 
-		var sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
+		var sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, $state, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
 
         vm.processing = false;
 
@@ -58,8 +58,6 @@
         vm.evEditorEvent = null;
 
         vm.readyStatus = sharedLogic.readyStatusObj;
-
-        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
         vm.formIsValid = true;
 
@@ -108,13 +106,19 @@
 
         }; */
 
+        //vm.currenciesSorted = [];
+
+        vm.keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+
+        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
+
         vm.entityTabsMenuTplt = sharedLogic.entityTabsMenuTplt;
         vm.entityTabsMenuPopupData = {viewModel: vm};
         vm.entityTablePopupClasses = "border-radius-2";
 
-        //vm.currenciesSorted = [];
-
-        vm.keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+        vm.selectTab = function (tabToSelect) {
+            vm.activeTab = vm.sharedLogic.selectTab(tabToSelect);
+        }
 
         /* vm.tabsWithErrors = {"system_tab": {}, "user_tab": {}};
         vm.formErrorsList = []; */
