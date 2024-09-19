@@ -9,7 +9,7 @@
     <md-dialog-content class="p-24">
 
         <div layout="column"
-             data-ng-if="vm.readyStatus.policy && vm.readyStatus.currencyPricingSchemes && vm.instrumentPricingSchemes">
+             data-ng-if="vm.readyStatus.policy">
 
             <md-input-container>
                 <label>Name</label>
@@ -27,7 +27,7 @@
 
         </div>
 
-        <div data-ng-if="!vm.readyStatus.policy || !vm.readyStatus.currencyPricingSchemes || !vm.instrumentPricingSchemes">
+        <div data-ng-if="!vm.readyStatus.policy">
 
             <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
                 <progress-circular diameter="100"></progress-circular>
