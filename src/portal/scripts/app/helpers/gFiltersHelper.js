@@ -189,7 +189,7 @@ export default function () {
 
 			var entityType = evDataService.getEntityType()
 
-			evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+			evEventService.dispatchEvent(evEvents.CREATE_TABLE);
 
 			// Deprecated, now everything is on backend
 			// if (entityType === 'transaction-report') {

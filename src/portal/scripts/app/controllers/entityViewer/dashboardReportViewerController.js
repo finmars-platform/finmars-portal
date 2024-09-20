@@ -285,8 +285,6 @@
 
                             console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.detect_report_settings_change.RESET_TABLE');
 
-                            vm.processing = true;
-
                             vm.entityViewerDataService.resetTableContent(true);
 
 
@@ -364,7 +362,6 @@
 
                 vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
                 vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
 
             });
 
