@@ -7,9 +7,19 @@
         var vm = this;
         vm.alreadyMadeRequests = [];
         vm.path = '';
+        var options = {}
 
         vm.listFiles = function (path) {
-            return explorerService.listFiles(path).then(function (dataResult) {
+            if (!path) {
+                options = {
+                    path: '',
+                    page: 1,
+                    pageSize: 100
+                }
+            } else {
+                options.path = path;
+            }
+            return explorerService.listFiles(options).then(function (dataResult) {
 
                 const itemsData = dataResult.results.filter(function (item) {
                     return !(item.name[0] === '.' && !vm.showHiddenFiles);
