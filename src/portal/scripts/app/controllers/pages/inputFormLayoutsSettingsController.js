@@ -416,6 +416,7 @@
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
                 targetEvent: $event,
+                parent: document.querySelector('.dialog-containers-wrap'),
                 multiple: true,
                 locals: {
                     data: {
