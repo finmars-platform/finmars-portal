@@ -228,6 +228,13 @@
                 "value_type": "json"
             },
             {
+                "key": "first_transaction_date",
+                "name": "First Transaction Date",
+                "value_type": 40,
+                "readonly": true,
+                "allow_null": true,
+            },
+            {
                 "key": "created_at",
                 "name": "Created At",
                 "value_type": 80,
