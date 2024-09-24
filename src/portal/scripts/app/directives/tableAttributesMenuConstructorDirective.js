@@ -155,6 +155,7 @@
                     $mdDialog.show({
                         controller: "TableAttributesMenuConstructorDialogController as vm",
                         templateUrl: "views/dialogs/table-attributes-menu-constructor-dialog-view.html",
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         targetEvent: event,
                         multiple: true,
                         locals: {

@@ -1,6 +1,7 @@
 <div data-ng-controller="DashboardReportViewerController as vm" class="report-viewer-holder height-100">
     <div class="height-100">
-        <div data-ng-if="!vm.processing" class="g-group-table-holder height-100">
+        <div data-ng-if="!vm.processing"
+             class="g-group-table-holder height-100 position-relative">
 
             <div data-ng-if="!vm.possibleToRequestReport">
 
@@ -36,12 +37,12 @@
             <div data-ng-if="vm.possibleToRequestReport" class="height-100 display-block">
 
                 <group-table class="height-100 display-block"
-                             attribute-data-service="vm.attributeDataService"
-                             ev-data-service="vm.entityViewerDataService"
-                             ev-event-service="vm.entityViewerEventService"
-                             sp-exchange-service="vm.splitPanelExchangeService"
-                             hide-filters-block="!showFiltersArea"
-                             hide-use-from-above-filters="!showUseFromAboveFilters"
+                             data-attribute-data-service="vm.attributeDataService"
+                             data-ev-data-service="vm.entityViewerDataService"
+                             data-ev-event-service="vm.entityViewerEventService"
+                             data-sp-exchange-service="vm.splitPanelExchangeService"
+                             data-hide-filters-block="!showFiltersArea"
+                             data-hide-use-from-above-filters="!showUseFromAboveFilters"
                 ></group-table>
 
             </div>
@@ -49,7 +50,7 @@
         </div>
 
         <div data-ng-if="vm.processing"
-             class="height-100">
+             class="height-100 position-absolute inset-0">
             <div class="height-100" layout="row" layout-sm="column" layout-align="center center">
                 <!--<md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>-->
                 <progress-circular diameter="50"></progress-circular>

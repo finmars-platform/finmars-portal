@@ -5,12 +5,12 @@
 
     var explorerRepository = require('../repositories/explorerRepository');
 
-    var listFiles = function (path) {
-        return explorerRepository.listFiles(path);
+    var listFiles = function (options) {
+        return explorerRepository.listFiles(options);
     };
 
-    var searchFiles = function (path) {
-        return explorerRepository.searchFiles(path);
+    var searchFiles = function (options) {
+        return explorerRepository.searchFiles(options);
     };
 
     var viewFile = function (path) {

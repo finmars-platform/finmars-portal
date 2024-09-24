@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import commonjs from '@rollup/plugin-commonjs';
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import vue from '@vitejs/plugin-vue'
 // import { copy } from 'vite-plugin-copy'; // not working
 
 // var viteStaticCopy = require('vite-plugin-static-copy').viteStaticCopy;
@@ -15,6 +16,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 // import babel from 'rollup-plugin-babel'; // not working
 
 import path from 'path'
+import vuePlugin from "@vitejs/plugin-vue";
 
 export default defineConfig({
     base: './',
@@ -52,6 +54,7 @@ export default defineConfig({
         // requireTransform({}),
         // nodePolyfills(),
         // environmentPlugin({ /* Define your environment variables here */ })
+        vue(),
     ],
     resolve: {
         alias: {

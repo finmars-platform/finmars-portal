@@ -507,6 +507,12 @@
 
             console.log("Dashboard.broadcastToChildren", data);
 
+            if (data) {
+                data['meta'] = {
+                    'origin': 'finmars'
+                }
+            }
+
             document.querySelectorAll('iframe').forEach(iframe => {
                 iframe.contentWindow.postMessage(data, '*'); // In practice, use a more specific target origin
             });
@@ -516,11 +522,13 @@
         vm.initEventListeners = function () {
 
             // THATS CRAZY
+            // also look at dashboardDataService.setComponentOutput
             // seems Keycloak uses also small iframe and it sends some data to it, but it not JSON
             // So we need to check if data is JSON or not
             window.addEventListener('message', function (event) {
                 // Security checks and message handling here...
                 // Update the dashboard state and broadcast if necessary
+                console.trace();
                 console.log("setEventListeners.event from child iframes", event);
 
                 // Check if event.data is a valid JSON object
@@ -530,8 +538,18 @@
 
                     // Update the dashboard state and broadcast if necessary
                     console.log("setEventListeners.event from child iframes", data);
-                    vm.dashboardDataService.setLayoutState(data);
-                    vm.broadcastToChildren(data);
+
+                    // IN CASE OF EXTERNAL EXTENSIONS/MODULES Could write to postMessage
+                    // szhitenev 2024-09-11 DO NOT REMOVE
+                    if (data && data.hasOwnProperty('meta')) {
+
+                        if (data['meta'].hasOwnProperty('origin')) {
+                            if (data['meta']['origin'] === 'finmars') {
+                                vm.dashboardDataService.setLayoutState(data);
+                                vm.broadcastToChildren(data);
+                            }
+                        }
+                    }
                 } catch (e) {
                     // Log an error if event.data is not valid JSON
                     console.error("Received data is not a valid JSON object:", event.data);
