@@ -76,6 +76,15 @@ import 'jstree/dist/themes/default/style.css'
 // import './src/core/tsparticles/tsparticles.updater.out-modes.min.js';
 // import './src/core/tsparticles/tsparticles.updater.size.min.js';
 
+//# region @finmar/ui
+import '@finmars/ui/dist/finmars-ui.css';
+
+import registerVueComponents from "./src/vue/registerComponents";
+registerVueComponents();
+//# endregion
+
+import './src/vue/assets/css/main.css'
+
 import './src/shell/scripts/main.js'
 
 import './src/portal/content/less/imports.less';

@@ -41,7 +41,7 @@
 
                 <md-button class="outline-button" data-ng-click="vm.toggleHidden($event)">
 
-                    <span data-ng-if="!vm.showHiddenFiles">Show Invisible Files</span>
+                    <span data-ng-if="!vm.showHiddenFiles">Show Invisible Files <span data-ng-if="vm.hideItemsCount">({{vm.hideItemsCount}})</span></span>
                     <span data-ng-if="vm.showHiddenFiles">Hide Invisible Files</span>
 
                 </md-button>
@@ -552,6 +552,37 @@
             </div>
 
         </div>
+
+        <div layout="row" class="m-t-16 pagination-bar">
+            <md-button
+                    class="md-raised pagination-bar-button pagination-bar-previous-button {{vm.currentPage == 1 ? 'disabled-btn' : ''}}"
+                    data-ng-click="vm.openPreviousPage()">
+                Previous
+            </md-button>
+
+            <div layout="row">
+
+                <div data-ng-repeat="page in vm.pages">
+
+                    <md-button data-ng-click="vm.openPage(page)" data-ng-if="page.number"
+                               class="md-raised pagination-bar-button {{ vm.currentPage == page.number ? 'md-primary' : ''}}">
+                        {{page.caption}}
+                    </md-button>
+
+                    <div data-ng-if="!page.number" style="margin: 10px;">
+                        {{page.caption}}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <md-button class="md-raised pagination-bar-button pagination-bar-previous-button"
+                       data-ng-show="vm.currentPage < vm.totalPages"
+                       data-ng-click="vm.openNextPage()">Next
+            </md-button>
+        </div>
+
         <div data-ng-if="vm.exportTaskId" style="position: absolute; top: 50px; right: 10px; z-index: 1; background: var(--dialog-background-color);">
             <task-card task-id="vm.exportTaskId"></task-card>
         </div>

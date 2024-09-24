@@ -1596,12 +1596,13 @@ const utilsHelper = require("../../helpers/utils.helper");
 
                     } else {
 
-                        if (showFrontEvFilters) {
+                        /*if (showFrontEvFilters) {
                             filters.frontend.push(filterToAdd);
 
                         } else {
                             filters.backend.push(filterToAdd);
-                        }
+                        }*/
+                        filters.backend.push(filterToAdd);
 
                     }
 
@@ -2737,7 +2738,8 @@ const utilsHelper = require("../../helpers/utils.helper");
                     scope.checkForFilteringBySameAttr = function (columnKey) {
 
                         var filters = scope.evDataService.getFilters();
-                        var filtersList = showFrontEvFilters ? filters.frontend : filters.backend;
+                        // var filtersList = showFrontEvFilters ? filters.frontend : filters.backend;
+                        var filtersList = filters.backend;
 
                         for (var i = 0; i < filtersList.length; i++) {
                             if (filtersList[i].key === columnKey) {

@@ -9,7 +9,7 @@
     <md-dialog-content class="p-24">
 
         <div layout="column"
-             data-ng-if="vm.readyStatus.policy && vm.readyStatus.currencyPricingSchemes && vm.instrumentPricingSchemes">
+             data-ng-if="vm.readyStatus.policy">
 
             <md-input-container>
                 <label>Name</label>
@@ -25,26 +25,9 @@
 
             </div>
 
-            <md-input-container class="m-t-16">
-                <label>Default Instrument Pricing Scheme</label>
-                <md-select data-ng-model="vm.item.default_instrument_pricing_scheme">
-                    <md-option ng-value="item.id" data-ng-repeat="item in vm.instrumentPricingSchemes">{{item.name}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-
-            <md-input-container class="m-t-16">
-                <label>Default Currency Pricing Scheme</label>
-                <md-select data-ng-model="vm.item.default_currency_pricing_scheme">
-                    <md-option ng-value="item.id" data-ng-repeat="item in vm.currencyPricingSchemes">{{item.name}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-
-
         </div>
 
-        <div data-ng-if="!vm.readyStatus.policy || !vm.readyStatus.currencyPricingSchemes || !vm.instrumentPricingSchemes">
+        <div data-ng-if="!vm.readyStatus.policy">
 
             <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
                 <progress-circular diameter="100"></progress-circular>

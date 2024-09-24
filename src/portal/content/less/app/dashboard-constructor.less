@@ -1,9 +1,10 @@
 .dashboard-constructor {
   //overflow: hidden;
-  padding-bottom: 64px;
   overflow: hidden;
   height: 100%;
   box-sizing: border-box;
+
+  @layoutAreaMinHeight: 320px;
 
   .dashboard-constructor-main {
     padding: 8px;
@@ -27,6 +28,7 @@
       display: flex;
       flex-direction: row;
       flex: 0 1 100%;
+      min-height: @layoutAreaMinHeight;
     }
   }
 
@@ -43,10 +45,9 @@
   }
 
   .fixed-area-holder {
-    //height: 200px;
-    height: 150px;
+    min-height: 150px;
+    flex: 0 1 150px;
     overflow: auto;
-    //margin-right: 320px;
 
     .dashboard-layout {
       height: auto;
@@ -60,6 +61,10 @@
 
   }
 
+  .dashboard-constructor-tabs-area-container {
+    flex-grow: 2;
+  }
+
   .dashboard-constructor-tabs-holder {
     height: 100%;
     overflow: auto;
@@ -67,13 +72,14 @@
   }
 
   .dashboard-constructor-sidebar {
+    display: flex;
+    flex-direction: column;
     flex: 0 0 320px;
     box-sizing: border-box;
     overflow: hidden;
   }
 
   .dashboard-constructor-comp-cards-top-text {
-    margin-bottom: 4px;
     margin-top: 12px;
     padding-left: 4px;
     font-weight: bold;
@@ -82,7 +88,7 @@
   }
 
   .dashboard-constructor-comp-cards-container {
-    height: 480px;
+    flex: 0 1 100%;
     overflow: auto;
   }
 
@@ -475,11 +481,7 @@
 }
 
 .dashboard-constructor-bottom-row {
-  position: fixed;
-  bottom: 0;
-  width: calc(100% - 181px);
+  flex: 0 0 49px;
   background-color: var(--dialog-background-color);
   border-top: 1px solid var(--secondary-color);
-  margin-left: -10px;
-  padding-left: 8px;
 }

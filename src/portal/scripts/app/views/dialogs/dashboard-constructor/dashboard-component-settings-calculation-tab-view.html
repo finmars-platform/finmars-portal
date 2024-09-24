@@ -2,7 +2,10 @@
 
     <div layout="column">
 
-        <div data-ng-if="vm.item.settings.entity_type == 'balance-report' || vm.item.type == 'report_viewer_matrix'">
+        <div data-ng-if="
+                vm.item.settings.entity_type == 'balance-report' ||
+                (vm.item.type === 'report_viewer_matrix' && vm.item.settings.matrix_type === 'balance')
+        ">
 
             <div class="m-t-16 m-b-16">
 
@@ -25,7 +28,10 @@
 
         </div>
 
-        <div data-ng-if="vm.item.settings.entity_type == 'pl-report' || vm.item.type == 'report_viewer_matrix'">
+        <div data-ng-if="
+                vm.item.settings.entity_type == 'pl-report' ||
+                (vm.item.type === 'report_viewer_matrix' && vm.item.settings.matrix_type === 'pl')
+            ">
 
             <div class="m-t-16" style="margin-bottom: 32px;">
 
