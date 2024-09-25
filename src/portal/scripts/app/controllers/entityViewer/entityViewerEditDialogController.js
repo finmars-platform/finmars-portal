@@ -584,6 +584,10 @@
                             options.tab = vm.activeTab.key;
                         }
 
+                        if ( ["strategy-1", "strategy-2", "strategy-3"].includes(vm.entityType) ) {
+                            options.strategyNumber = $state.params.strategyNumber;
+                        }
+
                         const editEvStateName = evHelperService.getNameOfStateForEditingEntity($state);
 
                         evHelperService.copyLinkToEvForm($state, editEvStateName, toastNotificationService, options);

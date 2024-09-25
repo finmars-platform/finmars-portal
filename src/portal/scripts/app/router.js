@@ -3,6 +3,79 @@
  */
 (function () {
 
+    /**
+     *
+     * @param {String} entityType
+     * @return {{controller: string, resolve: {data: (function(): {openedIn: string}), entityType: (function(): *), entityId: (string|(function(*): *))[]}, reloadOnSearch: boolean, templateUrl: string}}
+     */
+    function getStateDefForEditingEntityById(entityType) {
+        return {
+            templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
+            controller: 'EntityViewerEditDialogController as vm',
+            reloadOnSearch: false,
+            resolve: {
+                entityType: function () {
+                    return entityType;
+                },
+                entityId: ["$transition$", function ($transition$) {
+                    return $transition$.params().id;
+                }],
+                data: function () {
+                    return {
+                        openedIn: "webpage",
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param {String} entityType
+     * @param {Boolean} [tabQueryParam]
+     * @return {{controller: string, resolve: {data: (string|(function(*): {openedIn: string, userCode: *}))[], entityType: (function(): string), entityId: (function(): null)}, reloadOnSearch: boolean, params: {userCode: {type: string}}, templateUrl: string}}
+     */
+    function getStateDefForEditingEntityByUc(entityType, tabQueryParam) {
+
+        const stateDefinitionData = {
+            templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
+            controller: 'EntityViewerEditDialogController as vm',
+            reloadOnSearch: false,
+            params: {
+                userCode: {
+                    type: 'path'
+                },
+            },
+            resolve: {
+                entityType: function () {
+                    return entityType;
+                },
+                entityId: function () {
+                    return null;
+                },
+                data: ["$transition$", function ($transition$) {
+                    return {
+                        userCode: $transition$.params().userCode,
+                        openedIn: "webpage",
+                    }
+                }]
+            }
+        };
+
+        if (tabQueryParam) {
+
+            stateDefinitionData.params.tab = {
+                type: 'query',
+                value: null,
+                dynamic: true,
+            };
+
+        }
+
+        return stateDefinitionData;
+
+    }
+
     module.exports = function ($stateProvider) {
 
         /* $urlRouterProvider.otherwise('/');
@@ -154,26 +227,11 @@
                 }
             })
             .state('app.portal.data.portfolio-edition', {
+                ...getStateDefForEditingEntityById('portfolio'),
                 url: '/portfolio/:id?tab',
-                templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
-                controller: 'EntityViewerEditDialogController as vm',
-                reloadOnSearch: false,
                 params: {
                     tab: null,
                 },
-                resolve: {
-                    entityType: function () {
-                        return "portfolio"
-                    },
-                    entityId: ["$transition$", function ($transition$) {
-                        return $transition$.params().id;
-                    }],
-                    data: function () {
-                        return {
-                            openedIn: "webpage",
-                        }
-                    }
-                }
             })
             .state('app.portal.data.portfolio-register', {
                 url: '/portfolio-register',
@@ -182,6 +240,10 @@
                 params: {
                     layoutUserCode: null
                 }
+            })
+            .state('app.portal.data.portfolio-register-edition', {
+                ...getStateDefForEditingEntityById('portfolio-register'),
+                url: '/portfolio-register/:id',
             })
             .state('app.portal.data.portfolio-register-record', {
                 url: '/portfolio-register-record',
@@ -198,6 +260,10 @@
                 params: {
                     layoutUserCode: null
                 }
+            })
+            .state('app.portal.data.account-edition', {
+                ...getStateDefForEditingEntityById('account'),
+                url: '/account/:id',
             })
             .state('app.portal.data.account-type', {
                 url: '/account-type',
@@ -223,6 +289,10 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.counterparty-edition', {
+                ...getStateDefForEditingEntityById('counterparty'),
+                url: '/counterparty/:id',
+            })
             .state('app.portal.data.responsible-group', {
                 url: '/responsible-group',
                 templateUrl: 'views/data/data-responsible-group-view.html',
@@ -239,6 +309,10 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.responsible-edition', {
+                ...getStateDefForEditingEntityById('responsible'),
+                url: '/responsible/:id',
+            })
             .state('app.portal.data.instrument', {
                 url: '/instrument?entity',
                 templateUrl: 'views/data/data-instrument-view.html',
@@ -248,34 +322,8 @@
                 }
             })
             .state('app.portal.data.instrument-edition', {
+                ...getStateDefForEditingEntityByUc('instrument', true),
                 url: '/instrument/:userCode?tab',
-                templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
-                controller: 'EntityViewerEditDialogController as vm',
-                reloadOnSearch: false,
-                params: {
-                    userCode: {
-                        type: 'path'
-                    },
-                    tab: {
-                        type: 'query',
-                        value: null,
-                        dynamic: true,
-                    }
-                },
-                resolve: {
-                    entityType: function () {
-                        return "instrument"
-                    },
-                    entityId: function () {
-                        return null
-                    },
-                    data: ["$transition$", function ($transition$) {
-                        return {
-                            userCode: $transition$.params().userCode,
-                            openedIn: "webpage",
-                        }
-                    }]
-                }
             })
             .state('app.portal.data.generated-event', {
                 url: '/generated-event',
@@ -308,6 +356,10 @@
                 params: {
                     layoutUserCode: null
                 }
+            })
+            .state('app.portal.data.portfolio-reconcile-group-edition', {
+                ...getStateDefForEditingEntityById("portfolio-reconcile-group"),
+                url: '/portfolio-reconcile-group/:id',
             })
             .state('app.portal.data.portfolio-reconcile-history', {
                 url: '/portfolio-reconcile-history',
@@ -366,6 +418,10 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.currency-history-edition', {
+                ...getStateDefForEditingEntityById('currency-history'),
+                url: '/currency-history/:id',
+            })
             .state('app.portal.data.price-history', {
                 url: '/price-history',
                 templateUrl: 'views/data/data-price-history-view.html',
@@ -373,6 +429,10 @@
                 params: {
                     layoutUserCode: null
                 }
+            })
+            .state('app.portal.data.price-history-edition', {
+                ...getStateDefForEditingEntityById('price-history'),
+                url: '/price-history/:id',
             })
             .state('app.portal.data.portfolio-history', {
                 url: '/portfolio-history',
@@ -395,6 +455,10 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.currency-edition', {
+                ...getStateDefForEditingEntityByUc('currency', true),
+                url: '/currency/:userCode?tab',
+            })
             .state('app.portal.data.strategy-group', {
                 url: '/strategy/:strategyNumber/group',
                 templateUrl: 'views/data/data-strategy-group-view.html',
@@ -411,6 +475,23 @@
                 controller: 'DataStrategyController as vm',
                 params: {
                     layoutUserCode: null
+                }
+            })
+            .state('app.portal.data.strategy-edition', {
+                ...getStateDefForEditingEntityById(''),
+                url: '/strategy/:strategyNumber/:id',
+                resolve: {
+                    entityType: ["$transition$", function ($transition$) {
+                        return `strategy-${$transition$.params().strategyNumber}`;
+                    }],
+                    entityId: ["$transition$", function ($transition$) {
+                        return $transition$.params().id;
+                    }],
+                    data: function () {
+                        return {
+                            openedIn: "webpage",
+                        }
+                    }
                 }
             })
 

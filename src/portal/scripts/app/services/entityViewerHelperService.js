@@ -2007,9 +2007,12 @@
      *      {
      *          entityId?: Number,
      *          entityUserCode?: String,
-     *          tab?: String
+     *          tab?: String,
+     *          strategyNumber?: String,
      *      }
      * } options
+     * @param {String} [options.strategyNumber] - string because a router param
+     * `strategyNumber` is of type "path"
      */
     function copyLinkToEvForm($state, stateName, toastNotificationService, options={}) {
 
@@ -2057,6 +2060,21 @@
         }
 
         if (options.tab) params.tab = options.tab;
+
+        if (stateName === "app.portal.data.strategy-edition") {
+
+            if ( !["1", "2", "3"].includes(options.strategyNumber) ) {
+
+                throw new Error(
+                    "[entityViewerHelperService copyLinkToEvForm] " +
+                    `Invalid number of a strategy provided: ${options.strategyNumber}`
+                )
+
+            }
+
+            params.strategyNumber = options.strategyNumber;
+
+        }
 
         const linkToEvForm = $state.href(stateName, params, {absolute: true});
 
