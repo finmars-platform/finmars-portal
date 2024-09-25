@@ -450,6 +450,10 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return processGetByUcProm( instrumentService.getList(opts) );
                 break;
 
+            case "currency":
+                return processGetByUcProm( currencyService.getList(opts) );
+                break;
+
             default:
                 throw new Error(
                     "[entityResolverServiceNew getByUserCode] " +

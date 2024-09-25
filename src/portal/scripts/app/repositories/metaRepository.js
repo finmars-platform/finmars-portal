@@ -244,6 +244,7 @@
             case 'currency':
                 return [
                     {
+                        key: 'pricing',
                         label: 'Pricing',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/currency/pricing-view.html'
@@ -293,26 +294,31 @@
             case 'instrument-type':
                 return [
                     {
+                        key: 'pricing',
                         label: 'Pricing',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/pricing-view.html'
                     },
                     {
+                        key: 'accruals',
                         label: 'Accruals',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/accruals-view.html'
                     },
                     {
+                        key: 'events',
                         label: 'Events',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/events-view.html'
                     },
                     {
+                        key: 'factors',
                         label: 'Factors',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/factors-view.html'
                     },
                     {
+                        key: 'exposure',
                         label: 'Exposure',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/exposure-view.html'
