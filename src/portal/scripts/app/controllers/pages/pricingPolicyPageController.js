@@ -7,34 +7,33 @@
 
     var pricingPolicyService = require('../../services/pricingPolicyService').default;;
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, $state) {
 
         var vm = this;
 
         vm.readyStatus = {content: false};
         vm.items = [];
 
-        vm.getList = function () {
+        vm.pricingPolicyId = null;
 
-            pricingPolicyService.getList().then(function (data) {
+        vm.getList = async function () {
 
-                vm.items = data.results;
+            const data = await pricingPolicyService.getList();
 
-                vm.readyStatus.content = true;
+            vm.items = data.results;
 
-                $scope.$apply();
-
-            })
+            vm.readyStatus.content = true;
 
         };
 
-        vm.editPricingPolicy = function ($event, item) {
+        vm.editPricingPolicy = function (item) {
+
+            $state.go($state.current.name, { id: item.id });
 
             $mdDialog.show({
                 controller: 'PricingPolicyEditDialogController as vm',
                 templateUrl: 'views/dialogs/pricing/pricing-policy-edit-dialog-view.html',
                 parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
                 autoWrap: true,
@@ -48,8 +47,12 @@
                 }
             }).then(function (res) {
 
+                $state.go($state.current.name, { id: null });
+
                 if(res.status === 'agree') {
-                    vm.getList();
+                    vm.getList().then(() => {
+                        $scope.apply();
+                    });
                 }
 
             })
@@ -75,7 +78,9 @@
             }).then(function (res) {
 
                 if(res.status === 'agree') {
-                    vm.getList();
+                    vm.getList().then(() => {
+                        $scope.apply();
+                    });
                 }
 
             })
@@ -105,7 +110,9 @@
                 if (res.status === 'agree') {
 
                     pricingPolicyService.deleteByKey(item.id).then(function (value) {
-                        vm.getList();
+                        vm.getList().then(() => {
+                            $scope.apply();
+                        });
                     })
 
                 }
@@ -114,9 +121,34 @@
 
         };
 
-        vm.init = function () {
+        vm.init = async function () {
 
-            vm.getList();
+            await vm.getList();
+
+            vm.pricingPolicyId = parseInt($state.params.id);
+
+            if (vm.pricingPolicyId) {
+
+                const ppToEdit = vm.items.find(
+                    pp => pp.id === vm.pricingPolicyId
+                );
+
+                if (ppToEdit) {
+
+                    vm.editPricingPolicy(ppToEdit);
+
+                } else {
+
+                    console.warn(
+                        "A pricing policy with the following id was not " +
+                        `found: ${vm.pricingPolicyId}`
+                    );
+
+                }
+
+            }
+
+            $scope.$apply();
 
         };
 

@@ -11,7 +11,7 @@
     var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
 
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, toastNotificationService, data) {
 
         var vm = this;
 
@@ -33,6 +33,8 @@
             pricingPolicyService.update(vm.item.id, vm.item).then(function (data) {
 
                 vm.item = data;
+
+                toastNotificationService.success("Pricing policy was updated");
 
                 $mdDialog.hide({status: 'agree', data: {item: vm.item}});
 
