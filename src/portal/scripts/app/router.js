@@ -672,10 +672,17 @@
                 controller: 'SystemMessagesController as vm'
             })
 
-            .state('app.portal.pricing-policy', {
-                url: '/pricing-policy',
+            .state('app.portal.data.pricing-policy', {
+                url: '/pricing-policy?id',
                 templateUrl: 'views/pages/pricing-policy-page-view.html',
-                controller: 'PricingPolicyPageController as vm'
+                controller: 'PricingPolicyPageController as vm',
+                reloadOnSearch: false,
+                params: {
+                    id: {
+                        default: null,
+                        type: "query",
+                    }
+                },
             })
             .state('app.portal.balance-report-instance', {
                 url: '/balance-report-instance',

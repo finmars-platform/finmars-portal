@@ -50,8 +50,12 @@
                 </td>
 
                 <td>
-                    <md-button class="" data-ng-click="vm.editPricingPolicy($event, item)">Edit</md-button>
-                    <md-button class="" data-ng-if="item.user_code != '-'" data-ng-click="vm.deletePricingPolicy($event, item, $index)">Delete
+                    <md-button data-ng-click="vm.editPricingPolicy(item)">
+                        Edit
+                    </md-button>
+                    <md-button data-ng-if="item.user_code !== '-'"
+                               data-ng-click="vm.deletePricingPolicy($event, item, $index)">
+                        Delete
                     </md-button>
                 </td>
 

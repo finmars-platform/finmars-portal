@@ -838,7 +838,7 @@ export default (function () {
     // Pricing
 
 
-    portal.controller('PricingPolicyPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingPolicyPageController')]);
+    portal.controller('PricingPolicyPageController', ['$scope', '$mdDialog', '$state', require('./app/controllers/pages/pricingPolicyPageController')]);
     portal.controller('BalanceReportInstancePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/balanceReportInstancePageController')]);
     portal.controller('PlReportInstancePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/plReportInstancePageController')]);
     portal.controller('PricingManagePageController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/pages/pricingManagePageController')]);
@@ -861,7 +861,7 @@ export default (function () {
     portal.controller('InstrumentPricingSchemeEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/instrumentPricingSchemeEditDialogController')]);
 
     portal.controller('PricingPolicyAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyAddDialogController')]);
-    portal.controller('PricingPolicyEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyEditDialogController')]);
+    portal.controller('PricingPolicyEditDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyEditDialogController')]);
     portal.controller('PortfolioBundleDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/portfolioBundleDialogController')]);
 
     portal.controller('TransactionTypeGroupDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionTypeGroupDialogController')]);
