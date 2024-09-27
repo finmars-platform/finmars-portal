@@ -580,6 +580,8 @@
 
 
                         var options = {
+                            page: 1,
+                            page_size: 1000,
                             frontend_request_options: {
                                 groups_types: [{...abscissaGroupType}]
                             }
@@ -612,6 +614,8 @@
                             firstLevelGroups.forEach(function (group) {
 
                                 options = {
+                                    page: 1,
+                                    page_size: 1000,
                                     frontend_request_options: {
                                         groups_types: [
                                             {...abscissaGroupType},
