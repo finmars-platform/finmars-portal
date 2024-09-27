@@ -45,7 +45,7 @@
         vm.currentPage = 1;
         vm.currentPageForFailes = 1;
         vm.currentPageForSearch = 1;
-        vm.pageSize = 5;
+        vm.pageSize = 100;
         vm.pages = [];
         vm.totalPages = 0;
         vm.hideItemsCount = 0;
@@ -86,6 +86,7 @@
                         $scope.$apply();
                     });
                 } else {
+                    vm.currentPageForSearch = 1;
                     vm.listFiles();
                 }
             }, 300);
@@ -421,6 +422,10 @@
 
                 if (res.status === 'agree') {
 
+                    if (vm.currentPageForFailes > 1 && (vm.items.length - itemsToDelete.length) === 0) {
+                        vm.currentPageForFailes = vm.currentPageForFailes - 1;
+                        vm.allSelected = false;
+                    }
                     var promises = [];
 
                     itemsToDelete.forEach(function (item) {
@@ -595,14 +600,7 @@
 
             console.log('toggleSelectAll searchTerm', vm.searchTerm);
 
-            vm.items.filter(function (item) {
-                if (vm.searchTerm) {
-                    return item.name.indexOf(vm.searchTerm) !== -1
-                }
-
-                return true;
-
-            }).forEach(function (item) {
+            vm.items.forEach(function (item) {
                 item.selected = vm.allSelected;
 
                 if (item.selected) {
@@ -622,13 +620,8 @@
 
             vm.selectedCount = 0;
 
-            vm.items.filter(function (item) {
-                if (vm.searchTerm) {
-                    return item.name.indexOf(vm.searchTerm) !== -1
-                }
-                return true;
+            vm.items.forEach(function (item) {
 
-            }).forEach(function (item) {
                 if (!item.selected) {
                     allSelected = false;
                 }
