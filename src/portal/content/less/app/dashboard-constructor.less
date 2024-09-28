@@ -4,8 +4,6 @@
   height: 100%;
   box-sizing: border-box;
 
-  @layoutAreaMinHeight: 320px;
-
   .dashboard-constructor-main {
     padding: 8px;
     box-sizing: border-box;
@@ -28,7 +26,7 @@
       display: flex;
       flex-direction: row;
       flex: 0 1 100%;
-      min-height: @layoutAreaMinHeight;
+      min-height: 0;
     }
   }
 
@@ -481,6 +479,7 @@
 }
 
 .dashboard-constructor-bottom-row {
+  position: relative; // to display above a content of the .layout-areas-and-components-row
   flex: 0 0 49px;
   background-color: var(--dialog-background-color);
   border-top: 1px solid var(--secondary-color);
