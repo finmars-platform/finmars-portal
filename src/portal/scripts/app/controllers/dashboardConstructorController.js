@@ -1323,6 +1323,15 @@
 
                 vm.updateAvailableComponentsTypes();
 
+                setTimeout(function () {
+                    /* set timeout is used to wait until data-ng-repeat will
+                     render added component*/
+                    const compsContainerElem = document.querySelector(".dashboardConstructorCompsContains");
+
+                    compsContainerElem.scrollTop = compsContainerElem.scrollHeight;
+
+                }, 200);
+
             })
 
         };
