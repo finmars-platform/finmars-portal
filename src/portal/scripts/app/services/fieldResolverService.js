@@ -15,6 +15,7 @@ var portfolioClassRepository = require('../repositories/portfolioClassRepository
 var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
 var currencyRepository = require('../repositories/currencyRepository');
 var portfolioRepository = require('../repositories/portfolioRepository');
+var resourceGroupRepository = require('../repositories/resource-group/resourceGroupRepository').default;
 var portfolioRegisterRepository = require('../repositories/portfolioRegisterRepository');
 var counterpartyRepository = require('../repositories/counterpartyRepository');
 var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
@@ -460,6 +461,14 @@ export default function (instrumentService, transactionTypeService, metaContentT
                 case 'responsibles':
                     responsibleRepository.getListLight({pageSize: 1000}).then(function (data) {
                         return resolve({type: 'multiple-ids', key: 'responsibles', data: data.results});
+                    });
+                    break;
+                case 'resource_groups':
+                    resourceGroupRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({type: 'multiple-ids', key: 'resource_groups', data: data.results.map((item) => {
+                            item.id = item.user_code
+                            return item
+                        })});
                     });
                     break;
                 default:
