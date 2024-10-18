@@ -3438,8 +3438,6 @@ button.md-button.toggle-dashboard-filter-btn {
     align-items: center;
     justify-content: space-between;
 
-    color: @g-top-part-color;
-
     border-top: 2px solid @borderPale;
     border-bottom: 2px solid @borderPale;
   }
@@ -3453,7 +3451,8 @@ button.md-button.toggle-dashboard-filter-btn {
 
     padding: 0 10px;
 
-    background-color: @g-table-header-background-color;
+    background-color: var(--page-background-color);
+    color: var(--secondary-color);
     border-bottom: var(--table-border-color)000;
 
     box-sizing: border-box;
@@ -3473,7 +3472,6 @@ button.md-button.toggle-dashboard-filter-btn {
 
   .examples-items {
     width: 100%;
-    color: #000000;
     font-size: 14px;
 
     margin-top: 4px;
@@ -3569,7 +3567,6 @@ button.md-button.toggle-dashboard-filter-btn {
       .parameter {
         padding-left: 22px;
         flex-basis: 210px;
-        color: #000000;
         font-weight: 700;
       }
 

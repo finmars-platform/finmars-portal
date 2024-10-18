@@ -33,12 +33,14 @@
 
         <div data-ng-if="vm.items.length">
 
-            <div data-ng-repeat="item in vm.items track by item.id">
+            <div class="dashboard-layout-content-wrapper" data-ng-repeat="item in vm.items track by item.id">
 
-                {{item.name}}
+                <span class="dashboard-layout-item-title">{{item.name}}</span>
 
-                <md-button class="" data-ui-sref="app.portal.dashboard-constructor({id: item.id})">Edit</md-button>
-                <md-button class="md-raised md-warn" data-ng-click="vm.deleteItem($event, item)">Delete</md-button>
+                <div class="dashboard-layout-action-buttons">
+                    <md-button class="" data-ui-sref="app.portal.dashboard-constructor({id: item.id})">Edit</md-button>
+                    <md-button class="md-raised md-warn" data-ng-click="vm.deleteItem($event, item)">Delete</md-button>
+                </div>
 
             </div>
 
