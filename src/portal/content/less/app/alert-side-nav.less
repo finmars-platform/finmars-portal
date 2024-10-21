@@ -307,7 +307,8 @@ button.md-raised.alert-card-footer-send.md-button {
 }
 
 .alert-card-comment-comment {
-  background: #f2f2f2;
+  background: var(--table-border-color);
+  color: var(--primary-color);
   min-width: 100px;
   margin: 0;
   padding: 8px;
@@ -321,15 +322,16 @@ button.md-raised.alert-card-footer-send.md-button {
 
 .alert-card-comment-username {
   font-size: 11px;
-  color: grey;
+  color: var(--primary-color);
 }
 
 .alert-card-comment-comment-time {
+  color: var(--primary-color);
+  background: var(--table-border-color);
   position: absolute;
   right: 4px;
   bottom: 4px;
   font-size: 9px;
-  background: #d6d0d0;
   padding: 2px 4px;
   border-radius: 4px;
 }
