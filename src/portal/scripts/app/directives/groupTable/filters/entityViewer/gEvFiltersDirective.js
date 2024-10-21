@@ -457,6 +457,7 @@
                     $mdDialog.show({
                         controller: 'EntityDataConstructorDialogController as vm',
                         templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: ev,
                         multiple: true,
                         locals: {
