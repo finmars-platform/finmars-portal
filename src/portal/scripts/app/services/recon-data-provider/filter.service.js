@@ -66,7 +66,7 @@
 					var keyProperty = regularFilters[rf].key;
 					var valueType = regularFilters[rf].value_type;
 					var filterType = regularFilters[rf].filter_type;
-					var excludeEmptyCells = regularFilters[rf].exclude_empty_cells;
+					// var excludeEmptyCells = regularFilters[rf].exclude_empty_cells;
 					var filterValue = regularFilters[rf].value;
 
 					if (keyProperty !== 'ordering') {
@@ -219,7 +219,11 @@
 
 						} else {
 
-							if (excludeEmptyCells && flItem.___type !== 'group') { // if user choose to hide empty cells
+							// if (excludeEmptyCells && flItem.___type !== 'group') { // if user choose to hide empty cells
+							// 	match = false;
+							// 	break;
+							// }
+							if (flItem.___type !== 'group') { // if user choose to hide empty cells
 								match = false;
 								break;
 							} else {
