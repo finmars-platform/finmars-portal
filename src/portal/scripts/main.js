@@ -136,9 +136,9 @@ export default (function () {
     ]
 
     if (window.location.href.indexOf('space00000') === -1) {
-
+        const SENTRY_DSN = process.env.SENTRY_DSN !== undefined ? process.env.SENTRY_DSN : "https://c2822efa4c0c45ceb21c50a361bf05b2@sentry.finmars.com/5";
         Sentry.init({
-            dsn: "https://c2822efa4c0c45ceb21c50a361bf05b2@sentry.finmars.com/5",
+            dsn: SENTRY_DSN,
             integrations: [new AngularIntegration()],
         });
 
