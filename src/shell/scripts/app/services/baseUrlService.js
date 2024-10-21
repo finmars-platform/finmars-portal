@@ -42,11 +42,17 @@ const getApiVersion = () => {
 	return 'api/v1'
 }
 
+const getAngularJsPart = () => {
+	return 'a/#!';
+};
+
 export default {
 	resolve: resolve,
 	getAuthorizerUrl: getAuthorizerUrl,
 	setMasterUserPrefix: setMasterUserPrefix,
 	getMasterUserPrefix: getMasterUserPrefix,
 
-	getApiVersion: getApiVersion
+	getApiVersion: getApiVersion,
+
+	getAngularJsPart: getAngularJsPart,
 }
