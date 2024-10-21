@@ -22,6 +22,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             // let user;
             const user = globalDataService.getUser();
 
+            const fmHeaderElement = elem.find('fm-header');
+
             // scope.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
 
             scope.currentLocation = '';
@@ -46,12 +48,19 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             }
 
-            scope.toggleDarkMode = function () {
-
-                if (scope.isThemeInDarkMode) {
-                    globalDataService.disableThemeDarkMode()
+            scope.toggleDarkMode = function (val) {
+                if (val !== undefined) {
+                    if (val) {
+                        globalDataService.enableThemeDarkMode();
+                    } else {
+                        globalDataService.disableThemeDarkMode()
+                    }
                 } else {
-                    globalDataService.enableThemeDarkMode();
+                    if (scope.isThemeInDarkMode) {
+                        globalDataService.disableThemeDarkMode()
+                    } else {
+                        globalDataService.enableThemeDarkMode();
+                    }
                 }
 
                 scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode(); // to update title in the switcher
@@ -516,6 +525,10 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             }
 
+            const onToggleDarkMode = ($event) => scope.toggleDarkMode($event.detail)
+            const onSelectMaster = ($event) => scope.selectMaster($event.detail)
+            const goToProfile = () => window.open(scope.profileUrl, '_self')
+
             const init = async function () {
 
                 const user = globalDataService.getUser();
@@ -547,12 +560,26 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                     scope.universalInputEnabled = true
                 }
 
+                if (fmHeaderElement.length) {
+                    fmHeaderElement[0].addEventListener('setTheme', onToggleDarkMode);
+                    fmHeaderElement[0].addEventListener('profile', goToProfile);
+                    fmHeaderElement[0].addEventListener('security', scope.openAccManager);
+                    fmHeaderElement[0].addEventListener('setCurrent', onSelectMaster);
+                }
+
             };
 
             init();
 
             scope.$on("$destroy", function () {
                 deregisterOnSuccessTransitionHook();
+
+                if (fmHeaderElement.length) {
+                    fmHeaderElement[0].removeEventListener('setTheme', onToggleDarkMode);
+                    fmHeaderElement[0].removeEventListener('profile', goToProfile);
+                    fmHeaderElement[0].removeEventListener('security', scope.openAccManager);
+                    fmHeaderElement[0].removeEventListener('setCurrent', onSelectMaster);
+                }
             });
 
         }
