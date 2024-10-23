@@ -152,6 +152,25 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         vm.route.value.path = getActivePath(transition.to().name);
     });
 
+    const resizeSideNav = function() {
+        window.dispatchEvent(new Event('resize'));
+    };
+
+    const addNavigationPortalListener = function() {
+        const navigationPortal = document.querySelector('#fm-navigation-portal');
+
+        if (navigationPortal) {
+            navigationPortal.addEventListener('resizeSideNav', resizeSideNav);
+        }
+    };
+
+    const removeNavigationPortalListener = function() {
+        const navigationPortal = document.querySelector('#fm-navigation-portal');
+        if (navigationPortal) {
+            navigationPortal.removeEventListener('resizeSideNav', resizeSideNav);
+        }
+    };
+
     const init = function () {
 
         middlewareService.onToggleWarningsSideNav(function () {
@@ -159,7 +178,7 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
 
         })
 
-        localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
+        if (localStorageService.setGlobalDataService) localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
 
         vm.currentMasterUser = globalDataService.getMasterUser();
         const promises = [];
@@ -182,6 +201,8 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
             initAlertSideNavListeners();
             $scope.$apply();
 
+            addNavigationPortalListener()
+
         }).catch(function (error) {
 
             error.___custom_message = "PortalController init()"
@@ -198,6 +219,7 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
 
     $scope.$on("$destroy", function () {
         deregisterTransitionOnSuccess();
+        removeNavigationPortalListener()
     });
 
 };
