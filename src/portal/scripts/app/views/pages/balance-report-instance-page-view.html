@@ -2,6 +2,14 @@
 
     <div data-ng-if="vm.readyStatus.content">
 
+        <div class="display-flex">
+
+            <md-button class="md-raised" data-ng-click="vm.clearAllCache()">Clear all Cache</md-button>
+
+            <progress-circular diameter="20" data-ng-if="vm.processing"></progress-circular>
+
+        </div>
+
         <table>
 
             <thead>
@@ -23,14 +31,16 @@
             <tr data-ng-repeat="item in vm.items track by $index">
 
                 <td>
-                    {{item.id}}
+                    {{ item.id }}
                 </td>
 
                 <td>
-                    {{item.unique_key}}
+                    {{ item.unique_key }}
                 </td>
 
-                <td><div style="white-space: pre; padding: 8px;">{{ item.settings }}</div></td>
+                <td>
+                    <div style="white-space: pre; padding: 8px;">{{ item.settings }}</div>
+                </td>
 
                 <td>
                     <md-button class="" data-ng-click="vm.deleteItem($event, item, $index)">Delete
