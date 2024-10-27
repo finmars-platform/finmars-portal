@@ -6,7 +6,7 @@
     'use strict';
 
     var plReportInstanceService = require('../../services/plReportInstanceService').default;
-    ;
+
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -69,6 +69,20 @@
             vm.getList();
 
         };
+
+        vm.clearAllCache = async function () {
+
+            vm.processing = true
+
+            for (const item of vm.items) {
+
+                await plReportInstanceService.deleteByKey(item.id)
+            }
+
+            vm.processing = false;
+
+            vm.getList();
+        }
 
         vm.init();
 

@@ -112,6 +112,14 @@
                                 </md-button>
                             </md-menu-item>
 
+                            <md-menu-item>
+                                <md-button ng-click="vm.toggleCache($event)"
+                                           class="g-settings-option-btn">
+                                    <span data-ng-if="!vm.state.ignore_cache">Ignore Cache</span>
+                                    <span data-ng-if="vm.state.ignore_cache">Enable Cache</span>
+                                </md-button>
+                            </md-menu-item>
+
                         </md-menu-content>
                     </md-menu>
 

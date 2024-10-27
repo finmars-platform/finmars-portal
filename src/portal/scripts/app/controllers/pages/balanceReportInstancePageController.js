@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var balanceReportInstanceService = require('../../services/balanceReportInstanceService').default;;
+    var balanceReportInstanceService = require('../../services/balanceReportInstanceService').default;
+    ;
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -31,7 +32,7 @@
 
         };
 
-        vm.deleteItem = function($event, item, $index){
+        vm.deleteItem = function ($event, item, $index) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -68,6 +69,20 @@
             vm.getList();
 
         };
+
+        vm.clearAllCache = async function () {
+
+            vm.processing = true
+
+            for (const item of vm.items) {
+
+                await balanceReportInstanceService.deleteByKey(item.id)
+            }
+
+            vm.processing = false
+
+            vm.getList();
+        }
 
         vm.init();
 
