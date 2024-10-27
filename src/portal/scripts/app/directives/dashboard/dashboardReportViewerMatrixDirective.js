@@ -150,12 +150,17 @@ const evEvents = require("../../services/entityViewerEvents");
                         scope.reportOptions = {}
                     }
 
+                    var layoutState = scope.dashboardDataService.getLayoutState();
+
+
+                    scope.reportOptions.ignore_cache = !!layoutState.ignore_cache;
+
                     // TODO some shady logic here, consider refactor
                     if (scope.componentData.settings.linked_components) {
 
                         if (scope.componentData.settings.linked_components.report_settings) {
 
-                            var layoutState = scope.dashboardDataService.getLayoutState();
+
 
                             Object.keys(scope.componentData.settings.linked_components.report_settings).forEach(function (key) {
 
