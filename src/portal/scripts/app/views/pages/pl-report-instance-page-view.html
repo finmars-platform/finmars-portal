@@ -2,6 +2,12 @@
 
     <div data-ng-if="vm.readyStatus.content">
 
+        <div class="display-flex">
+            <md-button class="md-raised" data-ng-click="vm.clearAllCache()">Clear all Cache</md-button>
+
+            <progress-circular diameter="20" data-ng-if="vm.processing"></progress-circular>
+        </div>
+
         <table>
 
             <thead>
