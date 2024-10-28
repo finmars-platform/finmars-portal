@@ -40,11 +40,10 @@
 
         };
 
-        $scope.goProfile= function () {
+        $scope.goProfile = function () {
             // Navigate back to the previous URL, if available
 
-            const root = window.location.href.split('/a/#!')[0]
-            window.location.href = root + "/v/profile"
+            window.location.href = window.location.origin + "/v/profile"
 
         };
 
