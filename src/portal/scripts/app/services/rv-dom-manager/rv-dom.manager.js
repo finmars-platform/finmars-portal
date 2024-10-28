@@ -1303,6 +1303,27 @@ export default function (toastNotificationService, transactionTypeService, price
      * @param elements.rootWrapElem {HTMLDivElement} - `.g-wrapper.g-root-wrapper`
      * @param evDataService {Object}
      */
+    function getScrollbarHeight() {
+        var outer = document.createElement("div");
+        outer.style.visibility = "hidden";
+        outer.style.overflow = "scroll"; // force scrollbar
+        outer.style.width = "100px";
+        outer.style.height = "100px";
+        document.body.appendChild(outer);
+
+        var inner = document.createElement("div");
+        inner.style.width = "100%";
+        inner.style.height = "100%";
+        outer.appendChild(inner);
+
+        var scrollbarHeight = outer.offsetHeight - inner.clientHeight;
+
+        document.body.removeChild(outer);
+        return scrollbarHeight;
+    }
+
+    var horizontalScrollbarHeight = getScrollbarHeight();
+
     var calculateScroll = function (elements, evDataService) {
 
         rvScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
@@ -1352,6 +1373,11 @@ export default function (toastNotificationService, transactionTypeService, price
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;
         } */
         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+
+        if (contentWrapElemWidth < viewportWidth) {
+            viewportHeight -= horizontalScrollbarHeight;
+        }
+
 
         var isRootTitle = 'isRoot'
         if (isRootEntityViewer) {
