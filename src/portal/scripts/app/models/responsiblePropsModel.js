@@ -76,6 +76,14 @@
                 "name": "Delete At",
                 "value_type": 40,
                 "readonly": true
+            },
+            {
+                "key": "resource_groups",
+                "name": "Resource Groups",
+                "value_type": "mc_field",
+                "value_content_type": "iam.resourcegroup",
+                "value_entity": "resource-group",
+                "code": "user_code"
             }
         ]
     };

@@ -136,9 +136,9 @@ export default (function () {
     ]
 
     if (window.location.href.indexOf('space00000') === -1) {
-
+        const SENTRY_DSN = process.env.SENTRY_DSN !== undefined ? process.env.SENTRY_DSN : "https://c2822efa4c0c45ceb21c50a361bf05b2@sentry.finmars.com/5";
         Sentry.init({
-            dsn: "https://c2822efa4c0c45ceb21c50a361bf05b2@sentry.finmars.com/5",
+            dsn: SENTRY_DSN,
             integrations: [new AngularIntegration()],
         });
 
@@ -332,7 +332,7 @@ export default (function () {
 
     // Common
     // portal.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
-    portal.controller('PortalController', ['$scope', '$state', 'authorizerService', 'usersService', 'globalDataService', 'redirectionService', 'middlewareService', 'uiService', portalController]);
+    portal.controller('PortalController', ['$scope', '$state', '$transitions', '$urlService', 'authorizerService', 'usersService', 'globalDataService', 'redirectionService', 'middlewareService', 'uiService', portalController]);
     portal.controller('BookmarksController', ['$scope', '$mdDialog', '$state', 'toastNotificationService', require('./app/controllers/bookmarksController')]);
     portal.controller('SideNavController', ['$scope', '$interval', '$mdDialog', '$transitions', 'usersService', 'globalDataService', 'redirectionService', 'uiService', require('./app/controllers/sideNavController')]);
     portal.controller('AlertSideNavController', ['$scope', 'globalDataService', 'systemMessageService', require('./app/controllers/alertSideNavController')]);

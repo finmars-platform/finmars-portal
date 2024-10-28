@@ -215,6 +215,10 @@
 
                 console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.changed!")
 
+                var reportOptions = vm.entityViewerDataService.getReportOptions();
+                reportOptions.ignore_cache = !!layoutState.ignore_cache;
+                vm.entityViewerDataService.setReportOptions(reportOptions);
+
                 if (vm.componentData.settings.linked_components) {
 
                     if (vm.componentData.settings.linked_components.active_object && vm.componentData.settings.linked_components.active_object.length) {
@@ -258,8 +262,6 @@
                     }
 
                     if (vm.componentData.settings.linked_components.report_settings) {
-
-                        var reportOptions = vm.entityViewerDataService.getReportOptions();
 
                         // Because report could listen both to matrix and controls
                         // when user click on matrix it trigger change,

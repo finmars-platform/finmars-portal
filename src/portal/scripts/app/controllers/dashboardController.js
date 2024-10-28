@@ -42,6 +42,7 @@
         vm.totalComponents = 0;
         vm.processingMessage = 'Dashboard is in progress...'
         vm.processingTimeout = null;
+        vm.state = {}
 
         // ======================================
         //  LAYOUT SECTION START
@@ -519,6 +520,17 @@
 
         }
 
+        vm.toggleCache = function () {
+
+            vm.state = vm.dashboardDataService?.getLayoutState();
+
+            vm.state.ignore_cache = !vm.state.ignore_cache;
+
+            vm.dashboardDataService.setLayoutState(vm.state);
+
+            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
+        }
+
         vm.initEventListeners = function () {
 
             // THATS CRAZY
@@ -545,6 +557,9 @@
 
                         if (data['meta'].hasOwnProperty('origin')) {
                             if (data['meta']['origin'] === 'finmars') {
+
+                                vm.state = data;
+
                                 vm.dashboardDataService.setLayoutState(data);
                                 vm.broadcastToChildren(data);
                             }
