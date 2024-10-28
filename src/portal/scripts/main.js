@@ -909,6 +909,8 @@ export default (function () {
 
     portal.controller('ReconciliationMatchEditorController', ['$scope', '$mdDialog', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationMatchEditorController')]);
 
+    portal.controller('PermissionDeniedPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/permissionDeniedPageController')]);
+
 
     portal.directive('matchReconCard', ['$mdDialog', require('./app/directives/reconciliation/matchReconCardDirective')]);
 
