@@ -56,9 +56,9 @@
         }
 
         vm.entityId = entityId;
-
         vm.entityUserCode = null;
 
+        console.log("testing1044 data", data);
         if (data) {
 
             if (typeof data !== "object") {
@@ -578,6 +578,7 @@
                         let options = {
                             entityId: vm.entityId,
                             entityUserCode: vm.entity.user_code,
+                            transactionCode: vm.entity.transaction_code,
                         };
 
                         if (vm.activeTab && vm.activeTab.type === "system_tab") {
@@ -845,8 +846,37 @@
             if (vm.entityId) {
                 vm.entity = await entityResolverService.getByKey(vm.entityType, vm.entityId);
 
-            } else {
+            }
+            else if (vm.entityUserCode) {
                 vm.entity = await entityResolverService.getByUserCode(vm.entityType, vm.entityUserCode);
+            }
+            else if (vm.entityType === "transaction") {
+                console.log("testing1044.getItem data.transactionCode",
+                    data.transactionCode);
+                if ( !data.transactionCode || !Number.isInteger(data.transactionCode) ) {
+                    throw new Error(
+                        "[entityViewerEditDialogController] Error. " +
+                        `An invalid transactionCode was passed: ${data.transactionCode}`
+                    )
+                }
+                // content_type === "transactions.transaction"
+                const opts = {
+                    filters: {
+                        // transaction_code: data.transactionCode,
+                        transaction_code_min: data.transactionCode,
+                        transaction_code_max: data.transactionCode,
+                    }
+                }
+                console.log("testing1044.getItem opts", opts)
+                const data = await entityResolverService.getList(vm.entityType, opts);
+
+                if (data.results.length > 1) {
+                    throw "[entityViewerEditDialogController getItem] Error " +
+                    `Expected 1 object got: ${data.results.length}`;
+                }
+
+                vm.entity = data.results[0];
+
             }
 
             vm.draftUserCode = vm.generateUserCodeForDraft();
