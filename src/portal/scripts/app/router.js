@@ -13,6 +13,15 @@
             templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
             controller: 'EntityViewerEditDialogController as vm',
             reloadOnSearch: false,
+            params: {
+                id: {
+                    default: null,
+                    type: "path",
+                }
+            },
+            data: {
+                entityType: entityType,
+            },
             resolve: {
                 entityType: function () {
                     return entityType;
@@ -25,7 +34,7 @@
                         openedIn: "webpage",
                     }
                 }
-            }
+            },
         }
     }
 
@@ -43,7 +52,8 @@
             reloadOnSearch: false,
             params: {
                 userCode: {
-                    type: 'path'
+                    default: null,
+                    type: 'path',
                 },
             },
             resolve: {
@@ -59,6 +69,9 @@
                         openedIn: "webpage",
                     }
                 }]
+            },
+            data: {
+                entityType: entityType,
             }
         };
 
@@ -392,6 +405,33 @@
                 controller: 'DataTransactionController as vm',
                 params: {
                     layoutUserCode: null
+                }
+            })
+            .state('app.portal.data.transaction-edition', {
+                templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
+                controller: 'EntityViewerEditDialogController as vm',
+                url: '/transaction/:transactionCode',
+                params: {
+                    transactionCode: {
+                        type: 'path'
+                    },
+                },
+                data: {
+                    entityType: "transaction",
+                },
+                resolve: {
+                    entityType: function () {
+                        return "transaction";
+                    },
+                    entityId: function () {
+                        return null;
+                    },
+                    data: ["$transition$", function ($transition$) {
+                        return {
+                            transactionCode: $transition$.params().transactionCode,
+                            openedIn: "webpage",
+                        }
+                    }]
                 }
             })
             .state('app.portal.data.transaction-type', {

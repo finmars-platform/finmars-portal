@@ -2007,14 +2007,79 @@
      *      {
      *          entityId?: Number,
      *          entityUserCode?: String,
+     *          transactionCode?: Number,
+     *          complexTransactionCode?: Number,
      *          tab?: String,
      *          strategyNumber?: String,
      *      }
      * } options
+     * @param {Number} [options.transactionCode] - for
+     * editing "transactions.transaction"
+     * @param {Number} [options.complexTransactionCode] - for
+     * editing "transactions.complextransaction"
      * @param {String} [options.strategyNumber] - string because a router param
      * `strategyNumber` is of type "path"
      */
     function copyLinkToEvForm($state, stateName, toastNotificationService, options={}) {
+
+        function validateArguments(stateDeclaration) {
+
+            if ( stateDeclaration.params.hasOwnProperty("id") ) {
+
+                if ( !options.entityId || !Number.isInteger(options.entityId) ) {
+
+                    return "[entityViewerHelperService copyLinkToEvForm] " +
+                        "An invalid options.entityId for " +
+                        `the $state '${stateName}': ${options.entityId}`;
+
+                }
+
+            }
+            else if ( stateDeclaration.params.hasOwnProperty("userCode") ) { // getting entity bu user_code
+
+                if (!options.entityUserCode || typeof options.entityUserCode !== "string") {
+
+                    return "[entityViewerHelperService copyLinkToEvForm] " +
+                        "An invalid options.entityUserCode for " +
+                        `the $state '${stateName}': ${options.entityUserCode}`;
+
+                }
+
+            }
+            else if (stateDeclaration.data.entityType === "transaction") {
+
+                if (!options.transactionCode || !Number.isInteger(options.transactionCode) ) {
+
+                    return "[entityViewerHelperService copyLinkToEvForm] " +
+                        "An invalid options.transactionCode for " +
+                        `the $state '${stateName}': ${options.transactionCode}`;
+
+                }
+
+            }
+            else if (stateDeclaration.data.entityType === "complex-transaction") {
+
+                if (!options.complexTransactionCode || !Number.isInteger(options.entityUserCode) ) {
+
+                    return "[entityViewerHelperService copyLinkToEvForm] An invalid " +
+                        `options.complexTransactionCode for a $state '${stateName}': ` +
+                        `${options.complexTransactionCode}`;
+
+                }
+
+            }
+
+            if (
+                stateName === "app.portal.data.strategy-edition" &&
+                !["1", "2", "3"].includes(options.strategyNumber)
+            ) {
+
+                return "[entityViewerHelperService copyLinkToEvForm] " +
+                    `Invalid number of a strategy provided: ${options.strategyNumber}`;
+
+            }
+
+        }
 
         if ( !stateName || !stateName.endsWith("-edition") ) {
 
@@ -2027,53 +2092,32 @@
         }
 
         const stateDeclaration = $state.get(stateName);
-
+        console.log("testing stateDeclaration", stateDeclaration)
         let params = {};
 
-        if ( stateDeclaration.url.includes("/:id") ) {
+        const errorMsg = validateArguments(stateDeclaration);
 
-            if ( Number.isNaN(options.entityId) ) {
-
-                throw new Error(
-                    "[entityViewerHelperService copyLinkToEvForm] An invalid " +
-                    `options.entityId for the $state '${stateName}': ${options.entityId}`
-                )
-
-            }
-
-            params.id = options.entityId;
-
+        if (errorMsg) {
+            throw new Error(errorMsg);
         }
-        else { // getting entity bu user_code
 
-            if (!options.entityUserCode || typeof options.entityUserCode !== "string") {
-
-                throw new Error(
-                    "[entityViewerHelperService copyLinkToEvForm] An invalid " +
-                    `options.entityUserCode for a $state '${stateName}': ${options.entityUserCode}`
-                )
-
-            }
-
+        if ( stateDeclaration.params.hasOwnProperty("id") ) {
+            params.id = options.entityId;
+        }
+        else if ( stateDeclaration.params.hasOwnProperty("userCode") ) {
             params.userCode = options.entityUserCode;
-
+        }
+        else if (stateDeclaration.data.entityType === "transaction") {
+            params.transactionCode = options.transactionCode;
+        }
+        else if (stateDeclaration.data.entityType === "complex-transaction") {
+            params.complexTransactionCode = options.complexTransactionCode;
         }
 
         if (options.tab) params.tab = options.tab;
 
         if (stateName === "app.portal.data.strategy-edition") {
-
-            if ( !["1", "2", "3"].includes(options.strategyNumber) ) {
-
-                throw new Error(
-                    "[entityViewerHelperService copyLinkToEvForm] " +
-                    `Invalid number of a strategy provided: ${options.strategyNumber}`
-                )
-
-            }
-
             params.strategyNumber = options.strategyNumber;
-
         }
 
         const linkToEvForm = $state.href(stateName, params, {absolute: true});
