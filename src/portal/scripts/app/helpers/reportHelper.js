@@ -1047,6 +1047,7 @@ export default function (expressionService) {
         "report_type",
         "show_balance_exposure_details",
         "show_transaction_details",
+        "ignore_cache",
         "strategies1",
         "strategies1_object",
         "strategies2",

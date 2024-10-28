@@ -4,16 +4,20 @@
 
 'use strict';
 
+import baseUrlService from "../services/baseUrlService";
+
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
 var explorerService = require('../services/explorerService');
 
-export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService) {
+export default function ($scope, $state, $transitions, $urlService, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService) {
 
     let vm = this;
 
     vm.readyStatus = false;
     vm.showWarningSideNav = false;
+
+    vm.test = false;
 
     /*const getMember = function () {
 
@@ -41,7 +45,13 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     }*/
 
+    const urlBeginning = baseUrlService.resolve();
+    const angularPart = baseUrlService.getAngularJsPart();
 
+    const [realm_code, space_code] = baseUrlService?.getMasterUserPrefix()?.split('/');
+
+    vm.route = {value: {params: {realm_code, space_code}, path: ''}};
+    vm.baseUrl = baseUrlService.resolve();
 
     const getMemberData = async function () {
 
@@ -129,6 +139,38 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     };
 
+    const getActivePath = function (stateName) {
+
+        let path = $state.href(stateName);
+        path = $urlService.path(path);
+
+        return `${urlBeginning}/${angularPart}${path}`;
+
+    };
+
+    const deregisterTransitionOnSuccess = $transitions.onSuccess({}, function (transition) {
+        vm.route.value.path = getActivePath(transition.to().name);
+    });
+
+    const resizeSideNav = function() {
+        window.dispatchEvent(new Event('resize'));
+    };
+
+    const addNavigationPortalListener = function() {
+        const navigationPortal = document.querySelector('#fm-navigation-portal');
+
+        if (navigationPortal) {
+            navigationPortal.addEventListener('resizeSideNav', resizeSideNav);
+        }
+    };
+
+    const removeNavigationPortalListener = function() {
+        const navigationPortal = document.querySelector('#fm-navigation-portal');
+        if (navigationPortal) {
+            navigationPortal.removeEventListener('resizeSideNav', resizeSideNav);
+        }
+    };
+
     const init = function () {
 
         middlewareService.onToggleWarningsSideNav(function () {
@@ -136,7 +178,7 @@ export default function ($scope, $state, authorizerService, usersService, global
 
         })
 
-        localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
+        if (localStorageService.setGlobalDataService) localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
 
         vm.currentMasterUser = globalDataService.getMasterUser();
         const promises = [];
@@ -150,7 +192,7 @@ export default function ($scope, $state, authorizerService, usersService, global
 
         Promise.all(promises).then(resData => {
 
-            console.log('PortalController.resData', resData);
+            vm.route.value.path = getActivePath($state.current.name);
 
             vm.readyStatus = true;
 
@@ -158,6 +200,8 @@ export default function ($scope, $state, authorizerService, usersService, global
 
             initAlertSideNavListeners();
             $scope.$apply();
+
+            addNavigationPortalListener()
 
         }).catch(function (error) {
 
@@ -172,5 +216,10 @@ export default function ($scope, $state, authorizerService, usersService, global
     };
 
     init();
+
+    $scope.$on("$destroy", function () {
+        deregisterTransitionOnSuccess();
+        removeNavigationPortalListener()
+    });
 
 };
