@@ -1001,6 +1001,11 @@
                 url: '/file-report',
                 templateUrl: 'views/pages/file-reports-view.html',
                 controller: 'FileReportsController as vm'
+            })
+            .state('app.permission-denied', {
+                url: '/403',
+                templateUrl: 'views/pages/permission-denied-page-view.html',
+                controller: 'PermissionDeniedPageController as vm'
             });
 
     }
