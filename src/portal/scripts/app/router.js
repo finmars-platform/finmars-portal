@@ -399,6 +399,33 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.complex-transaction-edition', {
+                url: '/complex-transaction/:code',
+                templateUrl: 'views/entity-viewer/complex-transaction-edit-view.html',
+                controller: 'ComplexTransactionEditDialogController as vm',
+                params: {
+                    code: {
+                        type: 'path'
+                    }
+                },
+                data: {
+                    entityType: "complex-transaction",
+                },
+                resolve: {
+                    entityType: function () {
+                        return "complex-transaction";
+                    },
+                    entityId: function () {
+                        return null;
+                    },
+                    data: ["$transition$", function ($transition$) {
+                        return {
+                            code: $transition$.params().code,
+                            openedIn: "webpage",
+                        }
+                    }]
+                }
+            })
             .state('app.portal.data.transaction', {
                 url: '/transaction',
                 templateUrl: 'views/data/data-transaction-view.html',

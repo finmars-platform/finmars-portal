@@ -9,6 +9,10 @@
         return complexTransactionRepository.getList(options);
     };
 
+    var getListLight = function (options) {
+        return complexTransactionRepository.getListLight(options);
+    };
+
     var getByKey = function (id) {
         return complexTransactionRepository.getByKey(id);
     };
@@ -76,6 +80,7 @@
 
     module.exports = {
         getList: getList,
+        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

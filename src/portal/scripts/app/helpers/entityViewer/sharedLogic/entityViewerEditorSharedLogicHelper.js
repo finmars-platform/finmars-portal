@@ -1049,6 +1049,10 @@
 
 		};
 
+		const getEvStateName = () => {
+			return evHelperService.getEvStateNameForEditionState($state.current.name);
+		}
+
         // const manageAttributeTypes = function (ev) {
 		const manageAttributeTypes = function (option, _$popup) {
 
@@ -1135,10 +1139,11 @@
 					if (viewModel.openedIn === "webpage") {
 						// redirect to a matching entity viewer
 
-						let evStateName = $state.current.name;
+						/*let evStateName = $state.current.name;
 						evStateName = evStateName.slice(0, -8); // slice '-edition' part
 
-						$state.go(evStateName);
+						$state.go(evStateName);*/
+						$state.go( evHelperService.getEvStateNameForEditionState($state.current.name) );
 
 					} else {
 						metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, {status: 'delete'});
@@ -1842,6 +1847,7 @@
 			entityTypeForGroupSelectorsData: entityTypeForGroupSelectorsData,
 
 			mapPermissionsToInstrument: mapPermissionsToInstrument,
+			getEvStateName: getEvStateName,
 
             checkReadyStatus: checkReadyStatus,
 			bindFlex: bindFlex,

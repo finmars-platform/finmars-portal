@@ -1997,6 +1997,20 @@
 
     }
 
+    function checkEditionState(stateName) {
+
+        if ( !stateName || !stateName.endsWith("-edition") ) {
+
+            return new Error(
+                "[entityViewerHelperService copyLinkToEvForm] An invalid $state " +
+                "was passed. Expected a $state for edition of entities " +
+                `got: ${stateName}`
+            )
+
+        }
+
+    }
+
     /**
      * Copies to clipboard a link to a webpage for editing an entity
      *
@@ -2059,7 +2073,7 @@
             }
             else if (stateDeclaration.data.entityType === "complex-transaction") {
 
-                if (!options.complexTransactionCode || !Number.isInteger(options.entityUserCode) ) {
+                if ( !Number.isInteger(options.complexTransactionCode) ) {
 
                     return "[entityViewerHelperService copyLinkToEvForm] An invalid " +
                         `options.complexTransactionCode for a $state '${stateName}': ` +
@@ -2081,18 +2095,14 @@
 
         }
 
-        if ( !stateName || !stateName.endsWith("-edition") ) {
+        const invalidStateError = checkEditionState(stateName);
 
-            throw new Error(
-                "[entityViewerHelperService copyLinkToEvForm] An invalid $state " +
-                "was passed. Expected a $state for edition of entities " +
-                `got: ${stateName}`
-            )
-
+        if (invalidStateError) {
+            throw invalidStateError;
         }
 
         const stateDeclaration = $state.get(stateName);
-        console.log("testing stateDeclaration", stateDeclaration)
+
         let params = {};
 
         const errorMsg = validateArguments(stateDeclaration);
@@ -2111,7 +2121,7 @@
             params.transactionCode = options.transactionCode;
         }
         else if (stateDeclaration.data.entityType === "complex-transaction") {
-            params.complexTransactionCode = options.complexTransactionCode;
+            params.code = options.complexTransactionCode;
         }
 
         if (options.tab) params.tab = options.tab;
@@ -2147,6 +2157,18 @@
             multiple: true,
         })*/
 
+
+    }
+
+    function getEvStateNameForEditionState(stateName) {
+
+        const invalidStateError = checkEditionState(stateName);
+
+        if (invalidStateError) {
+            throw invalidStateError;
+        }
+
+        return stateName.slice(0, -8); // slice '-edition' part
 
     }
 
@@ -2190,6 +2212,7 @@
         onPricingSchemeChangeInsidePricingPolicy: onPricingSchemeChangeInsidePricingPolicy,
         isRestorable: isRestorable,
         copyLinkToEvForm: copyLinkToEvForm,
+        getEvStateNameForEditionState: getEvStateNameForEditionState,
         getNameOfStateForEditingEntity: getNameOfStateForEditingEntity,
     }
 
