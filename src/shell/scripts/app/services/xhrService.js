@@ -110,6 +110,19 @@ export default function (errorService, cookieService) {
                 });
             }
 
+            if (response.status === 403) {
+                // Save error details and previous URL to localStorage
+                const errorDetails = await response.json();
+                localStorage.setItem("errorMessage", errorDetails.error.details.errors[0].detail || "Access Denied");
+                localStorage.setItem("previousUrl", window.location.href);
+
+                var root = window.location.href.split('/a/#!')[0]
+                // Redirect to the 403 error page
+                window.location.href = root + "/a/#!/403"; // Adjust based on your routing setup
+
+                return
+            }
+
             if (response.status >= 400 && response.status < 600 && response.status !== 401) {
                 const errorData = await response.json();
                 throw buildError(response, errorData);
