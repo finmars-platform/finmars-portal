@@ -420,7 +420,7 @@
                     },
                     data: ["$transition$", function ($transition$) {
                         return {
-                            code: $transition$.params().code,
+                            code: parseInt($transition$.params().code),
                             openedIn: "webpage",
                         }
                     }]
@@ -455,7 +455,7 @@
                     },
                     data: ["$transition$", function ($transition$) {
                         return {
-                            transactionCode: $transition$.params().transactionCode,
+                            transactionCode: parseInt($transition$.params().transactionCode),
                             openedIn: "webpage",
                         }
                     }]
