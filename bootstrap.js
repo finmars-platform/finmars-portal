@@ -78,6 +78,7 @@ import 'jstree/dist/themes/default/style.css'
 
 //# region @finmar/ui
 import '@finmars/ui/dist/finmars-ui.css';
+import '@finmars/ui/dist/themes.css';
 
 import registerVueComponents from "./src/vue/registerComponents";
 registerVueComponents();
