@@ -857,12 +857,10 @@
                         `An invalid transactionCode was passed: ${data.transactionCode}`
                     )
                 }
-                // content_type === "transactions.transaction"
+
                 const opts = {
                     filters: {
-                        // transaction_code: data.transactionCode,
-                        transaction_code_min: data.transactionCode,
-                        transaction_code_max: data.transactionCode,
+                        transaction_code: data.transactionCode,
                     }
                 }
 
