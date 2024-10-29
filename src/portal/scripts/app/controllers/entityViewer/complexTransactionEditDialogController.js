@@ -812,11 +812,9 @@
         const getEntityIdByCode = async function (code) {
 
             const opts = {
-                page_size: 2,
+                page_size: 2, // needed to catch bugs with filtering complex transactions on backend
                 filters: {
-                    // code: code,
-                    code_min: code,
-                    code_max: code,
+                    code: code,
                 }
             };
 

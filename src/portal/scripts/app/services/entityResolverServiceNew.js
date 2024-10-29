@@ -440,8 +440,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
 
         const opts = {
             filters: {
-                // user_code__exact: userCode
-                user_code: userCode
+                user_code__exact: userCode
             }
         }
 
