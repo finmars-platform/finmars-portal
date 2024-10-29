@@ -234,12 +234,18 @@ export default function () {
             data.user.data.dark_mode = true
             document.body.classList.add('dark-mode'); // TODO probably should be moved to some other place?
             document.body.classList.remove('light-mode'); // TODO probably should be moved to some other place?
+
+            document.body.classList.add('dark-theme');
+            document.body.classList.remove('light-theme');
         },
 
         disableThemeDarkMode() {
             data.user.data.dark_mode = false
             document.body.classList.remove('dark-mode'); // TODO probably should be moved to some other place?
             document.body.classList.add('light-mode'); // TODO probably should be moved to some other place?
+
+            document.body.classList.add('light-theme');
+            document.body.classList.remove('dark-theme');
         },
 
         isThemeInDarkMode() {
