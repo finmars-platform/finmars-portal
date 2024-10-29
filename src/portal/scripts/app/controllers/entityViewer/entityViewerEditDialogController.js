@@ -529,9 +529,9 @@
 
 
 
-        var getFooterPopupData = function () {
+        const getFooterPopupData = function () {
 
-            var data = {
+            let data = {
                 options: []
             };
 
@@ -851,7 +851,7 @@
             }
             else if (vm.entityType === "transaction") {
 
-                if ( !data.transactionCode || !Number.isInteger(data.transactionCode) ) {
+                if ( !Number.isInteger(data.transactionCode) ) {
                     throw new Error(
                         "[entityViewerEditDialogController] Error. " +
                         `An invalid transactionCode was passed: ${data.transactionCode}`
@@ -864,14 +864,14 @@
                     }
                 }
 
-                const data = await entityResolverService.getList(vm.entityType, opts);
+                const res = await entityResolverService.getList(vm.entityType, opts);
 
-                if (data.results.length > 1) {
+                if (res.results.length > 1) {
                     throw "[entityViewerEditDialogController getItem] Error " +
-                    `Expected 1 object got: ${data.results.length}`;
+                    `Expected 1 object got: ${res.results.length}`;
                 }
 
-                vm.entity = data.results[0];
+                vm.entity = res.results[0];
 
             }
 
