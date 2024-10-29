@@ -1457,7 +1457,7 @@
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();
 
-        evScrollManager.setContentWrapElemHeight(document.body.clientHeight - 53)
+        evScrollManager.setContentWrapElemHeight(document.body.clientHeight - 80)
 
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = evScrollManager.getContentWrapElemWidth();
