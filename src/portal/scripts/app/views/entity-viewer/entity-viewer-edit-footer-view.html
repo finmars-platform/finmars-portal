@@ -6,6 +6,12 @@
         <span data-ng-if="vm.entityType === 'transaction'">Close</span>
     </md-button>
 
+    <md-button data-ng-if="vm.openedIn === 'webpage'"
+               class="link-button"
+               data-ui-sref="{{vm.getEvStateName()}}">
+        <span>Back to entity viewer</span>
+    </md-button>
+
     <md-button class="link-button" data-ng-if="vm.isRestorable && vm.entity.is_deleted" ng-click="vm.restoreDeleted()">
         <span>Restore</span>
     </md-button>

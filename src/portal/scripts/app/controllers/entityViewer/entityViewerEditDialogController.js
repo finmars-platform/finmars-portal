@@ -58,7 +58,6 @@
         vm.entityId = entityId;
         vm.entityUserCode = null;
 
-        console.log("testing1044 data", data);
         if (data) {
 
             if (typeof data !== "object") {
@@ -851,8 +850,7 @@
                 vm.entity = await entityResolverService.getByUserCode(vm.entityType, vm.entityUserCode);
             }
             else if (vm.entityType === "transaction") {
-                console.log("testing1044.getItem data.transactionCode",
-                    data.transactionCode);
+
                 if ( !data.transactionCode || !Number.isInteger(data.transactionCode) ) {
                     throw new Error(
                         "[entityViewerEditDialogController] Error. " +
@@ -867,7 +865,7 @@
                         transaction_code_max: data.transactionCode,
                     }
                 }
-                console.log("testing1044.getItem opts", opts)
+
                 const data = await entityResolverService.getList(vm.entityType, opts);
 
                 if (data.results.length > 1) {
@@ -952,6 +950,8 @@
             })
 
         };
+
+        vm.getEvStateName = vm.sharedLogic.getEvStateName;
 
         // vm.delete = function ($event) {
         vm.delete = vm.sharedLogic.deleteEntity;

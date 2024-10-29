@@ -10,7 +10,7 @@
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService').default;
-    var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
+    var evHelperService = require('../../services/entityViewerHelperService').default;
 
     var gridHelperService = require('../../services/gridHelperService');
     var complexTransactionService = require('../../services/transaction/complexTransactionService').default;
@@ -38,6 +38,11 @@
 
         vm.entityType = entityType;
         vm.entityId = entityId;
+        vm.entityCode = data.code; // complexTransactionData.code
+
+        if ( Number.isNaN(vm.entityId) && Number.isNaN(vm.entityCode) ) {
+            throw new Error("No valid 'id' or 'code' provided");
+        }
 
         /**
          * Data that is displayed on the form and changed by user.
@@ -804,6 +809,31 @@
             })
         };
 
+        const getEntityIdByCode = async function (code) {
+
+            const opts = {
+                page_size: 2,
+                filters: {
+                    // code: code,
+                    code_min: code,
+                    code_max: code,
+                }
+            };
+
+            const data = await complexTransactionService.getListLight(opts);
+
+            if (data.results.length > 1) {
+                throw new Error(`Expected 0 or 1 complex transaction got: ${data.results.length}`);
+            }
+
+            if ( !data.results[0] ) {
+                throw new Error(`Complex transaction with the code "${code}" was not found`);
+            }
+
+            return data.results[0].id;
+
+        }
+
         vm.fillTransactionInputs = function () {
 
             vm.transactionInputs = [];
@@ -1104,7 +1134,118 @@
 
         };
 
-        vm.footerPopupData = {
+        var getFooterPopupData = function () {
+
+            var data = {
+                options: []
+            };
+
+            if (vm.openedIn !== "webpage" && vm.entityType !== 'portfolio-register') {
+
+                data.options.push({
+                    icon: "content_copy",
+                    name: "Make a copy",
+                    get isDisabled() {
+
+                        return !vm.checkReadyStatus() ||
+                            !vm.hasEditPermission ||
+                            vm.entity.is_canceled ||
+                            vm.processing;
+
+                    },
+
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+                        vm.copy('big-drawer');
+                    },
+                });
+
+            }
+
+            data.options = data.options.concat([
+                {
+                    icon: "link",
+                    name: "Share",
+                    onClick: () => {
+
+                        let options = {
+                            complexTransactionCode: vm.entity.code,
+                        };
+
+                        evHelperService.copyLinkToEvForm(
+                            $state,
+                            "app.portal.data.complex-transaction-edition",
+                            toastNotificationService,
+                            options
+                        );
+
+                    }
+                },
+
+                {
+                    icon: "edit",
+                    name: "Edit as JSON",
+                    onClick: vm.editAsJson
+                },
+
+                {
+                    icon: "list",
+                    name: "Edit Form",
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+                        vm.editLayout();
+                    },
+                },
+
+                entityEditorHelper.getLockMenuOption(vm, vm.toggleLockStatus),
+
+                {
+                    get icon() {
+                        if (vm.entity.is_canceled === true) {
+                            return "check_circle"
+                        }
+
+                        return "album";
+                    },
+                    get name() {
+                        if (vm.entity.is_canceled === true) {
+                            return "Activate"
+                        }
+
+                        return "Ignore"
+                    },
+                    get isDisabled() {
+                        return vm.entity.is_locked === true ||
+                            !vm.hasEditPermission ||
+                            vm.processing;
+                    },
+
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+
+                        vm.toggleCancelStatus();
+
+                    },
+                },
+
+                {
+                    icon: 'delete',
+                    name: "Delete",
+                    get isDisabled() {
+                        return vm.entity.is_locked === true ||
+                            !vm.hasEditPermission ||
+                            vm.processing;
+                    },
+                    onClick: vm.delete,
+                }
+            ])
+
+            return data;
+
+        };
+
+        vm.footerPopupData;
+        /*vm.footerPopupData = {
             options: [
                 {
                     icon: "list",
@@ -1142,7 +1283,7 @@
                     },
                 },
 
-                /*{
+                /!*{
                     get icon() {
                         if (vm.entity.is_locked === true) {
                             return "lock_open"
@@ -1169,7 +1310,7 @@
                         vm.toggleLockStatus();
 
                     },
-                },*/
+                },*!/
                 entityEditorHelper.getLockMenuOption(vm, vm.toggleLockStatus),
 
                 {
@@ -1218,7 +1359,7 @@
                     },
                 },
             ]
-        };
+        };*/
 
         vm.updatePermissions = function ($event) {
 
@@ -2073,7 +2214,7 @@
 
         // DRAFT ENDED
 
-        vm.init = function () {
+        vm.init = async function () {
 
             /*
             setTimeout(function () {
@@ -2103,19 +2244,24 @@
                 vm.evEditorDataService.setColorPalettesList(palettesList);
             });
 
-            vm.getAttributeTypes().then(function () {
+            if (!vm.previewMode) vm.loadTransactionTypes();
 
-                vm.getItem().then(function () {
+            if (!vm.entityId) {
+                vm.entityId = await getEntityIdByCode(vm.entityCode);
+            }
 
-                    if (data.copy) {
-                        vm.copy();
-                    }
+            await vm.getAttributeTypes();
 
-                });
+            vm.getItem().then(function() {
+
+                vm.footerPopupData = getFooterPopupData();
+
+                if (data.copy) {
+                    vm.copy();
+                }
 
             });
 
-            if (!vm.previewMode) vm.loadTransactionTypes();
 
         };
 

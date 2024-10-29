@@ -1,8 +1,13 @@
 <div layout="row">
-    <md-button class="link-button" ng-click="vm.cancel()">
+    <md-button data-ng-if="vm.openedIn !== 'webpage'" class="link-button" ng-click="vm.cancel()">
         <span>Cancel</span>
     </md-button>
 
+    <md-button data-ng-if="vm.openedIn === 'webpage'"
+               data-ui-sref="app.portal.data.complex-transaction"
+               class="link-button">
+        <span>Back to entity viewer</span>
+    </md-button>
 </div>
 
 <div style="margin-right: 10px;">

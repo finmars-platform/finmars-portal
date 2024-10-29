@@ -1,0 +1,7 @@
+<div>
+    <h2>
+        <span>{{ vm.previewMode ? 'Transaction' : 'Rebook Transaction' }} </span>
+        <span>| Code: <span class="text-bold" data-ng-bind="vm.entity.code"></span></span>
+        <span data-ng-if="vm.entity.transaction_unique_code">| Unique Code: <span class="text-bold" data-ng-bind="vm.entity.transaction_unique_code"></span></span>
+    </h2>
+</div>
