@@ -800,7 +800,9 @@
 
 							try {
 
-								const exprCalcRes = await expressionService.getResultOfExpression({expression: 'get_date_last_month_end_business(now())'});
+								const currentDate = moment(new Date()).format('YYYY-MM-DD');
+								const exprCalcRes = await expressionService.calcPeriodDate(currentDate, "M", -1);
+
 								prevMonthLastDay = new Date(exprCalcRes.result);
 
 							} catch (error) {throw new Error(error);}
