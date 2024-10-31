@@ -2172,6 +2172,29 @@
 
     }
 
+    function doesEntityHaveEditionState(entityType) {
+        return [
+            'portfolio',
+            'account',
+            'counterparty',
+            'responsible',
+            'currency',
+            'currency-history',
+            'instrument',
+            'instrument-type',
+            'portfolio',
+            'portfolio-register',
+            'portfolio-register-record',
+            'portfolio-reconcile-group',
+            'strategy-1',
+            'strategy-2',
+            'strategy-3',
+            'price-history',
+            'transaction',
+            'complex-transaction',
+        ].includes(entityType)
+    }
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
@@ -2214,6 +2237,7 @@
         copyLinkToEvForm: copyLinkToEvForm,
         getEvStateNameForEditionState: getEvStateNameForEditionState,
         getNameOfStateForEditingEntity: getNameOfStateForEditingEntity,
+        doesEntityHaveEditionState: doesEntityHaveEditionState,
     }
 
 }());

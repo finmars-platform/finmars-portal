@@ -6,6 +6,7 @@
     var utilsHelper = require('../../helpers/utils.helper');
     // var evRvCommonHelper = require('../../helpers/ev-rv-csrc/portal/scripts/app/views/entity-viewer/entity-viewer-edit-content-view.htmlommon.helper').default;
     var metaHelper = require('../../helpers/meta.helper');
+    var evHelperService = require('../../services/entityViewerHelperService').default;
     var evEvents = require('../../services/entityViewerEvents');
 
     var EvRvDomManagerService = require('../evRvDomManagerService');
@@ -751,7 +752,8 @@
             console.log('selection', selection);
             if (clickData.___type === 'hyperlink') {
                 metaHelper.openLinkInNewTab(event);
-            } else if (event.detail === 2) { // double click handler
+            }
+            else if (event.detail === 2) { // double click handler
 
                 if (clickData.___type === 'object') {
 
@@ -781,7 +783,8 @@
 
                 }
 
-            } else if (clickData.isShiftPressed) {
+            }
+            else if (clickData.isShiftPressed) {
 
                 if (event.detail === 1) {
 
@@ -801,7 +804,8 @@
 
                 }
 
-            } else if (!selection.length) {
+            }
+            else if (!selection.length) {
 
                 if (event.detail === 1) {
 
@@ -1122,14 +1126,25 @@
                 ' data-object-id="' + objectId + '"' +
                 ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>';
 
-            if (!obj.is_deleted) {
+
+            innerHTMLString = innerHTMLString +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="delete"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
+
+            /*
+            `if ( evHelperService.doesEntityHaveEditionState(vm.entityType) )` must be removed after creating
+            router states for editing all entities that use
+            entityViewerEditDialogController
+            */
+            if ( evHelperService.doesEntityHaveEditionState(entityType) ) {
                 innerHTMLString = innerHTMLString +
                     '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="delete"' +
+                    ' data-ev-dropdown-action="share"' +
                     ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Share</div>';
             }
-
 
             if (entityType === 'price-history') {
 

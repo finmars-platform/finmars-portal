@@ -556,18 +556,11 @@
             }
 
             /*
-            `if (editEntityStateName)` will be removed after creating
+            `if (evHelperService.doesEntityHaveEditionState(vm.entityType))` must be removed after creating
             router states for editing all entities that use
             entityViewerEditDialogController
             */
-            let editEntityStateName;
-
-            try {
-                editEntityStateName = evHelperService.getNameOfStateForEditingEntity($state);
-
-            } catch (e) {}
-
-            if (editEntityStateName) {
+            if ( evHelperService.doesEntityHaveEditionState(vm.entityType) ) {
 
                 data.options.push({
                     icon: "link",

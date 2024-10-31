@@ -6,19 +6,25 @@
     /**
      *
      * @param {String} entityType
+     * @param {Boolean} hasTabParam
      * @return {{controller: string, resolve: {data: (function(): {openedIn: string}), entityType: (function(): *), entityId: (string|(function(*): *))[]}, reloadOnSearch: boolean, templateUrl: string}}
      */
-    function getStateDefForEditingEntityById(entityType) {
+    function getStateDefForEditingEntityById(entityType, hasTabParam) {
+
+        const paramsData = {
+            id: {
+                default: null,
+                type: "path",
+            },
+        };
+
+        if (hasTabParam) paramsData.tab = null;
+
         return {
             templateUrl: 'views/entity-viewer/entity-viewer-edit-view.html',
             controller: 'EntityViewerEditDialogController as vm',
             reloadOnSearch: false,
-            params: {
-                id: {
-                    default: null,
-                    type: "path",
-                }
-            },
+            params: paramsData,
             data: {
                 entityType: entityType,
             },
@@ -240,11 +246,8 @@
                 }
             })
             .state('app.portal.data.portfolio-edition', {
-                ...getStateDefForEditingEntityById('portfolio'),
+                ...getStateDefForEditingEntityById('portfolio', true),
                 url: '/portfolio/:id?tab',
-                params: {
-                    tab: null,
-                },
             })
             .state('app.portal.data.portfolio-register', {
                 url: '/portfolio-register',

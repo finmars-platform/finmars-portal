@@ -1102,6 +1102,26 @@
                         case 'view_json':
                             viewItemAsJson(entitytype, actionData);
                             break;
+
+                        case 'share':
+
+                            let options = {
+                                entityId: actionData.object.id,
+                                entityUserCode: actionData.object.user_code, // for instruments, currencies
+                            };
+
+                            if (entitytype === 'transaction') {
+                                options.transactionCode = actionData.object.transaction_code;
+                            }
+                            else if ( ["strategy-1", "strategy-2", "strategy-3"].includes(entitytype) ) {
+                                options.strategyNumber = $state.params.strategyNumber;
+                            }
+
+                            const editEvStateName = evHelperService.getNameOfStateForEditingEntity($state);
+
+                            evHelperService.copyLinkToEvForm($state, editEvStateName, toastNotificationService, options);
+
+                            break;
                     }
 
                 }
