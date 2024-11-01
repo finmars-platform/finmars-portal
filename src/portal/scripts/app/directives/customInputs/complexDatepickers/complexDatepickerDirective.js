@@ -801,7 +801,7 @@
 							try {
 
 								const currentDate = moment(new Date()).format('YYYY-MM-DD');
-								const exprCalcRes = await expressionService.calcPeriodDate(currentDate, "M", -1);
+								const exprCalcRes = await expressionService.calcPeriodDate(currentDate, "M", -1, true);
 
 								prevMonthLastDay = new Date(exprCalcRes.result);
 
