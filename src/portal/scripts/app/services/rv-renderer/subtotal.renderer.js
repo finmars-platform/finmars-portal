@@ -42,14 +42,39 @@
 
     }; */
 
+    var columnIsNotLast = function(columns, columnNumber, evDataService) {
+
+        if ( columnNumber === columns.length ) {
+            return false;
+        }
+
+        var groupTypes = evDataService.getGroups();
+
+        if ( columnNumber < groupTypes.length ) {
+            return true;
+        }
+
+        for (var i = columnNumber; i < columns.length; i++) {
+
+            if ( !columns[i].isHidden ) {
+                /* There is at least one column to the right that is not hidden
+                (with active subtotal / last group is unfolded etc.) */
+                return true;
+            }
+
+        }
+
+        return false;
+
+    }
+
     var getBorderClasses = function (evDataService, obj, column, columnNumber) {
 
         var columns = evDataService.getColumns();
         var nextColumn = columns[columnNumber]; // columnNumber is columnIndex + 1
 
-        var notLastColumn = columnNumber !== columns.length;
 
-        if (notLastColumn) {
+        if ( columnIsNotLast(columns, columnNumber, evDataService) ) {
 
             var isGrandTotalFirstColumn = obj.___level === 0 && columnNumber === 1;
 
@@ -62,7 +87,7 @@
             var nextColSubtotalOff = !nextColumn || !nextColumn.report_settings || !nextColumn.report_settings.subtotal_formula_id;
             var nextIsNotCellWithGroupName = columnNumber + 1 !== obj.___level - 1;
 
-            if (colSubtotalOff && notLastColumn && nextColSubtotalOff && nextIsNotCellWithGroupName) {
+            if (colSubtotalOff && nextColSubtotalOff && nextIsNotCellWithGroupName) {
                 return 'border-right-transparent';
             }
 
