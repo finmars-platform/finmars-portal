@@ -1079,6 +1079,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                     }
 
                     makePopupDataForColumns(scope.columns);
+                    rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
 
                     // TODO: reload only relevant column instead of a whole table
                     dispatchCreateTableD();
