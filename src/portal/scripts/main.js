@@ -1013,7 +1013,7 @@ export default (function () {
     portal.directive('jsonEditor', ['$mdDialog', require('./app/directives/jsonEditorDirective')]);
     portal.directive('taskCard', ['$mdDialog', 'systemMessageService', require('./app/directives/taskCardDirective')]);
     portal.directive('usercodeInput', ['configurationService', 'globalDataService', require('./app/directives/usercodeInputDirective')]);
-    portal.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
+    portal.directive('twoFieldsMultiselect', ['$mdDialog', 'customInputsService', require('./app/directives/twoFieldsMultiselectDirective')]);
     portal.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
     portal.directive('tableAttributeSelector', ['$mdDialog', require('./app/directives/tableAttributeSelectorDirective')]);
     portal.directive('tableAttributesMenuConstructor', ['$mdDialog', require('./app/directives/tableAttributesMenuConstructorDirective')]);
