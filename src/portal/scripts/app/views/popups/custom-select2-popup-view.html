@@ -1,0 +1,26 @@
+<div class="custom-select-popup popup-menu"
+     data-ng-init="popupData.onInit()">
+
+    <div class="popup-select-filter-wrap">
+        <input type="text"
+               data-ng-model="popupData.filterTerm"
+               data-ng-model-options="{debounce: 1000}"
+               data-ng-change="popupData.onFilterChange(popupData.filterTerm)"
+               data-ng-init="popupData.focusInput()"
+               class="popup-select-filter" />
+    </div>
+
+    <div data-ng-if="!popupData.loadingOptions">
+        <md-button ng-repeat="option in popupData.options"
+                   ng-click="popupData.selectOption(option, _$popup, $event)"
+                   class="popup-menu-item">
+            <span class="material-icons" ng-class="{'visibility-hidden': !option.isActive}">done</span>
+            <span data-ng-bind="option.name"></span>
+        </md-button>
+    </div>
+
+    <div data-ng-if="popupData.loadingOptions"
+         class="flex-row flex-center p-t-16 p-b-16">
+        <progress-circular data-diameter="30"></progress-circular>
+    </div>
+</div>
