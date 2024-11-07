@@ -29,6 +29,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             scope.currentLocation = '';
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
+            scope.user = globalDataService.getUser();
 
             scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode();
 
