@@ -5,6 +5,8 @@
 
     'use strict';
 
+    const metaService = require("../../../services/metaService").default;
+
     module.exports = function ($scope, $mdDialog, uiService, dashboardConstructorMethodsService, reportHelper, dashboardHelper, entityResolverService, item, dataService, multitypeFieldService) {
 
         var vm = this;
@@ -537,17 +539,26 @@
             // return entityResolverService.getList(entityType);
             return new Promise(function (resolve, reject) {
 
-                entityResolverService.getList(entityType, {pageSize: 1000}).then(function (data) {
+                const args = [
+                    entityType,
+                    {
+                        pageSize: 1000,
+                        page: 1,
+                    }
+                ];
 
-                    var options = data.results.map(function (item) {
-                        return {id: item.user_code, name: item.short_name};
+                metaService.loadDataFromAllPages(entityResolverService.getList, args)
+                    .then(function (data) {
+
+                        var options = data.map(function (item) {
+                            return {id: item.user_code, name: item.short_name};
+                        });
+
+                        resolve(options);
+
+                    }).catch(function (e) {
+                        reject(e);
                     });
-
-                    resolve(options);
-
-                }).catch(function (e) {
-                    reject(e);
-                });
             })
 
         };
