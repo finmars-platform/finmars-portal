@@ -245,7 +245,7 @@
 					// setInputText();
 
 					const getItems = function (filterTerm) {
-						console.log("testing1066 getItems", filterTerm);
+
 						return new Promise(function (resolve, reject) {
 
 							/*if (items && items.length) {
@@ -277,9 +277,15 @@
 
 							} else if (scope.getDataMethod) {
 
-								scope.getDataMethod({filter: filterTerm}).then(function (resData) {
+								scope.getDataMethod().then(function (resData) {
 
-									items = resData.results;
+									if ( Array.isArray(resData) ) {
+										items = resData;
+
+									} else {
+										items = resData.results;
+									}
+
 									resolve(items);
 
 								}).catch(function (error) {
@@ -356,7 +362,7 @@
 							const itemsList = await getItems();
 
 							scope.menuOptionsPopupData.options = getAvailableOptions(itemsList);
-							console.log("testing1066 scope.menuOptionsPopupData.options", scope.menuOptionsPopupData.options);
+
 							scope.menuOptionsPopupData.loadingOptions = false;
 
 							setTimeout(function () {
@@ -588,34 +594,16 @@
 							};
 
 							scope.addDropdownMenuListeners = function () {
-								console.log("testing1066 addDropdownMenuListeners called");
+
 								const customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
-								// const dropdownMenuFilter = elem[0].querySelector('.dropdownMenuFilter');
 
 								customInputContent.addEventListener("click", async function (event) {
 
 									let targetElem = event.target;
-									console.log("testing1066 customInputContent clicked", customInputContent, targetElem);
 
 									if (customInputContent === targetElem) {
 
-										/*scope.dropdownMenuShown = true;
-										scope.$apply();
-
-										dropdownMenuFilter.focus();
-*/
 										scope.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP);
-
-										/*if (!Array.isArray(items)) {
-
-											await getItems();
-
-											getAvailableOptions();
-											formatDataForChips();
-
-											scope.$apply();
-
-										}*/
 
 									}
 

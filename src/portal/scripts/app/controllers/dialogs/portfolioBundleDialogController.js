@@ -5,9 +5,9 @@
 
     'use strict';
 
-    var portfolioBundleService = require('../../services/portfolioBundleService');
-    var portfolioRegisterService = require('../../services/portfolioRegisterService').default;
-    var portfolioService = require('../../services/portfolioService').default;
+    const metaService = require('../../services/metaService').default;
+    const portfolioBundleService = require('../../services/portfolioBundleService').default;
+    const portfolioRegisterService = require('../../services/portfolioRegisterService').default;
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -53,11 +53,16 @@
 
             if (!options) {
                 options = {
-                    pageSize: 1000
+                    pageSize: 1000,
+                    page: 1,
                 };
             }
 
-            return portfolioRegisterService.getList(options);
+            return metaService.loadDataFromAllPages(
+                portfolioRegisterService.getList,
+                [options]
+            )
+
         };
 
         vm.getItem = function () {

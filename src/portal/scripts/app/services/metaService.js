@@ -621,7 +621,10 @@
                     resolve(dataList);
                 }
 
-            }).catch(error => reject(error));
+            }).catch(error => {
+                console.error(error);
+                reject(error);
+            });
 
         };
 
