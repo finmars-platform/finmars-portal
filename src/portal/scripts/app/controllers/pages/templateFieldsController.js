@@ -3,6 +3,7 @@
  */
 (function () {
 
+    const metaService = require("../../services/metaService").default;
     const uiService = require('../../services/uiService').default;
     const toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
@@ -10,7 +11,7 @@
 
         var vm = this;
 
-        vm.configuration_code = globalDataService.getDefaultConfigurationCode();
+        vm.configuration_code;
 
         vm.configurationCodeUpdated = function (code) {
 
@@ -502,12 +503,31 @@
 
         };
 
-        vm.getConfigurations = function () {
-            configurationService.getList().then(function (data) {
+        var getConfigurations = function () {
 
-                vm.configuration_codes = data.results.filter(function (item) {
-                    return !item.is_package; // TODO Move to backend filtering someday
-                }).map(function (item) {
+            var opts = {
+                pageSize: 1000,
+                page: 1,
+                filters: {
+                    is_package: false,
+                }
+            };
+
+            metaService.loadDataFromAllPages(configurationService.getList, [opts]).then(function (data) {
+
+                vm.configuration_code = data.find(function (item) {
+                    return item.is_primary;
+                }).configuration_code;
+
+                if (!vm.configuration_code) {
+
+                    console.warn(`No primary configuration code found.`);
+
+                    vm.configuration_code = globalDataService.getDefaultConfigurationCode();
+
+                }
+
+                vm.configuration_codes = data.map(function (item) {
                     return item.configuration_code;
                 })
 
@@ -520,7 +540,7 @@
 
             vm.readyStatus.content = false;
 
-            vm.getConfigurations();
+            getConfigurations();
 
             vm.getData();
 
