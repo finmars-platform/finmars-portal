@@ -8,7 +8,7 @@
     const metaHelper = require("../helpers/meta.helper");
     const utilsHelper = require("../helpers/utils.helper");
 
-    module.exports = function (configurationService, globalDataService) {
+    module.exports = function (configurationService) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/usercode-input-view.html',
@@ -53,8 +53,6 @@
                     value: ''
                 };
 
-                let convertedUserCode = '';
-
                 let errorText = '';
 
                 scope.errorData = {
@@ -84,6 +82,8 @@
                     tooltipText: 'Allowed symbols: Numbers: 0-9, Letters: a-z (lowercase) Special Symbols: _, - (underscore, dash)'
                 }
 
+                let ucTextInputElem = null;
+
                 const assembleUserCode = function (userCodeEnd) {
 
                     let userCode = scope.configuration_code.value + ':';
@@ -100,15 +100,21 @@
 
                 scope.updateUserCode = function (usercodeEnd, configuration_code) {
 
-                    console.log('scope.configuration_code', scope.configuration_code.value);
-                    console.log('scope.usercodeEnd', scope.usercodeEnd);
+                    let convertedUserCode = '';
+                    // scope.usercodeEnd.value = usercodeEnd
+                    scope.configuration_code.value = configuration_code;
 
-                    scope.usercodeEnd.value = usercodeEnd
-                    scope.configuration_code.value = configuration_code
-
-                    if (scope.usercodeEnd.value) {
-                        convertedUserCode = replaceSpecialCharsAndSpaces(scope.usercodeEnd.value).toLowerCase();
+                    if (usercodeEnd) {
+                        convertedUserCode = replaceSpecialCharsAndSpaces(usercodeEnd).toLowerCase();
                     }
+
+                    scope.usercodeEnd.value = convertedUserCode;
+
+                    if (!ucTextInputElem) {
+                        ucTextInputElem = elem[0].querySelector(".userCodeEndInput .textInputElem");
+                    }
+
+                    ucTextInputElem.value = scope.usercodeEnd.value;
 
                     // scope.item.user_code = assembleUserCode(usercode);
                     if (scope.item) {
@@ -127,7 +133,6 @@
 
                     }
 
-
                 }
 
                 function replaceSpecialCharsAndSpaces(str) {
@@ -139,7 +144,7 @@
                     scope.$apply();
                 }, 1000);
 
-                scope.validateUserCode = function (userCodeVal) {
+                const validateUserCode = function (userCodeVal) {
 
                     scope.errorData.value = metaHelper.validateTextForUserCode(userCodeVal, null, 'User code');
 
@@ -152,17 +157,20 @@
 
                     }
 
-                    setErrorDescriptionD(scope.errorData.value);
+                    // setErrorDescriptionD(scope.errorData.value);
+                    scope.errorDescription = scope.errorData.value;
+                    scope.$apply();
 
                 }
 
-                scope.onUserCodeChange = function (usercodeEnd, configuration_code) {
-
-                    scope.validateUserCode(usercodeEnd);
+                scope.onUserCodeChangeD = utilsHelper.debounce(function (usercodeEnd, configuration_code) {
 
                     scope.updateUserCode(usercodeEnd, configuration_code);
 
-                }
+                    // `scope.usercodeEnd.value` changed inside `scope.updateUserCode()`
+                    validateUserCode(scope.usercodeEnd.value);
+
+                }, 600);
 
                 const parseUserCode = function () {
 
