@@ -29,7 +29,10 @@
 
         <usercode-input data-ng-if="popupData.useUserCodeInput"
                         data-is-disabled="popupData.fields.user_code.isDisabled"
-                        data-user-code="popupData.fields.user_code.value"></usercode-input>
+                        data-user-code="popupData.fields.user_code.value"
+                        data-configuration-code="popupData.configurationCode"></usercode-input>
+
+<!--        <md-button data-ng-click="popupData.testing499Fn()" class="md-primary">CHANGE VALUE</md-button>-->
     </div>
 
     <div ng-if="popupData.fields.hasOwnProperty('public_name')">
