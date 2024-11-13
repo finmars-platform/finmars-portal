@@ -790,6 +790,9 @@
         }
 
         // DRAFT ENDED
+        vm.onConfigCodeChange = function (changedValue) {
+            vm.scheme.configuration_code = changedValue;
+        };
 
         vm.init = function () {
 
