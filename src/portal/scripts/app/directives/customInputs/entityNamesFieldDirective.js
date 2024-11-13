@@ -148,7 +148,7 @@ export default function (metaContentTypesService, globalDataService) {
 					}
 
 				};
-
+				console.log("testiong499.entityNamesField entity.user_code", scope.entity.user_code);
 				scope.popupData = {
 					fields: {
 						name: {
@@ -188,7 +188,10 @@ export default function (metaContentTypesService, globalDataService) {
 								if (scope.useUserCodeInput) {
 
 									const ucParts = splitUserCode(userCode);
-									scope.entity.configuration_code = ucParts.configuration_code || defConfigCode;
+
+									if (userCode) {
+										scope.entity.configuration_code = ucParts.configuration_code || defConfigCode;
+									}
 
 								}
 

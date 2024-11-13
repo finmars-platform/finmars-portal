@@ -33,9 +33,9 @@
                                     <md-card-content layout="column">
 
                                         <!--<usercode-input data-item="vm.scheme"></usercode-input>-->
-                                        <usercode-input data-configuration-code="vm.scheme.configuration_code"
-                                                        data-user-code="vm.scheme.user_code"
+                                        <usercode-input data-user-code="vm.scheme.user_code"
                                                         data-is-disabled="vm.editingScheme"
+                                                        data-on-configuration-code-change-callback="vm.onConfigCodeChange(changedValue)"
                                         ></usercode-input>
 
                                         <md-input-container class="md-block">

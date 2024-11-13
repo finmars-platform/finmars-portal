@@ -22,7 +22,7 @@
                                  data-is-disabled="isDisabled"
                                  data-small-options="selSmallOpts"
                                  data-event-signal="configSelEventSignal"
-                                 data-on-change-callback="updateUserCode(usercodeEnd.value, configuration_code.value)"></dropdown-select>
+                                 data-on-change-callback="onConfigCodeChange(changedValue)"></dropdown-select>
 
                 <div data-ng-if="!readyStatus" class="flex-row flex-center">
                     <progress-circular data-diameter="20"></progress-circular>
@@ -41,7 +41,8 @@
                             data-model="usercodeEnd.value"
                             data-small-options="uciSmallOpts"
                             data-is-disabled="isDisabled"
-                            data-on-change-callback="onUserCodeChange(usercodeEnd.value, configuration_code.value)"></text-input>
+                            data-on-change-callback="onUserCodeChangeD(usercodeEnd.value, configuration_code.value)"
+                            class="userCodeEndInput"></text-input>
             </div>
 
             <!--<ng-md-icon class="tooltip-inline-block"
