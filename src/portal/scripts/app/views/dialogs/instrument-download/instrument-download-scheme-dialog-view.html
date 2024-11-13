@@ -14,9 +14,9 @@
             <div layout="row" layout-align="center center">
                 <md-card flex="50" class="inm-card-special">
                     <md-card-content>
-                        <usercode-input data-configuration-code="vm.scheme.configuration_code"
-                                        data-user-code="vm.scheme.user_code"
+                        <usercode-input data-user-code="vm.scheme.user_code"
                                         data-is-disabled="vm.editingScheme"
+                                        data-on-configuration-code-change-callback="vm.onConfigCodeChange(changedValue)"
                         ></usercode-input>
                         <md-input-container class="md-block">
                             <label for="">Name</label>

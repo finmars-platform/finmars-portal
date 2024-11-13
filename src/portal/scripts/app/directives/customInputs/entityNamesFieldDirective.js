@@ -148,7 +148,7 @@ export default function (metaContentTypesService, globalDataService) {
 					}
 
 				};
-
+				console.log("testiong499.entityNamesField entity.user_code", scope.entity.user_code);
 				scope.popupData = {
 					fields: {
 						name: {
@@ -188,7 +188,10 @@ export default function (metaContentTypesService, globalDataService) {
 								if (scope.useUserCodeInput) {
 
 									const ucParts = splitUserCode(userCode);
-									scope.entity.configuration_code = ucParts.configuration_code || defConfigCode;
+
+									if (userCode) {
+										scope.entity.configuration_code = ucParts.configuration_code || defConfigCode;
+									}
 
 								}
 
@@ -240,19 +243,6 @@ export default function (metaContentTypesService, globalDataService) {
 						}
 					},
 					get useUserCodeInput() { return scope.useUserCodeInput; },
-
-					/* DO NOT USE `configurationCode` directly. Its purpose is only to be passed to the isolated scope
-					property `configurationCode` of a usercodeInputDirective inside `/popups/entity-names-popup-view.html`.
-					 To change configuration code, change `scope.entity.user_code` and
-					 `scope.entity.configuration_code`.
-					 To read configuration code, use `scope.entity.configuration_code`.
-					 */
-					configurationCode: null,
-
-					/*testing499Fn: function () {
-						scope.popupData.fields.user_code = "local.poms.space00000:changed_user_code499";
-						console.log("testing499.entityNamesField testing499Fn", scope.popupData.fields.user_code);
-					}*/
 				}
 
 				const placeholdersForNames = {

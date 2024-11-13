@@ -98,6 +98,10 @@
 
         };
 
+        vm.onConfigCodeChange = function (changedValue) {
+            vm.scheme.configuration_code = changedValue;
+        };
+
         vm.agree = function ($event) {
 
             vm.processing = true;

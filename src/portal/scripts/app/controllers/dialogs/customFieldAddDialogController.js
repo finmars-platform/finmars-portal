@@ -84,6 +84,10 @@
             });
         };
 
+        vm.onConfigCodeChange = function (changedValue) {
+            vm.customField.configuration_code = changedValue;
+        }
+
         vm.agree = function ($event) {
 
             customFieldService.create(vm.entityType, vm.customField).then(function (value) {

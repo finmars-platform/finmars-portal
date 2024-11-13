@@ -15,7 +15,7 @@
 
                 <usercode-input data-label="Custom Column Reference Code (use programming language naming rules)"
                                 data-user-code="vm.customField.user_code"
-                                data-configuration-code="vm.customField.configuration_code"></usercode-input>
+                                data-on-configuration-code-change-callback="vm.onConfigCodeChange(changedValue)"></usercode-input>
 
                 <div class="color-danger m-l-16 m-b-24" data-ng-if="vm.userCodeError">Only alphabet, numbers and
                     underscores allowed

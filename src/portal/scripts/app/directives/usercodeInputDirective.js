@@ -23,13 +23,14 @@
                 item: '=', // legacy
 
                 label: '@',
-                configurationCode: '=',
                 contentType: '<',
                 userCode: '=',
 
                 isDisabled: '=',
                 error: '=',
                 occupiedUserCodes: '<',
+                
+                onConfigurationCodeChangeCallback: '&?'
             },
             link: function (scope, elem, attrs) {
 
@@ -82,11 +83,26 @@
                     tooltipText: 'Allowed symbols: Numbers: 0-9, Letters: a-z (lowercase) Special Symbols: _, - (underscore, dash)'
                 }
 
+                scope.onConfigCodeChange = function(changedValue) {
+
+                    // scope.configurationCode = scope.configuration_code.value;
+                    scope.configuration_code.value = changedValue.id;
+
+                    if (scope.usercodeEnd.value) {
+                        scope.updateUserCode(scope.usercodeEnd.value, scope.configuration_code.value);
+                    }
+
+                    if (scope.onConfigurationCodeChangeCallback) {
+                        scope.onConfigurationCodeChangeCallback({changedValue: scope.configuration_code.value});
+                    }
+
+                }
+
                 let ucTextInputElem = null;
 
-                const assembleUserCode = function (userCodeEnd) {
+                const assembleUserCode = function (userCodeEnd, configurationCode) {
 
-                    let userCode = scope.configuration_code.value + ':';
+                    let userCode = configurationCode + ':';
 
                     const contentType = scope.item ? scope.item.content_type : scope.contentType;
 
@@ -98,11 +114,10 @@
 
                 }
 
-                scope.updateUserCode = function (usercodeEnd, configuration_code) {
+                scope.updateUserCode = function (usercodeEnd) {
 
                     let convertedUserCode = '';
                     // scope.usercodeEnd.value = usercodeEnd
-                    scope.configuration_code.value = configuration_code;
 
                     if (usercodeEnd) {
                         convertedUserCode = replaceSpecialCharsAndSpaces(usercodeEnd).toLowerCase();
@@ -117,19 +132,26 @@
                     ucTextInputElem.value = scope.usercodeEnd.value;
 
                     // scope.item.user_code = assembleUserCode(usercode);
-                    if (scope.item) {
-                        scope.item.user_code = assembleUserCode(convertedUserCode);
+                    if (scope.item) { // Legacy
+
+                        if (usercodeEnd) {
+                            scope.item.user_code = assembleUserCode(convertedUserCode, scope.configuration_code.value);
+
+                        } else {
+                            scope.item.user_code = null;
+                        }
+
                         scope.item.configuration_code = scope.configuration_code.value;
 
                     }
                     else {
 
-                        scope.userCode = assembleUserCode(convertedUserCode);
+                        if (usercodeEnd) {
+                            scope.userCode = assembleUserCode(convertedUserCode, scope.configuration_code.value);
 
-                        scope.configurationCode = scope.configuration_code.value;
-                        // if (typeof scope.configurationCode === 'string') {
-                        //     scope.configurationCode = scope.configuration_code.value;
-                        // }
+                        } else {
+                            scope.userCode = null;
+                        }
 
                     }
 
@@ -148,7 +170,7 @@
 
                     scope.errorData.value = metaHelper.validateTextForUserCode(userCodeVal, null, 'User code');
 
-                    const userCode = assembleUserCode(userCodeVal);
+                    const userCode = assembleUserCode(userCodeVal, scope.configuration_code.value);
 
                     if (Array.isArray(scope.occupiedUserCodes) &&
                         scope.occupiedUserCodes.includes(userCode)) {
@@ -177,7 +199,7 @@
                     const uc = scope.item ? scope.item.user_code : scope.userCode;
 
                     if (!uc) {
-                        return;
+                        return [scope.configuration_code.value, scope.usercodeEnd.value];
                     }
 
                     if (typeof uc !== 'string') {
@@ -203,11 +225,16 @@
                             break;
                     }
 
+                    return [scope.configuration_code.value, scope.usercodeEnd.value];
+
                 }
 
                 const init = function () {
 
-                    parseUserCode();
+                    const ucParts = parseUserCode();
+
+                    scope.configuration_code.value = ucParts[0];
+                    scope.usercodeEnd.value = ucParts[1];
 
                     // show selector of config codes empty in case of deprecated or invalid configurationCode
                     if (!scope.configuration_code.value) {
@@ -218,7 +245,7 @@
                     configurationService.getList().then(function (data) {
 
                         scope.configuration_codes = data.results.filter(function (item) {
-                            return !item.is_package; // TODO Move to backend filtering someday
+                            return !item.is_package; // TODO Use backend filter after release of the PLAT-514 task
                         }).map(function (item) {
                             return {
                                 id: item.configuration_code,
