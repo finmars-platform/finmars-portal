@@ -630,6 +630,10 @@
             return importSchemesMethodsService.checkForUserExpr(item);
         }
 
+        vm.onConfigCodeChange = function (changedValue) {
+            vm.scheme.configuration_code = changedValue;
+        };
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
