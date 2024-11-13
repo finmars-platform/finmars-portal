@@ -57,6 +57,10 @@
 
         };
 
+        vm.onConfigCodeChange = function (changedValue) {
+            vm.customField.configuration_code = changedValue;
+        }
+
         vm.agree = function ($event) {
 
             customFieldService.update(vm.entityType, vm.customField.id, vm.customField).then(function (data) {

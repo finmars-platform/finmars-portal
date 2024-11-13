@@ -1167,6 +1167,10 @@
 
         // DRAFT ENDED
 
+        vm.onConfigCodeChange = function (changedValue) {
+            vm.scheme.configuration_code = changedValue;
+        }
+
         const init = async function () {
 
             setTimeout(function () {
