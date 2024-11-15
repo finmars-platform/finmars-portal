@@ -2,9 +2,6 @@ import { h, reactive, createApp } from 'vue';
 import {createVuetify} from 'vuetify';
 import {FmNavigationPortal, FmHeader} from "@finmars/ui";
 
-import 'vuetify/styles';
-import '@mdi/font/css/materialdesignicons.css';
-
 
 const vuetify = createVuetify();
 
