@@ -338,7 +338,74 @@
 		};
 		//endregion Fixed area
 
-        const fixFieldsLayoutWithMissingSockets = function (tabs) {
+		/**
+		 *
+		 * @param { [String] } keysList - keys of attributes to recalculate
+		 * @param {Object} entity - data of an entity to edit or create
+		 * @param {Object} attributesLayout - vm.attributesLayout
+		 * @param {Object} evEditorDataService - instance of entityViewerEditorDataService
+		 * @param {entityViewerEventService} evEditorEventService
+		 * @param {Object} priceHistoryService
+		 *
+		 * @returns { Promise<{entity: Object, attributesLayout: Object}> } - entity with recalculated values, attributesLayout with marked recalculated fields
+		 */
+		const recalculatePriceHistoryField = async function (keysList, entity, attributesLayout, evEditorDataService, evEditorEventService, priceHistoryService) {
+
+			viewModel.processing = true;
+
+			evEditorDataService.setEntityAttributesToRecalculate(keysList);
+			evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_START);
+
+			try {
+
+				const recalculationData = JSON.parse(JSON.stringify(entity));
+				recalculationData.recalculate_inputs = keysList;
+
+				const res = await priceHistoryService.recalculate(recalculationData);
+
+				keysList.forEach(key => {
+
+					entity[key] = res[key];
+
+					const objKey = key + '_object';
+
+					if ( entity.hasOwnProperty(objKey) ) {
+						entity[objKey] = res[objKey];
+					}
+
+					const {field, tabOrder} = findFieldByKey(viewModel.tabs, key)
+
+					if (field) { // if field inside a form
+
+						const insideAttrsLayout = attributesLayout[tabOrder][field.row][field.column];
+
+						if (!insideAttrsLayout.frontOptions) {
+							insideAttrsLayout.frontOptions = {};
+						}
+
+						attributesLayout[tabOrder][field.row][field.column].frontOptions.recalculated = true;
+					}
+
+				})
+
+			} catch (e) {
+
+				console.error(e);
+
+			}
+
+			evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
+			viewModel.processing = false;
+
+			evEditorDataService.setEntityAttributesToRecalculate(null);
+
+			$scope.$apply();
+
+			return {entity, attributesLayout};
+
+		};
+
+		const fixFieldsLayoutWithMissingSockets = function (tabs) {
 
             let socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(tabs, viewModel.dataConstructorLayout);
 
@@ -386,8 +453,11 @@
             const attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(tabs, attributes, viewModel.dataConstructorLayout, true);
 
             // viewModel.attributesLayout = attributesLayoutData.attributesLayout;
-			const attributesLayout = attributesLayoutData.attributesLayout;
+			let attributesLayout = attributesLayoutData.attributesLayout;
 
+			if (viewModel.entityType === 'price-history') {
+				attributesLayout = addButtonsToFields(tabs, attributesLayout);
+			}
             /* CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR
 			if (viewModel.fixedArea && viewModel.fixedArea.isActive) {
 				var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(viewModel.fixedArea, attributes, viewModel.dataConstructorLayout, true);
@@ -413,6 +483,47 @@
             return mapAttributesToLayoutFields(tabs);
 
         };
+
+		const getAndApplyEntityAttrs = function () {
+
+			viewModel.entityAttrs = metaService.getEntityAttrs(viewModel.entityType) || [];
+			viewModel.fixedFieldsAttributes = [];
+
+			var i, a;
+			for (i = 0; i < viewModel.keysOfFixedFieldsAttrs.length; i++) {
+
+				var attrKey = viewModel.keysOfFixedFieldsAttrs[i];
+
+				if (!attrKey) {
+
+					viewModel.fixedFieldsAttributes.push(null);
+
+				} else {
+
+					for (a = 0; a < viewModel.entityAttrs.length; a++) {
+
+						if (viewModel.entityAttrs[a].key === attrKey) {
+
+							if (viewModel.entityAttrs[a]) {
+								var entityAttr = JSON.parse(JSON.stringify(viewModel.entityAttrs[a]));
+							}
+
+							viewModel.fixedFieldsAttributes.push(entityAttr);
+
+							break;
+
+						}
+					}
+
+				}
+			}
+
+			return {
+				entityAttributes: viewModel.entityAttrs,
+				fixedFieldsAttributes: viewModel.fixedFieldsAttributes,
+			};
+
+		};
 
         const getAttributeTypes = function () { // dynamic attributes
 
@@ -446,6 +557,34 @@
             return readyStatus;
 
         };
+
+		/**
+		 * @param { [Object] } tabs - tabs from a layout for editing a form
+		 * @param {String} key - `key` of an attribute type or name of user input of transaction type
+		 *
+		 * @returns { {field: Object, tabOrder: Number}|null} - the field inside tabs
+		 */
+		const findFieldByKey = function (tabs, key) {
+
+			let a,b;
+			for (a = 0; a < tabs.length; a++) {
+				const tab = tabs[a];
+
+				for (b = 0; b < tab.layout.fields.length; b++) {
+
+					const field = tab.layout.fields[b];
+
+					if (field.attribute && field.attribute.key && field.attribute.key === key) {
+						return {field: field, tabOrder: tab.tabOrder};
+					}
+
+				}
+
+			}
+
+			return null;
+
+		}
 
         const bindFlex = (tab, field) => {
 
@@ -1197,6 +1336,43 @@
 
 		};
 
+		const addButtonsToFields = function (tabs, attributesLayout) {
+
+			function addRecalculationBtn(attributeKey) {
+
+				// const eAttr = viewModel.entityAttrs.find(attr => attr.key === attributeKey);
+				const {field, tabOrder} = findFieldByKey(tabs, attributeKey);
+
+				if (field) { // if field inside a form
+
+					/*
+					 * `viewModel.recalculate` declared inside `entityViewerEditDialogController`,
+					 * `entityViewerAddDialogController`
+					 */
+					attributesLayout[tabOrder][field.row][field.column].buttons = [{
+						iconObj: {type: 'angular-material', icon: 'refresh'},
+						tooltip: 'Recalculate this field',
+						caption: '',
+						classes: '',
+						action: {
+							key: 'entity-attribute-recalculation',
+							callback: viewModel.recalculate,
+							parameters: {keysList: [attributeKey]}
+						}
+					}];
+
+				}
+
+			}
+
+			addRecalculationBtn("accrued_price");
+			addRecalculationBtn("modified_duration");
+			addRecalculationBtn("ytm");
+			addRecalculationBtn("factor");
+
+			return attributesLayout;
+		}
+
         const getFormLayout = async formLayout => {
 
 			const hasRelationSelectorInFixedArea = typeSelectorValueEntities.hasOwnProperty(viewModel.entityType);
@@ -1209,9 +1385,11 @@
 				viewModel.groupSelectorOptions = await getTypeSelectorOptions(viewModel.groupSelectorEntityType);
 			}
 
-			const tabs = await getUserTabsAndFixedAreaData(formLayout);
+			let tabs = await getUserTabsAndFixedAreaData(formLayout);
 
-			if (viewModel.entityType === 'transaction') await applyTransactionUserFieldsAliases(tabs);
+			if (viewModel.entityType === 'transaction') {
+				await applyTransactionUserFieldsAliases(tabs);
+			}
 
             if (viewModel.openedIn === 'big-drawer') {
 
@@ -1849,6 +2027,8 @@
 			mapPermissionsToInstrument: mapPermissionsToInstrument,
 			getEvStateName: getEvStateName,
 
+			getAndApplyEntityAttrs: getAndApplyEntityAttrs,
+
             checkReadyStatus: checkReadyStatus,
 			bindFlex: bindFlex,
 			checkFieldRender: checkFieldRender,
@@ -1856,7 +2036,10 @@
 			editAsJsonDialog: editAsJsonDialog,
 			deleteEntity: deleteEntity,
 			copy: copy,
+
+			recalculatePriceHistoryField: recalculatePriceHistoryField,
             getFormLayout: getFormLayout,
+
 			updateAttributesInsideEntity: updateAttributesInsideEntity,
 			// getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
             onEditorStart: onEditorStart,

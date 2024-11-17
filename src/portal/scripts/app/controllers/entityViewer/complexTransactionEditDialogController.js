@@ -698,7 +698,7 @@
                 book.complex_transaction = vm.entity;
 
                 var recalcProm = complexTransactionService.recalculateComplexTransaction(book.id, book);
-                sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
+                sharedLogicHelper.processRecalculationResolve(recalcProm, inputs);
 
             }
 
