@@ -203,7 +203,7 @@
                                     action: {
                                         key: 'input-recalculation',
                                         callback: vm.recalculate,
-                                        parameters: {inputs: [inputWithCalc.name], recalculationData: 'input'}
+                                        parameters: {inputs: [inputWithCalc.name]}
                                     }
                                 })
                             }
@@ -220,7 +220,7 @@
                                     action: {
                                         key: 'linked-inputs-recalculation',
                                         callback: vm.recalculate,
-                                        parameters: {inputs: linkedInputsList, recalculationData: 'linked_inputs'}
+                                        parameters: {inputs: linkedInputsList}
                                     }
                                 })
                             }
@@ -258,7 +258,7 @@
                 var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
 
                 var recalcProm = transactionTypeService.recalculateComplexTransaction(book.transaction_type, book);
-                sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
+                sharedLogicHelper.processRecalculationResolve(recalcProm, inputs);
 
             }
 

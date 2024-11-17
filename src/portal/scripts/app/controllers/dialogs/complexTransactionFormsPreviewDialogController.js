@@ -162,7 +162,7 @@
 									action: {
 										key: 'input-recalculation',
 										callback: vm.recalculate,
-										parameters: {inputs: [inputWithCalc.name], recalculationData: 'input'}
+										parameters: {inputs: [inputWithCalc.name]}
 									}
 								})
 							}
@@ -179,7 +179,7 @@
 									action: {
 										key: 'linked-inputs-recalculation',
 										callback: vm.recalculate,
-										parameters: {inputs: linkedInputsList, recalculationData: 'linked_inputs'}
+										parameters: {inputs: linkedInputsList}
 									}
 								})
 							}
@@ -205,7 +205,7 @@
 
 		};
 
-		/* var bookComplexTransaction = function (inputsToRecalculate, recalculationData) {
+		/* var bookComplexTransaction = function (inputsToRecalculate) {
 
 			vm.processing = true;
 
@@ -258,7 +258,6 @@
 
 				var recalculationInfo = {
 					recalculatedInputs: inputsToRecalculate,
-					recalculationData: recalculationData
 				}
 
 
@@ -289,9 +288,8 @@
 		vm.recalculate = function (paramsObj) {
 
 			var inputs = paramsObj.inputs;
-			var recalculationData = paramsObj.recalculationData;
 
-			bookComplexTransaction(inputs, recalculationData);
+			bookComplexTransaction(inputs);
 
 		}; */
 		vm.recalculate = function (paramsObj) {
@@ -304,7 +302,7 @@
 				var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
 
 				var recalcProm = transactionTypeService.recalculateComplexTransaction(book.transaction_type, book);
-				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
+				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs);
 
 			}
 
