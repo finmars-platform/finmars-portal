@@ -99,26 +99,6 @@
     </div>
 
     <div ng-if="column.cellType === 'multiselector'" class="gt-cell-content">
-
-        <!-- <div class="gt-cell-text-container">
-            <two-fields-multiselect ng-model="column.settings.value"
-                                    items="column.settings.selectorOptions"
-                                    model="column.settings.value"
-                                    dialog-title="{{column.columnName}}"
-                                    name-property="name"
-                                    get-data-method="column.settings.getItemsMethod()"
-                                    selected-items-indication="array"
-                                    strict-order="column.settings.strictOrder"
-                                    options-checkboxes="column.settings.optionsCheckboxes"
-                                    on-change-callback="onCellValueChange()"
-                                    class="grid-table-cell-multiselector no-error-spacer">
-            </two-fields-multiselect>
-
-            <div class="gt-cell-edit-btn gtOpenMultiselectorEditor"
-                 ng-click="multiselectorEditClick()">
-                <span class="material-icons">edit</span>
-            </div>
-        </div> -->
         <grid-table-multiselector-cell row="row"
                                        column="column"
                                        gt-data-service="gtDataService"

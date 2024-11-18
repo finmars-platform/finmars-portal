@@ -251,27 +251,31 @@
                         scope.modelObj.model = bfcVm.getValueFromEntity();
                     });
 
-                    elIndexesData['FIELDS_RECALCULATION_END'] = scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
+                    if ( ["complex-transaction", "price-history"].includes(scope.entityType) ) {
 
-                        scope.modelObj.model = bfcVm.getValueFromEntity();
+                        elIndexesData['FIELDS_RECALCULATION_END'] = scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 
-                        if (scope.item &&
-                            scope.item.frontOptions && scope.item.frontOptions.recalculated &&
-                            (scope.modelObj.model || scope.modelObj.model === 0)) {
+                            scope.modelObj.model = bfcVm.getValueFromEntity();
 
-                            getData().then(function () {
+                            if (scope.item &&
+                                scope.item.frontOptions && scope.item.frontOptions.recalculated &&
+                                (scope.modelObj.model || scope.modelObj.model === 0)) {
 
-                                setItemSpecificSettings();
-                                // prepareDataForSelector();
-                                scope.inputTextObj.value = getSelectedFieldName();
+                                getData().then(function () {
 
-                                scope.$apply();
+                                    setItemSpecificSettings();
+                                    // prepareDataForSelector();
+                                    scope.inputTextObj.value = getSelectedFieldName();
 
-                            })
+                                    scope.$apply();
 
-                        }
+                                })
 
-                    });
+                            }
+
+                        });
+
+                    }
 
                 };
 

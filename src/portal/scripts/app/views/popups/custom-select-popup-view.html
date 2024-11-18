@@ -1,14 +1,6 @@
 <div class="custom-select-popup popup-menu"
      ng-init="popupData.onInit()">
 
-    <!--<div class="popup-select-filter-wrap">
-        <input type="text"
-               ng-model="popupData.filterTerm"
-               ng-model-options="{debounce: 1000}"
-               ng-init="popupData.focusInput()"
-               class="popup-select-filter" />
-    </div>-->
-
     <div>
         <md-button ng-repeat="option in popupData.options | filter: popupData.filterTerm"
                    ng-click="popupData.selectOption(option, _$popup, $event)"

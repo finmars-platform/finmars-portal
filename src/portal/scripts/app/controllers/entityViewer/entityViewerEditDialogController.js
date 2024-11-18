@@ -39,7 +39,7 @@
 
     const pricingPolicyService = require('../../services/pricingPolicyService').default;
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, configurationService, entityType, entityId, data) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, metaContentTypesService, instrumentService, priceHistoryService, entityResolverService, fieldResolverService, attributeTypeService, uiService, configurationService, entityType, entityId, data) {
 
         var vm = this;
 
@@ -277,7 +277,23 @@
 
         };
 
-        var getEntityAttrs = function () {
+        /**
+         *
+         * @param {Object} paramsObj
+         * @param { [String] } paramsObj.keysList - array of keys of attributes
+         *
+         * @returns {Promise<void>}
+         */
+        vm.recalculate = async function (paramsObj) {
+            const result = await vm.sharedLogic.recalculatePriceHistoryField(
+                paramsObj.keysList, vm.entity, vm.attributesLayout, vm.evEditorDataService, vm.evEditorEventService, priceHistoryService
+            );
+
+            vm.entity = result.entity;
+            vm.attributesLayout = result.attributesLayout;
+        };
+
+        /*var getEntityAttrs = function () {
 
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
             vm.fixedFieldsAttributes = [];
@@ -311,7 +327,7 @@
                 }
             }
 
-        };
+        };*/
 
         vm.getCurrencies = function () {
 
@@ -1362,7 +1378,11 @@
                     });
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
-                    getEntityAttrs();
+                    // getEntityAttrs();
+
+                    const attrsData = vm.sharedLogic.getAndApplyEntityAttrs();
+                    vm.entityAttrs = attrsData.entityAttributes;
+                    vm.fixedFieldsAttributes = attrsData.fixedFieldsAttributes;
 
                 }
 
@@ -2345,7 +2365,11 @@
 
             }
 
-            getEntityAttrs();
+            // getEntityAttrs();
+            const attrsData = vm.sharedLogic.getAndApplyEntityAttrs();
+            vm.entityAttrs = attrsData.entityAttributes;
+            vm.fixedFieldsAttributes = attrsData.fixedFieldsAttributes;
+
             vm.getCurrencies();
 
             vm.getItem().then(function () {

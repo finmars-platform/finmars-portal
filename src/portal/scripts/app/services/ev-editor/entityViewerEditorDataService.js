@@ -15,7 +15,8 @@
 			changedUserInputData: null,
 			tooltipsList: [],
 			colorPalettes: [],
-			userInputsToRecalc: null,
+			entityAttributesToRecalculate: null,
+			userInputsToRecalculate: null,
 			entityAttributeTypes: [],
 
 			locationsWithErrors: JSON.parse(JSON.stringify(defaultLocationWithErrors)),
@@ -58,12 +59,28 @@
 
         }
 
+		/**
+		 *
+		 * @param { [String] } attributesKeys - array of keys of attributes
+		 */
+		function setEntityAttributesToRecalculate(attributesKeys) {
+			data.entityAttributesToRecalculate = attributesKeys;
+		}
+
+		function getEntityAttributesToRecalculate () {
+			return data.entityAttributesToRecalculate || [];
+		}
+
+		/**
+		 *
+		 * @param { [String] } userInputs - array of names of user inputs of a transaction type
+		 */
         function setUserInputsToRecalculate (userInputs) {
-        	data.userInputsToRecalc = userInputs
+        	data.userInputsToRecalculate = userInputs
 		}
 
 		function getUserInputsToRecalculate () {
-			return data.userInputsToRecalc;
+			return data.userInputsToRecalculate || [];
 		}
 
 		function setEntityAttributeTypes (attributeTypes) {
@@ -101,6 +118,8 @@
         return {
             /*setChangedUserInputData: setChangedUserInputData,
             getChangedUserInputData: getChangedUserInputData,*/
+			setEntityAttributesToRecalculate: setEntityAttributesToRecalculate,
+			getEntityAttributesToRecalculate: getEntityAttributesToRecalculate,
 			setUserInputsToRecalculate: setUserInputsToRecalculate,
 			getUserInputsToRecalculate: getUserInputsToRecalculate,
 			setEntityAttributeTypes: setEntityAttributeTypes,

@@ -78,6 +78,12 @@
 
         };
 
+        /**
+         *
+         * @param { [String] } inputs - array of names of user inputs of transaction type
+         * @param { Boolean } updateScope
+         * @returns {{values: {}, recalculate_inputs, transaction_type, process_mode: string}}
+         */
         const preRecalculationActions = (inputs, updateScope) => {
 
             viewModel.processing = true;
@@ -109,7 +115,7 @@
 
         };
 
-        const processRecalculationResolve = function (recalculationPromise, inputs, recalculationData) {
+        const processRecalculationResolve = function (recalculationPromise, inputs) {
 
             recalculationPromise.then(function (data) {
 
@@ -124,14 +130,19 @@
                         viewModel.entity.values[inputName + '_object'] = data.values[inputName + '_object'];
                     }
 
-                    let recalculatedUserInput = viewModel.userInputs.find(input => input.name === inputName);
 
-                    if (recalculatedUserInput) recalculatedUserInput.frontOptions.recalculated = recalculationData;
+                    let recalculatedUserInput = viewModel.userInputs.find(input => input.name === inputName);
+                    /* IMPORTANT:
+                     * Row bellow mutates the same object inside:
+                     * `viewModel.attributesLayout`
+                    */
+                    if (recalculatedUserInput) recalculatedUserInput.frontOptions.recalculated = true;
 
                 });
 
                 viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
                 viewModel.processing = false;
+                viewModel.evEditorDataService.setUserInputsToRecalculate(null);
 
                 $scope.$apply();
 
@@ -265,7 +276,7 @@
                                     action: {
                                         key: 'input-recalculation',
                                         callback: recalculateFn,
-                                        parameters: {inputs: [inputWithCalc.name], recalculationData: 'input'}
+                                        parameters: {inputs: [inputWithCalc.name]}
                                     }
                                 })
                             }
@@ -282,7 +293,7 @@
                                     action: {
                                         key: 'linked-inputs-recalculation',
                                         callback: recalculateFn,
-                                        parameters: {inputs: linkedInputsList, recalculationData: 'linked_inputs'}
+                                        parameters: {inputs: linkedInputsList}
                                     }
                                 })
 
@@ -470,7 +481,6 @@
 
                             viewModel.recalculate({
                                 inputs: linkedInputsNames,
-                                recalculationData: "linked_inputs",
                                 updateScope: true
                             });
 

@@ -31,6 +31,10 @@ export default function (cookieService, xhrService) {
         return priceHistoryRepository.deleteBulk(data)
     };
 
+    var recalculate = function (data) {
+        return priceHistoryRepository.recalculate(data);
+    }
+
     return {
         getList: getList,
         getByKey: getByKey,
@@ -38,7 +42,9 @@ export default function (cookieService, xhrService) {
         update: update,
         deleteByKey: deleteByKey,
 
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+
+        recalculate: recalculate,
     }
 
 }
