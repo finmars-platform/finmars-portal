@@ -7,6 +7,7 @@
 'use strict';
 
 import UsersRepository from '../repositories/usersRepository.js';
+import explorerService from "../../../../portal/scripts/app/services/explorerService";
 // import authorizerRepository from "../repositories/authorizerRepository";
 /** @module usersService */
 export default function (cookieService, globalDataService, xhrService) {
@@ -103,6 +104,84 @@ export default function (cookieService, globalDataService, xhrService) {
 	}; */
 	const getMyCurrentMember = function () {
 
+		/**
+		 * Function globalDataService.setTheme change `user` inside globalDataService
+		 *
+		 * @param userData
+		 * @return {Promise<*>}
+		 */
+		const getTheme = async function (member) {
+
+			// memberLayout.data.theme = 'com.finmars.default-theme' // for debug
+
+			if (!member.data.theme) { // if no theme selected, use default one
+				globalDataService.setTheme('com.finmars.base-theme');
+				return globalDataService.getUser();
+			}
+
+			// User selected specific theme
+
+			const themePath = member.data.theme.split('.').join('/');
+			const itemPath = `.system/ui/themes/${themePath}/theme.css`;
+
+			try {
+
+				const blob = await explorerService.viewFile(itemPath);
+
+				const reader = new FileReader();
+
+				reader.addEventListener("loadend", function (e) {
+
+					var styleElement = document.createElement('style');
+					styleElement.textContent = reader.result;
+
+					document.head.appendChild(styleElement);
+
+				});
+
+				reader.readAsText(blob);
+
+			} catch (error) {
+				console.error("[portalController loadTheme] Could not fetch theme", error);
+				globalDataService.setTheme('com.finmars.base-theme')
+			}
+
+			return member
+
+		}
+
+		/**
+		 * Functions globalDataService.enableThemeDarkMode and globalDataService.disableThemeDarkMode
+		 * change `user` inside globalDataService
+		 *
+		 * @param member
+		 * @return {Promise<*>} - user with filled properties related to theme
+		 */
+		const applyTheme = async function (member) {
+
+			member = await getTheme(member);
+
+			if (typeof member.data.dark_mode !== 'boolean') {
+
+				if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+					// Dark mode preferred
+					globalDataService.enableThemeDarkMode()
+				} else {
+					globalDataService.disableThemeDarkMode()
+					// Light mode preferred
+				}
+
+			} else if (member.data.dark_mode === true) {
+				globalDataService.enableThemeDarkMode()
+			} else {
+				globalDataService.disableThemeDarkMode()
+			}
+
+			return member;
+
+		}
+
+
 		return new Promise((resolve, reject) => {
 
 			usersRepository.getMyCurrentMember().then(memberData => {
@@ -126,6 +205,8 @@ export default function (cookieService, globalDataService, xhrService) {
 				if (!memberData.data.favorites.attributes) {
 					memberData.data.favorites.attributes = {};
 				}
+
+				memberData = applyTheme(memberData);
 
 				globalDataService.setMember(memberData);
 				resolve(memberData);

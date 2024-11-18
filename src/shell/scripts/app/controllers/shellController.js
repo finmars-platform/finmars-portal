@@ -132,82 +132,6 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     };
 
-    /**
-     * Function globalDataService.setTheme change `user` inside globalDataService
-     *
-     * @param userData
-     * @return {Promise<*>}
-     */
-    const getTheme = async function (userData) {
-
-        // memberLayout.data.theme = 'com.finmars.default-theme' // for debug
-
-        if (!userData.data.theme) { // if no theme selected, use default one
-            globalDataService.setTheme('base-theme');
-            return globalDataService.getUser();
-        }
-
-        // User selected specific theme
-
-        const themePath = userData.data.theme.split('.').join('/');
-        const itemPath = `.system/ui/themes/${themePath}/theme.css`;
-
-        try {
-
-            const blob = await explorerService.viewFile(itemPath);
-
-            const reader = new FileReader();
-
-            reader.addEventListener("loadend", function (e) {
-
-                var styleElement = document.createElement('style');
-                styleElement.textContent = reader.result;
-
-                document.head.appendChild(styleElement);
-
-            });
-
-            reader.readAsText(blob);
-
-        } catch (error) {
-            console.error("[portalController loadTheme] Could not fetch theme", error);
-            globalDataService.setTheme('base-theme')
-        }
-
-        return globalDataService.getUser();
-
-    }
-
-    /**
-     * Functions globalDataService.enableThemeDarkMode and globalDataService.disableThemeDarkMode
-     * change `user` inside globalDataService
-     *
-     * @param user
-     * @return {Promise<*>} - user with filled properties related to theme
-     */
-    const applyTheme = async function (user) {
-
-        user = await getTheme(user);
-
-        if (typeof user.data.dark_mode !== 'boolean') {
-
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                // Dark mode preferred
-                globalDataService.enableThemeDarkMode()
-            } else {
-                globalDataService.disableThemeDarkMode()
-                // Light mode preferred
-            }
-
-        } else if (user.data.dark_mode === true) {
-            globalDataService.enableThemeDarkMode()
-        } else {
-            globalDataService.disableThemeDarkMode()
-        }
-
-        return globalDataService.getUser();
-
-    }
 
     const getUser = function () {
 
@@ -224,7 +148,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
                 globalDataService.setUser(vm.user);
 
-                vm.user = await applyTheme(vm.user);
+                // deprecated, theme part of member, not user
+                // vm.user = await applyTheme(vm.user);
 
                 resolve();
 
