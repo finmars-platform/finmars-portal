@@ -153,7 +153,9 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
     });
 
     const resizeSideNav = function() {
-        window.dispatchEvent(new Event('resize'));
+        setTimeout(()=> {
+            window.dispatchEvent(new Event('resize'));
+        })
     };
 
     const addNavigationPortalListener = function() {

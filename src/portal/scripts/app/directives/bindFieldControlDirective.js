@@ -612,9 +612,7 @@
                     if ($scope.item.frontOptions) {
 
                         if ($scope.item.frontOptions.recalculated) {
-
                             $scope.ciEventObj.event = {key: "set_style_preset1"};
-
                         }
 
                     }
@@ -804,7 +802,7 @@
 
 					});
 
-					if (vm.entityType === "complex-transaction") {
+					/*if (vm.entityType === "complex-transaction") {
 
 						eventListenersIndexesData['FIELDS_RECALCULATION_START'] = vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_START, function () {
 
@@ -825,13 +823,13 @@
 								vm.readyStatus.content = true;
 							}
 
-							/* if ($scope.item &&
+							/!* if ($scope.item &&
 								$scope.item.frontOptions && $scope.item.frontOptions.recalculated &&
 								($scope.entity[vm.fieldKey] || $scope.entity[vm.fieldKey] === 0)) {
 
 								setItemSpecificSettings();
 
-							} */
+							} *!/
 
 							vm.model = vm.getValueFromEntity();
 
@@ -845,7 +843,61 @@
 
 						});
 
-					}
+					}*/
+
+                    if ( ["complex-transaction", "price-history"].includes(vm.entityType) ) {
+
+                        eventListenersIndexesData['FIELDS_RECALCULATION_START'] = vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_START, function () {
+
+                            var fieldsToRecalc;
+
+                            if (vm.fieldType.type === 'userInput') {
+
+                                fieldsToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
+
+                            } else if (vm.fieldType.type === 'systemAttribute') {
+
+                                fieldsToRecalc = vm.evEditorDataService.getEntityAttributesToRecalculate();
+
+                            }
+
+                            if ( fieldsToRecalc && fieldsToRecalc.includes(vm.fieldKey) ) {
+                                vm.readyStatus.content = false;
+                            }
+
+                        });
+
+                        eventListenersIndexesData['FIELDS_RECALCULATION_END'] = vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
+
+                            var fieldsToRecalc;
+
+                            if (vm.fieldType.type === 'userInput') {
+
+                                fieldsToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
+
+                            } else if (vm.fieldType.type === 'systemAttribute') {
+
+                                fieldsToRecalc = vm.evEditorDataService.getEntityAttributesToRecalculate();
+
+                            }
+
+                            if ( fieldsToRecalc && fieldsToRecalc.includes(vm.fieldKey) ) {
+                                vm.readyStatus.content = true;
+                            }
+
+                            vm.model = vm.getValueFromEntity();
+                            // TODO: get rid of `$scope.item.frontOptions.recalculated`. Use `vm.evEditorDataService` instead to determine when field was recalculated and how.
+                            if ($scope.item &&
+                                $scope.item.frontOptions && $scope.item.frontOptions.recalculated &&
+                                (vm.model || vm.model === 0)) {
+
+                                setItemSpecificSettings();
+
+                            }
+
+                        });
+
+                    }
 
                     /* vm.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
 

@@ -31,7 +31,7 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
-    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, globalDataService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entity, data, configurationService) {
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, globalDataService, metaContentTypesService, instrumentService, priceHistoryService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entity, data, configurationService) {
 
         var vm = this;
 
@@ -223,7 +223,23 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
         vm.formErrorsList = []; */
         var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
-        var getEntityAttrs = function () {
+        /**
+         *
+         * @param {Object} paramsObj
+         * @param { [String] } paramsObj.keysList - array of keys of attributes
+         *
+         * @returns {Promise<void>}
+         */
+        vm.recalculate = async function (paramsObj) {
+            const result = await vm.sharedLogic.recalculatePriceHistoryField(
+                paramsObj.keysList, vm.entity, vm.attributesLayout, vm.evEditorDataService, vm.evEditorEventService, priceHistoryService
+            );
+
+            vm.entity = result.entity;
+            vm.attributesLayout = result.attributesLayout;
+        };
+
+        /*var getEntityAttrs = function () {
 
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
             vm.fixedFieldsAttributes = [];
@@ -254,7 +270,7 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
                 }
             }
 
-        };
+        };*/
 
         vm.getCurrencies = function () {
 
@@ -906,7 +922,10 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
                     vm.init();
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
-                    getEntityAttrs();
+                    // getEntityAttrs();
+                    const attrsData = vm.sharedLogic.getAndApplyEntityAttrs();
+                    vm.entityAttrs = attrsData.entityAttributes;
+                    vm.fixedFieldsAttributes = attrsData.fixedFieldsAttributes;
 
                 }
 
@@ -1874,12 +1893,12 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
                 vm.evEditorDataService.setColorPalettesList(palettesList);
             });
 
-            getEntityAttrs();
-            // vm.getFormLayout();
-            // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
-			// vm.sharedLogic.getGroupSelectorOptions(groupValueEntity).then(function () {
+            // getEntityAttrs();
+            const attrsData = vm.sharedLogic.getAndApplyEntityAttrs();
+            vm.entityAttrs = attrsData.entityAttributes;
+            vm.fixedFieldsAttributes = attrsData.fixedFieldsAttributes;
 
-			vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
+            vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
 				vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
 				vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;

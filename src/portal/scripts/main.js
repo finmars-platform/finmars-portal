@@ -534,9 +534,9 @@ export default (function () {
     portal.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'metaContentTypesService', 'customFieldService', 'attributeTypeService', 'uiService', 'reconDataProviderService', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
     portal.controller(
         'EntityViewerAddDialogController',
-        ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'globalDataService', 'metaContentTypesService', 'instrumentService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'entityType', 'entity', 'data', 'configurationService', require('./app/controllers/entityViewer/entityViewerAddDialogController')]
+        ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'globalDataService', 'metaContentTypesService', 'instrumentService', 'priceHistoryService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'entityType', 'entity', 'data', 'configurationService', require('./app/controllers/entityViewer/entityViewerAddDialogController')]
     );
-    portal.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'metaContentTypesService', 'instrumentService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'configurationService', 'entityType', 'entityId', 'data',  require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
+    portal.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'metaContentTypesService', 'instrumentService', 'priceHistoryService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'configurationService', 'entityType', 'entityId', 'data',  require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
     portal.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
     portal.controller('EntityViewerDeleteBulkDialogController', ['$scope', '$mdDialog', 'entityResolverService', 'evDataService', 'evEventService', 'data', require('./app/controllers/entityViewer/entityViewerDeleteBulkDialogController')]);
     portal.controller('EntityViewerRestoreDeletedBulkDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/entityViewer/entityViewerRestoreDeletedBulkDialogController')]);
@@ -1013,7 +1013,7 @@ export default (function () {
     portal.directive('jsonEditor', ['$mdDialog', require('./app/directives/jsonEditorDirective')]);
     portal.directive('taskCard', ['$mdDialog', 'systemMessageService', require('./app/directives/taskCardDirective')]);
     portal.directive('usercodeInput', ['configurationService', require('./app/directives/usercodeInputDirective')]);
-    portal.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
+    portal.directive('twoFieldsMultiselect', ['$mdDialog', 'customInputsService', require('./app/directives/twoFieldsMultiselectDirective')]);
     portal.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
     portal.directive('tableAttributeSelector', ['$mdDialog', require('./app/directives/tableAttributeSelectorDirective')]);
     portal.directive('tableAttributesMenuConstructor', ['$mdDialog', require('./app/directives/tableAttributesMenuConstructorDirective')]);

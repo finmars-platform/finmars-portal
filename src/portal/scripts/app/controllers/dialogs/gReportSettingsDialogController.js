@@ -11,7 +11,7 @@
 
     var portfolioService = require('../../services/portfolioService').default;
     var accountService = require('../../services/accountService').default;
-    var strategyService = require('../../services/strategyService');
+    var strategyService = require('../../services/strategyService').default;
     var transactionClassService = require('../../services/transaction/transactionClassService').default;
 
 
@@ -274,13 +274,14 @@
 
             });
         };*/
+
         vm.optionsForMultiselect = {
             page: 1,
             pageSize: 1000
         };
 
-        vm.getPortfolios = function (options) {
-            return portfolioService.getListLight(options);
+        vm.getPortfolios = function () {
+            return metaService.loadDataFromAllPages(portfolioService.getListLight, [vm.optionsForMultiselect]);
         };
 
         /*vm.getAccounts = function () {
@@ -296,8 +297,8 @@
 
             });
         };*/
-        vm.getAccounts = function (options) {
-            return accountService.getListLight(options);
+        vm.getAccounts = function () {
+            return metaService.loadDataFromAllPages(accountService.getListLight, [vm.optionsForMultiselect]);
         };
 
         /*vm.getStrategies1 = function () {
@@ -314,8 +315,11 @@
             });
         };*/
 
-        vm.getStrategies1 = function (options) {
-            return strategyService.getListLight(1, options);
+        vm.getStrategies1 = function () {
+            return metaService.loadDataFromAllPages(
+                strategyService.getListLight,
+                [1, vm.optionsForMultiselect]
+            );
         };
 
         /*vm.getStrategies2 = function () {
@@ -333,7 +337,10 @@
         };*/
 
         vm.getStrategies2 = function (options) {
-            return strategyService.getListLight(2, options);
+            return metaService.loadDataFromAllPages(
+                strategyService.getListLight,
+                [2, vm.optionsForMultiselect]
+            );
         };
 
         /*vm.getStrategies3 = function () {
@@ -351,7 +358,10 @@
         };*/
 
         vm.getStrategies3 = function (options) {
-            return strategyService.getListLight(3, options);
+            return metaService.loadDataFromAllPages(
+                strategyService.getListLight,
+                [3, vm.optionsForMultiselect]
+            );
         };
 
         vm.getTransactionClasses = function () {
@@ -433,14 +443,16 @@
 
         };
 
-        vm.getCustomFields = function () {
+        vm.getCustomFields = function (filterTerm) {
 
             customFieldService.getList(vm.entityType).then(function (data) {
 
                 if (vm.reportOptions.custom_fields_to_calculate) {
                     vm.selectedCustomFields = vm.reportOptions.custom_fields_to_calculate.split(',')
                 }
+
                 vm.customFields = data.results;
+
                 vm.customFieldsNames = data.results.map(function (item) {
                     return {
                         id: item.name,

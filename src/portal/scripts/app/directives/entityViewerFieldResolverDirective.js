@@ -665,7 +665,7 @@
                         scope.modelObj.model = bfcVm.getValueFromEntity();
                     });
 
-                    if (scope.entityType === 'complex-transaction') {
+                    if ( ["complex-transaction", "price-history"].includes(scope.entityType) ) {
 
                         elIndexesData['FIELDS_RECALCULATION_END'] = scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 

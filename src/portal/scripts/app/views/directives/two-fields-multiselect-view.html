@@ -24,7 +24,21 @@
 
     <div ng-if="selectedItemsIndication === 'chips'">
 
-        <div class="custom-input-container">
+        <div data-custom-popup
+             data-popup-template-url="'views/popups/custom-select2-popup-view.html'"
+             data-popup-data="menuOptionsPopupData"
+             data-popup-event-service="popupEventService"
+             data-position-relative-to="element"
+             data-relative-popup-x="left"
+             data-relative-popup-y="bottom"
+             data-offset-y="2"
+             data-close-on-click-outside="true"
+             data-is-disabled="isDisabled"
+             data-popup-classes="custom-select-popup-container mh-100vh-popup"
+             data-on-cancel="onMenuClose()"
+             data-ng-init="addDropdownMenuListeners()"
+
+             class="custom-input-container">
 
             <div ng-if="title" class="custom-input-top-row">
                 <span class="custom-input-textarea-span-pan">{{title}}</span>
@@ -102,7 +116,7 @@
                 </div>
             </div>
 
-            <div ng-show="dropdownMenuShown"
+<!--            <div ng-show="dropdownMenuShown"
                  class="custom-input-sel-menu-container custom-input-dropdown-div multiselectorMenuContainer">
 
                 <div class="custom-input-sel-menu-block">
@@ -118,10 +132,10 @@
                          data-ng-mousedown="selectOption(option, $index)"
                          data-ng-bind="option[nameProperty]"
                          class="custom-input-sel-option"></div>
-                    <!--  data-ng-repeat="option in menuOptions | filter: inputText | orderBy:'-'+option.name"-->
+                    &lt;!&ndash;  data-ng-repeat="option in menuOptions | filter: inputText | orderBy:'-'+option.name"&ndash;&gt;
                 </div>
 
-            </div>
+            </div>-->
 
         </div>
 
