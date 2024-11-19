@@ -72,13 +72,19 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
 			delete vm.entity.id; // lack of id indicates creation of entity
         }
 
+        //# region Tabs
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
+
+        vm.selectTab = function (tabToSelect) {
+            vm.activeTab = vm.sharedLogic.selectTab(tabToSelect);
+        }
 
 		if (vm.entityType === 'portfolio') {
 			// Don't show performance tab while creating portfolio
 			const perfTabIndex = vm.entityTabs.findIndex(tab => tab.templateUrl === 'views/tabs/portfolio/performance-tab-view.html');
 			vm.entityTabs.splice(perfTabIndex, 1);
 		}
+        //# endregion
 
         vm.attributeTypes = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
@@ -1912,7 +1918,7 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
 				vm.tabs = formLayoutData.tabs;
 				vm.tabColumns = formLayoutData.tabColumns;
 				vm.attributesLayout = formLayoutData.attributesLayout;
-
+                console.log("testing1328 vm.attributesLayout", vm.attributesLayout);
 				vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
 				if (vm.entityType === 'instrument') {
