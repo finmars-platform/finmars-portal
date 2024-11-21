@@ -117,7 +117,7 @@
 				const loadInstrumentType = function () {
 					return new Promise ((res, rej) => {
 
-						if (scope.entity.instrument_type || scope.entity.instrument_type === 0) {
+						if (scope.entity.instrument_type) {
 
 							instrumentTypeService.getByKey(scope.entity.instrument_type).then(instrTypeData => {
 
@@ -251,6 +251,11 @@
 					const instrTypeAccrualsProm = new Promise ((res, rej) => {
 
 						loadInstrumentType().then(instrTypeData => {
+
+							if (!instrTypeData) {
+								return res();
+							}
+
 							const accrualsScheme = instrTypeData.accruals || [];
 
 							scope.rowAdditionSchemes = accrualsScheme.map(scheme => {
@@ -449,6 +454,10 @@
 					const instrTypeEventsProm = new Promise ((res, rej) => {
 
 						loadInstrumentType().then(instrTypeData => {
+
+							if (!instrTypeData) {
+								return res();
+							}
 
 							const eventsSchemes = instrTypeData.events || [];
 
