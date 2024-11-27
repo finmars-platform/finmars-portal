@@ -94,24 +94,6 @@
 
                 $mdDialog.hide({status: 'agree'});
 
-            }).catch(function (reason) {
-                $mdDialog.show({
-                    controller: 'InfoDialogController as vm',
-                    templateUrl: 'views/info-dialog-view.html',
-                    parent: document.querySelector('.dialog-containers-wrap'),
-                    targetEvent: $event,
-                    clickOutsideToClose: true,
-                    locals: {
-                        info: {
-                            title: 'Warning',
-                            description: "Custom Field with <b>" + vm.customField.user_code + "</b> already exist."
-                        }
-                    },
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true
-                })
             })
 
         };
