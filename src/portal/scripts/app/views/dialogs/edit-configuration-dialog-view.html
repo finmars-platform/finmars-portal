@@ -37,9 +37,13 @@
                     <input type="text" data-ng-model="vm.item.target_configuration_version">
                 </md-input-container>
 
-                <md-input-container class="width-80">
+                <md-input-container style="height: 68px" class="width-80">
                     <label>Configuration Channel</label>
-                    <input type="text" data-ng-model="vm.item.target_configuration_channel">
+                    <md-select data-ng-model="vm.item.target_configuration_channel">
+                        <md-option ng-repeat="channel in vm.configurationCannelArray" value="{{channel.value}}">
+                            {{channel.title}}
+                        </md-option>
+                    </md-select>
                 </md-input-container>
 
                 <md-input-container class="width-80">
