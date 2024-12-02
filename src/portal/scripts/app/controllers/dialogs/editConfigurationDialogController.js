@@ -13,6 +13,10 @@
 
         vm.item = Object.assign({}, item);
 
+        vm.configurationCannelArray = [
+            { title: 'Stable', value: 'stable' },
+            { title: 'Release Candidate', value: 'rc' }
+        ];
 
         vm.isFromMarketplace = false;
 
@@ -28,7 +32,7 @@
             vm.isFromMarketplace = !vm.isFromMarketplace;
             vm.item.target_configuration_code = null;
             vm.item.target_configuration_version = null;
-            vm.item.target_configuration_channel = null;
+            vm.item.target_configuration_channel = vm.configurationCannelArray[0].value;
             vm.item.target_configuration_is_package = false;
             vm.file = null;
         }
