@@ -116,7 +116,9 @@ export default function (cookieService, globalDataService, xhrService) {
 
 			if (!member.data.theme) { // if no theme selected, use default one
 				globalDataService.setTheme('com.finmars.base-theme');
-				return globalDataService.getUser();
+
+				return member
+				// return globalDataService.getUser();
 			}
 
 			// User selected specific theme
