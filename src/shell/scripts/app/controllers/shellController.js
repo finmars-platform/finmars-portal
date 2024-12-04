@@ -461,8 +461,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             token: cookieService.getCookie('access_token'),
             refreshToken: cookieService.getCookie('refresh_token'),
             idToken: cookieService.getCookie('id_token'),
-            checkLoginIframe: true,
-            checkLoginIframeInterval: 60, // Seconds
+            checkLoginIframe: false,
+            // checkLoginIframeInterval: 60, // Seconds
             timeSkew: 0, // fix bag with update token
             // checkLoginIframe: false
         });
