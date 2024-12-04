@@ -44,6 +44,8 @@
         vm.processingTimeout = null;
         vm.state = {}
 
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
         // ======================================
         //  LAYOUT SECTION START
         // =====================================
@@ -52,7 +54,7 @@
 
             vm.readyStatus.data = false;
 
-            uiService.getDashboardLayoutByKey(layoutId).then(function (data) {
+            uiService.getDashboardLayoutByKey(layoutId).then(async function (data) {
 
                 vm.dashboardDataService = new DashboardDataService();
                 vm.dashboardEventService = new DashboardEventService();
@@ -81,6 +83,9 @@
 
                 vm.dashboardDataService.setProjection(vm.projection);
 
+                console.log("vm.initEventListeners delay 100")
+                await delay(100) // Waits for 100ms, special wait because of keycloak "unchanged" event upon page start
+
                 vm.initEventListeners();
 
                 $scope.$apply();
@@ -93,7 +98,7 @@
 
             vm.readyStatus.data = false;
 
-            uiService.getDefaultDashboardLayout().then(function (data) {
+            uiService.getDefaultDashboardLayout().then(async function (data) {
 
                 if (data.results.length) {
                     vm.layout = data.results[0];
@@ -107,6 +112,10 @@
                     vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
                     vm.readyStatus.data = true;
+
+                    console.log("vm.initEventListeners delay 100")
+                    await delay(100) // Waits for 100ms, special wait because of keycloak "unchanged" event upon page start
+
 
                     vm.initEventListeners();
 
