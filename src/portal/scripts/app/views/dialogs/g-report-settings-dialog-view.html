@@ -302,6 +302,12 @@
                                     Ignore Cache
                                 </md-checkbox>
                             </md-input-container>
+
+                            <md-input-container class="m-0" ng-if="vm.entityType === 'balance-report'">
+                                <md-checkbox data-ng-model="vm.reportOptions.calculate_pl">
+                                    Calculate P&L
+                                </md-checkbox>
+                            </md-input-container>
                         </div>
 
                     </div>
