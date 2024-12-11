@@ -601,12 +601,12 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
         return uiRepository.updateTransactionField(id, data);
     };
 
-    const getInstrumentFieldList = function () {
-        return uiRepository.getInstrumentFieldList()
+    const getInstrumentFieldList = function (options) {
+        return uiRepository.getInstrumentFieldList(options)
     };
 
-    const getInstrumentFieldPrimaryList = function () {
-        return uiRepository.getInstrumentFieldPrimaryList()
+    const getInstrumentFieldPrimaryList = function (options) {
+        return uiRepository.getInstrumentFieldPrimaryList(options)
     };
 
     const createInstrumentField = function (data) {
