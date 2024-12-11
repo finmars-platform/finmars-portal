@@ -513,36 +513,46 @@
                 }
             };
 
-            metaService.loadDataFromAllPages(configurationService.getList, [opts]).then(function (data) {
+            return new Promise((resolve, reject) => {
 
-                vm.configuration_code = data.find(function (item) {
-                    return item.is_primary;
-                }).configuration_code;
+                metaService.loadDataFromAllPages(configurationService.getList, [opts])
+                    .then(function (data) {
 
-                if (!vm.configuration_code) {
+                        vm.configuration_code = data.find(function (item) {
+                            return item.is_primary;
+                        }).configuration_code;
 
-                    console.warn(`No primary configuration code found.`);
+                        if (!vm.configuration_code) {
 
-                    vm.configuration_code = globalDataService.getDefaultConfigurationCode();
+                            console.warn(`No primary configuration code found.`);
 
-                }
+                            vm.configuration_code = globalDataService.getDefaultConfigurationCode();
 
-                vm.configuration_codes = data.map(function (item) {
-                    return item.configuration_code;
-                })
+                        }
 
-                $scope.$apply();
+                        vm.configuration_codes = data.map(function (item) {
+                            return item.configuration_code;
+                        })
 
-            })
+                        $scope.$apply();
+                        resolve();
+
+                    })
+                    .catch(function (e) { reject(e); })
+
+            });
+
+
         }
 
         vm.init = function () {
 
             vm.readyStatus.content = false;
 
-            getConfigurations();
+            getConfigurations().then(function () {
+                vm.getData();
+            });
 
-            vm.getData();
 
         };
 

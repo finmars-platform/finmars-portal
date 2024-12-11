@@ -1937,7 +1937,7 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
 				vm.tabs = formLayoutData.tabs;
 				vm.tabColumns = formLayoutData.tabColumns;
 				vm.attributesLayout = formLayoutData.attributesLayout;
-                console.log("testing1328 vm.attributesLayout", vm.attributesLayout);
+
 				vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
 				if (vm.entityType === 'instrument') {
