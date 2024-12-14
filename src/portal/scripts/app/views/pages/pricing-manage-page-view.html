@@ -1,7 +1,7 @@
 <div data-ng-controller="PricingManagePageController as vm">
 
     <h1 class="p-l-24">Run pricing</h1>
-    <div data-ng-if="vm.readyStatus.content" class="flex-column m-t-20">
+    <div class="flex-column m-t-20">
 
         <div class="p-l-12">
 
@@ -22,8 +22,8 @@
             <div class="p-r-8 m-t-20" style="width: 260px">
                 <two-fields-multiselect
                         data-title="Pricing Policy"
-                        data-items="vm.pricingPolicies"
                         data-model="vm.pricingModel"
+                        data-get-data-method="vm.getPricingPolicies()"
                         data-selected-items-indication="chips"
                         class="table-filter-input-container"
                 >
@@ -33,7 +33,7 @@
             <div class="p-r-8 m-t-20" style="width: 260px">
                 <two-fields-multiselect
                         data-title="Instruments"
-                        data-items="vm.instruments"
+                        data-get-data-method="vm.getInstruments()"
                         data-model="vm.instrumentModel"
                         data-selected-items-indication="chips"
                         class="table-filter-input-container"
@@ -44,7 +44,7 @@
             <div class="p-r-8 m-t-20" style="width: 260px">
                 <two-fields-multiselect
                         data-title="Currencies"
-                        data-items="vm.currencies"
+                        data-get-data-method="vm.getCurrencies()"
                         data-model="vm.currencyModel"
                         data-selected-items-indication="chips"
                         class="table-filter-input-container"
@@ -54,7 +54,7 @@
             <div class="p-r-8 m-t-20" style="width: 260px">
                 <two-fields-multiselect
                         data-title="Instrument Types"
-                        data-items="vm.instrumentTypes"
+                        data-get-data-method="vm.getInstrumentTypes()"
                         data-model="vm.instrumentTypeModel"
                         data-selected-items-indication="chips"
                         class="table-filter-input-container"

@@ -281,7 +281,7 @@
         };
 
         vm.getPortfolios = function () {
-            return metaService.loadDataFromAllPages(portfolioService.getListLight, [vm.optionsForMultiselect]);
+            return metaService.loadDataFromAllPages(portfolioService.getListLight, [structuredClone(vm.optionsForMultiselect)]);
         };
 
         /*vm.getAccounts = function () {
@@ -298,7 +298,7 @@
             });
         };*/
         vm.getAccounts = function () {
-            return metaService.loadDataFromAllPages(accountService.getListLight, [vm.optionsForMultiselect]);
+            return metaService.loadDataFromAllPages(accountService.getListLight, [structuredClone(vm.optionsForMultiselect)]);
         };
 
         /*vm.getStrategies1 = function () {
@@ -318,7 +318,7 @@
         vm.getStrategies1 = function () {
             return metaService.loadDataFromAllPages(
                 strategyService.getListLight,
-                [1, vm.optionsForMultiselect]
+                [1, structuredClone(vm.optionsForMultiselect)]
             );
         };
 
@@ -339,7 +339,7 @@
         vm.getStrategies2 = function (options) {
             return metaService.loadDataFromAllPages(
                 strategyService.getListLight,
-                [2, vm.optionsForMultiselect]
+                [2, structuredClone(vm.optionsForMultiselect)]
             );
         };
 
@@ -360,7 +360,7 @@
         vm.getStrategies3 = function (options) {
             return metaService.loadDataFromAllPages(
                 strategyService.getListLight,
-                [3, vm.optionsForMultiselect]
+                [3, structuredClone(vm.optionsForMultiselect)]
             );
         };
 
