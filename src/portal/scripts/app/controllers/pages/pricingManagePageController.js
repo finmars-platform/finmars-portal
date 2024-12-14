@@ -5,6 +5,7 @@
 
     'use strict';
 
+    var metaService = require('../../services/metaService').default;
     var pricingPolicyService = require('../../services/pricingPolicyService').default;
     var currencyService = require('../../services/currencyService').default;
     var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
@@ -16,81 +17,64 @@
 
         vm.readyStatus = {content: false};
         vm.items = [];
-        vm.pricingPolicies = [];
+
         vm.pricingModel = [];
 
-
-        vm.instruments = [];
-        vm.instrumentModel = [];
-
-        vm.currencies = [];
         vm.currencyModel = [];
 
-        vm.instrumentTypes = [];
         vm.instrumentTypeModel = [];
 
-        vm.getPricingPolicies = function () {
-            pricingPolicyService.getList().then(function (data) {
+        /**
+         *
+         * @param {Function} requestMethod - Method to request entities to use inside multiselector. Returns Promise.
+         * @returns {Promise<*>}
+         */
+        const getItemsForMultiselector = async function (requestMethod) {
 
-                vm.pricingPolicies = data.results.map((item) => {
+            const argsList = [{
+                page: 1,
+                pageSize: 1000,
+            }];
+
+            try {
+
+                const res = await metaService.loadDataFromAllPages(
+                    requestMethod,
+                    argsList
+                );
+
+                return res.map(entity => {
                     return {
-                        id: item.user_code,
-                        name: item.name
-                    }
+                        id: entity.user_code,
+                        name: entity.name
+                    };
                 });
 
-                vm.readyStatus.content = true;
+            } catch (e) {
+                throw e;
+            }
 
-                $scope.$apply();
-            })
+        };
+
+        /**
+         *
+         * @param {Function} requestMethod - returns Promise
+         * @returns {Promise<*>}
+         */
+        vm.getPricingPolicies = function () {
+            return getItemsForMultiselector(pricingPolicyService.getListLight);
         };
 
         vm.getInstruments = function () {
-            instrumentService.getListLight().then(function (data) {
-
-                vm.instruments = data.results.map((item) => {
-                    return {
-                        id: item.user_code,
-                        name: item.name
-                    }
-                });
-
-                vm.readyStatus.content = true;
-
-                $scope.$apply();
-            })
-        };
+            return getItemsForMultiselector(instrumentService.getListLight);
+        }
 
         vm.getCurrencies = function () {
-            currencyService.getListLight().then(function (data) {
-
-                vm.currencies = data.results.map((item) => {
-                    return {
-                        id: item.user_code,
-                        name: item.name
-                    }
-                });
-
-                vm.readyStatus.content = true;
-
-                $scope.$apply();
-            })
-        };
+            return getItemsForMultiselector(currencyService.getListLight);
+        }
 
         vm.getInstrumentTypes = function () {
-            instrumentTypeService.getListLight().then(function (data) {
-
-                vm.instrumentTypes = data.results.map((item) => {
-                    return {
-                        id: item.user_code,
-                        name: item.name
-                    }
-                });
-
-                vm.readyStatus.content = true;
-
-                $scope.$apply();
-            })
+            return getItemsForMultiselector(instrumentTypeService.getListLight);
         };
 
         vm.runPricing = function () {
@@ -109,15 +93,6 @@
                 $mdDialog.hide({status: 'disagree'});
             })
         }
-
-        vm.init = function () {
-            vm.getPricingPolicies();
-            vm.getInstruments();
-            vm.getCurrencies();
-            vm.getInstrumentTypes();
-        };
-
-        vm.init();
 
     };
 

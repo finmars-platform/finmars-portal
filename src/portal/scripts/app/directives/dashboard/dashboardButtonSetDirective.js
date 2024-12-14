@@ -12,12 +12,13 @@
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
 
     var pricingProcedureService = require('../../services/procedures/pricingProcedureService').default;
+    var pricingPolicyService = require('../../services/pricingPolicyService').default;
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     var rvHelper = require('../../helpers/rv.helper');
 
-    module.exports = function dashboardButtonSetDirective($mdDialog, $state, transactionImportSchemeService, pricingPolicyService) {
+    module.exports = function dashboardButtonSetDirective($mdDialog, $state, transactionImportSchemeService) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-button-set-view.html',
