@@ -162,8 +162,9 @@ export default function (cookieService, globalDataService, xhrService) {
 		const applyTheme = async function (member) {
 
 			member = await getTheme(member);
+			const isDarkMode = await globalDataService.getUser()?.data?.dark_mode;
 
-			if (typeof member.data.dark_mode !== 'boolean') {
+			if (typeof isDarkMode !== 'boolean') {
 
 				if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 					// Dark mode preferred
@@ -173,7 +174,7 @@ export default function (cookieService, globalDataService, xhrService) {
 					// Light mode preferred
 				}
 
-			} else if (member.data.dark_mode === true) {
+			} else if (isDarkMode === true) {
 				globalDataService.enableThemeDarkMode()
 			} else {
 				globalDataService.disableThemeDarkMode()
