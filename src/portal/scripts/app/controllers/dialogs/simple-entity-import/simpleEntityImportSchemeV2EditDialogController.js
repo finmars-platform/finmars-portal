@@ -305,7 +305,7 @@
 
             vm.scheme.csv_fields.push({
                 name: '',
-                column: vm.scheme.csv_fields.length,
+                column: vm.scheme.csv_fields.length + 1,
                 frontOptions: {
                     key: metaHelper.generateUniqueId(vm.scheme.csv_fields.length),
                 }
