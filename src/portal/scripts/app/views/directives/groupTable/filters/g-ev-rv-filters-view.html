@@ -413,7 +413,7 @@
                         </md-button>
                     </md-menu-item>
 
-                    <md-menu-item data-ng-if="entityType !== 'complex-transaction'">
+                    <md-menu-item data-ng-if="!(entityType === 'complex-transaction' || entityType ==='balance-report')">
                         <md-button data-ng-click="clearCacheForReport($event)" class="g-settings-option-btn">
                             <span>Recalculate Report (Clear Cache)</span>
                         </md-button>
