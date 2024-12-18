@@ -19,9 +19,8 @@
         vm.items = [];
 
         vm.pricingModel = [];
-
         vm.currencyModel = [];
-
+        vm.instrumentModel = [];
         vm.instrumentTypeModel = [];
 
         /**
