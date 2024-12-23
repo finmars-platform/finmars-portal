@@ -325,7 +325,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                     if (window.PROJECT_ENV === 'local') {
                         window.location.href = '/' + master.realm_code + '/' + master.space_code + '/a/#!/'
                     } else {
-                        window.location.href = '/' + master.realm_code + '/' + master.space_code + '/v/home'
+                        window.location.href = '/' + master.realm_code + '/' + master.space_code + '/a/#!/dashboard'
                     }
 
                     /*if ($state.current.name.startsWith('app.portal')) {
@@ -455,7 +455,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                     // $state.go('app.portal.home');
                     console.log("redirection mainHeaderDirective selectMaster to app.portal.home");
-                    window.open(scope.homepageUrl, '_self'); // REDIRECTION: app.portal.home
+                    // window.location.href = '/' + master.realm_code + '/' + master.space_code + '/a/#!/dashboard'
 
                 }
 
