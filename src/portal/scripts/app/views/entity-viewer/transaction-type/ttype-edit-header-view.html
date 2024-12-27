@@ -1,0 +1,23 @@
+<div data-ng-if="vm.checkMainDataReadyStatus()"
+     class="flex-row flex-c-space-between width-100"
+     data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
+
+    <div class="flex-row flex-i-center">
+        <h2 class="big-drawer-header-h">{{ vm.hasEditPermission ? 'Edit' : 'View' }} Transaction type: {{vm.entity.name}}</h2>
+
+        <div data-ng-if="vm.processing" layout="row" class="m-l-16 big-drawer-header-processing">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                <progress-circular diameter="20"></progress-circular>
+            </div>
+            — Processing
+        </div>
+    </div>
+
+    <div class="flex-row flex-i-center p-r-16">
+        <draft-button user-code="vm.draftUserCode"
+                      on-export-to-draft-callback="vm.exportToDraft($event)"
+                      on-draft-apply-callback="vm.applyDraft(event, data)"
+                      class="position-static"></draft-button>
+    </div>
+
+</div>
