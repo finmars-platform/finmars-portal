@@ -582,7 +582,7 @@ export default (function () {
     portal.controller(
         'TransactionTypeEditDialogController',
         [
-            '$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'usersService', 'usersGroupService', 'ecosystemDefaultService', 'metaContentTypesService', 'transactionTypeService', 'attributeTypeService', 'uiService', 'fieldResolverService', 'gridTableHelperService', 'entityType', 'entityId', 'data',
+            '$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'usersService', 'usersGroupService', 'ecosystemDefaultService', 'metaContentTypesService', 'entityResolverService', 'transactionTypeService', 'attributeTypeService', 'uiService', 'fieldResolverService', 'gridTableHelperService', 'entityType', 'entityId', 'data',
             require('./app/controllers/entityViewer/transactionTypeEditDialogController')
         ]
     );

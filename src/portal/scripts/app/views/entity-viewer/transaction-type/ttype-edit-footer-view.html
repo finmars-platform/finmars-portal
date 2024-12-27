@@ -1,0 +1,105 @@
+<div layout="row">
+    <md-button class="link-button" ng-click="vm.cancel()">
+        <span>Cancel</span>
+    </md-button>
+</div>
+
+<div style="margin-right: 10px;">
+    <md-menu md-position-mode="target-right target">
+
+        <md-button class="outline-button" ng-click="$mdOpenMenu($event)">
+            <div class="flex-row flex-c-center">
+                <span class="material-icons">more_vert</span>
+            </div>
+        </md-button>
+
+        <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
+
+            <md-menu-item>
+                <md-button ng-click="vm.copy('big-drawer')"
+                           data-ng-disabled="!vm.checkMainDataReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing">
+                    <div class="flex-row flex-i-center">
+                        <span class="material-icons">content_copy</span>
+                        <span class="m-l-16">Duplicate</span>
+                    </div>
+
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-divider></md-menu-divider>
+
+            <md-menu-item>
+                <md-button ng-click="vm.copyLinkToEntity($event)">
+                    <div class="flex-row flex-i-center">
+                        <span class="material-icons">link</span>
+                        <span class="m-l-16">Share</span>
+                    </div>
+
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button ng-click="vm.editLayout($event)">
+                    <div class="flex-row flex-i-center">
+                        <span class="material-icons">edit</span>
+                        <span class="m-l-16">Edit Form</span>
+                    </div>
+
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button ng-click="vm.editAsJson($event)">
+                    <div class="flex-row flex-i-center">
+                        <span class="material-icons">edit</span>
+                        <span class="m-l-16">Edit as JSON</span>
+                    </div>
+
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button ng-click="vm.manageAttrs($event)">
+                    <div class="flex-row flex-i-center">
+                        <span class="material-icons">list</span>
+                        <span class="m-l-16">Manage Attributes</span>
+                    </div>
+
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-divider></md-menu-divider>
+
+            <md-menu-item data-ng-if="vm.entityType != 'transaction'">
+                <md-button data-ng-click="vm.delete($event)"
+                           data-ng-disabled="!vm.hasEditPermission || vm.processing">
+                    <div class="flex-row flex-i-center">
+                        <span class="material-icons">delete</span>
+                        <span class="m-l-16">Delete</span>
+                    </div>
+
+                </md-button>
+            </md-menu-item>
+
+        </md-menu-content>
+    </md-menu>
+
+    <md-button class="link-button"
+               data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.hasEditPermission"
+               ng-click="vm.validateTTypeView()">
+        Validate
+    </md-button>
+
+    <md-button class="outline-button"
+               data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.hasEditPermission"
+               ng-click="vm.save()">
+        Save
+    </md-button>
+
+    <md-button ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.hasEditPermission"
+               ng-click="vm.saveAndExit()"
+               class="m-r-24 md-primary md-raised">
+        Save and Exit
+    </md-button>
+
+</div>
