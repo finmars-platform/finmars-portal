@@ -385,6 +385,17 @@ const evEvents = require("../../services/entityViewerEvents");
 
                             scope.datesData.to = scope.reportOptions[dateToKey];
 
+                            if(scope.reportOptions.pl_first_date) {
+                                scope.reportOptions.begin_date = scope.reportOptions.pl_first_date;
+                                scope.reportOptions.end_date = scope.reportOptions.report_date;
+                            }
+
+                            if( scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker?.periodType) {
+                                scope.reportOptions.period_type = scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.periodType;
+                                delete scope.reportOptions.begin_date;
+                            } else {
+                                delete scope.reportOptions.period_type;
+                            }
                         });
 
                     }

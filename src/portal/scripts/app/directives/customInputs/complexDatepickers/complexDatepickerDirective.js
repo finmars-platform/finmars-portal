@@ -649,6 +649,10 @@
 							secondCalendarElem.classList.remove("pmu-calendar-disabled");
 						}
 
+						if( scope.datepickerOptions.periodType) {
+							delete scope.datepickerOptions.periodType;
+						}
+
 						disableUseFromAboveMode();
 
 					}
@@ -673,6 +677,10 @@
 
 							scope.dateIsDisabled = true;
 							firstCalendarElem.classList.add("pmu-calendar-disabled");
+
+							if( scope.datepickerOptions.periodType) {
+								delete scope.datepickerOptions.periodType;
+							}
 
 							break;
 
@@ -706,6 +714,10 @@
 
 							scope.dateIsDisabled = true;
 							firstCalendarElem.classList.add("pmu-calendar-disabled");
+
+							if( scope.datepickerOptions.periodType) {
+								delete scope.datepickerOptions.periodType;
+							}
 
 							updateScope = true;
 
@@ -765,31 +777,31 @@
 				};
 
 				scope.activateRangeMode = async function (mode) {
-
 					const currentDate = new Date();
 					let updateScope = false;
 
 					switch (mode) {
+						case 'daily':
 
-						case 'week-to-date':
-
-							let prevWeekLastDay;
+							let dailyDay;
 
 							try {
-
-								const exprCalcRes = await expressionService.getResultOfExpression({expression: 'get_date_last_week_end_business(now())'});
-								prevWeekLastDay = new Date(exprCalcRes.result);
-
-							} catch (error) {throw new Error(error);}
+								const currentDate = moment(new Date()).format('YYYY-MM-DD');
+								const exprCalcRes = await expressionService.calcBusinessDate(currentDate);
+								dailyDay = new Date(exprCalcRes.result);
+							}
+								catch (error) {throw new Error(error);
+							}
 
 							applyDatesOnRangeModeSwitch(
-								prevWeekLastDay,
-								'get_date_last_week_end_business(now())',
+								dailyDay,
+								'',
 								currentDate,
 								'now()',
-								'week-to-date'
+								'daily'
 							);
 
+							scope.datepickerOptions.periodType = 'daily';
 							updateScope = true;
 
 							break;
@@ -829,6 +841,7 @@
 								'month-to-date'
 							);
 
+							scope.datepickerOptions.periodType = 'mtd';
 							updateScope = true;
 
 							break;
@@ -866,6 +879,7 @@
 								'quarter-to-date'
 							);
 
+							scope.datepickerOptions.periodType = 'qtd';
 							updateScope = true;
 
 							break;
@@ -900,36 +914,27 @@
 
 							applyDatesOnRangeModeSwitch(
 								prevYearLastDay,
-								'get_date_last_year_end_business(now())',
+								'days(now())',
 								currentDate,
 								'now()',
 								'year-to-date'
 							);
 
+							scope.datepickerOptions.periodType = 'ytd';
 							updateScope = true;
 
 							break;
 
 						case 'inception':
-
-							//<editor-fold desc="First date">
 							applyFirstDate(new Date('0001-01-01'));
-
 							scope.datepickerOptions.datepickerMode = 'inception';
 							scope.datepickerOptions.expression = '';
-							//</editor-fold>
-
-							//<editor-fold desc="Second date">
 							applySecondDate(currentDate);
-
 							scope.secondDatepickerOptions.datepickerMode = 'inception';
 							scope.secondDatepickerOptions.expression = 'now()';
-							//</editor-fold>
-
+							scope.datepickerOptions.periodType = 'inception';
 							disableFieldsAndCalendars();
-
 							break;
-
 					}
 
 					if (mode !== 'link_to_above') disableUseFromAboveMode();
@@ -946,6 +951,7 @@
 
 						switch (scope.datepickerOptions.datepickerMode) {
 
+							case 'daily':
 							case 'month-to-date':
 							case 'quarter-to-date':
 							case 'year-to-date':
