@@ -396,6 +396,11 @@ const evEvents = require("../../services/entityViewerEvents");
                             } else {
                                 delete scope.reportOptions.period_type;
                             }
+
+                            if(scope.reportOptions.period_type && scope.reportOptions.period_type === 'daily') {
+                                delete scope.reportOptions.pl_first_date;
+                                delete scope.reportOptions.begin_date;
+                            }
                         });
 
                     }
