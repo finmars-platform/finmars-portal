@@ -796,8 +796,8 @@
 							applyDatesOnRangeModeSwitch(
 								dailyDay,
 								'',
-								currentDate,
-								'now()',
+								dailyDay,
+								'',
 								'daily'
 							);
 
