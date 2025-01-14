@@ -191,7 +191,7 @@
     <div class="g-filters-right-part-holder gFiltersRightPart">
 
         <div class="g-filters-right-part-top-panel"
-             data-ng-if="(entityType == 'balance-report' || entityType == 'pl-report') && prettyReportCreatedAt">
+             data-ng-if="entityType == 'pl-report' && prettyReportCreatedAt">
 
             <div class="report-calculated-at" data-ng-if="!reportOptions.ignore_cache">
                 {{ prettyReportCreatedAt }}
