@@ -569,6 +569,7 @@
                     // Log an error if event.data is not valid JSON
                     console.error("Received data is not a valid JSON object:", event.data);
                 }
+                vm.processing = false;
 
             });
 
@@ -595,6 +596,7 @@
             }, 1000 * 20)
 
             vm.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_LAYOUT_CHANGE, function () {
+                vm.processing = true;
 
                 var layoutToOpen = vm.dashboardDataService.getLayoutToOpen();
 
