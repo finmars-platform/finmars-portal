@@ -1090,12 +1090,18 @@
             .state('app.portal.settings.simple-entity-import', {
                 url: '/data-import',
                 templateUrl: 'views/settings/simple-entity-import-settings-view.html',
-                controller: 'SettingsGeneralSimpleEntityImportController as vm'
+                controller: 'SettingsGeneralSimpleEntityImportController as vm',
+                params: {
+                    layoutUserCode: null
+                }
             })
             .state('app.portal.settings.transaction-import', {
                 url: '/transaction-import',
                 templateUrl: 'views/settings/transaction-import-settings-view.html',
-                controller: 'SettingsGeneralTransactionImportController as vm'
+                controller: 'SettingsGeneralTransactionImportController as vm',
+                params: {
+                    layoutUserCode: null
+                }
             })
             .state('app.portal.settings.complex-import', {
                 url: '/complex-import',
