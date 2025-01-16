@@ -408,7 +408,9 @@
 
                         // document.querySelector(selector).innerHTML = '';
                         chartElement = document.querySelector(selector)
-                        chartInstance = chartElement.__chart;
+                        if(chartElement) {
+                            chartInstance = chartElement.__chart;
+                        }
 
                     } catch (error) {
 
@@ -430,7 +432,9 @@
                     if (chartInstance) {
                         chartInstance.destroy();
                     }
-                    chartElement.innerHTML = '';
+                    if(chartElement) {
+                        chartElement.innerHTML = '';
+                    }
 
                     utils['_finmars_prevent_from_builder_remove'] = true; // it needed to prevent build remove of utils (of unused variable) it need to be use inside eval
 
