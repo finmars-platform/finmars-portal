@@ -342,14 +342,22 @@
                         templateUrl: 'views/tabs/transaction-type/transaction-type-general-tab-view.html'
                     },
                     {
+                        key: 'inputs',
                         label: 'Inputs',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-inputs-tab-view.html'
                     },
                     {
+                        key: 'actions',
                         label: 'Actions',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
+                    },
+                    {
+                        key: 'fields',
+                        label: 'Fields',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/transaction-type/transaction-type-fields-tab-view.html'
                     }
                 ];
             case 'complex-transaction':

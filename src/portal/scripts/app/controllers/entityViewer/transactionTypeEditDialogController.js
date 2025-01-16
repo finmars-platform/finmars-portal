@@ -30,8 +30,9 @@
     var TransactionTypeEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/transactionTypeEditorSharedLogicHelper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
+    var evHelperService = require('../../services/entityViewerHelperService').default;
 
-    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, usersService, usersGroupService, ecosystemDefaultService, metaContentTypesService, transactionTypeService, attributeTypeService, uiService, fieldResolverService, gridTableHelperService, entityType, entityId, data) {
+    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, usersService, usersGroupService, ecosystemDefaultService, metaContentTypesService, entityResolverService, transactionTypeService, attributeTypeService, uiService, fieldResolverService, gridTableHelperService, entityType, entityId, data) {
 
         var vm = this;
 
@@ -39,6 +40,30 @@
 
         vm.entityType = entityType;
         vm.entityId = entityId;
+        vm.entityUserCode = null;
+
+        if (data) {
+
+            if (typeof data !== "object") {
+
+                throw new Error(
+                    "Invalid value inside 'data' for " +
+                    "transactionTypeEditDialogController. Expected an 'object' got: " +
+                    `${typeof data} ${data}`
+                )
+
+            }
+
+            vm.entityUserCode = data.userCode;
+
+        }
+
+        if ( Number.isNaN(vm.entityId) &&
+            (!vm.entityUserCode || typeof vm.entityUserCode !== "string") ) {
+
+            throw new Error("No valid 'id' or 'user_code' provided")
+
+        }
 
         vm.entity = {};
         // var originalEntity = {};
@@ -58,8 +83,6 @@
         // < Creating various variables to use as search terms for filters of repeating md-select components >
 
         vm.readyStatus = {attrs: false, permissions: true, entity: false, layout: false, inputs: false};
-
-        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
         vm.editLayoutEntityInstanceId = null;
         vm.editLayoutByEntityInsance = false;
@@ -90,6 +113,68 @@
             userFields: [],
             actions: {},
         }
+
+        //# region Tabs
+        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
+        vm.activeTab = null;
+
+        const getTabFromQueryParams = function () {
+
+            const tabToOpenKey = $state.params.tab;
+
+            if (!tabToOpenKey) {
+                return null;
+            }
+
+            const activeTab = vm.entityTabs.find(
+                tabData => tabData.key === tabToOpenKey
+            );
+
+            if (!activeTab) {
+                console.warn(`Could not find a system tab with a key: ${tabToOpenKey}`);
+            }
+
+            return activeTab;
+
+        }
+
+        vm.onTabSelect = function (tabKey) {
+
+            if (tabKey) {
+
+                const activeTab = vm.entityTabs.find(
+                    tabData => tabData.key === tabKey
+                );
+
+                if (!activeTab) {
+                    throw new Error(`Could not find a system tab with a key: ${tabKey}`);
+                }
+
+                vm.activeTab = activeTab;
+
+            } else {
+                vm.activeTab = null;
+            }
+
+            if (vm.openedIn === "webpage") {
+
+                let tabKey = null;
+
+                if (vm.activeTab?.key) {
+                    tabKey = vm.activeTab.key;
+                }
+
+                $state.go(
+                    $state.current.name,
+                    {tab: tabKey},
+                    {reload: false, location: 'replace'}
+                );
+
+            }
+
+        }
+
+        //# endregion
 
         // Deprecated
         vm.loadPermissions = function () {
@@ -308,6 +393,25 @@
 
         };
 
+        vm.copyLinkToEntity = function() {
+
+            const options = {
+                entityUserCode: vm.entity.user_code
+            };
+
+            if (vm.activeTab?.key) {
+                options.tab = vm.activeTab.key;
+            }
+
+            evHelperService.copyLinkToEvForm(
+                $state,
+                "app.portal.data.transaction-type-edition",
+                toastNotificationService,
+                options
+            );
+
+        }
+
         vm.getLayout = function () {
 
             uiService.getEditLayoutByKey(vm.entityType).then(function (data) {
@@ -408,28 +512,25 @@
 
         }
 
-        vm.getItem = function () {
+        vm.getItem = async function () {
 
-            return new Promise(function (res, rej) {
+            let res;
 
-                transactionTypeService.getByKey(vm.entityId).then(function (data) {
+            if (vm.entityId) {
+                res = await transactionTypeService.getByKey(vm.entityId);
 
-                    vm._original_entity = JSON.parse(JSON.stringify(data));
+            }
+            else if (vm.entityUserCode) {
+                res = await entityResolverService.getByUserCode(vm.entityType, vm.entityUserCode);
+            }
 
-                    vm.entity = data;
+            vm._original_entity = JSON.parse(JSON.stringify(res));
 
-                    vm.draftUserCode = vm.generateUserCodeForDraft();
+            vm.entity = res;
 
-                    vm.transformSourceEntityToFrontendLogic().then(function () {
-                        res();
-                    });
+            vm.draftUserCode = vm.generateUserCodeForDraft();
 
-
-                }).catch(function (error) {
-                    rej(error);
-                });
-
-            });
+            await vm.transformSourceEntityToFrontendLogic();
 
         };
 
@@ -1937,6 +2038,8 @@
 
             vm.layoutAttrs = layoutService.getLayoutAttrs();
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+            vm.activeTab = getTabFromQueryParams();
 
         };
 

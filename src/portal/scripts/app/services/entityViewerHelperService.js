@@ -2192,6 +2192,7 @@
             'price-history',
             'transaction',
             'complex-transaction',
+            'transaction-type',
         ].includes(entityType)
     }
 

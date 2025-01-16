@@ -472,6 +472,12 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.transaction-type-edition', {
+                ...getStateDefForEditingEntityByUc('transaction-type', true),
+                templateUrl: 'views/entity-viewer/transaction-type/ttype-edit-view.html',
+                controller: 'TransactionTypeEditDialogController as vm',
+                url: '/transaction-type/:userCode?tab',
+            })
             .state('app.portal.data.transaction-type-group', {
                 url: '/transaction-type-group',
                 templateUrl: 'views/data/data-transaction-type-group-view.html',

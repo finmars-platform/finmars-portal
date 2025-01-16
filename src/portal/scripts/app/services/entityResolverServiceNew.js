@@ -439,8 +439,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
     const getByUserCode = async function (entityType, userCode) {
 
         const opts = {
+            pageSize: 2, // to check whether a filter by a `user_code__exact` query parameter works on backend
             filters: {
-                user_code__exact: userCode
+                user_code__exact: userCode,
             }
         }
 
@@ -451,6 +452,10 @@ export default function (instrumentService, transactionTypeService, priceHistory
 
             case "currency":
                 return processGetByUcProm( currencyService.getList(opts) );
+                break;
+
+            case "transaction-type":
+                return processGetByUcProm( transactionTypeService.getList(opts) );
                 break;
 
             default:
