@@ -1109,8 +1109,13 @@ export default (function () {
 
     var currentUrl = location.href;
     window.addEventListener('hashchange', function () {
-        _paq.push(['setReferrerUrl', currentUrl]);
-        currentUrl = '/' + window.location.hash.substr(1);
+
+        const hash = window.location.hash.substr(3); // Remove the `#`
+
+        currentUrl = `${location.origin}${location.pathname}${hash}`; // Build the new clean URL
+
+        // _paq.push(['setReferrerUrl', currentUrl]);
+        // currentUrl = '/' + window.location.hash.substr(1);
         _paq.push(['setCustomUrl', currentUrl]);
         _paq.push(['setDocumentTitle', document.title]);
 
