@@ -85,6 +85,13 @@ export default function () {
                 }
 
                 _paq.push(['setUserId', user.username]);
+                const hash = window.location.hash.substr(3); // Remove the `#`
+
+                var currentUrl = `${location.origin}${location.pathname}${hash}`; // Build the new clean URL
+
+                // _paq.push(['setReferrerUrl', currentUrl]);
+                // currentUrl = '/' + window.location.hash.substr(1);
+                _paq.push(['setCustomUrl', currentUrl]);
                 _paq.push(['trackPageView']);
                 _paq.push(['enableLinkTracking']);
 
