@@ -932,8 +932,10 @@
 							applySecondDate(currentDate);
 							scope.secondDatepickerOptions.datepickerMode = 'inception';
 							scope.secondDatepickerOptions.expression = 'now()';
-							scope.datepickerOptions.periodType = 'inception';
 							disableFieldsAndCalendars();
+							if( scope.datepickerOptions.periodType) {
+								delete scope.datepickerOptions.periodType;
+							}
 							break;
 					}
 
