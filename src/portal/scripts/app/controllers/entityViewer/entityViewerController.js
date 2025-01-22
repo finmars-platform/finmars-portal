@@ -1116,6 +1116,9 @@
                             else if ( ["strategy-1", "strategy-2", "strategy-3"].includes(entitytype) ) {
                                 options.strategyNumber = $state.params.strategyNumber;
                             }
+                            else if (entitytype === 'complex-transaction') {
+                                options.complexTransactionCode = actionData.object.code
+                            }
 
                             const editEvStateName = evHelperService.getNameOfStateForEditingEntity($state);
 
