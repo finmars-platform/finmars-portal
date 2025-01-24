@@ -1123,6 +1123,13 @@ export default function (instrumentService, transactionTypeService, priceHistory
                     "transactionTypeService.restoreBulk",
                     intervalDelay
                 );
+
+            case 'currency':
+                return _restoreEntities(
+                    currencyService.restoreBulk(data),
+                    "transactionTypeService.restoreBulk",
+                    intervalDelay
+                );
             default:
                 throw {
                     error_key: "invalid_arguments",
