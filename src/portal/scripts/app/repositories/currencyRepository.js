@@ -159,6 +159,25 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'cu
             })
     };
 
+    var restoreBulk = function (data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'currencies/currency/bulk-restore/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
 
     module.exports = {
 
@@ -168,7 +187,8 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'cu
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk
     }
 
 }());
