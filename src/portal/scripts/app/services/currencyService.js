@@ -33,6 +33,10 @@
         return currencyRepository.deleteBulk(data);
     };
 
+    var restoreBulk = function(data){
+        return currencyRepository.restoreBulk(data);
+    };
+
     module.exports = {
         getList: getList,
         getListLight: getListLight,
@@ -40,7 +44,8 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk
     }
 
 
