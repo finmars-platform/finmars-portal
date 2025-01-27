@@ -5,19 +5,30 @@
 'use strict';
 
 import baseUrlService from "../services/baseUrlService";
+import { NavigationRoutes } from '@finmars/ui';
 
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
 var explorerService = require('../services/explorerService');
+var portalService = require('../services/portalService').default;
 
 export default function ($scope, $state, $transitions, $urlService, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService) {
 
     let vm = this;
 
+    vm.ROLES_MAP = {
+        'local.poms.space0i3a2:viewer': ['dashboard', 'reports', 'add-ons'],
+        'local.poms.space0i3a2:base-data-manager': ['data', 'valuations', 'transactions-from-file', 'data-from-file', 'reconciliation', 'workflows'],
+        'local.poms.space0i3a2:configuration-manager': ['Default-settings', 'Account-Types', 'Instrument-Types', 'Transaction-Types', 'Account-Types', 'Transaction-Type-Groups'],
+        'local.poms.space0i3a2:full-data-manager': ['dashboard', 'Member', 'Permissions',],
+        'local.poms.space0i3a2:member': ['dashboard', 'reports', 'Member', 'navigation', 'group']
+    };
     vm.readyStatus = false;
     vm.showWarningSideNav = false;
 
     vm.test = false;
+    // vm.member = null;
+    vm.temporaryItems = [];
 
     /*const getMember = function () {
 
@@ -63,8 +74,8 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
                 uiService.getDefaultMemberLayout(),
             ]);
 
+            // vm.member = res[0];
             const memberLayout = res[1];
-
             // enable by default list layout autosave
             if ( typeof memberLayout.data.autosave_layouts !== 'boolean' ) {
                 memberLayout.data.autosave_layouts = true;
@@ -94,7 +105,6 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         });
 
     };
-
 
     const initAlertSideNavListeners = function () {
 
@@ -173,6 +183,67 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         }
     };
 
+    const filterMenuItems = function (navigationRouts, allowedKeys) {
+        if (!allowedKeys) return [];
+
+        return navigationRouts.reduce(function (acc, item) {
+            let hasChildren = Array.isArray(item.children) && item.children.length > 0;
+            let filteredChildren = [];
+
+            if (hasChildren) {
+                filteredChildren = filterMenuItems(item.children, allowedKeys);
+            }
+
+            let isParentAllowed = allowedKeys.includes(item.key);
+            let isChildAllowed = filteredChildren.length > 0;
+
+            if (isParentAllowed && !isChildAllowed) {
+                acc.push({
+                    key: item.key,
+                    label: item.label,
+                    children: item.children
+                });
+            } else if (isChildAllowed) {
+                acc.push({
+                    key: item.key,
+                    label: item.label,
+                    children: filteredChildren
+                });
+            }
+
+            return acc;
+        }, []);
+    };
+
+    const buildNavigationSidebar = async function() {
+        console.log('0000 - NavigationRoutes',NavigationRoutes)
+        const member = await usersService.getMyCurrentMember();
+        if(member?.is_admin) {
+            console.log('0000000000 if', member)
+            vm.temporaryItems = NavigationRoutes;
+        } else {
+            console.log('0000000000 else', member)
+            let options = {
+                role: member?.roles_object?.[0]?.user_code,
+                user_code: member?.roles_object?.[0]?.user_code?.split(':')[1],
+                configuration_code: member?.roles_object?.[0]?.configuration_code
+            }
+
+            portalService.getNavigationRoutingList(options).then(function (res) {
+                if (!res) {
+                    vm.temporaryItems = [];
+                } else {
+                    const data = res?.[0];
+                    if(data?.allowed_items) {
+                        vm.temporaryItems = filterMenuItems(NavigationRoutes, data.allowed_items);
+                    }
+                }
+            }).catch(function (error) {
+                console.log(`getNavigationRoutingList: ${error}`)
+            });
+        }
+    };
+
     const init = function () {
 
         middlewareService.onToggleWarningsSideNav(function () {
@@ -191,6 +262,7 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
 
         promises.push(getMemberData());
         promises.push(loadWhiteLabelDefault());
+        promises.push(buildNavigationSidebar());
 
         Promise.all(promises).then(resData => {
 
@@ -214,11 +286,12 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
             // window.open(redirectionService.getUrlByState('app.profile'), '_self')
 
         })
-
     };
 
-    init();
 
+
+
+    init();
     $scope.$on("$destroy", function () {
         deregisterTransitionOnSuccess();
         removeNavigationPortalListener()
