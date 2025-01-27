@@ -5,7 +5,7 @@
 'use strict';
 
 import baseUrlService from "../services/baseUrlService";
-import { NavigationRoutes } from '@finmars/ui';
+import {NavigationRoutes} from '@finmars/ui';
 
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
@@ -23,44 +23,16 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         'local.poms.space0i3a2:full-data-manager': ['dashboard', 'Member', 'Permissions',],
         'local.poms.space0i3a2:member': ['dashboard', 'reports', 'Member', 'navigation', 'group']
     };
-    vm.temporaryItems = [];
+    vm.allowedItems = [];
     vm.readyStatus = false;
     vm.showWarningSideNav = false;
-
-    vm.test = false;
-
-    /*const getMember = function () {
-
-        return new Promise(function (resolve, reject) {
-
-            usersService.getMyCurrentMember().then(function (data) {
-
-                const member = data;
-                // enable by default list layout autosave
-                if (member.data && typeof member.data.autosave_layouts !== 'boolean') {
-                    member.data.autosave_layouts = true;
-                    globalDataService.setMember(member);
-                }
-
-                // websocketService.send({action: "update_user_state", data: {member: member}});
-
-                resolve(member);
-
-            }).catch(function (error) {
-                console.error(error);
-                reject(error);
-            });
-
-        });
-
-    }*/
 
     const urlBeginning = baseUrlService.resolve();
     const angularPart = baseUrlService.getAngularJsPart();
 
     const [realm_code, space_code] = baseUrlService?.getMasterUserPrefix()?.split('/');
 
-    vm.route = {value: {params: {realm_code, space_code}, path: ''}};
+    vm.route = {params: {realm_code, space_code}, path: ''};
     vm.baseUrl = baseUrlService.resolve();
 
     const getMemberData = async function () {
@@ -68,20 +40,17 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
 
         try {
 
-            const res = await Promise.all([
-                usersService.getMyCurrentMember(),
-                uiService.getDefaultMemberLayout(),
-            ]);
+            const res = await Promise.all([usersService.getMyCurrentMember(), uiService.getDefaultMemberLayout(),]);
 
             const memberLayout = res[1];
 
             // enable by default list layout autosave
-            if ( typeof memberLayout.data.autosave_layouts !== 'boolean' ) {
+            if (typeof memberLayout.data.autosave_layouts !== 'boolean') {
                 memberLayout.data.autosave_layouts = true;
                 globalDataService.setMemberLayout(memberLayout);
             }
 
-        } catch(error) {
+        } catch (error) {
             console.error(error);
             throw error;
         }
@@ -159,16 +128,16 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
     };
 
     const deregisterTransitionOnSuccess = $transitions.onSuccess({}, function (transition) {
-        vm.route.value.path = getActivePath(transition.to().name);
+        vm.route.path = getActivePath(transition.to().name);
     });
 
-    const resizeSideNav = function() {
-        setTimeout(()=> {
+    const resizeSideNav = function () {
+        setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
         })
     };
 
-    const addNavigationPortalListener = function() {
+    const addNavigationPortalListener = function () {
         const navigationPortal = document.querySelector('#fm-navigation-portal');
 
         if (navigationPortal) {
@@ -176,7 +145,7 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         }
     };
 
-    const removeNavigationPortalListener = function() {
+    const removeNavigationPortalListener = function () {
         const navigationPortal = document.querySelector('#fm-navigation-portal');
         if (navigationPortal) {
             navigationPortal.removeEventListener('resizeSideNav', resizeSideNav);
@@ -199,15 +168,11 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
 
             if (isParentAllowed && !isChildAllowed) {
                 acc.push({
-                    key: item.key,
-                    label: item.label,
-                    children: item.children
+                    key: item.key, label: item.label, children: item.children
                 });
             } else if (isChildAllowed) {
                 acc.push({
-                    key: item.key,
-                    label: item.label,
-                    children: filteredChildren
+                    key: item.key, label: item.label, children: filteredChildren
                 });
             }
 
@@ -215,27 +180,26 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         }, []);
     };
 
-    const buildNavigationSidebar = async function() {
-        console.log('0000 - NavigationRoutes',NavigationRoutes)
+    const buildNavigationSidebar = async function () {
         const member = await usersService.getMyCurrentMember();
-        if(member?.is_admin) {
-            console.log('0000000000 if', member)
-            vm.temporaryItems = NavigationRoutes;
+
+        if (member?.is_admin) {
+            vm.allowedItems = NavigationRoutes;
         } else {
-            console.log('0000000000 else', member)
-            let options = {
-                role: member?.roles_object?.[0]?.user_code,
-                user_code: member?.roles_object?.[0]?.user_code?.split(':')[1],
-                configuration_code: member?.roles_object?.[0]?.configuration_code
+            const role = member?.roles_object?.[0]
+            const options = {
+                role: role?.user_code,
+                user_code: role?.user_code?.split(':')?.[1],
+                configuration_code: role?.configuration_code
             }
 
             portalService.getNavigationRoutingList(options).then(function (res) {
                 if (!res) {
-                    vm.temporaryItems = [];
+                    vm.allowedItems = [];
                 } else {
                     const data = res?.[0];
-                    if(data?.allowed_items) {
-                        vm.temporaryItems = filterMenuItems(NavigationRoutes, data.allowed_items);
+                    if (data?.allowed_items) {
+                        vm.allowedItems = filterMenuItems(NavigationRoutes, data.allowed_items);
                     }
                 }
             }).catch(function (error) {
@@ -266,7 +230,7 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
 
         Promise.all(promises).then(resData => {
 
-            vm.route.value.path = getActivePath($state.current.name);
+            vm.route.path = getActivePath($state.current.name);
 
             vm.readyStatus = true;
 
