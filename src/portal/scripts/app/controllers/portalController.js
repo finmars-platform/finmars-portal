@@ -23,12 +23,11 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         'local.poms.space0i3a2:full-data-manager': ['dashboard', 'Member', 'Permissions',],
         'local.poms.space0i3a2:member': ['dashboard', 'reports', 'Member', 'navigation', 'group']
     };
+    vm.temporaryItems = [];
     vm.readyStatus = false;
     vm.showWarningSideNav = false;
 
     vm.test = false;
-    // vm.member = null;
-    vm.temporaryItems = [];
 
     /*const getMember = function () {
 
@@ -74,8 +73,8 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
                 uiService.getDefaultMemberLayout(),
             ]);
 
-            // vm.member = res[0];
             const memberLayout = res[1];
+
             // enable by default list layout autosave
             if ( typeof memberLayout.data.autosave_layouts !== 'boolean' ) {
                 memberLayout.data.autosave_layouts = true;
@@ -105,6 +104,7 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         });
 
     };
+
 
     const initAlertSideNavListeners = function () {
 
@@ -286,12 +286,11 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
             // window.open(redirectionService.getUrlByState('app.profile'), '_self')
 
         })
+
     };
 
-
-
-
     init();
+
     $scope.$on("$destroy", function () {
         deregisterTransitionOnSuccess();
         removeNavigationPortalListener()
