@@ -168,11 +168,11 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
 
             if (isParentAllowed && !isChildAllowed) {
                 acc.push({
-                    key: item.key, label: item.label, children: item.children
+                    ...item, children: item.children
                 });
             } else if (isChildAllowed) {
                 acc.push({
-                    key: item.key, label: item.label, children: filteredChildren
+                    ...item, children: filteredChildren
                 });
             }
 
@@ -186,27 +186,40 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         if (member?.is_admin) {
             vm.allowedItems = NavigationRoutes;
         } else {
-            const role = member?.roles_object?.[0]
-            const options = {
-                role: role?.user_code,
-                user_code: role?.user_code?.split(':')?.[1],
-                configuration_code: role?.configuration_code
-            }
+            const roles = member?.roles_object || [];
 
-            portalService.getNavigationRoutingList(options).then(function (res) {
-                if (!res) {
-                    vm.allowedItems = [];
-                } else {
-                    const data = res?.[0];
-                    if (data?.allowed_items) {
-                        vm.allowedItems = filterMenuItems(NavigationRoutes, data.allowed_items);
-                    }
-                }
-            }).catch(function (error) {
-                console.log(`getNavigationRoutingList: ${error}`)
+            const promises = roles.map(role => {
+                const options = {
+                    role: role?.user_code,
+                    user_code: role?.user_code?.split(':')?.[1],
+                    configuration_code: role?.configuration_code
+                };
+
+                return portalService.getNavigationRoutingList(options);
             });
+
+            Promise.all(promises)
+              .then(results => {
+                  const allAllowedItems = [];
+
+                  results.forEach(res => {
+                      if (res?.[0]?.allowed_items) {
+                          allAllowedItems.push(...res[0].allowed_items);
+                      }
+                  });
+
+                  const uniqueAllowedItems = Array.from(new Set(allAllowedItems));
+
+                  vm.allowedItems = filterMenuItems(NavigationRoutes, uniqueAllowedItems);
+              })
+              .catch(error => {
+                  console.log(`getNavigationRoutingList: ${error}`);
+                  vm.allowedItems = [];
+              });
         }
     };
+
+
 
     const init = function () {
 
