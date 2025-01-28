@@ -5,52 +5,34 @@
 'use strict';
 
 import baseUrlService from "../services/baseUrlService";
+import {NavigationRoutes} from '@finmars/ui';
 
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
 var explorerService = require('../services/explorerService');
+var portalService = require('../services/portalService').default;
 
 export default function ($scope, $state, $transitions, $urlService, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService) {
 
     let vm = this;
 
+    vm.ROLES_MAP = {
+        'local.poms.space0i3a2:viewer': ['dashboard', 'reports', 'add-ons'],
+        'local.poms.space0i3a2:base-data-manager': ['data', 'valuations', 'transactions-from-file', 'data-from-file', 'reconciliation', 'workflows'],
+        'local.poms.space0i3a2:configuration-manager': ['Default-settings', 'Account-Types', 'Instrument-Types', 'Transaction-Types', 'Account-Types', 'Transaction-Type-Groups'],
+        'local.poms.space0i3a2:full-data-manager': ['dashboard', 'Member', 'Permissions',],
+        'local.poms.space0i3a2:member': ['dashboard', 'reports', 'Member', 'navigation', 'group']
+    };
+    vm.allowedItems = [];
     vm.readyStatus = false;
     vm.showWarningSideNav = false;
-
-    vm.test = false;
-
-    /*const getMember = function () {
-
-        return new Promise(function (resolve, reject) {
-
-            usersService.getMyCurrentMember().then(function (data) {
-
-                const member = data;
-                // enable by default list layout autosave
-                if (member.data && typeof member.data.autosave_layouts !== 'boolean') {
-                    member.data.autosave_layouts = true;
-                    globalDataService.setMember(member);
-                }
-
-                // websocketService.send({action: "update_user_state", data: {member: member}});
-
-                resolve(member);
-
-            }).catch(function (error) {
-                console.error(error);
-                reject(error);
-            });
-
-        });
-
-    }*/
 
     const urlBeginning = baseUrlService.resolve();
     const angularPart = baseUrlService.getAngularJsPart();
 
     const [realm_code, space_code] = baseUrlService?.getMasterUserPrefix()?.split('/');
 
-    vm.route = {value: {params: {realm_code, space_code}, path: ''}};
+    vm.route = {params: {realm_code, space_code}, path: ''};
     vm.baseUrl = baseUrlService.resolve();
 
     const getMemberData = async function () {
@@ -58,20 +40,17 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
 
         try {
 
-            const res = await Promise.all([
-                usersService.getMyCurrentMember(),
-                uiService.getDefaultMemberLayout(),
-            ]);
+            const res = await Promise.all([usersService.getMyCurrentMember(), uiService.getDefaultMemberLayout(),]);
 
             const memberLayout = res[1];
 
             // enable by default list layout autosave
-            if ( typeof memberLayout.data.autosave_layouts !== 'boolean' ) {
+            if (typeof memberLayout.data.autosave_layouts !== 'boolean') {
                 memberLayout.data.autosave_layouts = true;
                 globalDataService.setMemberLayout(memberLayout);
             }
 
-        } catch(error) {
+        } catch (error) {
             console.error(error);
             throw error;
         }
@@ -149,16 +128,16 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
     };
 
     const deregisterTransitionOnSuccess = $transitions.onSuccess({}, function (transition) {
-        vm.route.value.path = getActivePath(transition.to().name);
+        vm.route.path = getActivePath(transition.to().name);
     });
 
-    const resizeSideNav = function() {
-        setTimeout(()=> {
+    const resizeSideNav = function () {
+        setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
         })
     };
 
-    const addNavigationPortalListener = function() {
+    const addNavigationPortalListener = function () {
         const navigationPortal = document.querySelector('#fm-navigation-portal');
 
         if (navigationPortal) {
@@ -166,12 +145,81 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         }
     };
 
-    const removeNavigationPortalListener = function() {
+    const removeNavigationPortalListener = function () {
         const navigationPortal = document.querySelector('#fm-navigation-portal');
         if (navigationPortal) {
             navigationPortal.removeEventListener('resizeSideNav', resizeSideNav);
         }
     };
+
+    const filterMenuItems = function (navigationRouts, allowedKeys) {
+        if (!allowedKeys) return [];
+
+        return navigationRouts.reduce(function (acc, item) {
+            let hasChildren = Array.isArray(item.children) && item.children.length > 0;
+            let filteredChildren = [];
+
+            if (hasChildren) {
+                filteredChildren = filterMenuItems(item.children, allowedKeys);
+            }
+
+            let isParentAllowed = allowedKeys.includes(item.key);
+            let isChildAllowed = filteredChildren.length > 0;
+
+            if (isParentAllowed && !isChildAllowed) {
+                acc.push({
+                    ...item, children: item.children
+                });
+            } else if (isChildAllowed) {
+                acc.push({
+                    ...item, children: filteredChildren
+                });
+            }
+
+            return acc;
+        }, []);
+    };
+
+    const buildNavigationSidebar = async function () {
+        const member = await usersService.getMyCurrentMember();
+
+        if (member?.is_admin) {
+            vm.allowedItems = NavigationRoutes;
+        } else {
+            const roles = member?.roles_object || [];
+
+            const promises = roles.map(role => {
+                const options = {
+                    role: role?.user_code,
+                    user_code: role?.user_code?.split(':')?.[1],
+                    configuration_code: role?.configuration_code
+                };
+
+                return portalService.getNavigationRoutingList(options);
+            });
+
+            Promise.all(promises)
+              .then(results => {
+                  const allAllowedItems = [];
+
+                  results.forEach(res => {
+                      if (res?.[0]?.allowed_items) {
+                          allAllowedItems.push(...res[0].allowed_items);
+                      }
+                  });
+
+                  const uniqueAllowedItems = Array.from(new Set(allAllowedItems));
+
+                  vm.allowedItems = filterMenuItems(NavigationRoutes, uniqueAllowedItems);
+              })
+              .catch(error => {
+                  console.log(`getNavigationRoutingList: ${error}`);
+                  vm.allowedItems = [];
+              });
+        }
+    };
+
+
 
     const init = function () {
 
@@ -191,10 +239,11 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
 
         promises.push(getMemberData());
         promises.push(loadWhiteLabelDefault());
+        promises.push(buildNavigationSidebar());
 
         Promise.all(promises).then(resData => {
 
-            vm.route.value.path = getActivePath($state.current.name);
+            vm.route.path = getActivePath($state.current.name);
 
             vm.readyStatus = true;
 
