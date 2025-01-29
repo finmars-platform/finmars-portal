@@ -3,8 +3,8 @@
  */
 
 import UiRepository from "../repositories/uiRepository";
-import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
-// var localStorageService = require("../../../../shell/scripts/app/services/localStorageService");
+// import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
+var localStorageService = require("../../../../shell/scripts/app/services/localStorageService");
 // import metaService from "./metaService";
 var metaService = require("./metaService").default;
 import globalDataService from "../../../../shell/scripts/app/services/globalDataService";
