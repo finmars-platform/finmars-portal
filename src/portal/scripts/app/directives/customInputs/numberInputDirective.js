@@ -25,7 +25,8 @@
             link: function (scope, elem, attr) {
 
                 // scope.placeholderText = "0";
-                scope.placeholder = scope.placeholderText || "0";
+                // scope.placeholder = scope.placeholderText || "0";
+                scope.placeholder = scope.placeholderText || "e.g., 0";
                 scope.error = '';
 
                 var inputLoaded = false;  // prevents not null inputs highlight from start
@@ -374,19 +375,19 @@
                         switch (scope.numberFormat.round_format_id) {
                             case 0:
                             case 1:
-                                scope.placeholderText = "0"
+                                scope.placeholderText = "e.g., 0"
                                 break;
 
                             case 2:
-                                scope.placeholderText = "0.0"
+                                scope.placeholderText = "e.g., 0.0"
                                 break;
 
                             case 3:
-                                scope.placeholderText = "0.00"
+                                scope.placeholderText = "e.g., 0.00"
                                 break;
 
                             case 4:
-                                scope.placeholderText = "0.0000"
+                                scope.placeholderText = "e.g., 0.0000"
                                 break;
                         }
 
