@@ -55,6 +55,54 @@
                     return `${year}-${month}-${day}`;
                 }
 
+                const initExpressionDateValue = () => {
+                    if (scope.componentData.settings.default_value_expression) {
+
+                        expressionService.getResultOfExpression({
+                            expression: scope.componentData.settings.default_value_expression,
+                            is_eval: true
+                        }).then(function (data) {
+
+                            if (data.result) {
+                                scope.item.data.store.value = data.result;
+                            }
+
+                            scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
+
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                            scope.processing = false;
+                            scope.$apply();
+
+                        }).catch(function (error) {
+
+                            console.log("dashboard.control.date.invalid_expression", error)
+
+                            scope.item.data.store.value = getTodaysDate();
+
+                            scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
+
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                            scope.processing = false;
+
+                        })
+
+                    } else {
+
+                        scope.item.data.store.value = getTodaysDate();
+                        scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
+
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                        scope.processing = false;
+
+                    }
+                }
+
                 const initComponent = async function () {
 
                     scope.processing = true;
@@ -70,51 +118,7 @@
 
                         // No value found in layout, trying to calculate default value
 
-                        if (scope.componentData.settings.default_value_expression) {
-
-                            expressionService.getResultOfExpression({
-                                expression: scope.componentData.settings.default_value_expression,
-                                is_eval: true
-                            }).then(function (data) {
-
-                                if (data.result) {
-                                    scope.item.data.store.value = data.result;
-                                }
-
-                                scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
-
-                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                                scope.processing = false;
-                                scope.$apply();
-
-                            }).catch(function (error) {
-
-                                console.log("dashboard.control.date.invalid_expression", error)
-
-                                scope.item.data.store.value = getTodaysDate();
-
-                                scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
-
-                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                                scope.processing = false;
-
-                            })
-
-                        } else {
-
-                            scope.item.data.store.value = getTodaysDate();
-                            scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
-
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                            scope.processing = false;
-
-                        }
+                        initExpressionDateValue();
 
                     } else {
 
@@ -174,6 +178,8 @@
                     // so that dashboard manager can start processing it
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    initExpressionDateValue();
 
                 }
 
