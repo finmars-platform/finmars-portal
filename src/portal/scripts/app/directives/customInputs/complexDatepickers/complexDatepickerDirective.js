@@ -173,6 +173,13 @@
 
 				};
 
+				const getCurrentBusinessDayExcludeWeekends = (date = new Date()) => {
+					const day = date.getDay();
+					const adjustment = day === 0 ? -2 : day === 6 ? -1 : 0;
+					date.setDate(date.getDate() + adjustment);
+					return date;
+				};
+
 				/* const onDateFromPickmeupChange = event => {
 
 					let datesRange = [];
@@ -777,7 +784,7 @@
 				};
 
 				scope.activateRangeMode = async function (mode) {
-					const currentDate = new Date();
+					const currentDate = getCurrentBusinessDayExcludeWeekends(new Date());
 					let updateScope = false;
 
 					switch (mode) {
@@ -914,7 +921,7 @@
 
 							applyDatesOnRangeModeSwitch(
 								prevYearLastDay,
-								'days(now())',
+								'get_date_last_year_end_business(now())',
 								currentDate,
 								'now()',
 								'year-to-date'
