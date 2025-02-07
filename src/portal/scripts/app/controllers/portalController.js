@@ -199,12 +199,12 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
             });
 
             Promise.all(promises)
-              .then(results => {
+              .then(response => {
                   const allAllowedItems = [];
 
-                  results.forEach(res => {
-                      if (res?.[0]?.allowed_items) {
-                          allAllowedItems.push(...res[0].allowed_items);
+                  response.forEach(res => {
+                      if (res?.results?.[0]?.allowed_items) {
+                          allAllowedItems.push(...res.results[0].allowed_items);
                       }
                   });
 
