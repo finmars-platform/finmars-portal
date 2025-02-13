@@ -175,9 +175,20 @@
 
 				const getCurrentBusinessDayExcludeWeekends = (date = new Date()) => {
 					const day = date.getDay();
-					const adjustment = day === 0 ? -2 : day === 6 ? -1 : 0;
+					let adjustment = -1; // Default for weekdays
+
+					if (day === 1) { // Monday
+						adjustment = -3;
+					} else if (day === 0) { // Sunday
+						adjustment = -2;
+					}
+
+					const expDaysCount = Math.abs(adjustment); // Number of days adjusted
 					date.setDate(date.getDate() + adjustment);
-					return date;
+					return {
+						date,
+						expDaysCount
+					};
 				};
 
 				/* const onDateFromPickmeupChange = event => {
@@ -784,7 +795,9 @@
 				};
 
 				scope.activateRangeMode = async function (mode) {
-					const currentDate = getCurrentBusinessDayExcludeWeekends(new Date());
+					const currentBusinessDate = getCurrentBusinessDayExcludeWeekends(new Date()).date;
+					const expDaysCount = getCurrentBusinessDayExcludeWeekends(new Date()).expDaysCount;
+
 					let updateScope = false;
 
 					switch (mode) {
@@ -793,7 +806,7 @@
 							let dailyDay;
 
 							try {
-								const currentDate = moment(new Date()).format('YYYY-MM-DD');
+								const currentDate = moment(currentBusinessDate).format('YYYY-MM-DD');
 								const exprCalcRes = await expressionService.calcBusinessDate(currentDate);
 								dailyDay = new Date(exprCalcRes.result);
 							}
@@ -803,8 +816,8 @@
 							applyDatesOnRangeModeSwitch(
 								dailyDay,
 								'',
-								dailyDay,
-								'',
+								currentBusinessDate,
+								`last_business_day(now()-days(${expDaysCount}))`,
 								'daily'
 							);
 
@@ -843,8 +856,8 @@
 							applyDatesOnRangeModeSwitch(
 								prevMonthLastDay,
 								'calculate_period_date(now(), "M", -1, True, False)',
-								currentDate,
-								'now()',
+								currentBusinessDate,
+								`last_business_day(now()-days(${expDaysCount}))`,
 								'month-to-date'
 							);
 
@@ -881,8 +894,8 @@
 							applyDatesOnRangeModeSwitch(
 								prevQuarterLastDay,
 								'get_date_last_quarter_end_business(now())',
-								currentDate,
-								'now()',
+								currentBusinessDate,
+								`last_business_day(now()-days(${expDaysCount}))`,
 								'quarter-to-date'
 							);
 
@@ -922,8 +935,8 @@
 							applyDatesOnRangeModeSwitch(
 								prevYearLastDay,
 								'get_date_last_year_end_business(now())',
-								currentDate,
-								'now()',
+								currentBusinessDate,
+								`last_business_day(now()-days(${expDaysCount}))`,
 								'year-to-date'
 							);
 
@@ -936,7 +949,7 @@
 							applyFirstDate(new Date('0001-01-01'));
 							scope.datepickerOptions.datepickerMode = 'inception';
 							scope.datepickerOptions.expression = '';
-							applySecondDate(currentDate);
+							applySecondDate(currentBusinessDate);
 							scope.secondDatepickerOptions.datepickerMode = 'inception';
 							scope.secondDatepickerOptions.expression = 'now()';
 							disableFieldsAndCalendars();
