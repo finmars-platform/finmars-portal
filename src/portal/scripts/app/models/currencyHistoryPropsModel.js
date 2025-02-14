@@ -46,6 +46,12 @@
                 "value_type": 20
             },
             {
+                "key": "is_temporary_fx_rate",
+                "name": "Is Temporary FX Rate",
+                "value_type": 50,
+                "allow_null": true
+            },
+            {
                 "key": "pricing_policy",
                 "name": "Pricing policy",
                 "value_type": "field",
