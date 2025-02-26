@@ -1143,6 +1143,22 @@ const {default: pricingPolicyService} = require("../../services/pricingPolicySer
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
                 console.log('resultEntity', resultEntity);
 
+                if (resultEntity && vm.entityType === "portfolio-reconcile-group") {
+                    resultEntity = {
+                        ...resultEntity,
+                        params: {
+                            precision: resultEntity.precision,
+                            report_ttl: resultEntity.report_ttl,
+                            only_errors: resultEntity.only_errors,
+                            round_digits: resultEntity.round_digits
+                        }
+                    }
+                    delete resultEntity.precision;
+                    delete resultEntity.report_ttl;
+                    delete resultEntity.only_errors;
+                    delete resultEntity.round_digits;
+                }
+
                 if (vm.dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(vm.dataConstructorLayout.id, vm.dataConstructorLayout);
                 }
