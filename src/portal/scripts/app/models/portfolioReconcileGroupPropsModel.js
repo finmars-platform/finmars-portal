@@ -55,6 +55,30 @@
                 "value_entity": "portfolio",
                 "code": "user_code",
                 "allow_null": false
+            },
+            {
+                "key": "precision",
+                "name": "Precision",
+                "value_type": 20,
+                "allow_null": true
+            },
+            {
+                "key": "report_ttl",
+                "name": "Time To Live(Days max count: 90)",
+                "value_type": 20,
+                "allow_null": true,
+            },
+            {
+                "key": "only_errors",
+                "name": "Show Only Errors",
+                "value_type": 50,
+                "allow_null": true
+            },
+            {
+                "key": "round_digits",
+                "name": "Round Digits",
+                "value_type": 20,
+                "allow_null": true
             }
         ]
     };

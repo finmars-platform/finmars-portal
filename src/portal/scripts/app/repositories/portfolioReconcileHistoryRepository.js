@@ -88,6 +88,26 @@
             })
     };
 
+    var check = function (options) {
+      var prefix = baseUrlService.getMasterUserPrefix();
+      var apiVersion = baseUrlService.getApiVersion();
+
+      const portfoliosQueryString = options.portfolios?.map(portfolio => `portfolios=${portfolio}`).join('&');
+
+      const url = baseUrl + '/' + prefix + '/' + apiVersion + '/' +
+        'portfolios/portfolio-reconcile-history/status/?date=' + options.report_date + '&' + portfoliosQueryString;
+
+      return xhrService.fetch(configureRepositoryUrlService.configureUrl(url), {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        }
+      });
+    };
+
     var deleteByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -140,6 +160,7 @@
         getByKey: getByKey,
         create: create,
         update: update,
+        check: check,
         deleteByKey: deleteByKey,
         deleteBulk: deleteBulk
     }

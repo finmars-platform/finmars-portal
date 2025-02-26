@@ -107,9 +107,11 @@
 
 						changedValue = Number.isInteger(changedValue) ? parseInt(changedValue) : parseFloat(changedValue);
 
-						// negative numbers processing
-
-						if (changedValue < 0) {
+              if (scope.smallOptions?.fieldKey === 'report_ttl' && changedValue > 90) {
+                  error = "Can't be bigger than 90";
+                  modelValue = 90;
+              }
+              else if (changedValue < 0) {
 
 							if (scope.numberFormat && scope.numberFormat.negative_color_format_id === 1) {
 								inputElem.classList.add('red-text');

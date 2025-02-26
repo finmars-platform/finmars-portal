@@ -27,6 +27,10 @@
         vm.missingHistoricalFxRates = []; // transaction rates
 
         vm.missingCustomFields = [];
+        vm.reconcileHistory = {
+            count: 0,
+            results: {}
+        };
 
         vm.downloadPriceHistoryCSV = function (event) {
 
@@ -129,6 +133,21 @@
                         items: vm.missingHistoricalFxRates,
                         evDataService: vm.evDataService
                     }
+                }
+            })
+
+        };
+
+        vm.viewFailedReconcileHistory = function ($event) {
+
+            $mdDialog.show({
+                controller: 'ViewFailedReconcileHistoryDialogController as vm',
+                templateUrl: 'views/dialogs/report-missing-prices/view-failed-reconcile-history-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    data: vm.reconcileHistory
                 }
             })
 
@@ -273,6 +292,8 @@
                 return item
 
             });
+
+            vm.reconcileHistory = data.failedReconcileData;
 
         };
 
