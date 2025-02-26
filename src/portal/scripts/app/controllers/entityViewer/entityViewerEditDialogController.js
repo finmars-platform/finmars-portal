@@ -854,6 +854,12 @@
             if (vm.entityId) {
                 vm.entity = await entityResolverService.getByKey(vm.entityType, vm.entityId);
 
+                if (vm.entity?.params && vm.entityType === "portfolio-reconcile-group") {
+                    // Merge `params` properties into the main object
+                    Object.assign(vm.entity, vm.entity.params);
+                    // Remove the `params` key after merging
+                    delete vm.entity.params;
+                }
             }
             else if (vm.entityUserCode) {
                 vm.entity = await entityResolverService.getByUserCode(vm.entityType, vm.entityUserCode);
@@ -882,6 +888,10 @@
 
                 vm.entity = res.results[0];
 
+            }
+
+            if (!vm.entity?.is_enabled) {
+                vm.entity.is_enabled = true;
             }
 
             vm.draftUserCode = vm.generateUserCodeForDraft();
@@ -1180,6 +1190,22 @@
 
                 // var result = entityEditorHelper.removeNullFields(vm.entity);
                 var result = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
+
+                if (result && vm.entityType === "portfolio-reconcile-group") {
+                    result = {
+                        ...result,
+                        params: {
+                            precision: result.precision,
+                            report_ttl: result.report_ttl,
+                            only_errors: result.only_errors,
+                            round_digits: result.round_digits
+                        }
+                    }
+                    delete result.precision;
+                    delete result.report_ttl;
+                    delete result.only_errors;
+                    delete result.round_digits;
+                }
 
                 if (vm.dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(vm.dataConstructorLayout.id, vm.dataConstructorLayout);

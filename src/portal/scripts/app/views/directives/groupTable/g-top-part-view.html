@@ -46,10 +46,9 @@
     <div class="p-r-24 flex-row flex-i-center">
 
         <div data-ng-if="isReport" class="flex-row flex-i-center">
-
-            <md-button data-ng-if="missingPricesData.items.length" class="missing-prices-warning-button"
+            <md-button data-ng-if="missingPricesData.items.length || failedReconcileData.count > 0" class="missing-prices-warning-button"
                        data-ng-click="openMissingPricesDialog($event)"><span class="material-icons">warning</span>
-                Missing Data ({{missingPricesData.items.length}})
+                Missing Data ({{missingPricesData.items.length + failedReconcileData.count}})
             </md-button>
 
             <md-select ng-if="entityType != 'transaction-report'"

@@ -10,6 +10,8 @@ const evEvents = require("../../services/entityViewerEvents");
     var evEvents = require('../../services/entityViewerEvents');
 
     var currencyService = require('../../services/currencyService').default;
+    var portfolioRepository = require('../../repositories/portfolioRepository');
+    var portfolioReconcileHistoryService = require('../../services/portfolioReconcileHistoryService').default;
 
     module.exports = function ($mdDialog, $state, usersService, ecosystemDefaultService, globalDataService, evRvLayoutsHelper, reportHelper) {
         return {
@@ -29,6 +31,13 @@ const evEvents = require("../../services/entityViewerEvents");
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.viewContext = scope.evDataService.getViewContext();
 
+                scope.portfoliosList = [];
+                scope.filteredPortfoliosList = [];
+                scope.failedReconcileData = {
+                    count: 0,
+                    results: {}
+                };
+
                 scope.globalTableSearch = ''
 
                 scope.layoutData = {
@@ -36,6 +45,7 @@ const evEvents = require("../../services/entityViewerEvents");
                 };
 
                 let listLayout = scope.evDataService.getListLayout();
+                let plFirstDateForStatus = scope.reportOptions?.pl_first_date || '';
 
                 let dateFromKey;
                 let dateToKey;
@@ -85,6 +95,7 @@ const evEvents = require("../../services/entityViewerEvents");
                         locals: {
                             data: {
                                 missingPricesData: scope.missingPricesData,
+                                failedReconcileData: scope.failedReconcileData,
                                 evDataService: scope.evDataService
                             }
                         }
@@ -352,6 +363,74 @@ const evEvents = require("../../services/entityViewerEvents");
 
                 }*/
 
+                function getPortfolios() {
+                    return portfolioRepository.getList()
+                      .then(function (data) {
+                          if (data?.results) {
+                              scope.portfoliosList = data.results;
+                          } else {
+                              scope.portfoliosList = [];
+                          }
+                      })
+                      .catch(function (error) {
+                          console.log('getPortfolios error: ', error);
+                          scope.portfoliosList = [];
+                      });
+                }
+
+                function getReconcileStatus() {
+                    if (!scope.reportOptions?.portfolios?.length) {
+                        scope.filteredPortfoliosList = scope.portfoliosList.map(item => item.user_code);
+                    } else {
+                        scope.filteredPortfoliosList = scope.portfoliosList
+                          .filter(portfolio => scope.reportOptions?.portfolios.includes(portfolio.id))
+                          .map(portfolio => portfolio.user_code);
+                    }
+
+                    if (!scope.filteredPortfoliosList?.length) {
+                        return;
+                    }
+
+                    let options = {
+                        portfolios: scope.filteredPortfoliosList,
+                        report_date: scope.reportOptions?.report_date
+                    };
+
+                    if (scope.entityType === "pl-report" && (scope.reportOptions?.pl_first_date || scope.reportOptions?.begin_date)) {
+                        let optionsPlFirstDate = {
+                            portfolios: scope.filteredPortfoliosList,
+                            report_date: scope.reportOptions?.pl_first_date || plFirstDateForStatus
+                        };
+
+                        Promise.all([
+                            portfolioReconcileHistoryService.check(options),
+                            portfolioReconcileHistoryService.check(optionsPlFirstDate)
+                        ])
+                          .then(([res1, res2]) => {
+                              let mergedResults = { ...res1, ...res2 };
+
+                              scope.failedReconcileData.results = Object.fromEntries(
+                                Object.entries(mergedResults).filter(([_, status]) => status.toLowerCase() !== "ok")
+                              );
+
+                              scope.failedReconcileData.count = Object.keys(scope.failedReconcileData.results).length;
+                          })
+                          .catch(error => {
+                              console.error('failed Reconcile P&L Status Data error:', error);
+                          });
+
+                    } else if (scope.entityType === "balance-report") {
+                        portfolioReconcileHistoryService.check(options)
+                          .then(res => {
+                              scope.failedReconcileData.results = res || {};
+                              scope.failedReconcileData.count = Object.values(scope.failedReconcileData.results)
+                                .filter(status => status.toLowerCase() !== "ok").length;
+                          })
+                          .catch(error => {
+                              console.error('failed Reconcile Balance Status Data error:', error);
+                          });
+                    }
+                }
 
                 var initEventListeners = function () {
 
@@ -369,6 +448,7 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         scope.missingPricesData = scope.evDataService.getMissingPrices()
 
+                        getReconcileStatus();
 
                     });
 
@@ -398,16 +478,25 @@ const evEvents = require("../../services/entityViewerEvents");
                             }
 
                             if(scope.reportOptions.period_type && scope.reportOptions.period_type === 'daily') {
+                                plFirstDateForStatus = scope.reportOptions.pl_first_date || scope.reportOptions.begin_date;
                                 delete scope.reportOptions.pl_first_date;
                                 delete scope.reportOptions.begin_date;
                             }
+
+                            getReconcileStatus();
                         });
 
                     }
 
+                    getPortfolios()
+                      .then(() => getReconcileStatus())
+                      .catch((error) => {
+                          console.log('Error in getPortfolios: ', error);
+                      });
+
                 };
 
-                const init = async function () {
+                const init = function () {
 
                     scope.missingPricesData = scope.evDataService.getMissingPrices()
 
