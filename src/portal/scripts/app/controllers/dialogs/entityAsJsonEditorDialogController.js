@@ -244,6 +244,22 @@
 
                 if (vm.item.id) {
 
+                    if (vm.entityType === "portfolio-reconcile-group") {
+                        vm.item = {
+                            ...vm.item,
+                            params: {
+                                precision: vm.item.precision,
+                                report_ttl: vm.item.report_ttl,
+                                only_errors: vm.item.only_errors,
+                                round_digits: vm.item.round_digits
+                            }
+                        }
+                        delete vm.item.precision;
+                        delete vm.item.report_ttl;
+                        delete vm.item.only_errors;
+                        delete vm.item.round_digits;
+                    }
+
                     entityResolverService.update(vm.entityType, vm.item.id, vm.item).then(function (responseData) {
 
                         vm.processing = false;

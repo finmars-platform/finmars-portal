@@ -667,6 +667,17 @@
 
                         entityViewerDataService.setRequestParameters(requestParameters);
 
+                        if (data?.results && entityType === "portfolio-reconcile-group") {
+                            data.results.forEach((item) => {
+                                if (item.params) {
+                                    // Merge `params` properties into the main object
+                                    Object.assign(item, item.params);
+                                    // Remove the `params` key after merging
+                                    delete item.params;
+                                }
+                            });
+                        }
+
                         deserializeObjects(entityViewerDataService, entityViewerEventService, attributeDataService, data, requestParameters, pageToRequest);
 
                         if (requestParameters.loadAll) {

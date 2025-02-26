@@ -22,6 +22,10 @@
         return portfolioReconcileHistoryRepository.update(id, portfolio);
     };
 
+    var check = function (options) {
+        return portfolioReconcileHistoryRepository.check(options);
+    };
+
     var deleteByKey = function (id) {
         return portfolioReconcileHistoryRepository.deleteByKey(id);
     };
@@ -34,6 +38,7 @@
         getByKey: getByKey,
         create: create,
         update: update,
+        check: check,
         deleteByKey: deleteByKey,
         deleteBulk: deleteBulk
 
