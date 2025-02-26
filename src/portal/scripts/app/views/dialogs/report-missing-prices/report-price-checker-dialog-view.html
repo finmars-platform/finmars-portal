@@ -54,6 +54,17 @@
 
             </div>
 
+
+            <div data-ng-if="vm.reconcileHistory.count > 0" layout="row" class="m-b-24">
+
+                <div class="p-t-16" style="min-width: 600px;">
+                    Reconciliation Failed ({{vm.reconcileHistory.count}})
+                </div>
+
+                <md-button class="" data-ng-click="vm.viewFailedReconcileHistory($event)">View</md-button>
+
+            </div>
+
             <div data-ng-if="vm.missingCustomFields.length" layout="row" class="m-b-24">
 
                 <div class="p-t-16" style="min-width: 600px;">

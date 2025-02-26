@@ -687,7 +687,7 @@ export default (function () {
     portal.controller('ViewMissingHistoricalFxRatesDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'currencyHistoryService', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingHistoricalFxRatesDialogController')]);
     portal.controller('ViewMissingPriceHistoryViewPositionsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingPriceHistoryViewPositionsDialogController')]);
     portal.controller('ViewMissingCustomFieldsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingCustomFieldsDialogController')]);
-
+    portal.controller('ViewFailedReconcileHistoryDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewFailedReconcileHistoryDialogController')]);
 
     // Settings
 

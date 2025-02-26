@@ -262,6 +262,16 @@
 
                         }
 
+                    } else if (scope.groupType.entity === 'portfolio' && scope.groupType?.key !== 'status') {
+
+                        if (scope.item.___group_name === 1) {
+                            scope.item.___group_name_pretty = 'General'
+                        } else if (scope.item.___group_name === 3) {
+                            scope.item.___group_name_pretty = 'Positional'
+                        } else if (!scope.item.___group_name) {
+                            scope.item.___group_name_pretty = 'None'
+                        }
+
                     }
 
                     return scope.item.___group_name_pretty
