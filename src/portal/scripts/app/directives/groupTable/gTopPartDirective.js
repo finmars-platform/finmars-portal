@@ -409,11 +409,14 @@ const evEvents = require("../../services/entityViewerEvents");
                           .then(([res1, res2]) => {
                               let mergedResults = { ...res1 || {}, ...res2 || {} };
 
-                              scope.failedReconcileData.results = Object.fromEntries(
-                                Object.entries(mergedResults).filter(([_, data]) => data.final_status.toLowerCase() !== "ok")
-                              );
+                              // Store all results (including "ok")
+                              scope.failedReconcileData.results = mergedResults;
 
-                              scope.failedReconcileData.count = Object.keys(scope.failedReconcileData.results).length;
+                              // Count only failed ones (not "ok")
+                              scope.failedReconcileData.count = Object.values(mergedResults)
+                                .filter(data => data.final_status.toLowerCase() !== "ok")
+                                .length;
+
                           })
                           .catch(error => {
                               console.error('failed Reconcile P&L Status Data error:', error);
@@ -422,13 +425,13 @@ const evEvents = require("../../services/entityViewerEvents");
                     } else if (scope.entityType === "balance-report") {
                         portfolioReconcileHistoryService.check(options)
                           .then(res => {
+                              // Store all results (including "ok")
                               scope.failedReconcileData.results = res || {};
 
-                              scope.failedReconcileData.results = Object.fromEntries(
-                                Object.entries(res).filter(([_, data]) => data.final_status.toLowerCase() !== "ok")
-                              );
-
-                              scope.failedReconcileData.count = Object.keys(scope.failedReconcileData.results).length;
+                              // Count only failed ones (not "ok")
+                              scope.failedReconcileData.count = Object.values(res)
+                                .filter(data => data.final_status.toLowerCase() !== "ok")
+                                .length;
                           })
                           .catch(error => {
                               console.error('failed Reconcile Balance Status Data error:', error);
