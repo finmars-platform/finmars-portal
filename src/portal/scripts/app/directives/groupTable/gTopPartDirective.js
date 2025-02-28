@@ -407,10 +407,10 @@ const evEvents = require("../../services/entityViewerEvents");
                             portfolioReconcileHistoryService.check(optionsPlFirstDate)
                         ])
                           .then(([res1, res2]) => {
-                              let mergedResults = { ...res1, ...res2 };
+                              let mergedResults = { ...res1 || {}, ...res2 || {} };
 
                               scope.failedReconcileData.results = Object.fromEntries(
-                                Object.entries(mergedResults).filter(([_, status]) => status.toLowerCase() !== "ok")
+                                Object.entries(mergedResults).filter(([_, data]) => data.final_status.toLowerCase() !== "ok")
                               );
 
                               scope.failedReconcileData.count = Object.keys(scope.failedReconcileData.results).length;
@@ -423,8 +423,12 @@ const evEvents = require("../../services/entityViewerEvents");
                         portfolioReconcileHistoryService.check(options)
                           .then(res => {
                               scope.failedReconcileData.results = res || {};
-                              scope.failedReconcileData.count = Object.values(scope.failedReconcileData.results)
-                                .filter(status => status.toLowerCase() !== "ok").length;
+
+                              scope.failedReconcileData.results = Object.fromEntries(
+                                Object.entries(res).filter(([_, data]) => data.final_status.toLowerCase() !== "ok")
+                              );
+
+                              scope.failedReconcileData.count = Object.keys(scope.failedReconcileData.results).length;
                           })
                           .catch(error => {
                               console.error('failed Reconcile Balance Status Data error:', error);
