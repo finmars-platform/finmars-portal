@@ -14,12 +14,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="(key, status) in vm.items">
+            <tr ng-repeat="(key, val) in vm.items">
                 <td>
                     <span class="block p-t-16">{{key}}</span>
                 </td>
                 <td>
-                    <span class="block p-t-16">{{status}}</span>
+                    <span class="block p-t-16">{{val.final_status}}</span>
                 </td>
             </tr>
             </tbody>
