@@ -409,8 +409,10 @@ const evEvents = require("../../services/entityViewerEvents");
                           .then(([res1, res2]) => {
                               let mergedResults = { ...res1 || {}, ...res2 || {} };
 
-                              // Store all results (including "ok")
-                              scope.failedReconcileData.results = mergedResults;
+                              // Filter out only failed statuses (not "ok")
+                              scope.failedReconcileData.results = Object.fromEntries(
+                                Object.entries(mergedResults).filter(([key, data]) => data.final_status.toLowerCase() !== "ok")
+                              );
 
                               // Count only failed ones (not "ok")
                               scope.failedReconcileData.count = Object.values(mergedResults)
@@ -425,8 +427,10 @@ const evEvents = require("../../services/entityViewerEvents");
                     } else if (scope.entityType === "balance-report") {
                         portfolioReconcileHistoryService.check(options)
                           .then(res => {
-                              // Store all results (including "ok")
-                              scope.failedReconcileData.results = res || {};
+                              // Filter out only failed statuses (not "ok")
+                              scope.failedReconcileData.results = Object.fromEntries(
+                                Object.entries(res || {}).filter(([key, data]) => data.final_status.toLowerCase() !== "ok")
+                              );
 
                               // Count only failed ones (not "ok")
                               scope.failedReconcileData.count = Object.values(res)

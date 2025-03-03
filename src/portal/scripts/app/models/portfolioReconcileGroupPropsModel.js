@@ -76,7 +76,7 @@
             },
             {
                 "key": "round_digits",
-                "name": "Round Digits (digits after decimal point)",
+                "name": "Round Digits (Digits after decimal point)",
                 "value_type": 20,
                 "allow_null": true
             }

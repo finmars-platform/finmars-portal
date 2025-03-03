@@ -165,14 +165,16 @@
 
         vm.formatContent = function () {
 
-            var name = ''
+            var name = '';
+            var fileUrl = '';
 
             if (vm.data.file_descriptor) {
                 name = vm.data.file_descriptor.name
             }
 
             if (vm.data.info && vm.data.info.file_report_object) {
-                name = vm.data.info.file_report_object.name
+                name = vm.data.info.file_report_object.name;
+                fileUrl = vm.data.info.file_report_object.file_url;
             }
 
             if (name.indexOf('.csv') !== -1) {
@@ -181,7 +183,7 @@
 
                 vm.data.content_formatted = vm.formatCSV()
 
-            } else if (name.indexOf('.json') !== -1) {
+            } else if (name.indexOf('.json') !== -1 || fileUrl.indexOf('.json') !== -1) {
 
                 vm.contentType = 'json'
 
@@ -189,7 +191,7 @@
 
                 vm.initJsonEditor()
 
-            } else if (name.indexOf('.py') !== -1) {
+            } else if (name.indexOf('.py') !== -1 || fileUrl.indexOf('.py') !== -1) {
 
                 vm.contentType = 'python'
 
@@ -197,7 +199,12 @@
 
                 vm.initPythonEditor()
 
-            } else if (name.indexOf('.yml') !== -1 || name.indexOf('.yaml') !== -1) {
+            } else if (
+              name.indexOf('.yml') !== -1 ||
+              name.indexOf('.yaml') !== -1 ||
+              fileUrl.indexOf('.yml') !== -1 ||
+              fileUrl.indexOf('.yaml') !== -1
+            ) {
 
                 vm.contentType = 'yaml'
 
