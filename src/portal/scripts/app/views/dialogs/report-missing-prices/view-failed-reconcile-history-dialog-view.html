@@ -16,10 +16,12 @@
             <tbody>
             <tr ng-repeat="(key, val) in vm.items">
                 <td>
-                    <span class="block p-t-16">{{key}}</span>
+                    <span class="block p-t-16" style="color: {{ vm.getStatusTitle(val.final_status).color }}">{{key}}</span>
                 </td>
                 <td>
-                    <span class="block p-t-16">{{val.final_status}}</span>
+                    <span class="block p-t-16" style="color: {{ vm.getStatusTitle(val.final_status).color }}">
+                        <i>{{vm.getStatusTitle(val.final_status).text}}</i>
+                    </span>
                 </td>
             </tr>
             </tbody>
