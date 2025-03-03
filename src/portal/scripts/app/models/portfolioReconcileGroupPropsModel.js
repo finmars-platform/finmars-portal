@@ -64,7 +64,7 @@
             },
             {
                 "key": "report_ttl",
-                "name": "Time To Live(Days max count: 90)",
+                "name": "Time To Live (Days max count: 90)",
                 "value_type": 20,
                 "allow_null": true,
             },
@@ -76,7 +76,7 @@
             },
             {
                 "key": "round_digits",
-                "name": "Round Digits",
+                "name": "Round Digits (digits after decimal point)",
                 "value_type": 20,
                 "allow_null": true
             }
