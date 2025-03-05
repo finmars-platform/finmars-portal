@@ -33,8 +33,8 @@
                 name = vm.data.file_descriptor.name
             }
 
-            if (vm.data.info && vm.data.info.file_report_object) {
-                name = vm.data.info.file_report_object.name
+            if (vm.data.info && (vm.data.info.file_report_object || vm.data.info.file_report)) {
+                name = vm.data.info.file_report_object?.name || vm.data.info.file_report?.name
             }
 
             downloadFileHelper.downloadFile(content, "application/force-download", name);
@@ -172,9 +172,9 @@
                 name = vm.data.file_descriptor.name
             }
 
-            if (vm.data.info && vm.data.info.file_report_object) {
-                name = vm.data.info.file_report_object.name;
-                fileUrl = vm.data.info.file_report_object.file_url;
+            if (vm.data.info && (vm.data.info.file_report_object || vm.data.info.file_report)) {
+                name = vm.data.info.file_report_object?.name || vm.data.info.file_report?.name;
+                fileUrl = vm.data.info.file_report_object?.file_url || vm.data.info.file_report?.file_url;
             }
 
             if (name.indexOf('.csv') !== -1) {
