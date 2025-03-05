@@ -63,7 +63,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@cyclonedx/bom": "^4.0.2",
-    "@finmars/ui": "1.0.71",
+    "@finmars/ui": "1.0.72",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@sentry/browser": "^6.19.7",
     "@sentry/integrations": "^6.19.0",
