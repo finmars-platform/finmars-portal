@@ -20,7 +20,7 @@
 
                 scope.downloadFile = function ($event, item) {
 
-                    explorerService.viewFile(item.file_report_object.file_url).then(function (blob) {
+                    explorerService.viewFile(item.file_report_object?.file_url || item.file_report?.file_url).then(function (blob) {
 
                         var reader = new FileReader();
 
@@ -28,7 +28,7 @@
 
                             var content = reader.result;
 
-                            if (item.file_report_object.file_url.indexOf('.json') !== -1) {
+                            if (item.file_report_object?.file_url.indexOf('.json') !== -1 || item.file_report?.file_url.indexOf('.json') !== -1) {
                                 content = JSON.parse(content)
                             }
 
