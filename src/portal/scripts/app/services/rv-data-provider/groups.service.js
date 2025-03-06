@@ -384,6 +384,7 @@ export default function (entityResolverService) {
 
                 reportOptions.report_instance_id = data.report_instance_id;
                 reportOptions.created_at = data.created_at;
+                reportOptions.portfolios_table_data = data.items;
                 entityViewerDataService.setReportOptions(reportOptions);
 
                 var result = {
