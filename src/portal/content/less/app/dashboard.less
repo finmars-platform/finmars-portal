@@ -22,10 +22,11 @@
   }
 
   .dashboard-fixed-area-container {
+    position: relative;
+    height: 72px;
     flex: 0 0 auto;
     margin-bottom: 10px;
     z-index: 50;
-    position: relative;
   }
 
   .dashboard-tabs-holder {
@@ -121,7 +122,7 @@
   }
 
   .dashboard-rows-holder {
-    height: 64px;
+    height: 72px;
   }
 
 
@@ -318,12 +319,16 @@
 
   .dashboard-control {
     .custom-input-container {
-      padding-top: 10px;
+      padding-top: 8px;
       margin-bottom: 0;
     }
 
     .custom-input-sel-menu-container {
       position: static;
+    }
+
+    .custom-input-borders {
+      height: 48px !important;
     }
   }
 
@@ -420,6 +425,7 @@
       .g-wrapper .g-column-bottom-row.g-table-header .g-cell-rows-settings {
         border-top: 0;
       }
+
       .g-wrapper .g-column-bottom-row.g-table-header .g-cell {
         border-top: 0;
       }
@@ -982,7 +988,6 @@ button.md-button.dashboard-button-set-button {
   z-index: 101;
 
 
-
   &:after {
     content: "";
     display: block;
@@ -1002,6 +1007,7 @@ button.md-button.dashboard-button-set-button {
   right: 8px;
   opacity: .5;
   cursor: pointer;
+
   &:hover {
     opacity: 1;
   }
