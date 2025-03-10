@@ -946,13 +946,14 @@
 							break;
 
 						case 'inception':
-							applyFirstDate(new Date('0001-01-01'));
-							scope.datepickerOptions.datepickerMode = 'inception';
-							scope.datepickerOptions.expression = '';
-							applySecondDate(currentBusinessDate);
-							scope.secondDatepickerOptions.datepickerMode = 'inception';
-							scope.secondDatepickerOptions.expression = 'now()';
-							disableFieldsAndCalendars();
+							applyDatesOnRangeModeSwitch(
+								new Date(scope.date),
+								'',
+								currentBusinessDate,
+								`last_business_day(now()-days(${expDaysCount}))`,
+								'inception'
+							);
+
 							if( scope.datepickerOptions.periodType) {
 								delete scope.datepickerOptions.periodType;
 							}
@@ -1008,7 +1009,12 @@
 
 				};
 
-				const init = function () {
+				const init = async function () {
+					if (scope.datepickerOptions.datepickerMode === 'daily' && !scope.date) {
+						const currentDate = moment(getCurrentBusinessDayExcludeWeekends(new Date()).date).format('YYYY-MM-DD');
+						const exprCalcRes = await expressionService.calcBusinessDate(currentDate);
+						scope.date = moment(new Date(exprCalcRes.result)).format('YYYY-MM-DD');
+					}
 
 					if (moment(scope.date, 'YYYY-MM-DD', true).isValid()) {
 						firstDate = new Date(scope.date);
