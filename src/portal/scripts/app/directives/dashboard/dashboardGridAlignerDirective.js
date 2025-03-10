@@ -43,7 +43,7 @@
                     // var tabHeight = $(elem).height();
                     // scope.cellHeight = Math.floor(tabHeight / scope.columnsTotal)
 
-                    scope.cellHeight = 64; // var it be fixed value
+                    scope.cellHeight = 72; // var it be fixed value
 
                 };
 

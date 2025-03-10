@@ -45,8 +45,12 @@
                  class="report-viewer-matrix-cell rv-matrix-colored-cell text-{{styles.cell.text_align}} firstColumnCell rvMatrixCell"
                  title="{{row.row_name}}"
                  data-ng-click="singleRowTotalClick($event, row.index)"
-                 data-ng-class="{'active': activeItem == 'row_total:' + row.index}">
-                {{row.row_name}}
+                 data-ng-class="{'active': activeItem == 'row_total:' + row.index}"
+            >
+                <span>
+                    {{row.row_name}}
+                    <md-tooltip md-position="top">{{row.row_name}}</md-tooltip>
+                </span>
             </div>
         </div>
 
