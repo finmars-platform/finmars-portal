@@ -5,261 +5,263 @@ import baseUrlService from "../../../../shell/scripts/app/services/baseUrlServic
 
 export default function (cookieService, xhrService) {
 
-    const baseUrl = baseUrlService.resolve();
+  const baseUrl = baseUrlService.resolve();
 
-    var getList = function (options) {
+  var getList = function (options) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'reports/report/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'reports/report/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
 
-    var getBalanceReport = function (options) {
+  var getBalanceReport = function (options) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/balance-report/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/balance-report/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
 
-    var getPnlReport = function (options) {
+  var getPnlReport = function (options) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/pl-report/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/pl-report/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
 
-    var getTransactionReport = function (options) {
+  var getTransactionReport = function (options) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/transaction-report/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/transaction-report/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
 
-    // NOT IMPLEMENTED
-    var getCashFlowProjectionReport = function (options) {
+  // NOT IMPLEMENTED
+  var getCashFlowProjectionReport = function (options) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'reports/cash-flow-projection-report/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'reports/cash-flow-projection-report/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
 
-    var getPerformanceReport = function (options) {
+  var getPerformanceReport = function (options) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'reports/performance-report/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
-
-
-    // Backend Reports
-
-    var getBackendBalanceReportGroups = function (options) {
-
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
-
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-balance-report/groups/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'reports/performance-report/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
 
 
-    var getBackendBalanceReportItems = function (options) {
+  // Backend Reports
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+  var getBackendBalanceReportGroups = function (options) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-balance-report/items/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-
-    var getBackendPnlReportGroups = function (options) {
-
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
-
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-pl-report/groups/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
-
-    var getBackendPnlReportItems = function (options) {
-
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
-
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-pl-report/items/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-balance-report/groups/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
 
 
-    var getBackendTransactionReportGroups = function (options) {
+  function getBackendBalanceReportItems(options) {
+    const prefix = baseUrlService.getMasterUserPrefix();
+    const apiVersion = baseUrlService.getApiVersion();
+    const versionQueryForHash = `${Date.now()}`;
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    const url = `${baseUrl}/${prefix}/${apiVersion}/reports/backend-balance-report/items/?v=${versionQueryForHash}`;
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-transaction-report/groups/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
-
-    var getBackendTransactionReportItems = function (options) {
-
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
-
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-transaction-report/items/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
-    };
-
-    return {
-        getList: getList,
-        getBalanceReport: getBalanceReport,
-        getPnlReport: getPnlReport,
-        getTransactionReport: getTransactionReport,
-        getCashFlowProjectionReport: getCashFlowProjectionReport,
-        getPerformanceReport: getPerformanceReport,
+    return xhrService.fetch(url,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options),
+      })
+  }
 
 
-        getBackendBalanceReportGroups: getBackendBalanceReportGroups,
-        getBackendBalanceReportItems: getBackendBalanceReportItems,
+  var getBackendPnlReportGroups = function (options) {
 
-        getBackendPnlReportGroups: getBackendPnlReportGroups,
-        getBackendPnlReportItems: getBackendPnlReportItems,
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        getBackendTransactionReportGroups: getBackendTransactionReportGroups,
-        getBackendTransactionReportItems: getBackendTransactionReportItems
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-pl-report/groups/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
 
-    }
+  var getBackendPnlReportItems = function (options) {
+
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
+
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-pl-report/items/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
+
+
+  var getBackendTransactionReportGroups = function (options) {
+
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
+
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-transaction-report/groups/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
+
+  var getBackendTransactionReportItems = function (options) {
+
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
+
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/reports/backend-transaction-report/items/',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookieService.getCookie('csrftoken'),
+          'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+          Accept: 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(options)
+      })
+  };
+
+  return {
+    getList: getList,
+    getBalanceReport: getBalanceReport,
+    getPnlReport: getPnlReport,
+    getTransactionReport: getTransactionReport,
+    getCashFlowProjectionReport: getCashFlowProjectionReport,
+    getPerformanceReport: getPerformanceReport,
+
+
+    getBackendBalanceReportGroups: getBackendBalanceReportGroups,
+    getBackendBalanceReportItems: getBackendBalanceReportItems,
+
+    getBackendPnlReportGroups: getBackendPnlReportGroups,
+    getBackendPnlReportItems: getBackendPnlReportItems,
+
+    getBackendTransactionReportGroups: getBackendTransactionReportGroups,
+    getBackendTransactionReportItems: getBackendTransactionReportItems
+
+  }
 
 }
