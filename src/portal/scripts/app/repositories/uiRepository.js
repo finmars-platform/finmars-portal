@@ -939,7 +939,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
     var installTheme = async function (themeSettings) {
 
-        if (themeSettings?.theme_css_file) {
+        if (themeSettings?.theme_css_url) {
             setCssFile(themeSettings)
         }
 
@@ -947,7 +947,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
             setCustomCss(themeSettings)
         }
 
-        if (themeSettings?.favicon_image) {
+        if (themeSettings?.favicon_url) {
             setFavicon(themeSettings)
         }
     }
@@ -965,12 +965,12 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
             document.head.appendChild(link)
         }
 
-        link.href = themeSettings.favicon_image
+        link.href = themeSettings.favicon_url
     }
     var setCssFile = async function (themeSettings) {
         let link = document.createElement('link')
         link.rel = 'stylesheet'
-        link.href = themeSettings.theme_css_file
+        link.href = themeSettings.theme_css_url
 
         document.head.appendChild(link)
     }
