@@ -28,7 +28,7 @@
 
                             var content = reader.result;
 
-                            if (item.file_report_object?.file_url.indexOf('.json') !== -1 || item.file_report?.file_url.indexOf('.json') !== -1) {
+                            if (item.file_report_object?.file_url?.indexOf('.json') !== -1 || item.file_report?.file_url?.indexOf('.json') !== -1) {
                                 content = JSON.parse(content)
                             }
 
