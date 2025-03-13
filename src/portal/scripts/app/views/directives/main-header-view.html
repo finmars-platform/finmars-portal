@@ -6,7 +6,7 @@
                ng-attr-documentation-url="{{getDocumentationLink()}}"
                ng-attr-api-reference-url="{{'/' + currentMasterUser.realm_code + '/' + currentMasterUser.space_code + '/docs/api/v1/'}}"
                logout-url="/logout"
-               ng-attr-logo="{{logoPath || ''}}"
+               ng-attr-logo="{{logoPath}}"
                ng-attr-avatar="{{user.profile_picture}}"
                ng-attr-letters="{{(user.first_name || user.username).slice(0, 2)}}"
                id="fmHeader"
