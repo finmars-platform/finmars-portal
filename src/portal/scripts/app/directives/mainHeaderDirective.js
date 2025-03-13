@@ -30,6 +30,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
             scope.user = globalDataService.getUser();
+            scope.logoPath = undefined
 
             scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode();
 
@@ -69,6 +70,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 const user = globalDataService.getUser();
 
                 authorizerService.updateUser(user.id, user);
+
+                scope.setLogoPath()
 
             }
 
@@ -568,7 +571,24 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                     fmHeaderElement[0].addEventListener('setCurrent', onSelectMaster);
                 }
 
+                scope.setLogoPath()
+
             };
+
+            scope.getPrefixPath = function () {
+                return `${window.API_HOST}/${window.base_api_url}/`
+            }
+
+            scope.setLogoPath = function () {
+                const whiteLabel = globalDataService.getWhiteLabel()
+                if (!whiteLabel) return undefined
+
+                const relativePath = scope.isThemeInDarkMode ? whiteLabel.logo_dark_url : whiteLabel.logo_light_url
+
+                if (relativePath) {
+                    scope.logoPath = scope.getPrefixPath() + relativePath
+                }
+            }
 
             init();
 
