@@ -860,6 +860,13 @@
                     // Remove the `params` key after merging
                     delete vm.entity.params;
                 }
+
+                if (
+                  vm.entity?.portfolio_reconcile_group_object ||
+                  vm.entityType === "portfolio-reconcile-history"
+                ) {
+                    vm.entity.portfolio_reconcile_group = vm.entity.portfolio_reconcile_group_object.id;
+                }
             }
             else if (vm.entityUserCode) {
                 vm.entity = await entityResolverService.getByUserCode(vm.entityType, vm.entityUserCode);
@@ -888,10 +895,6 @@
 
                 vm.entity = res.results[0];
 
-            }
-
-            if (!vm.entity?.is_enabled) {
-                vm.entity.is_enabled = true;
             }
 
             vm.draftUserCode = vm.generateUserCodeForDraft();
