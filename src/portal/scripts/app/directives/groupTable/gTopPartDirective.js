@@ -364,10 +364,17 @@ const evEvents = require("../../services/entityViewerEvents");
                 }*/
 
                 const getFilteredTablePortfolios = function () {
-                    return scope.reportOptions.portfolios_table_data?.map(group => {
-                        let key = group.___group_type_key.split('.').pop();
-                        return scope.portfoliosList.filter(portfolio => portfolio[key] === group.___group_name);
-                    }).flat();
+                    if (scope.reportOptions.portfolios_table_data_items) {
+                        return scope.reportOptions.portfolios_table_data_items.map(group => {
+                            let key = group.___group_type_key.split('.').pop();
+                            return scope.portfoliosList.filter(portfolio => portfolio[key] === group.___group_name);
+                        }).flat();
+                    } else if (scope.reportOptions.portfolios_table_data_objects) {
+                        return scope.portfoliosList.filter(portfolio =>
+                          scope.reportOptions.portfolios_table_data_objects.some(object => object.user_code === portfolio.user_code)
+                        );
+                    }
+                    return [];
                 };
 
                 const getFilteredEarliestDate = function () {
@@ -547,10 +554,17 @@ const evEvents = require("../../services/entityViewerEvents");
                             getReconcileStatus();
                         });
 
+                        scope.evEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+                            fetchInceptionDate();
+                        });
+
                         scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
                             fetchInceptionDate();
                         });
 
+                        scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+                            fetchInceptionDate();
+                        });
                     }
 
                     getPortfolios()
