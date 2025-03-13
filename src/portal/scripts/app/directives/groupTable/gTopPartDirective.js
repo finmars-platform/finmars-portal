@@ -562,7 +562,7 @@ const evEvents = require("../../services/entityViewerEvents");
                             fetchInceptionDate();
                         });
 
-                        scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+                        scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function () {
                             fetchInceptionDate();
                         });
                     }
