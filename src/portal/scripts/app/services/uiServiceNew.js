@@ -3,960 +3,958 @@
  */
 
 import UiRepository from "../repositories/uiRepository";
-// import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
-var localStorageService = require("../../../../shell/scripts/app/services/localStorageService");
+import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
+// var localStorageService = require("../../../../shell/scripts/app/services/localStorageService");
 // import metaService from "./metaService";
 var metaService = require("./metaService").default;
 import globalDataService from "../../../../shell/scripts/app/services/globalDataService";
 
 export default function (cookieService, xhrService, ecosystemDefaultService, metaContentTypesService, globalDataService) {
 
-  const uiRepository = new UiRepository(cookieService, xhrService, metaContentTypesService);
+    const uiRepository = new UiRepository(cookieService, xhrService, metaContentTypesService);
 
-  const isCachedLayoutActual = function (cachedLayout, layoutData) {
+    const isCachedLayoutActual = function (cachedLayout, layoutData) {
 
-    if (cachedLayout && cachedLayout.modified_at) {
+        if (cachedLayout && cachedLayout.modified_at) {
 
-      let cachedLayoutModDate = new Date(cachedLayout.modified_at).getTime();
-      let layoutModDate = new Date(layoutData.modified_at).getTime();
+            let cachedLayoutModDate = new Date(cachedLayout.modified_at).getTime();
+            let layoutModDate = new Date(layoutData.modified_at).getTime();
 
-      if (cachedLayoutModDate >= layoutModDate) {
-        return true;
-      }
+            if (cachedLayoutModDate >= layoutModDate) {
+                return true;
+            }
 
-    }
-
-    return false;
-
-  };
-
-  const getPortalInterfaceAccess = function () {
-    return uiRepository.getPortalInterfaceAccess();
-  };
-
-  const getCachedLayoutObj = (cacheResponse) => {
-    if (!cacheResponse || cacheResponse.hasOwnProperty('id')) {
-      return cacheResponse;
-
-    } else { // default layout returns inside results
-      return cacheResponse.results[0];
-    }
-  };
-
-  const getOnRejectCallback = (onRejectCallback, reject, cachedLayout) => {
-
-    if (onRejectCallback) {
-
-      return function (error) {
-
-        let errorMessage = "Layout ping error";
-        if (cachedLayout) errorMessage = "Id of layout to ping: " + cachedLayout.id;
-
-        console.error(errorMessage, error);
-        onRejectCallback();
-
-      }
-
-    } else {
-
-      return function (error) {
-        if (cachedLayout) error.___custom_message = "id of layout to get: " + cachedLayout.id;
-        reject(error);
-      };
-
-    }
-
-  }
-
-  /**
-   * If there is actual layout in cache, return it. Otherwise resolve layout from server
-   *
-   * @param cachedLayoutResponse {*} - data about particular layout inside local storage
-   * @param fetchLayoutFn {Function} - get layout, in case there is not one in local storage
-   * @param resolve {Function} - resolve function of parent promise
-   * @param reject {Function} - reject function of parent promise
-   * @param onRejectFn {Function} - execute on layout ping reject
-   */
-  const resolveLayoutByKey = function (cachedLayoutResponse, fetchLayoutFn, resolve, reject, onRejectFn) {
-
-    const cachedLayout = getCachedLayoutObj(cachedLayoutResponse);
-    const onErrorResponse = getOnRejectCallback(onRejectFn, reject, cachedLayout);
-
-    if (cachedLayout) {
-
-      uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
-
-        if (isCachedLayoutActual(cachedLayout, pingData)) {
-          resolve(cachedLayoutResponse);
-
-        } else {
-          fetchLayoutFn();
         }
 
-      }).catch(onErrorResponse);
+        return false;
 
-    } else {
-      fetchLayoutFn();
-    }
+    };
 
-  };
+    const getPortalInterfaceAccess = function () {
+        return uiRepository.getPortalInterfaceAccess();
+    };
 
-  const getListLayout = function (entityType, options) {
+    const getCachedLayoutObj = (cacheResponse) => {
+        if (!cacheResponse || cacheResponse.hasOwnProperty('id')) {
+            return cacheResponse;
 
-    // get content_type by entityType when getting layout by user_code
-    if (options && options.filters && options.filters.user_code && entityType) {
-      options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
-    }
+        } else { // default layout returns inside results
+            return cacheResponse.results[0];
+        }
+    };
 
-    if (options && options.filters &&
-      options.filters.content_type && options.filters.user_code) { // if getting one layout by user_code
+    const getOnRejectCallback = (onRejectCallback, reject, cachedLayout) => {
 
-      return new Promise(function (resolve, reject) {
+        if (onRejectCallback) {
 
-        uiRepository.getListLayoutLight(entityType, options).then(function (data) {
+            return function (error) {
 
-          let lightLayout = data.results[0];
+                let errorMessage = "Layout ping error";
+                if (cachedLayout) errorMessage = "Id of layout to ping: " + cachedLayout.id;
 
-          if (lightLayout) {
+                console.error(errorMessage, error);
+                onRejectCallback();
 
-            let cachedLayout = localStorageService.getCachedLayout(lightLayout.id);
+            }
 
-            if (isCachedLayoutActual(cachedLayout, lightLayout)) {
-              resolve({results: [cachedLayout]});
+        } else {
 
-            } else {
-
-              uiRepository.getListLayout(entityType, options).then(function (listLayoutData) {
-
-                let listLayout = listLayoutData.results[0];
-
-                localStorageService.cacheLayout(listLayout);
-                resolve(listLayoutData);
-
-              }).catch(function (error) {
+            return function (error) {
+                if (cachedLayout) error.___custom_message = "id of layout to get: " + cachedLayout.id;
                 reject(error);
-              });
+            };
 
-            }
-
-          } else {
-            resolve(data);
-          }
-
-        }).catch(function (error) {
-          reject(error);
-        });
-
-      });
+        }
 
     }
 
-    return uiRepository.getListLayout(entityType, options);
+    /**
+     * If there is actual layout in cache, return it. Otherwise resolve layout from server
+     *
+     * @param cachedLayoutResponse {*} - data about particular layout inside local storage
+     * @param fetchLayoutFn {Function} - get layout, in case there is not one in local storage
+     * @param resolve {Function} - resolve function of parent promise
+     * @param reject {Function} - reject function of parent promise
+     * @param onRejectFn {Function} - execute on layout ping reject
+     */
+    const resolveLayoutByKey = function (cachedLayoutResponse, fetchLayoutFn, resolve, reject, onRejectFn) {
 
-  };
+        const cachedLayout = getCachedLayoutObj(cachedLayoutResponse);
+        const onErrorResponse = getOnRejectCallback(onRejectFn, reject, cachedLayout);
 
-  const getListLayoutLight = function (entity, options) {
-    return uiRepository.getListLayoutLight(entity, options);
-  };
+        if (cachedLayout) {
 
-  /* let getListLayoutDefault = function (options) {
-      return uiRepository.getListLayoutDefault(options);
-  }; */
+            uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
 
-  const getListLayoutByKey = key => {
+                if (isCachedLayoutActual(cachedLayout, pingData)) {
+                    resolve(cachedLayoutResponse);
 
-    return new Promise(function (resolve, reject) {
+                } else {
+                    fetchLayoutFn();
+                }
 
-      const cachedLayout = localStorageService.getCachedLayout(key);
-
-      const fetchLayout = function () {
-
-        uiRepository.getListLayoutByKey(key).then(function (layoutData) {
-
-          if (layoutData && layoutData.id) {
-            localStorageService.cacheLayout(layoutData);
-          }
-
-          resolve(layoutData);
-
-        }).catch(function (error) {
-          reject(error);
-        });
-
-      };
-
-      resolveLayoutByKey(cachedLayout, fetchLayout, resolve, reject);
-
-    });
-
-    // return uiRepository.getListLayoutByKey(key);
-  };
-
-  /**
-   *
-   * @memberOf module:uiService
-   * @param entityType {string}
-   * @param userCode {string} - user code of layout
-   * @returns {Promise<any>}
-   */
-  const getListLayoutByUserCode = (entityType, userCode) => {
-
-    const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
-
-    return getListLayout(
-      null,
-      {
-        pageSize: 1000,
-        filters: {
-          content_type: contentType,
-          user_code: userCode
-        }
-      }
-    );
-
-  }
-
-  const createListLayout = function (entity, ui) {
-
-    ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-
-    return new Promise(function (resolve, reject) {
-
-      uiRepository.createListLayout(ui).then(function (data) {
-
-        if (data.is_default) {
-          localStorageService.cacheDefaultLayout(data);
-        }
-
-        resolve(data);
-
-      }).catch(function (error) {
-        reject(error);
-      });
-
-    });
-
-  };
-
-  const updateListLayout = function (id, ui) {
-
-    return new Promise(function (resolve, reject) {
-
-      uiRepository.updateListLayout(id, ui).then(function (data) {
-
-        ui.modified_at = data.modified_at
-
-        if (ui.is_systemic) {
-          localStorageService.cacheAutosaveLayout(ui);
-        }
-
-        if (ui.is_default) {
-          localStorageService.cacheDefaultLayout(ui);
-
-        } else if (!ui.is_systemic) {
-          localStorageService.cacheLayout(ui);
-        }
-
-        resolve(ui);
-
-      }).catch(function (error) {
-
-        if (error.status === 400 &&
-          error.message &&
-          error.message.non_field_errors &&
-          error.message.non_field_errors[0] === "Synchronization error") {
-          // this and page reload fixes "Synchronization error" which sometimes occur
-          localStorageService.deleteLayoutFromCache(id);
-
-        }
-
-        reject(error);
-
-      });
-
-    });
-
-  };
-
-  const deleteListLayoutByKey = function (id) {
-
-    return new Promise(function (resolve, reject) {
-
-      uiRepository.deleteListLayoutByKey(id).then(function (data) {
-
-        localStorageService.deleteLayoutFromCache(id);
-        resolve(data);
-
-      }).catch(function (error) {
-        reject(error);
-      });
-
-    });
-
-  };
-  /**
-   *
-   * @param id {number} - layout id
-   * @param xhrOptions {Object=}
-   * @returns {Promise<Object>}
-   */
-  const pingListLayoutByKey = (id, xhrOptions) => {
-    return uiRepository.pingListLayoutByKey(id, xhrOptions);
-  }
-
-  const getListLayoutTemplate = function (isReport) {
-    return uiRepository.getListLayoutTemplate(isReport);
-  };
-
-  /**
-   * If there is actual default layout in cache, return it. Otherwise fetch layout from server.
-   *
-   * @param cachedLayoutResponse {*} - data about particular layout inside local storage
-   * @param fetchLayoutCallback {Function} - callback to fetch layout from server if default layout in local storage does not fit
-   * @param resolve - resolve function of parent promise
-   * @param reject - reject function of parent promise
-   */
-  const resolveDefaultListLayout = function (cachedLayoutResponse, fetchLayoutCallback, resolve, reject) {
-
-    const cachedLayout = getCachedLayoutObj(cachedLayoutResponse);
-    const onPingRejectCallback = getOnRejectCallback(fetchLayoutCallback, reject, cachedLayout);
-
-    if (cachedLayout) {
-
-      uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
-
-        if (pingData && pingData.is_default && isCachedLayoutActual(cachedLayout, pingData)) {
-          resolve(cachedLayoutResponse);
+            }).catch(onErrorResponse);
 
         } else {
-          fetchLayoutCallback();
+            fetchLayoutFn();
         }
 
-      }).catch(onPingRejectCallback);
+    };
 
-    } else {
-      fetchLayoutCallback();
-    }
+    const getListLayout = function (entityType, options) {
 
-  };
+        // get content_type by entityType when getting layout by user_code
+        if (options && options.filters && options.filters.user_code && entityType) {
+            options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+        }
 
+        if (options && options.filters &&
+            options.filters.content_type && options.filters.user_code) { // if getting one layout by user_code
 
-  const applyDefaultSettingsToLayoutTemplate = async function (layoutTemplate, isReport) {
+            return new Promise (function (resolve, reject) {
 
-    if (isReport) {
+                uiRepository.getListLayoutLight(entityType, options).then(function (data) {
 
-      const ecosystemDefaultData = await ecosystemDefaultService.getList().then(res => res.results[0]);
+                    let lightLayout = data.results[0];
 
-      const reportOptions = {
-        "account_mode": 1,
-        "calculation_group": "no_grouping",
-        "cost_method": 1,
-        "report_date": new Date().toISOString().slice(0, 10),
-        "portfolio_mode": 1,
-        "strategy1_mode": 0,
-        "strategy2_mode": 0,
-        "strategy3_mode": 0,
-        "table_font_size": "small",
-        "pricing_policy": ecosystemDefaultData.pricing_policy,
-      };
+                    if (lightLayout) {
 
-      layoutTemplate.data.reportOptions = reportOptions;
+                        let cachedLayout = localStorageService.getCachedLayout(lightLayout.id);
 
-    } else {
+                        if (isCachedLayoutActual(cachedLayout, lightLayout)) {
+                            resolve({results: [cachedLayout]});
 
-      layoutTemplate.data.rowSettings = {};
-      layoutTemplate.data.ev_options = {};
+                        } else {
 
-    }
+                            uiRepository.getListLayout(entityType, options).then(function (listLayoutData) {
 
-    return layoutTemplate;
-  }
+                                let listLayout = listLayoutData.results[0];
 
-  const getDefaultListLayout = function (entityType) {
+                                localStorageService.cacheLayout(listLayout);
+                                resolve(listLayoutData);
 
-    return new Promise(function (resolve, reject) {
+                            }).catch(function (error) {
+                                reject(error);
+                            });
 
-      const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
-      const cachedLayout = localStorageService.getDefaultLayout(contentType);
-      const cachedLayoutRes = {results: [cachedLayout]};
+                        }
 
-      /*uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
+                    } else {
+                        resolve(data);
+                    }
 
-          if (isCachedLayoutActual(cachedLayout, pingData) && pingData.isDefault) {
+                }).catch(function (error) {
+                    reject(error);
+                });
 
-          }
+            });
 
-      });*/
-      const fetchDefaultListLayout = function () {
+        }
 
-        uiRepository.getDefaultListLayout(entityType).then(async function (defaultLayoutData) {
+        return uiRepository.getListLayout(entityType, options);
 
-          let defaultLayout = defaultLayoutData.results[0];
+    };
 
-          if (defaultLayout) {
-            localStorageService.cacheDefaultLayout(defaultLayout);
+    const getListLayoutLight = function (entity, options) {
+        return uiRepository.getListLayoutLight(entity, options);
+    };
 
-          } else {
+    /* let getListLayoutDefault = function (options) {
+        return uiRepository.getListLayoutDefault(options);
+    }; */
 
-            const isReport = metaService.isReport(entityType);
+    const getListLayoutByKey = key => {
 
-            defaultLayout = uiRepository.getListLayoutTemplate(isReport);
-            defaultLayout[0].content_type = contentType;
+        return new Promise (function (resolve, reject) {
 
-            defaultLayout[0] = await applyDefaultSettingsToLayoutTemplate(defaultLayout[0], isReport);
-            defaultLayoutData = {results: defaultLayout};
+            const cachedLayout = localStorageService.getCachedLayout(key);
 
-          }
+            const fetchLayout = function () {
 
-          resolve(defaultLayoutData);
+                uiRepository.getListLayoutByKey(key).then(function (layoutData) {
 
-        }).catch(error => {
-          error.___custom_message = "Failed to load default layout for entity type: " + entityType;
-          reject(error);
+                    if (layoutData && layoutData.id) {
+                        localStorageService.cacheLayout(layoutData);
+                    }
+
+                    resolve(layoutData);
+
+                }).catch(function (error) {
+                    reject(error);
+                });
+
+            };
+
+            resolveLayoutByKey(cachedLayout, fetchLayout, resolve, reject);
+
         });
 
-      };
+        // return uiRepository.getListLayoutByKey(key);
+    };
 
-      resolveDefaultListLayout(cachedLayoutRes, fetchDefaultListLayout, resolve, reject);
+    /**
+     *
+     * @memberOf module:uiService
+     * @param entityType {string}
+     * @param userCode {string} - user code of layout
+     * @returns {Promise<any>}
+     */
+    const getListLayoutByUserCode = (entityType, userCode) => {
 
-    });
+        const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
-    // return uiRepository.getDefaultListLayout(entityType);
-  };
+        return getListLayout(
+            null,
+            {
+                pageSize: 1000,
+                filters: {
+                    content_type: contentType,
+                    user_code: userCode
+                }
+            }
+        );
 
-  // Input Form Layouts
-
-  const getListEditLayout = function (entityType, options) {
-
-    // get content_type by entityType when getting layout by user_code
-    if (options && options.filters && options.filters.user_code && entityType) {
-      options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
     }
 
-    if (options && options.filters &&
-      options.filters.content_type && options.filters.user_code) { // if getting one layout by user_code
+    const createListLayout = function (entity, ui) {
 
-      return new Promise(function (resolve, reject) {
+        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
-        uiRepository.getListEditLayout(entityType, options).then(function (listLayoutData) {
+        return new Promise(function (resolve, reject) {
 
-          resolve(listLayoutData);
+            uiRepository.createListLayout(ui).then(function (data) {
 
-        }).catch(function (error) {
-          reject(error);
+                if (data.is_default) {
+                    localStorageService.cacheDefaultLayout(data);
+                }
+
+                resolve(data);
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
         });
 
+    };
 
-      });
+    const updateListLayout = function (id, ui) {
 
+        return new Promise(function (resolve, reject) {
+
+            uiRepository.updateListLayout(id, ui).then(function (data) {
+
+                ui.modified_at = data.modified_at
+
+                if (ui.is_systemic) {
+                    localStorageService.cacheAutosaveLayout(ui);
+                }
+
+                if (ui.is_default) {
+                    localStorageService.cacheDefaultLayout(ui);
+
+                } else if (!ui.is_systemic) {
+                    localStorageService.cacheLayout(ui);
+                }
+
+                resolve(ui);
+
+            }).catch(function (error) {
+
+                if (error.status === 400 &&
+                    error.message &&
+                    error.message.non_field_errors &&
+                    error.message.non_field_errors[0] === "Synchronization error") {
+                    // this and page reload fixes "Synchronization error" which sometimes occur
+                    localStorageService.deleteLayoutFromCache(id);
+
+                }
+
+                reject(error);
+
+            });
+
+        });
+
+    };
+
+    const deleteListLayoutByKey = function (id) {
+
+        return new Promise(function (resolve, reject) {
+
+            uiRepository.deleteListLayoutByKey(id).then(function (data) {
+
+                localStorageService.deleteLayoutFromCache(id);
+                resolve(data);
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
+        });
+
+    };
+    /**
+     *
+     * @param id {number} - layout id
+     * @param xhrOptions {Object=}
+     * @returns {Promise<Object>}
+     */
+    const pingListLayoutByKey = (id, xhrOptions) => {
+        return uiRepository.pingListLayoutByKey(id, xhrOptions);
     }
 
-    return uiRepository.getListEditLayout(entityType, options);
+    const getListLayoutTemplate = function (isReport) {
+        return uiRepository.getListLayoutTemplate(isReport);
+    };
 
-  };
+    /**
+     * If there is actual default layout in cache, return it. Otherwise fetch layout from server.
+     *
+     * @param cachedLayoutResponse {*} - data about particular layout inside local storage
+     * @param fetchLayoutCallback {Function} - callback to fetch layout from server if default layout in local storage does not fit
+     * @param resolve - resolve function of parent promise
+     * @param reject - reject function of parent promise
+     */
+    const resolveDefaultListLayout = function (cachedLayoutResponse, fetchLayoutCallback, resolve, reject) {
 
-  const getDefaultEditLayout = function (entityType) {
+        const cachedLayout = getCachedLayoutObj(cachedLayoutResponse);
+        const onPingRejectCallback = getOnRejectCallback(fetchLayoutCallback, reject, cachedLayout);
 
-    return new Promise((resolve, reject) => {
+        if (cachedLayout) {
 
-      uiRepository.getDefaultEditLayout(entityType).then(defaultLayoutData => {
+            uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
 
-        if (defaultLayoutData.results.length) {
-          resolve(defaultLayoutData);
+                if (pingData && pingData.is_default && isCachedLayoutActual(cachedLayout, pingData)) {
+                    resolve(cachedLayoutResponse);
+
+                } else {
+                    fetchLayoutCallback();
+                }
+
+            }).catch(onPingRejectCallback);
 
         } else {
+            fetchLayoutCallback();
+        }
 
-          uiRepository.getListEditLayout(entityType).then(layoutsList => {
-
-            const resolveObj = {results: []};
-
-            if (layoutsList.results.length) {
-
-              let defaultLayout = layoutsList.results.find(layout => layout.is_default);
-
-              if (!defaultLayout) {
-                defaultLayout = layoutsList.results[0];
-                defaultLayout.is_default = true;
-              }
-
-              resolveObj.results.push(defaultLayout);
-
-            }
+    };
 
 
-            resolve(resolveObj)
+    const applyDefaultSettingsToLayoutTemplate = async function (layoutTemplate, isReport) {
 
-          }).catch(error => reject(error));
+        if (isReport) {
+
+            const ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+
+            const reportOptions = {
+                "account_mode": 1,
+                "calculation_group": "no_grouping",
+                "cost_method": 1,
+                "report_date" : new Date().toISOString().slice(0, 10),
+                "portfolio_mode": 1,
+                "strategy1_mode": 0,
+                "strategy2_mode": 0,
+                "strategy3_mode": 0,
+                "table_font_size": "small",
+                "pricing_policy": ecosystemDefaultData.pricing_policy,
+            };
+
+            layoutTemplate.data.reportOptions = reportOptions;
+
+        }
+        else {
+
+            layoutTemplate.data.rowSettings = {};
+            layoutTemplate.data.ev_options = {};
 
         }
 
-      }).catch(error => reject(error));
-
-    });
-
-    // return uiRepository.getDefaultEditLayout(entityType);
-  };
-
-  let getEditLayoutByKey = function (id) {
-    return uiRepository.getEditLayoutByKey(id);
-  };
-
-  let getEditLayoutByUserCode = function (entityType, userCode) {
-    return uiRepository.getEditLayoutByUserCode(entityType, userCode);
-  };
-
-  const createEditLayout = function (entity, ui) {
-
-    ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-
-    return uiRepository.createEditLayout(ui);
-  };
-
-  const updateEditLayout = function (id, ui) {
-    return uiRepository.updateEditLayout(id, ui);
-  };
-
-  const deleteEditLayoutByKey = function (id) {
-
-    return new Promise(function (resolve, reject) {
-
-      uiRepository.deleteEditLayoutByKey(id).then(function (data) {
-
-        resolve(data);
-
-      }).catch(function (error) {
-        reject(error);
-      });
-
-    });
-
-  };
-
-
-  // Configuration Layouts
-
-  const getConfigurationList = function () {
-    return uiRepository.getConfigurationList();
-  };
-
-  const createConfiguration = function (data) {
-    return uiRepository.createConfiguration(data)
-  };
-
-  const updateConfiguration = function (id, data) {
-    return uiRepository.updateConfiguration(id, data);
-  };
-
-  const deleteConfigurationByKey = function (id) {
-    return uiRepository.deleteConfigurationByKey(id);
-  };
-
-
-  const getConfigurationExportLayoutList = function () {
-    return uiRepository.getConfigurationExportLayoutList();
-  };
-
-  const createConfigurationExportLayout = function (data) {
-    return uiRepository.createConfigurationExportLayout(data);
-  };
-
-  const updateConfigurationExportLayout = function (id, data) {
-    return uiRepository.updateConfigurationExportLayout(id, data);
-  };
-
-  const deleteConfigurationExportLayoutByKey = function (id) {
-    return uiRepository.deleteConfigurationExportLayoutByKey(id);
-  };
-
-  const getComplexTransactionFieldList = function (options) {
-    return uiRepository.getComplexTransactionFieldList(options)
-  };
-
-  const getComplexTransactionFieldPrimaryList = function (options) {
-    return uiRepository.getComplexTransactionFieldPrimaryList(options)
-  };
-  const createComplexTransactionField = function (data) {
-    return uiRepository.createComplexTransactionField(data);
-  };
-
-  const updateComplexTransactionField = function (id, data) {
-    return uiRepository.updateComplexTransactionField(id, data);
-  };
-
-  const getTransactionFieldList = function (options) {
-    return uiRepository.getTransactionFieldList(options)
-  };
-
-  const getTransactionFieldPrimaryList = function (options) {
-    return uiRepository.getTransactionFieldPrimaryList(options)
-  };
-
-  const createTransactionField = function (data) {
-    return uiRepository.createTransactionField(data);
-  };
-
-  const updateTransactionField = function (id, data) {
-    return uiRepository.updateTransactionField(id, data);
-  };
-
-  const getInstrumentFieldList = function (options) {
-    return uiRepository.getInstrumentFieldList(options)
-  };
-
-  const getInstrumentFieldPrimaryList = function (options) {
-    return uiRepository.getInstrumentFieldPrimaryList(options)
-  };
-
-  const createInstrumentField = function (data) {
-    return uiRepository.createInstrumentField(data);
-  };
-
-  const updateInstrumentField = function (id, data) {
-    return uiRepository.updateInstrumentField(id, data);
-  };
-
-  // Dashboard Layout
-
-  const getDashboardLayoutList = function (options) {
-    return uiRepository.getDashboardLayoutList(options);
-  };
-
-  const getActiveDashboardLayout = function () {
-    return uiRepository.getActiveDashboardLayout()
-  };
-
-  const getDefaultDashboardLayout = function () {
-    return uiRepository.getDefaultDashboardLayout()
-  };
-
-  const getDashboardLayoutByKey = function (key) {
-    return uiRepository.getDashboardLayoutByKey(key);
-  };
-
-  const createDashboardLayout = function (data) {
-
-    return uiRepository.createDashboardLayout(data);
-  };
-
-  var updateDashboardLayout = function (id, data) {
-
-    return new Promise(function (resolve, reject) {
-
-      uiRepository.updateDashboardLayout(id, data).then(function (updatedLayoutData) {
-
-        data.modified_at = updatedLayoutData.modified_at // prevents synchronization error
-
-        resolve(updatedLayoutData);
-
-      }).catch(function (error) {
-        reject(error);
-      });
-
-    });
-
-  };
-
-  const deleteDashboardLayoutByKey = function (id) {
-    return uiRepository.deleteDashboardLayoutByKey(id);
-  };
-
-  // Template Layout
-
-  const getTemplateLayoutList = function (options) {
-    return uiRepository.getTemplateLayoutList(options);
-  };
-
-  const getDefaultTemplateLayout = function () {
-    return uiRepository.getDefaultTemplateLayout()
-  };
-
-  const getTemplateLayoutByKey = function (key) {
-    return uiRepository.getTemplateLayoutByKey(key);
-  };
-
-  const createTemplateLayout = function (data) {
-
-    return uiRepository.createTemplateLayout(data);
-  };
-
-  const updateTemplateLayout = function (id, data) {
-    return uiRepository.updateTemplateLayout(id, data)
-  };
-
-  const deleteTemplateLayoutByKey = function (id) {
-    return uiRepository.deleteTemplateLayoutByKey(id);
-  };
-
-  // Context Menu
-
-  const getContextMenuLayoutList = function (options) {
-    return uiRepository.getContextMenuLayoutList(options);
-  };
-
-  const getContextMenuLayoutByKey = function (key) {
-    return uiRepository.getContextMenuLayoutByKey(key);
-  };
-
-  const createContextMenuLayout = function (data) {
-
-    return uiRepository.createContextMenuLayout(data);
-  };
-
-  const updateContextMenuLayout = function (id, data) {
-    return uiRepository.updateContextMenuLayout(id, data)
-  };
-
-  const deleteContextMenuLayoutByKey = function (id) {
-    return uiRepository.deleteContextMenuLayoutByKey(id);
-  };
-
-  // Entity Tooltip
-
-  const getEntityTooltipList = function (options) {
-    return uiRepository.getEntityTooltipList(options);
-  };
-
-  const createEntityTooltip = function (data) {
-    return uiRepository.createEntityTooltip(data);
-  };
-
-  const updateEntityTooltip = function (id, data) {
-    return uiRepository.updateEntityTooltip(id, data);
-  };
-
-  // Cross Entity Attribute Extension
-
-  const getCrossEntityAttributeExtensionList = function (options) {
-
-    return uiRepository.getCrossEntityAttributeExtensionList(options);
-  };
-
-  const getCrossEntityAttributeExtension = function (id) {
-    return uiRepository.getCrossEntityAttributeExtension(id);
-  };
-
-  const createCrossEntityAttributeExtension = function (item) {
-
-    return uiRepository.createCrossEntityAttributeExtension(item);
-  };
-
-  const updateCrossEntityAttributeExtension = function (id, item) {
-    return uiRepository.updateCrossEntityAttributeExtension(id, item);
-  };
-
-  const deleteCrossEntityAttributeExtension = function (id) {
-
-    return new Promise(function (resolve, reject) {
-
-      uiRepository.deleteCrossEntityAttributeExtension(id).then(function (data) {
-
-        resolve(data);
-
-      }).catch(function (error) {
-        reject(error);
-      });
-
-    });
-
-  };
-
-  // Column Sort Data
-
-  const getColumnSortDataList = function (options) {
-
-    return uiRepository.getColumnSortDataList(options);
-  };
-
-  const getColumnSortData = function (id) {
-    return uiRepository.getColumnSortData(id);
-  };
-
-  const createColumnSortData = function (item) {
-    return uiRepository.createColumnSortData(item);
-  };
-
-  const updateColumnSortData = function (id, item) {
-    return uiRepository.updateColumnSortData(id, item);
-  };
-
-  const deleteColumnSortData = function (id) {
-
-    return new Promise(function (resolve, reject) {
-
-      uiRepository.deleteColumnSortData(id).then(function (data) {
-
-        resolve(data);
-
-      }).catch(function (error) {
-        reject(error);
-      });
-
-    });
-
-  };
-
-  const getDefaultMemberLayout = async function () {
-
-    try {
-      let data = await uiRepository.getDefaultMemberLayout();
-
-      data = data.results[0];
-
-      if (!data.data) data.data = {};
-
-      if (typeof data.data.autosave_layouts !== 'boolean') {
-        data.data.autosave_layouts = true;
-      }
-
-      if (!data.data.favorites) {
-        data.data.favorites = {};
-      }
-
-      if (!data.data.favorites.attributes) {
-        data.data.favorites.attributes = {};
-      }
-
-      globalDataService.setMemberLayout(data);
-
-      return data;
-
-    } catch (error) {
-      throw error;
+        return layoutTemplate;
     }
 
-  }
+    const getDefaultListLayout = function (entityType) {
 
-  const updateMemberLayout = async function (id, ui) {
+        return new Promise (function (resolve, reject) {
 
-    try {
-      const data = await uiRepository.updateMemberLayout(id, ui);
+            const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+            const cachedLayout = localStorageService.getDefaultLayout(contentType);
+            const cachedLayoutRes = {results: [cachedLayout]};
 
-      globalDataService.setMemberLayout(data);
+            /*uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
 
-    } catch (error) {
-      throw error;
+                if (isCachedLayoutActual(cachedLayout, pingData) && pingData.isDefault) {
+
+                }
+
+            });*/
+            const fetchDefaultListLayout = function () {
+
+                uiRepository.getDefaultListLayout(entityType).then(async function (defaultLayoutData) {
+
+                    let defaultLayout = defaultLayoutData.results[0];
+
+                    if (defaultLayout) {
+                        localStorageService.cacheDefaultLayout(defaultLayout);
+
+                    } else {
+
+                        const isReport = metaService.isReport(entityType);
+
+                        defaultLayout = uiRepository.getListLayoutTemplate(isReport);
+                        defaultLayout[0].content_type = contentType;
+
+                        defaultLayout[0] = await applyDefaultSettingsToLayoutTemplate(defaultLayout[0], isReport);
+                        defaultLayoutData = {results: defaultLayout};
+
+                    }
+
+                    resolve(defaultLayoutData);
+
+                }).catch(error => {
+                    error.___custom_message = "Failed to load default layout for entity type: " + entityType;
+                    reject(error);
+                });
+
+            };
+
+            resolveDefaultListLayout(cachedLayoutRes, fetchDefaultListLayout, resolve, reject);
+
+        });
+
+        // return uiRepository.getDefaultListLayout(entityType);
+    };
+
+    // Input Form Layouts
+
+    const getListEditLayout = function (entityType, options) {
+
+        // get content_type by entityType when getting layout by user_code
+        if (options && options.filters && options.filters.user_code && entityType) {
+            options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+        }
+
+        if (options && options.filters &&
+            options.filters.content_type && options.filters.user_code) { // if getting one layout by user_code
+
+            return new Promise (function (resolve, reject) {
+
+                uiRepository.getListEditLayout(entityType, options).then(function (listLayoutData) {
+
+                    resolve(listLayoutData);
+
+                }).catch(function (error) {
+                    reject(error);
+                });
+
+
+            });
+
+        }
+
+        return uiRepository.getListEditLayout(entityType, options);
+
+    };
+
+    const getDefaultEditLayout = function (entityType) {
+
+        return new Promise((resolve, reject) => {
+
+            uiRepository.getDefaultEditLayout(entityType).then(defaultLayoutData => {
+
+                if (defaultLayoutData.results.length) {
+                    resolve(defaultLayoutData);
+
+                } else {
+
+                    uiRepository.getListEditLayout(entityType).then(layoutsList => {
+
+                        const resolveObj = {results: []};
+
+                        if (layoutsList.results.length) {
+
+                            let defaultLayout = layoutsList.results.find(layout => layout.is_default);
+
+                            if (!defaultLayout) {
+                                defaultLayout = layoutsList.results[0];
+                                defaultLayout.is_default = true;
+                            }
+
+                            resolveObj.results.push(defaultLayout);
+
+                        }
+
+
+                        resolve(resolveObj)
+
+                    }).catch(error => reject(error));
+
+                }
+
+            }).catch(error => reject(error));
+
+        });
+
+        // return uiRepository.getDefaultEditLayout(entityType);
+    };
+
+    let getEditLayoutByKey = function (id) {
+        return uiRepository.getEditLayoutByKey(id);
+    };
+
+    let getEditLayoutByUserCode = function (entityType, userCode) {
+        return uiRepository.getEditLayoutByUserCode(entityType, userCode);
+    };
+
+    const createEditLayout = function (entity, ui) {
+
+        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+
+        return uiRepository.createEditLayout(ui);
+    };
+
+    const updateEditLayout = function (id, ui) {
+        return uiRepository.updateEditLayout(id, ui);
+    };
+
+    const deleteEditLayoutByKey = function (id) {
+
+        return new Promise(function (resolve, reject) {
+
+            uiRepository.deleteEditLayoutByKey(id).then(function (data) {
+
+                resolve(data);
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
+        });
+
+    };
+
+
+
+    // Configuration Layouts
+
+    const getConfigurationList = function () {
+        return uiRepository.getConfigurationList();
+    };
+
+    const createConfiguration = function (data) {
+        return uiRepository.createConfiguration(data)
+    };
+
+    const updateConfiguration = function (id, data) {
+        return uiRepository.updateConfiguration(id, data);
+    };
+
+    const deleteConfigurationByKey = function (id) {
+        return uiRepository.deleteConfigurationByKey(id);
+    };
+
+
+    const getConfigurationExportLayoutList = function () {
+        return uiRepository.getConfigurationExportLayoutList();
+    };
+
+    const createConfigurationExportLayout = function (data) {
+        return uiRepository.createConfigurationExportLayout(data);
+    };
+
+    const updateConfigurationExportLayout = function (id, data) {
+        return uiRepository.updateConfigurationExportLayout(id, data);
+    };
+
+    const deleteConfigurationExportLayoutByKey = function (id) {
+        return uiRepository.deleteConfigurationExportLayoutByKey(id);
+    };
+
+    const getComplexTransactionFieldList = function (options) {
+        return uiRepository.getComplexTransactionFieldList(options)
+    };
+
+    const getComplexTransactionFieldPrimaryList = function (options) {
+        return uiRepository.getComplexTransactionFieldPrimaryList(options)
+    };
+    const createComplexTransactionField = function (data) {
+        return uiRepository.createComplexTransactionField(data);
+    };
+
+    const updateComplexTransactionField = function (id, data) {
+        return uiRepository.updateComplexTransactionField(id, data);
+    };
+
+    const getTransactionFieldList = function (options) {
+        return uiRepository.getTransactionFieldList(options)
+    };
+
+    const getTransactionFieldPrimaryList = function (options) {
+        return uiRepository.getTransactionFieldPrimaryList(options)
+    };
+
+    const createTransactionField = function (data) {
+        return uiRepository.createTransactionField(data);
+    };
+
+    const updateTransactionField = function (id, data) {
+        return uiRepository.updateTransactionField(id, data);
+    };
+
+    const getInstrumentFieldList = function (options) {
+        return uiRepository.getInstrumentFieldList(options)
+    };
+
+    const getInstrumentFieldPrimaryList = function (options) {
+        return uiRepository.getInstrumentFieldPrimaryList(options)
+    };
+
+    const createInstrumentField = function (data) {
+        return uiRepository.createInstrumentField(data);
+    };
+
+    const updateInstrumentField = function (id, data) {
+        return uiRepository.updateInstrumentField(id, data);
+    };
+
+    // Dashboard Layout
+
+    const getDashboardLayoutList = function (options) {
+        return uiRepository.getDashboardLayoutList(options);
+    };
+
+    const getActiveDashboardLayout = function () {
+        return uiRepository.getActiveDashboardLayout()
+    };
+
+    const getDefaultDashboardLayout = function () {
+        return uiRepository.getDefaultDashboardLayout()
+    };
+
+    const getDashboardLayoutByKey = function (key) {
+        return uiRepository.getDashboardLayoutByKey(key);
+    };
+
+    const createDashboardLayout = function (data) {
+
+        return uiRepository.createDashboardLayout(data);
+    };
+
+    var updateDashboardLayout = function (id, data) {
+
+        return new Promise(function (resolve, reject) {
+
+            uiRepository.updateDashboardLayout(id, data).then(function (updatedLayoutData) {
+
+                data.modified_at = updatedLayoutData.modified_at // prevents synchronization error
+
+                resolve(updatedLayoutData);
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
+        });
+
+    };
+
+    const deleteDashboardLayoutByKey = function (id) {
+        return uiRepository.deleteDashboardLayoutByKey(id);
+    };
+
+    // Template Layout
+
+    const getTemplateLayoutList = function (options) {
+        return uiRepository.getTemplateLayoutList(options);
+    };
+
+    const getDefaultTemplateLayout = function () {
+        return uiRepository.getDefaultTemplateLayout()
+    };
+
+    const getTemplateLayoutByKey = function (key) {
+        return uiRepository.getTemplateLayoutByKey(key);
+    };
+
+    const createTemplateLayout = function (data) {
+
+        return uiRepository.createTemplateLayout(data);
+    };
+
+    const updateTemplateLayout = function (id, data) {
+        return uiRepository.updateTemplateLayout(id, data)
+    };
+
+    const deleteTemplateLayoutByKey = function (id) {
+        return uiRepository.deleteTemplateLayoutByKey(id);
+    };
+
+    // Context Menu
+
+    const getContextMenuLayoutList = function (options) {
+        return uiRepository.getContextMenuLayoutList(options);
+    };
+
+    const getContextMenuLayoutByKey = function (key) {
+        return uiRepository.getContextMenuLayoutByKey(key);
+    };
+
+    const createContextMenuLayout = function (data) {
+
+        return uiRepository.createContextMenuLayout(data);
+    };
+
+    const updateContextMenuLayout = function (id, data) {
+        return uiRepository.updateContextMenuLayout(id, data)
+    };
+
+    const deleteContextMenuLayoutByKey = function (id) {
+        return uiRepository.deleteContextMenuLayoutByKey(id);
+    };
+
+    // Entity Tooltip
+
+    const getEntityTooltipList = function (options) {
+        return uiRepository.getEntityTooltipList(options);
+    };
+
+    const createEntityTooltip = function (data) {
+        return uiRepository.createEntityTooltip(data);
+    };
+
+    const updateEntityTooltip = function (id, data) {
+        return uiRepository.updateEntityTooltip(id, data);
+    };
+
+    // Cross Entity Attribute Extension
+
+    const getCrossEntityAttributeExtensionList = function (options) {
+
+        return uiRepository.getCrossEntityAttributeExtensionList( options);
+    };
+
+    const getCrossEntityAttributeExtension = function (id) {
+        return uiRepository.getCrossEntityAttributeExtension(id);
+    };
+
+    const createCrossEntityAttributeExtension = function (item) {
+
+        return uiRepository.createCrossEntityAttributeExtension(item);
+    };
+
+    const updateCrossEntityAttributeExtension = function (id, item) {
+        return uiRepository.updateCrossEntityAttributeExtension(id, item);
+    };
+
+    const deleteCrossEntityAttributeExtension = function (id) {
+
+        return new Promise(function (resolve, reject) {
+
+            uiRepository.deleteCrossEntityAttributeExtension(id).then(function (data) {
+
+                resolve(data);
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
+        });
+
+    };
+
+    // Column Sort Data
+
+    const getColumnSortDataList = function (options) {
+
+        return uiRepository.getColumnSortDataList( options);
+    };
+
+    const getColumnSortData = function (id) {
+        return uiRepository.getColumnSortData(id);
+    };
+
+    const createColumnSortData = function (item) {
+        return uiRepository.createColumnSortData(item);
+    };
+
+    const updateColumnSortData = function (id, item) {
+        return uiRepository.updateColumnSortData(id, item);
+    };
+
+    const deleteColumnSortData = function (id) {
+
+        return new Promise(function (resolve, reject) {
+
+            uiRepository.deleteColumnSortData(id).then(function (data) {
+
+                resolve(data);
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
+        });
+
+    };
+
+    const getDefaultMemberLayout = async function () {
+
+        try {
+            let data = await uiRepository.getDefaultMemberLayout();
+
+            data = data.results[0];
+
+            if (!data.data) data.data = {};
+
+            if (typeof data.data.autosave_layouts !== 'boolean') {
+                data.data.autosave_layouts = true;
+            }
+
+            if (!data.data.favorites) {
+                data.data.favorites = {};
+            }
+
+            if (!data.data.favorites.attributes) {
+                data.data.favorites.attributes = {};
+            }
+
+            globalDataService.setMemberLayout(data);
+
+            return data;
+
+        } catch (error) { throw error; }
+
     }
 
-  };
+    const updateMemberLayout = async function (id, ui) {
 
-  // White label
+        try {
+            const data = await uiRepository.updateMemberLayout(id, ui);
 
-  const loadThemeSettingsDefault = function () {
-    return uiRepository.loadThemeSettingsDefault();
-  };
+            globalDataService.setMemberLayout(data);
 
-  const installTheme = function (options) {
-    globalDataService.setWhiteLabel(options);
+        } catch (error) { throw error; }
 
-    return uiRepository.installTheme(options);
-  };
+    };
 
-  /** @module uiService */
-  return {
-    isCachedLayoutActual: isCachedLayoutActual,
-    getPortalInterfaceAccess: getPortalInterfaceAccess,
+    // White label
 
-    getListLayoutTemplate: getListLayoutTemplate,
-    getDefaultListLayout: getDefaultListLayout,
-    /*autosaveListLayout: autosaveListLayout,
-getAutosaveListLayout: getAutosaveListLayout,*/
+    const loadThemeSettingsDefault = function () {
+        return uiRepository.loadThemeSettingsDefault();
+    };
 
-    getListLayout: getListLayout,
-    getListLayoutLight: getListLayoutLight,
-    // getListLayoutDefault: getListLayoutDefault,
-    getListLayoutByKey: getListLayoutByKey,
-    getListLayoutByUserCode: getListLayoutByUserCode,
-    createListLayout: createListLayout,
-    updateListLayout: updateListLayout,
+    const installTheme = function (options) {
+        globalDataService.setWhiteLabel(options);
 
-    deleteListLayoutByKey: deleteListLayoutByKey,
+        return uiRepository.installTheme(options);
+    };
 
-    pingListLayoutByKey: pingListLayoutByKey,
+    /** @module uiService */
+    return {
+        isCachedLayoutActual: isCachedLayoutActual,
+        getPortalInterfaceAccess: getPortalInterfaceAccess,
 
-    //<editor-fold desc="Input form editor layout management">
-    getListEditLayout: getListEditLayout,
-    getDefaultEditLayout: getDefaultEditLayout,
-    getEditLayoutByKey: getEditLayoutByKey,
-    getEditLayoutByUserCode: getEditLayoutByUserCode,
-    createEditLayout: createEditLayout,
-    updateEditLayout: updateEditLayout,
+        getListLayoutTemplate: getListLayoutTemplate,
+        getDefaultListLayout: getDefaultListLayout,
+        /*autosaveListLayout: autosaveListLayout,
+    getAutosaveListLayout: getAutosaveListLayout,*/
 
-    deleteEditLayoutByKey: deleteEditLayoutByKey,
-    //</editor-fold>
+        getListLayout: getListLayout,
+        getListLayoutLight: getListLayoutLight,
+        // getListLayoutDefault: getListLayoutDefault,
+        getListLayoutByKey: getListLayoutByKey,
+        getListLayoutByUserCode: getListLayoutByUserCode,
+        createListLayout: createListLayout,
+        updateListLayout: updateListLayout,
 
-    getConfigurationList: getConfigurationList,
-    createConfiguration: createConfiguration,
-    updateConfiguration: updateConfiguration,
-    deleteConfigurationByKey: deleteConfigurationByKey,
+        deleteListLayoutByKey: deleteListLayoutByKey,
 
-    getConfigurationExportLayoutList: getConfigurationExportLayoutList,
-    createConfigurationExportLayout: createConfigurationExportLayout,
-    updateConfigurationExportLayout: updateConfigurationExportLayout,
-    deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
+        pingListLayoutByKey: pingListLayoutByKey,
 
-    getComplexTransactionFieldList: getComplexTransactionFieldList,
-    getComplexTransactionFieldPrimaryList: getComplexTransactionFieldPrimaryList,
-    createComplexTransactionField: createComplexTransactionField,
-    updateComplexTransactionField: updateComplexTransactionField,
+        //<editor-fold desc="Input form editor layout management">
+        getListEditLayout: getListEditLayout,
+        getDefaultEditLayout: getDefaultEditLayout,
+        getEditLayoutByKey: getEditLayoutByKey,
+        getEditLayoutByUserCode: getEditLayoutByUserCode,
+        createEditLayout: createEditLayout,
+        updateEditLayout: updateEditLayout,
 
-    getTransactionFieldList: getTransactionFieldList,
-    getTransactionFieldPrimaryList: getTransactionFieldPrimaryList,
-    createTransactionField: createTransactionField,
-    updateTransactionField: updateTransactionField,
+        deleteEditLayoutByKey: deleteEditLayoutByKey,
+        //</editor-fold>
 
+        getConfigurationList: getConfigurationList,
+        createConfiguration: createConfiguration,
+        updateConfiguration: updateConfiguration,
+        deleteConfigurationByKey: deleteConfigurationByKey,
 
-    getInstrumentFieldList: getInstrumentFieldList,
-    getInstrumentFieldPrimaryList: getInstrumentFieldPrimaryList,
-    createInstrumentField: createInstrumentField,
-    updateInstrumentField: updateInstrumentField,
+        getConfigurationExportLayoutList: getConfigurationExportLayoutList,
+        createConfigurationExportLayout: createConfigurationExportLayout,
+        updateConfigurationExportLayout: updateConfigurationExportLayout,
+        deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
 
+        getComplexTransactionFieldList: getComplexTransactionFieldList,
+        getComplexTransactionFieldPrimaryList: getComplexTransactionFieldPrimaryList,
+        createComplexTransactionField: createComplexTransactionField,
+        updateComplexTransactionField: updateComplexTransactionField,
 
-    getDashboardLayoutList: getDashboardLayoutList,
-    getDashboardLayoutByKey: getDashboardLayoutByKey,
-    getActiveDashboardLayout: getActiveDashboardLayout,
-    getDefaultDashboardLayout: getDefaultDashboardLayout,
-    createDashboardLayout: createDashboardLayout,
-    updateDashboardLayout: updateDashboardLayout,
-    deleteDashboardLayoutByKey: deleteDashboardLayoutByKey,
+        getTransactionFieldList: getTransactionFieldList,
+        getTransactionFieldPrimaryList: getTransactionFieldPrimaryList,
+        createTransactionField: createTransactionField,
+        updateTransactionField: updateTransactionField,
 
 
-    getTemplateLayoutList: getTemplateLayoutList,
-    getTemplateLayoutByKey: getTemplateLayoutByKey,
-    getDefaultTemplateLayout: getDefaultTemplateLayout,
-    createTemplateLayout: createTemplateLayout,
-    updateTemplateLayout: updateTemplateLayout,
-    deleteTemplateLayoutByKey: deleteTemplateLayoutByKey,
+        getInstrumentFieldList: getInstrumentFieldList,
+        getInstrumentFieldPrimaryList: getInstrumentFieldPrimaryList,
+        createInstrumentField: createInstrumentField,
+        updateInstrumentField: updateInstrumentField,
 
 
-    getContextMenuLayoutList: getContextMenuLayoutList,
-    getContextMenuLayoutByKey: getContextMenuLayoutByKey,
-    createContextMenuLayout: createContextMenuLayout,
-    updateContextMenuLayout: updateContextMenuLayout,
-    deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey,
+        getDashboardLayoutList: getDashboardLayoutList,
+        getDashboardLayoutByKey: getDashboardLayoutByKey,
+        getActiveDashboardLayout: getActiveDashboardLayout,
+        getDefaultDashboardLayout: getDefaultDashboardLayout,
+        createDashboardLayout: createDashboardLayout,
+        updateDashboardLayout: updateDashboardLayout,
+        deleteDashboardLayoutByKey: deleteDashboardLayoutByKey,
 
 
-    getEntityTooltipList: getEntityTooltipList,
-    createEntityTooltip: createEntityTooltip,
-    updateEntityTooltip: updateEntityTooltip,
+        getTemplateLayoutList: getTemplateLayoutList,
+        getTemplateLayoutByKey: getTemplateLayoutByKey,
+        getDefaultTemplateLayout: getDefaultTemplateLayout,
+        createTemplateLayout: createTemplateLayout,
+        updateTemplateLayout: updateTemplateLayout,
+        deleteTemplateLayoutByKey: deleteTemplateLayoutByKey,
 
-    getCrossEntityAttributeExtensionList: getCrossEntityAttributeExtensionList,
-    getCrossEntityAttributeExtension: getCrossEntityAttributeExtension,
-    createCrossEntityAttributeExtension: createCrossEntityAttributeExtension,
-    updateCrossEntityAttributeExtension: updateCrossEntityAttributeExtension,
-    deleteCrossEntityAttributeExtension: deleteCrossEntityAttributeExtension,
 
-    getColumnSortDataList: getColumnSortDataList,
-    getColumnSortData: getColumnSortData,
-    createColumnSortData: createColumnSortData,
-    updateColumnSortData: updateColumnSortData,
-    deleteColumnSortData: deleteColumnSortData,
+        getContextMenuLayoutList: getContextMenuLayoutList,
+        getContextMenuLayoutByKey: getContextMenuLayoutByKey,
+        createContextMenuLayout: createContextMenuLayout,
+        updateContextMenuLayout: updateContextMenuLayout,
+        deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey,
 
-    getDefaultMemberLayout: getDefaultMemberLayout,
-    updateMemberLayout: updateMemberLayout,
 
-    loadThemeSettingsDefault: loadThemeSettingsDefault,
-    installTheme: installTheme,
+        getEntityTooltipList: getEntityTooltipList,
+        createEntityTooltip: createEntityTooltip,
+        updateEntityTooltip: updateEntityTooltip,
 
-  }
+        getCrossEntityAttributeExtensionList: getCrossEntityAttributeExtensionList,
+        getCrossEntityAttributeExtension: getCrossEntityAttributeExtension,
+        createCrossEntityAttributeExtension: createCrossEntityAttributeExtension,
+        updateCrossEntityAttributeExtension: updateCrossEntityAttributeExtension,
+        deleteCrossEntityAttributeExtension: deleteCrossEntityAttributeExtension,
+
+        getColumnSortDataList: getColumnSortDataList,
+        getColumnSortData: getColumnSortData,
+        createColumnSortData: createColumnSortData,
+        updateColumnSortData: updateColumnSortData,
+        deleteColumnSortData: deleteColumnSortData,
+
+        getDefaultMemberLayout: getDefaultMemberLayout,
+        updateMemberLayout: updateMemberLayout,
+
+        loadThemeSettingsDefault: loadThemeSettingsDefault,
+        installTheme: installTheme,
+
+    }
 
 };
