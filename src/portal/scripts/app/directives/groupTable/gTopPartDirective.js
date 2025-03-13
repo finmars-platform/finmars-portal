@@ -481,6 +481,11 @@ const evEvents = require("../../services/entityViewerEvents");
                             } else if ('begin_date' in scope.reportOptions) {
                                 scope.reportOptions.begin_date = earliestDate;
                             }
+                            scope.datesData.from = earliestDate;
+
+                            setTimeout(function () {
+                                scope.$apply();
+                            }, 200)
                         }
                     }
                 }
@@ -508,12 +513,12 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     if (scope.isReport) {
 
-                        scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+                        scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, async function () {
 
                             scope.reportOptions = scope.evDataService.getReportOptions();
                             scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
 
-                            fetchInceptionDate();
+                            await fetchInceptionDate();
 
                             if (dateFromKey) {
                                 scope.datesData.from = scope.reportOptions[dateFromKey];
