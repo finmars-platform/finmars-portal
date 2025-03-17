@@ -66,7 +66,7 @@
 		 */
 		function calculateCommonElemsWidth (evDataService) {
 
-			let dropNewFieldWidth = 400;
+			let dropNewFieldWidth = 50; // 400; Change according to PLAT-1682 point 11
 
 			const viewContext = evDataService.getViewContext();
 
@@ -84,14 +84,15 @@
 			const addColBtnWidth = 50;
 
 			const columns = evDataService.getColumns();
-			let columnsWidth = 0;
-			let i;
-			for (i = 0; i < columns.length; i = i + 1) {
 
-				var columnWidth = parseInt(columns[i].style.width.split('px')[0], 10);
+			const columnsWidth = columns.reduce((acc, column) => {
+				const { isHidden, style } = column;
+				if (!isHidden) {
+					acc += parseInt(style.width?.split('px')[0], 10);
+				}
 
-				columnsWidth = columnsWidth + columnWidth;
-			}
+				return acc;
+			}, 0);
 
 			return columnsWidth + buttonSelectAllWidth + addColBtnWidth + dropNewFieldWidth;
 
@@ -190,7 +191,6 @@
 
 			if (contentElemWidth < viewportWidth) {
 				scrollableColumnsAreaElement.style.width = viewportWidth + "px";
-
 			} else {
 				scrollableColumnsAreaElement.style.width = contentElemWidth + "px";
 			}
@@ -265,8 +265,6 @@
 			/* for (var i = 0; i < dropdowns.length; i = i + 1) {
 				dropdowns[i].remove();
 			} */
-
-			console.log('clearDropdowns.dropdowns', dropdowns)
 
 			dropdowns.forEach(dropdown => {
 				// remove popup after animation
