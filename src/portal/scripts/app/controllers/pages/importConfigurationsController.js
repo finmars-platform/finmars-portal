@@ -27,7 +27,7 @@ const processesService = require("../../services/processesService");
 
             return new Promise(function (resolve, reject) {
 
-                if (file.name && file.name.indexOf('.fcfg') === file.name.length - '.fcfg'.length || file.name.indexOf('.zip') !== -1) {
+                if (file.name && file.name.indexOf('.fcfg') === file.name.length - '.fcfg'.length || file.name.indexOf('.zip') !== -1 || file.name.indexOf('.json') !== -1) {
 
                     resolve(true);
 
@@ -72,7 +72,7 @@ const processesService = require("../../services/processesService");
 
                 checkExtension(file, $event).then(function () {
 
-                    if (file.name.indexOf('.zip') !== -1) {
+                    if (file.name.indexOf('.zip') !== -1 || file.name.indexOf('.json') !== -1) {
 
                         var formData = new FormData();
 
@@ -160,7 +160,7 @@ const processesService = require("../../services/processesService");
 
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/dialogs/info-dialog-view.html',
+                        templateUrl: 'views/info-dialog-view.html',
                         parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,

@@ -187,7 +187,7 @@ export default function (cookieService, globalDataService, xhrService) {
 
 		return new Promise((resolve, reject) => {
 
-			usersRepository.getMyCurrentMember().then(memberData => {
+			usersRepository.getMyCurrentMember().then(async memberData => {
 
 				if (!memberData.data) {
 					memberData.data = {};
@@ -209,7 +209,7 @@ export default function (cookieService, globalDataService, xhrService) {
 					memberData.data.favorites.attributes = {};
 				}
 
-				memberData = applyTheme(memberData);
+				await applyTheme(memberData);
 
 				globalDataService.setMember(memberData);
 				resolve(memberData);
