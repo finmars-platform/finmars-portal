@@ -363,6 +363,37 @@ const evEvents = require("../../services/entityViewerEvents");
 
                 }*/
 
+                const getFilteredTablePortfolios = function () {
+                    if (scope.reportOptions.portfolios_table_data_items) {
+                        return scope.reportOptions.portfolios_table_data_items.map(group => {
+                            let key = group.___group_type_key.split('.').pop();
+                            return scope.portfoliosList.filter(portfolio => portfolio[key] === group.___group_name);
+                        }).flat();
+                    } else if (scope.reportOptions.portfolios_table_data_objects) {
+                        return scope.portfoliosList.filter(portfolio =>
+                          scope.reportOptions.portfolios_table_data_objects.some(object => object.user_code === portfolio.user_code)
+                        );
+                    }
+                    return [];
+                };
+
+                const getFilteredEarliestDate = function () {
+                    const portfoliosListOfTable = getFilteredTablePortfolios();
+                    if (portfoliosListOfTable?.length) {
+                        const dates = portfoliosListOfTable.map(item => item.first_transaction_date);
+                        const validDates = dates.filter(date => date !== null).map(date => new Date(date).getTime());
+                        const earliestDate = new Date(Math.min(...validDates));
+                        return earliestDate.toISOString().split('T')[0];
+                    } else if(scope.portfoliosList?.length){
+                        const dates = scope.portfoliosList.map(item => item.first_transaction_date);
+                        const validDates = dates.filter(date => date !== null).map(date => new Date(date).getTime());
+                        const earliestDate = new Date(Math.min(...validDates));
+                        return earliestDate.toISOString().split('T')[0];
+                    } else {
+                        return '0001-01-01';
+                    }
+                }
+
                 function getPortfolios() {
                     return portfolioRepository.getList()
                       .then(function (data) {
@@ -443,6 +474,29 @@ const evEvents = require("../../services/entityViewerEvents");
                     }
                 }
 
+                function fetchInceptionDate() {
+                    if((scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') &&
+                      scope.reportLayoutOptions?.datepickerOptions?.reportFirstDatepicker?.datepickerMode === 'inception' )
+                    {
+                        const earliestDate = getFilteredEarliestDate();
+                        if (earliestDate) {
+                            if ('pl_first_date' in scope.reportOptions && 'begin_date' in scope.reportOptions) {
+                                scope.reportOptions.pl_first_date = earliestDate;
+                                scope.reportOptions.begin_date = earliestDate;
+                            } else if ('pl_first_date' in scope.reportOptions) {
+                                scope.reportOptions.pl_first_date = earliestDate;
+                            } else if ('begin_date' in scope.reportOptions) {
+                                scope.reportOptions.begin_date = earliestDate;
+                            }
+                            scope.datesData.from = earliestDate;
+
+                            setTimeout(function () {
+                                scope.$apply();
+                            }, 200)
+                        }
+                    }
+                }
+
                 var initEventListeners = function () {
 
                     scope.evEventService.addEventListener(evEvents.LAYOUT_NAME_CHANGE, function () {
@@ -459,16 +513,19 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         scope.missingPricesData = scope.evDataService.getMissingPrices()
 
+                        fetchInceptionDate();
                         getReconcileStatus();
 
                     });
 
                     if (scope.isReport) {
 
-                        scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+                        scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, async function () {
 
                             scope.reportOptions = scope.evDataService.getReportOptions();
                             scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
+
+                            await fetchInceptionDate();
 
                             if (dateFromKey) {
                                 scope.datesData.from = scope.reportOptions[dateFromKey];
@@ -497,10 +554,24 @@ const evEvents = require("../../services/entityViewerEvents");
                             getReconcileStatus();
                         });
 
+                        scope.evEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+                            fetchInceptionDate();
+                        });
+
+                        scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
+                            fetchInceptionDate();
+                        });
+
+                        scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function () {
+                            fetchInceptionDate();
+                        });
                     }
 
                     getPortfolios()
-                      .then(() => getReconcileStatus())
+                      .then(() => {
+                          fetchInceptionDate();
+                          getReconcileStatus();
+                      })
                       .catch((error) => {
                           console.log('Error in getPortfolios: ', error);
                       });
