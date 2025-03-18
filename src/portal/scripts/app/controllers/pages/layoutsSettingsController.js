@@ -13,6 +13,10 @@
 
         var vm = this;
 
+        vm.balanceReportLayoutsCollapsed = false;
+        vm.plReportLayoutsCollapsed = false;
+        vm.transactionReportLayoutsCollapsed = false;
+
         vm.portfolioLayoutsCollapsed = false;
         vm.accountLayoutsCollapsed = false;
         vm.instrumentLayoutsCollapsed = false;
@@ -25,6 +29,11 @@
         vm.accountTypeLayoutsCollapsed = false;
         vm.instrumentTypeLayoutsCollapsed = false;
         vm.transactionTypeLayoutsCollapsed = false;
+
+        vm.balanceReportLayouts = [];
+        vm.plReportLayouts = [];
+        vm.transactionReportLayouts = [];
+
 
         vm.portfolioLayouts = [];
         vm.accountLayouts = [];
@@ -113,6 +122,22 @@
             var layoutState = null;
 
             switch (contentType) {
+
+                case 'reports.balancereport':
+                    layoutsArrayPropertyName = 'balanceReportLayouts';
+                    layoutsEntityType = 'balance-report';
+                    layoutState = 'app.portal.reports.balance-report';
+                    break;
+                case 'reports.plreport':
+                    layoutsArrayPropertyName = 'plReportLayouts';
+                    layoutsEntityType = 'pl-report';
+                    layoutState = 'app.portal.reports.pl-report';
+                    break;
+                case 'reports.transactionreport':
+                    layoutsArrayPropertyName = 'transactionReportLayouts';
+                    layoutsEntityType = 'transaction-report';
+                    layoutState = 'app.portal.reports.transaction-report';
+                    break;
                 case 'portfolios.portfolio':
                     layoutsArrayPropertyName = 'portfolioLayouts';
                     layoutsEntityType = 'portfolio';
@@ -262,6 +287,16 @@
                         layouts.map(function (layout) {
 
                             switch (layout.content_type) {
+
+                                case 'reports.balancereport':
+                                    vm.balanceReportLayouts.push(layout)
+                                    break;
+                                case 'reports.plreport':
+                                    vm.plReportLayouts.push(layout)
+                                    break;
+                                case 'reports.transactionreport':
+                                    vm.transactionReportLayouts.push(layout)
+                                    break;
                                 case 'portfolios.portfolio':
                                     vm.portfolioLayouts.push(layout);
                                     break;
