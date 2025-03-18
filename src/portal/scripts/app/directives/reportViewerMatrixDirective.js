@@ -92,33 +92,26 @@
                 };
 
                 var getCellWidth = function (columnsCount) {
-
                     var elemWidth = $(elem).width();
                     var cellWidth = 0;
                     var minWidth = 120;
-                    var maxWidth = 300;
                     var result = {cellWidth: 0, nameColWidth: 0};
 
                     var calcCellWidth = function (availableSpace) {
-
                         if (availableSpace < columnsCount * minWidth) {
-                            availableSpace = availableSpace - SCROLL_WIDTH - 3; // wtf is 3?
+                            availableSpace = availableSpace - SCROLL_WIDTH;
                         }
 
+                        // Dynamically calculate cell width to fill available space
                         cellWidth = Math.floor(availableSpace / columnsCount);
 
                         cellWidth = Math.max(cellWidth, minWidth);
-                        cellWidth = Math.min(cellWidth, maxWidth);
                     };
 
                     calcCellWidth(elemWidth);
-
                     result.nameColWidth = cellWidth;
-
                     result.cellWidth = cellWidth;
-
                     return result;
-
                 };
 
                 // Constants
