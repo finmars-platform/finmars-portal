@@ -364,16 +364,27 @@ const evEvents = require("../../services/entityViewerEvents");
                 }*/
 
                 const getFilteredTablePortfolios = function () {
-                    if (scope.reportOptions.portfolios_table_data_items) {
-                        return scope.reportOptions.portfolios_table_data_items.map(group => {
-                            let key = group.___group_type_key.split('.').pop();
-                            return scope.portfoliosList.filter(portfolio => portfolio[key] === group.___group_name);
-                        }).flat();
-                    } else if (scope.reportOptions.portfolios_table_data_objects) {
-                        return scope.portfoliosList.filter(portfolio =>
-                          scope.reportOptions.portfolios_table_data_objects.some(object => object.user_code === portfolio.user_code)
-                        );
+
+                      if (scope.entityType === 'pl-report' ) {
+                          return scope.reportOptions.portfolios_table_data_items.map(group => {
+                              let key = group.___group_type_key.split('.').pop();
+                              return scope.portfoliosList.filter(portfolio => portfolio[key] === group.___group_name);
+                          }).flat();
+                      }
+
+                    if (scope.entityType === 'transaction-report') {
+                        let filteredPortfolios = scope.portfoliosList;
+                        scope.reportOptions.frontend_request_options.filter_settings.forEach(filterItem => {
+                            let [str1, str2] = filterItem.key.split('.');
+                            if (str1 === 'portfolio') {
+                                filteredPortfolios = filteredPortfolios.filter(portfolio =>
+                                  filterItem.value.includes(portfolio[str2])
+                                );
+                            }
+                        });
+                        return filteredPortfolios;
                     }
+
                     return [];
                 };
 
