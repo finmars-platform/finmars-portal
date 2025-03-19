@@ -92,38 +92,31 @@
                 };
 
                 var getCellWidth = function (columnsCount) {
-
                     var elemWidth = $(elem).width();
                     var cellWidth = 0;
                     var minWidth = 120;
-                    var maxWidth = 300;
                     var result = {cellWidth: 0, nameColWidth: 0};
 
                     var calcCellWidth = function (availableSpace) {
-
                         if (availableSpace < columnsCount * minWidth) {
-                            availableSpace = availableSpace - SCROLL_WIDTH - 3; // wtf is 3?
+                            availableSpace = availableSpace - SCROLL_WIDTH;
                         }
 
+                        // Dynamically calculate cell width to fill available space
                         cellWidth = Math.floor(availableSpace / columnsCount);
 
                         cellWidth = Math.max(cellWidth, minWidth);
-                        cellWidth = Math.min(cellWidth, maxWidth);
                     };
 
                     calcCellWidth(elemWidth);
-
                     result.nameColWidth = cellWidth;
-
                     result.cellWidth = cellWidth;
-
                     return result;
-
                 };
 
                 // Constants
-                const MIN_CELL_HEIGHT = 14;
-                const MAX_CELL_HEIGHT = 48;
+                const MIN_CELL_HEIGHT = 30;
+                const MAX_CELL_HEIGHT = 60;
                 const SCROLL_WIDTH = 17;
                 const SCROLL_HEIGHT = 14;
                 const FONT_SIZE = 16;
@@ -258,7 +251,7 @@
                     var cellWidth = cwResult.cellWidth;
                     nameColWidth = cwResult.nameColWidth;
 
-                    var cellHeight = 48;
+                    var cellHeight = 60;
 
                     // var minWidth = 100;
                     // var maxWidth = 300;
@@ -280,8 +273,8 @@
                         var elemHeight = $(elem).height();
                         var cellHeight = Math.floor(elemHeight / rowsCount);
 
-                        cellHeight = Math.max(cellHeight, 14);
-                        cellHeight = Math.min(cellHeight, 48);
+                        cellHeight = Math.max(cellHeight, 30);
+                        cellHeight = Math.min(cellHeight, 60);
 
                     }
 
@@ -331,7 +324,7 @@
 
                         matrixHolder.classList.add('has-x-scroll');
                         matrixProbableHeight = matrixProbableHeight + 14; // add space for scroll
-                        matrixVCAvailableHeight = matrixVCAvailableHeight - 14;
+                        matrixVCAvailableHeight = matrixVCAvailableHeight - 30;
 
                     } else {
                         matrixHolder.classList.remove('has-x-scroll');
@@ -405,6 +398,21 @@
                     scope.alignGrid();
 
                     bodyScrollElem.addEventListener('scroll', scrollHeaderAndColumn);
+
+                    // Add event listener for mouseover
+                    bodyScrollElem.addEventListener('mouseover', function() {
+                        rvMatrixFixedBottomRow.style.opacity = '0.3';
+                        rvMatrixRightCol.style.opacity = '0.3';
+                        rvMatrixFixedBottomRow.style.pointerEvents = 'none';
+                        rvMatrixRightCol.style.pointerEvents = 'none';
+                    });
+
+                    bodyScrollElem.addEventListener('mouseout', function() {
+                        rvMatrixFixedBottomRow.style.opacity = '1';
+                        rvMatrixRightCol.style.opacity = '1';
+                        rvMatrixFixedBottomRow.style.pointerEvents = 'auto';
+                        rvMatrixRightCol.style.pointerEvents = 'auto';
+                    });
 
                 };
 
