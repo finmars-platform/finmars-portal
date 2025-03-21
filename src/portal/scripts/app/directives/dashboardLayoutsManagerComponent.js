@@ -35,14 +35,17 @@
 
                 scope.layouts = [];
 
-                scope.createNewLayout = function (){
+                scope.prepareNuxtLink = function (id) {
+                    const { protocol, host, pathname: currentPathName } = window.location;
+                    const pathname = `${currentPathName.slice(0, -2)}v/`;
+                    return `${protocol}//${host}${pathname}configuration/dashboard-constructor/${id}`;
+                }
 
+                scope.createNewLayout = function () {
                     scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                    $state.go('app.portal.dashboard-constructor', {
-                        id: 'new'
-                    })
-
+                    const url = scope.prepareNuxtLink('new');
+                    window.location.href = url;
                 }
 
                 scope.deleteLayout = function (ev) {
@@ -132,7 +135,7 @@
                 };
 
                 scope.editDashboardLayout = () => {
-                    const url = $state.href('app.portal.dashboard-constructor', {id: scope.layout.id});
+                    const url = scope.prepareNuxtLink(scope.layout.id);
                     window.open(url, '_blank');
                 };
 
