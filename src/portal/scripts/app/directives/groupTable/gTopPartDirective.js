@@ -364,32 +364,58 @@ const evEvents = require("../../services/entityViewerEvents");
                 }*/
 
                 const getFilteredTablePortfolios = function () {
-
-                      if (scope.entityType === 'pl-report' ) {
-                          return scope.reportOptions.portfolios_table_data_items.map(group => {
-                              let key = group.___group_type_key.split('.').pop();
-                              return scope.portfoliosList.filter(portfolio => portfolio[key] === group.___group_name);
-                          }).flat();
-                      }
-
-                    if (scope.entityType === 'transaction-report') {
-                        let filteredPortfolios = scope.portfoliosList;
-                        scope.reportOptions.frontend_request_options.filter_settings.forEach(filterItem => {
-                            let [str1, str2] = filterItem.key.split('.');
-                            if (str1 === 'portfolio') {
-                                filteredPortfolios = filteredPortfolios.filter(portfolio =>
-                                  filterItem.value.includes(portfolio[str2])
-                                );
-                            }
-                        });
-                        return filteredPortfolios;
+                    if (scope.entityType === 'pl-report') {
+                        return scope.reportOptions.portfolios_table_data_items
+                          .map(group => {
+                              const [key1, key2] = group.___group_type_key.split('.');
+                              if (key1 === 'portfolio') {
+                                  return scope.portfoliosList.filter(
+                                    portfolio => portfolio[key2] === group.___group_name
+                                  );
+                              }
+                              return [];
+                          })
+                          .flat();
                     }
 
-                    return [];
+                    if (scope.entityType === 'transaction-report') {
+                        const filterSettings = scope.reportOptions.frontend_request_options?.filter_settings || [];
+                        const globalPortfolioIds = scope.reportOptions.portfolios || [];
+
+                        const filteredPortfoliosLocal = filterSettings.flatMap(filterItem => {
+                            const [key1, key2] = filterItem.key.split('.');
+                            if (key1 === 'portfolio') {
+                                return scope.portfoliosList.filter(portfolio =>
+                                  filterItem.value.includes(portfolio[key2])
+                                );
+                            }
+                            return [];
+                        });
+
+                        const filteredPortfoliosGlobal = scope.portfoliosList.filter(portfolio =>
+                          globalPortfolioIds.includes(portfolio.id)
+                        );
+
+                        const mergedPortfolios = [...filteredPortfoliosLocal, ...filteredPortfoliosGlobal];
+
+                        // Remove duplicates by portfolio id
+                        return mergedPortfolios.filter(
+                          (portfolio, index, self) =>
+                            index === self.findIndex(p => p.id === portfolio.id)
+                        );
+                    }
+
+                    return scope.portfoliosList;
                 };
 
                 const getFilteredEarliestDate = function () {
-                    const portfoliosListOfTable = getFilteredTablePortfolios();
+                    let portfoliosListOfTable;
+                    if (!scope.reportOptions.portfolios_table_data_items?.length) {
+                        portfoliosListOfTable = scope.portfoliosList;
+                    } else {
+                        portfoliosListOfTable = getFilteredTablePortfolios();
+                    }
+
                     if (portfoliosListOfTable?.length) {
                         const dates = portfoliosListOfTable.map(item => item.first_transaction_date);
                         const validDates = dates.filter(date => date !== null).map(date => new Date(date).getTime());
@@ -408,7 +434,7 @@ const evEvents = require("../../services/entityViewerEvents");
                 function getPortfolios() {
                     return portfolioRepository.getList()
                       .then(function (data) {
-                          if (data?.results) {
+                          if (data?.results?.length) {
                               scope.portfoliosList = data.results;
                           } else {
                               scope.portfoliosList = [];
@@ -524,19 +550,16 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         scope.missingPricesData = scope.evDataService.getMissingPrices()
 
-                        fetchInceptionDate();
                         getReconcileStatus();
 
                     });
 
                     if (scope.isReport) {
 
-                        scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, async function () {
+                        scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 
                             scope.reportOptions = scope.evDataService.getReportOptions();
                             scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
-
-                            await fetchInceptionDate();
 
                             if (dateFromKey) {
                                 scope.datesData.from = scope.reportOptions[dateFromKey];
@@ -562,15 +585,8 @@ const evEvents = require("../../services/entityViewerEvents");
                                 delete scope.reportOptions.begin_date;
                             }
 
+                            fetchInceptionDate();
                             getReconcileStatus();
-                        });
-
-                        scope.evEventService.addEventListener(evEvents.CREATE_TABLE, function () {
-                            fetchInceptionDate();
-                        });
-
-                        scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
-                            fetchInceptionDate();
                         });
 
                         scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function () {
