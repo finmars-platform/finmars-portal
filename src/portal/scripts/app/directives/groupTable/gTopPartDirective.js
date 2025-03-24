@@ -32,7 +32,6 @@ const evEvents = require("../../services/entityViewerEvents");
                 scope.viewContext = scope.evDataService.getViewContext();
 
                 scope.portfoliosList = [];
-                // scope.portfoliosFullList = [];
                 scope.filteredPortfoliosList = [];
                 scope.failedReconcileData = {
                     count: 0,
@@ -365,14 +364,12 @@ const evEvents = require("../../services/entityViewerEvents");
                 }*/
 
                 const getFilteredTablePortfolios = function () {
-                    const { entityType, reportOptions, portfoliosList } = scope;
-
-                    if (entityType === 'pl-report') {
-                        return reportOptions.portfolios_table_data_items
+                    if (scope.entityType === 'pl-report') {
+                        return scope.reportOptions.portfolios_table_data_items
                           .map(group => {
                               const [key1, key2] = group.___group_type_key.split('.');
                               if (key1 === 'portfolio') {
-                                  return portfoliosList.filter(
+                                  return scope.portfoliosList.filter(
                                     portfolio => portfolio[key2] === group.___group_name
                                   );
                               }
@@ -381,21 +378,21 @@ const evEvents = require("../../services/entityViewerEvents");
                           .flat();
                     }
 
-                    if (entityType === 'transaction-report') {
-                        const filterSettings = reportOptions.frontend_request_options?.filter_settings || [];
-                        const globalPortfolioIds = reportOptions.portfolios || [];
+                    if (scope.entityType === 'transaction-report') {
+                        const filterSettings = scope.reportOptions.frontend_request_options?.filter_settings || [];
+                        const globalPortfolioIds = scope.reportOptions.portfolios || [];
 
                         const filteredPortfoliosLocal = filterSettings.flatMap(filterItem => {
                             const [key1, key2] = filterItem.key.split('.');
                             if (key1 === 'portfolio') {
-                                return portfoliosList.filter(portfolio =>
+                                return scope.portfoliosList.filter(portfolio =>
                                   filterItem.value.includes(portfolio[key2])
                                 );
                             }
                             return [];
                         });
 
-                        const filteredPortfoliosGlobal = portfoliosList.filter(portfolio =>
+                        const filteredPortfoliosGlobal = scope.portfoliosList.filter(portfolio =>
                           globalPortfolioIds.includes(portfolio.id)
                         );
 
@@ -408,7 +405,7 @@ const evEvents = require("../../services/entityViewerEvents");
                         );
                     }
 
-                    return portfoliosList;
+                    return scope.portfoliosList;
                 };
 
                 const getFilteredEarliestDate = function () {
@@ -553,7 +550,6 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         scope.missingPricesData = scope.evDataService.getMissingPrices()
 
-                        fetchInceptionDate();
                         getReconcileStatus();
 
                     });
@@ -564,8 +560,6 @@ const evEvents = require("../../services/entityViewerEvents");
 
                             scope.reportOptions = scope.evDataService.getReportOptions();
                             scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
-
-                            fetchInceptionDate();
 
                             if (dateFromKey) {
                                 scope.datesData.from = scope.reportOptions[dateFromKey];
@@ -591,6 +585,7 @@ const evEvents = require("../../services/entityViewerEvents");
                                 delete scope.reportOptions.begin_date;
                             }
 
+                            fetchInceptionDate();
                             getReconcileStatus();
                         });
 
