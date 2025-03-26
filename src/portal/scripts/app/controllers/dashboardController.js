@@ -220,27 +220,22 @@
 
         vm.getFilteredProjection = function (data) {
             data.forEach((item) => {
-                // Filter empty rows and columns in the layout
+                // Filter out empty rows by checking if all columns are empty in the row
                 item.layout.rows = item.layout.rows.filter((row) => {
-                    row.columns = row.columns.filter((column) => column.cell_type !== 'empty');
-                    return row.columns.length > 0;
+                    return row.columns.some((column) => column.cell_type !== 'empty');
                 });
 
+                // Update rows_count after filtering
                 item.layout.rows_count = item.layout.rows.length;
 
-                // Fix field `to` in accordion_layout by filtering empty columns and rows
+                // Fix field `to` in accordion_layout by updating the number of rows
                 item.accordion_layout.forEach((accordion) => {
                     accordion.items = accordion.items.filter((item) => {
-                        item.columns = item.columns.filter((column) => column.cell_type !== 'empty');
-                        return item.columns.length > 0;
+                        return item.columns.some((column) => column.cell_type !== 'empty');
                     });
 
+                    // Update property `to`
                     accordion.to = accordion.items.length;
-                });
-
-                // Fix field `to` of the parent accordion_layout
-                item.accordion_layout.forEach((accordion) => {
-                    accordion.from = 0;
                 });
             });
 
