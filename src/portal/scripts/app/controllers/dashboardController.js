@@ -218,6 +218,35 @@
 
         };
 
+        vm.getFilteredProjection = function (data) {
+            data.forEach((item) => {
+                // Filter empty rows and columns in the layout
+                item.layout.rows = item.layout.rows.filter((row) => {
+                    row.columns = row.columns.filter((column) => column.cell_type !== 'empty');
+                    return row.columns.length > 0;
+                });
+
+                item.layout.rows_count = item.layout.rows.length;
+
+                // Fix field `to` in accordion_layout by filtering empty columns and rows
+                item.accordion_layout.forEach((accordion) => {
+                    accordion.items = accordion.items.filter((item) => {
+                        item.columns = item.columns.filter((column) => column.cell_type !== 'empty');
+                        return item.columns.length > 0;
+                    });
+
+                    accordion.to = accordion.items.length;
+                });
+
+                // Fix field `to` of the parent accordion_layout
+                item.accordion_layout.forEach((accordion) => {
+                    accordion.from = 0;
+                });
+            });
+
+            return data || [];
+        }
+
         // ======================================
         //  LAYOUT SECTION END
         // =====================================
@@ -225,8 +254,6 @@
         vm.generateProjection = function (layout) {
 
             var result = [];
-
-            console.log('generateProjection.vm.layout', layout);
 
             var data = JSON.parse(JSON.stringify(layout.data));
 
@@ -310,7 +337,6 @@
 
                 }
 
-
                 tab.accordion_layout = tab.accordion_layout.sort(function (a, b) {
 
                     if (a.from < b.from) {
@@ -326,11 +352,9 @@
 
                 result.push(tab);
 
-            })
+            });
 
-            console.log('generateProjection.result', result);
-
-            return result;
+            return vm.getFilteredProjection(result);
 
         }
 
