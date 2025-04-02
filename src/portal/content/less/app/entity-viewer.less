@@ -181,7 +181,6 @@
 
     .ev-left-panel-grouping-section-item .material-icons {
       position: relative;
-      top: 6px;
     }
 
     .ev-left-panel-grouping-section-item {
@@ -193,6 +192,16 @@
       border-bottom: 1px solid rgba(224, 224, 224, 1);
       box-sizing: border-box;
       cursor: move;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      .ev-left-panel-grouping-section-item-name {
+        width : 100%;
+        overflow:hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-left: 3px;
+      }
     }
 
     .ev-left-panel-tree-elem {
