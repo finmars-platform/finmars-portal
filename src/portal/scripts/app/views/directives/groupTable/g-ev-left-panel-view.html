@@ -59,24 +59,21 @@
                  class="ev-left-panel-grouping-section-item {{'p-l-' + $index * 2}}"
                  data-key="{{item.key}}">
 
-                <span class="material-icons">drag_indicator</span> <span
-                    class="ev-left-panel-grouping-section-item-name">{{item.name}}
-
-         <md-tooltip md-direction="top">{{item.name}}</md-tooltip></span>
-
-                <md-menu class="float-right" style="    margin-right: 4px;
-    margin-top: -2px;">
+                <span class="material-icons">drag_indicator</span>
+                <span class="ev-left-panel-grouping-section-item-name">
+                    {{item.name}}
+                    <md-tooltip md-direction="top">{{item.name}}</md-tooltip>
+                </span>
+                <md-menu class="float-right" style="margin-right: 4px;">
                     <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                        <div class="flex-column flex-i-center" style="margin-top: -11px;">
+                        <div class="flex-column flex-i-center">
                             <span class="material-icons">more_vert</span>
                         </div>
                     </md-button>
 
                     <md-menu-content width="4">
-
                         <md-menu-item>
-                            <md-button data-ng-click="sortGroupType($index, 'DESC')"
-                                       class="g-settings-option-btn">
+                            <md-button data-ng-click="sortGroupType($index, 'DESC')" class="g-settings-option-btn">
                             <span class="material-icons m-r-8"
                                   data-ng-class="{
                                     'visibility-hidden': !item.options || item.options.sort !== 'DESC'
@@ -102,7 +99,6 @@
                                 <span>Delete</span>
                             </md-button>
                         </md-menu-item>
-
                     </md-menu-content>
                 </md-menu>
 
