@@ -85,9 +85,7 @@
 
                 scope.loadMore = function ($event) {
 
-
                     var groupHashId = scope.item.___id;
-
 
                     var requestParameters = scope.evDataService.getRequestParameters(groupHashId);
 
@@ -216,7 +214,6 @@
 
                     } else {
 
-                        // evDomManager.requestObjects(scope.item.___id, scope.item.___parentId, scope.evDataService, scope.evEventService)
                         requestObjects = true;
 
                         selectedGroups.push(itemData);
@@ -229,7 +226,7 @@
 
                     scope.evDataService.setSelectedGroups(selectedGroups);
 
-                    scope.evContentElement.scrollTop = 0;
+                    if(scope.evContentElement) scope.evContentElement.scrollTop = 0;
 
                     scope.evDataService.setSelectAllRowsState(false);
 
@@ -244,6 +241,7 @@
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
                     }
 
+                    scope.evDataService.setLastClickInfo(itemData?.___is_selected ? scope.item : {});
                 }
 
                 scope.getPrettyName = function () {
@@ -290,11 +288,9 @@
                         }
 
                     }
-                    // console.log('tree groups, ', groups)
-                    // console.log('tree groupType, ', scope.groupType)
                 }
 
-                var init = async function () {
+                var init = function () {
 
                     scope.getGroupType()
 
@@ -320,17 +316,14 @@
                         }
 
                         scope.currentPage = requestParameters.pagination.page;
-
-                        console.log('scope.requestParameters', scope.requestParameters);
-                        console.log('scope.currentPage', scope.currentPage);
-                        console.log('scope.total_pages', scope.total_pages);
-
                     })
-
                 };
 
-                if (scope.item) { // wtf/??
+                if (scope.item) {
                     init();
+
+                    const lastClickedItemData = scope.evDataService.getLastClickInfo();
+                    if(lastClickedItemData && lastClickedItemData.___id === scope.item.___id) scope.toggleGroupSelection();
                 }
 
             },
