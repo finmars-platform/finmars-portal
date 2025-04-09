@@ -188,17 +188,8 @@
                 }
 
                 function renderEntityViewer() {
-
-                    // var flatList = evDataHelper.getFlatStructure(scope.evDataService);
                     var flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService, globalDataService);
-
                     console.log('renderEntityViewer.flatlist', flatList);
-                    /* flatList = flatList.map(function (item, i) {
-                        item.___flat_list_index = i;
-                        return item
-                    });
-
-                    scope.evDataService.setUnfilteredFlatList(flatList); */
 
                     var filters = scope.evDataService.getFilters();
                     var regularFilters = evFilterService.convertIntoRegularFilters(filters.frontend);
@@ -209,73 +200,43 @@
                     }
 
                     var selGroupsList = scope.evDataService.getSelectedGroups();
-
                     if (selGroupsList.length) {
-
                         var lastSelGroup = selGroupsList[selGroupsList.length - 1];
-
                         var controlObj = {
                             ___parentId: lastSelGroup.___id,
                             ___type: 'control',
                             ___level: lastSelGroup.___level + 1
                         };
-
                         controlObj.___id = evRvCommonHelper.getId(controlObj);
-
                         flatList.push(controlObj);
-
-                    } else {
-
-                        if (flatList.length) {
-
-                            var controlObj = {
-                                ___parentId: flatList[0].___parentId,
-                                ___type: 'control',
-                                ___level: 1
-                            };
-
-                            controlObj.___id = evRvCommonHelper.getId(controlObj);
-
-                            flatList.push(controlObj);
-
-                        }
-
+                    } else if (flatList.length) {
+                        var controlObj = {
+                            ___parentId: flatList[0].___parentId,
+                            ___type: 'control',
+                            ___level: 1
+                        };
+                        controlObj.___id = evRvCommonHelper.getId(controlObj);
+                        flatList.push(controlObj);
                     }
 
                     var index = 0;
-                    flatList = flatList.map(function (item, i) {
-                        item.___flat_list_index = i;
+                    flatList = flatList.map(function (item) {
+                        item.___flat_list_index = index;
 
-                        if (item.___type === 'object' ||
-                            item.___type === 'control' ||
-                            item.___type === 'placeholder_group' ||
-                            item.___type === 'placeholder_object' ||
-                            item.___type === 'group') {
+                        if (['object', 'control', 'placeholder_group', 'placeholder_object', 'group'].includes(item.___type)) {
                             item.___flat_list_offset_top_index = index;
-                            index = index + 1;
+                            index++;
+                        } else {
+                            index++;
                         }
 
-                        return item
+                        return item;
                     });
-
-                    /* var controlObj = {
-                        ___parentId: obj.___id,
-                        ___type: 'control',
-                        ___level: obj.___level + 1
-                    };
-
-                    controlObj.___id = evRvCommonHelper.getId(controlObj);
-
-                    obj.results.push(controlObj); */
 
                     scope.evDataService.setFlatList(flatList);
 
-                    // evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
-
-                    projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
-
+                    var projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
                     console.log('renderEntityViewer.projection', projection);
-
                     scope.evDataService.setProjection(projection);
 
                     evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
@@ -284,9 +245,7 @@
                         evRenderer.render(contentElem, projection, globalDataService, scope.evDataService, scope.evEventService);
                     });
 
-
                     scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER);
-
                 }
 
                 function cellContentOverflow() {
