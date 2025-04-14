@@ -269,7 +269,9 @@
                 // verify `___type`, `___subtotal_type`, `___subtotal_subtype`
 
 
-                list[parentListIndex].results.splice(node.___tree_index, 0, node);
+                if ( list[parentListIndex]?.results ) {
+                    list[parentListIndex].results.splice(node.___tree_index, 0, node);
+                }
 
                 /* TODO: if everything alright delete in release 1.17.0
 
