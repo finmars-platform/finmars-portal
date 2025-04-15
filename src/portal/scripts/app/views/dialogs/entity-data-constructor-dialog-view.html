@@ -259,7 +259,7 @@
                 Manage attributes
             </md-button>
             <md-button class="md-raised outline-button manage-attrs-btn"
-                       data-ng-if="vm.isPreviewFormAvailable"
+                       data-ng-if="vm.entityType === 'complex-transaction'"
                        data-ng-click="vm.openFormPreview($event)"
                        ng-disabled="!vm.readyStatus.constructor">
                 Preview Form

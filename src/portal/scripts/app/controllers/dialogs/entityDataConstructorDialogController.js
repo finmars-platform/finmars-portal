@@ -37,7 +37,6 @@
         vm.fieldsTree = {};
         vm.fixedArea = null;
 
-        vm.isPreviewFormAvailable = false;
         vm.entityType = data.entityType;
         vm.targetContentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
@@ -2220,10 +2219,7 @@
                     scrollHelper.setDnDScrollElem(scrollElem);
 
                 });
-
             });
-
-            vm.isPreviewFormAvailable = vm.entityType === 'complex-transaction';
         };
 
 
