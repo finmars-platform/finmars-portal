@@ -37,6 +37,7 @@
         vm.fieldsTree = {};
         vm.fixedArea = null;
 
+        vm.isPreviewFormAvailable = false;
         vm.entityType = data.entityType;
         vm.targetContentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
@@ -2094,7 +2095,6 @@
         };
 
         vm.openFormPreview = function ($event) {
-
             var tabs = JSON.parse(angular.toJson(vm.tabs));
 
             var previewController = 'EntityViewerFormsPreviewDialogController as vm';
@@ -2223,7 +2223,7 @@
 
             });
 
-
+            vm.isPreviewFormAvailable = vm.entityType === 'complex-transaction';
         };
 
 
