@@ -26,33 +26,20 @@
 
                 scope.unfoldGroup = function ($event) {
 
-                    // scope.item.___is_open = true;
-
-                    // scope.evDataService.setData(scope.item);
                     const itemData = scope.evDataService.getData(scope.item.___id);
                     itemData.___is_open = true;
-
                     scope.evDataService.setData(itemData);
-
                     const hasUnloadedChildren = scope.item.___items_count > 0 && !scope.item.results.length;
-
                     if (hasUnloadedChildren) {
-
                         scope.loading = true;
-
                         const dataLoadEndIndex = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
                             scope.loading = false;
                             scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndIndex);
-
                         });
-
                     }
 
                     // event UPDATE_TABLE dispatched by `evDomManager.requestGroups()`
                     evDomManager.requestGroups(scope.item.___id, scope.item.___parentId, scope.evDataService, scope.evEventService);
-
-                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 }
 
                 scope.foldGroup = function ($event) {
@@ -179,9 +166,7 @@
 
                     var selectedGroups;
                     var requestObjects = false;
-
                     var itemData = scope.evDataService.getData(scope.item.___id);
-
                     scope.multiselectIsActive = scope.evDataService.getSelectedGroupsMultiselectState();
 
                     if (!scope.multiselectIsActive) {
@@ -190,46 +175,31 @@
                         var items = scope.evDataService.getDataAsList();
 
                         items.forEach(function (item) {
-
                             item.___is_selected = false;
-
                             if (item.results && item.results.length) {
                                 deselectChildrenObjs(item.___id);
                             }
-
                             scope.evDataService.setData(item);
-
                         })
 
                         scope.evDataService.setSelectedGroups([]);
-
                         itemData.___is_selected = selected; // return ___is_selected status of clicked group after resetting statuses of all groups
-
                     }
 
                     selectedGroups = scope.evDataService.getSelectedGroups();
 
                     if (itemData.___is_selected) {
                         selectedGroups = deselectGroup(itemData, selectedGroups);
-
                     } else {
-
                         requestObjects = true;
-
                         selectedGroups.push(itemData);
-
                     }
 
                     itemData.___is_selected = !itemData.___is_selected;
-
                     scope.evDataService.setData(itemData);
-
                     scope.evDataService.setSelectedGroups(selectedGroups);
-
                     if(scope.evContentElement) scope.evContentElement.scrollTop = 0;
-
                     scope.evDataService.setSelectAllRowsState(false);
-
                     scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.HIDE_BULK_ACTIONS_AREA);
 
@@ -291,23 +261,16 @@
                 }
 
                 var init = function () {
-
                     scope.getGroupType()
-
                     scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
-
                         scope.getGroupType()
-
                     });
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         scope.getGroupType()
-
                         var groupHashId = scope.item.___id;
-
                         var requestParameters = scope.evDataService.getRequestParameters(groupHashId);
-
                         scope.total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
 
                         if (!requestParameters.pagination.page) {
@@ -316,16 +279,15 @@
                         }
 
                         scope.currentPage = requestParameters.pagination.page;
-                    })
+                    });
+
+                    const lastClickedItemData = scope.evDataService.getLastClickInfo();
+                    if(lastClickedItemData && lastClickedItemData.___id === scope.item.___id) scope.toggleGroupSelection();
                 };
 
                 if (scope.item) {
                     init();
-
-                    const lastClickedItemData = scope.evDataService.getLastClickInfo();
-                    if(lastClickedItemData && lastClickedItemData.___id === scope.item.___id) scope.toggleGroupSelection();
                 }
-
             },
         }
     }
