@@ -1019,8 +1019,11 @@
 
 			}
 
-			return uiService.getDefaultEditLayout(viewModel.entityType);
-
+			try {
+				return uiService.getDefaultEditLayout(viewModel.entityType);
+			} catch (e) {
+				console.error('uiService.getDefaultEditLayout(viewModel.entityType) at <<entityViewerEditorSharedLogicHelper>> ', e)
+			}
 		};
 
 		const getUserTabsAndFixedAreaData = formLayout => {
@@ -1047,7 +1050,7 @@
 				}
 
 				if (gotEditLayout &&
-					editLayout.results.length && editLayout.results[0].data) {
+					editLayout?.results?.length && editLayout?.results?.[0]?.data) {
 
 					viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
 
@@ -1230,9 +1233,11 @@
 
 				if (!viewModel.entity.attributes) viewModel.entity.attributes = [];
 
-				viewModel.attributeTypes.forEach(function (attrType) {
-					viewModel.entity.attributes = entityEditorHelper.updateAttribute(viewModel.entity.attributes, attrType);
-				});
+				if (viewModel?.attributeTypes) {
+					viewModel.attributeTypes.forEach(function (attrType) {
+						viewModel.entity.attributes = entityEditorHelper.updateAttribute(viewModel.entity.attributes, attrType);
+					});
+				}
 
 			}
 
