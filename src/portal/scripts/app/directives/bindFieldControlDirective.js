@@ -522,23 +522,23 @@
                                 };*/
                 vm.checkForNotNull = function (options) {
 
-                    if ($scope.item.options && $scope.item.options.notNull) {
+                    if ($scope.item?.options && $scope.item?.options?.notNull) {
 						options.notNull = true;
 
                     } else if (
-                        $scope.item.frontOptions &&
-                        ($scope.item.frontOptions.notNull || $scope.item.frontOptions.usedInExpr)
+                        $scope.item?.frontOptions &&
+                        ($scope.item?.frontOptions?.notNull || $scope.item?.frontOptions?.usedInExpr)
                     ) {
 
 						options.notNull = true;
 
-                    } else if ($scope.item.key && vm.fieldType.type === 'systemAttribute') {
+                    } else if ($scope.item?.key && vm.fieldType.type === 'systemAttribute') {
 
                         var requiredAttrs = metaService.getRequiredEntityAttrs(
                             vm.entityType
                         );
 
-                        if (requiredAttrs.indexOf($scope.item.key) > -1) {
+                        if (requiredAttrs.indexOf($scope.item?.key) > -1) {
 							options.notNull = true;
                         }
 

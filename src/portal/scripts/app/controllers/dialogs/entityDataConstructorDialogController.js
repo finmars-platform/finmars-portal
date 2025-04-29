@@ -2094,7 +2094,6 @@
         };
 
         vm.openFormPreview = function ($event) {
-
             var tabs = JSON.parse(angular.toJson(vm.tabs));
 
             var previewController = 'EntityViewerFormsPreviewDialogController as vm';
@@ -2220,10 +2219,7 @@
                     scrollHelper.setDnDScrollElem(scrollElem);
 
                 });
-
             });
-
-
         };
 
 
