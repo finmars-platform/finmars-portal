@@ -20,12 +20,12 @@
                 onChangeLayoutCallback: '&',
                 dashboardDataService: '=',
                 dashboardEventService: '=',
-				parentPopup: '='
+				        parentPopup: '='
             },
             link: function (scope) {
 
                 scope.layout = scope.dashboardDataService.getData();
-				scope.viewContext = 'dashboard';
+				        scope.viewContext = 'dashboard';
 
                 scope.invites = [];
 
@@ -70,14 +70,22 @@
                         multiple: true
                     }).then(function (res) {
                         if (res.status === 'agree') {
-
-                            uiService.deleteDashboardLayoutByKey(scope.layout.id).then(function (){
-
-                                toastNotificationService.success("Dashboard Layout is deleted")
-
-                            })
+                            uiService.deleteDashboardLayoutByKey(scope.layout.id).then(function () {
+                                toastNotificationService.success("Dashboard Layout is deleted");
+                                // Refresh layouts and check if the current layout was deleted
+                                return scope.getLayouts();
+                            }).then(function (layouts) {
+                                // Check if the current layout (being viewed) was deleted
+                                const layoutExists = layouts.some(l => l.id === scope.layout.id);
+                                if (!layoutExists) {
+                                    // Redirect to dashboard and reload to trigger default layout check
+                                    $state.go('app.portal.dashboard', {}, { reload: true });
+                                }
+                            }).catch(function (error) {
+                                console.error('Error deleting layout:', error);
+                            });
                         }
-                    })
+                    });
                 };
 
                 scope.openLayout = (layout) => {
@@ -93,38 +101,38 @@
 
                 };
 
-				/* scope.getLinkToLayout = function (userCode) {
-					return $state.current.name + "({layoutUserCode: '" + userCode + "'})";
-				}; */
-				scope.onLayoutLinkClick = function ($event, layout) {
+                /* scope.getLinkToLayout = function (userCode) {
+                  return $state.current.name + "({layoutUserCode: '" + userCode + "'})";
+                }; */
+                scope.onLayoutLinkClick = function ($event, layout) {
 
-					scope.parentPopup.cancel();
-					$event.preventDefault();
+                  scope.parentPopup.cancel();
+                  $event.preventDefault();
 
-					scope.dashboardDataService.setLayoutToOpen(layout);
-					scope.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
+                  scope.dashboardDataService.setLayoutToOpen(layout);
+                  scope.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
 
-				};
+                };
 
-				scope.getLinkToLayout = function (userCode) {
+                scope.getLinkToLayout = function (userCode) {
 
-					let link = $state.href($state.current.name);
-					if (userCode) link = link + '?layout=' + userCode;
-					return link;
+                  let link = $state.href($state.current.name);
+                  if (userCode) link = link + '?layout=' + userCode;
+                  return link;
 
-				};
+                };
 
                 scope.layoutIsDefault = layout => layout.is_default;
 
                 scope.setAsDefault = (targetLayout) => {
 
-					if (targetLayout.is_default) {
-						return;
-					}
+                  if (targetLayout.is_default) {
+                    return;
+                  }
 
                     scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-					targetLayout.is_default = true;
+					          targetLayout.is_default = true;
 
                     uiService.updateDashboardLayout(targetLayout.id, targetLayout).then(async function (data) {
                         scope.dashboardDataService.updateModifiedDate(data.modified_at);
@@ -370,19 +378,13 @@
                 };
 
                 scope.getLayouts = function () {
-
                     scope.processing = true;
-
-                    uiService.getDashboardLayoutList({pageSize: 1000}).then(function (data){
-
+                    return uiService.getDashboardLayoutList({ pageSize: 1000 }).then(function (data) {
                         scope.layouts = data.results;
-
                         scope.processing = false;
-
                         scope.$apply();
-
-                    })
-
+                        return data.results; // Return the layouts for chaining
+                    });
                 };
 
                 const init = async () => {
