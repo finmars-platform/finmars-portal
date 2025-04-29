@@ -108,7 +108,7 @@
 
                         var listLayout = dashboardDataService.getListLayout();
 
-                        if (listLayout.id === data.id) {
+                        if (listLayout?.id === data.id) {
 
                             var activeLayoutData = dashboardDataService.getData();
 
@@ -203,7 +203,7 @@
                         layoutsList[i].is_default = false;
 
                         // uiService.updateDashboardLayout(layoutsList[i].id, layoutsList[i]);
-                        if (listLayout.id === layout.id) {
+                        if (listLayout?.id === layout.id) {
 
                             activeLayoutData = dashboardDataService.getData();
 
@@ -224,7 +224,7 @@
 
                 uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (updatedData) {
 
-                    if (listLayout.id === item.id) {
+                    if (listLayout?.id === item.id) {
 
                         activeLayoutData = dashboardDataService.getData();
 
@@ -342,8 +342,6 @@
 
                     vm.getInvites();
                     vm.getList().then(function (data) {
-
-                        var listLayout = dashboardDataService.getListLayout();
 
                         vm.items.forEach(function (item) {
 
