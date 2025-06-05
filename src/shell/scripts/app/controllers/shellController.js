@@ -13,7 +13,7 @@ import crossTabEvents from "../services/events/crossTabEvents";
 import Keycloak from '../../../../core/keycloak/keycloak.js'
 import explorerService from "../../../../portal/scripts/app/services/explorerService";
 
-export default function ($scope, $state, $transitions, $urlService, $uiRouterGlobals, $mdDialog, toastNotificationService, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService) {
+export default function ($scope, $state, $transitions, $urlService, $uiRouterGlobals, $mdDialog, toastNotificationService, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService, usersService) {
 
     console.log("shellController init()")
 
@@ -296,7 +296,27 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
                 middlewareService.initLogOut();
 
-                authorizerService.logout().then(function (data) {
+                if (window.EDITION_TYPE == 'enterprise') {
+
+                    authorizerService.logout().then(function (data) {
+
+                        sessionStorage.removeItem('afterLoginEvents');
+
+                        /* if (window.location.pathname !== '/') {
+                            window.location.pathname = '/';
+                        } else {
+                            window.location.reload()
+                        } */
+                        cookieService.deleteCookie('access_token');
+                        cookieService.deleteCookie('refresh_token');
+
+                        vm.isAuthenticated = false;
+
+                        $state.go('app.authentication');
+
+
+                    });
+                } else {
 
                     sessionStorage.removeItem('afterLoginEvents');
 
@@ -312,8 +332,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
                     $state.go('app.authentication');
 
-
-                });
+                }
 
             }
 
@@ -504,7 +523,12 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             } else if (vm.isAuthenticationPage) {
                 $state.go('app.portal.home');
             } */
-            getUser().then(async () => {
+
+            console.log("EDITION_TYPE: " + window.EDITION_TYPE)
+
+
+            if (window.EDITION_TYPE == 'enterprise') {
+                getUser().then(async () => {
 
                 if (base_api_url) {
 
@@ -535,7 +559,39 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 $scope.$apply();
 
             });
+            } else if( window.EDITION_TYPE == 'community') {
 
+                globalDataService.setUser({data: {}})
+
+                vm.member = await usersService.getMyCurrentMember()
+
+                vm.member.user.data = {} // fix in future
+
+                globalDataService.setUser(vm.member.user);
+
+                console.log('vm.member.user', vm.member.user);
+
+                console.log("Fetching local master user?")
+
+                globalDataService.setMasterUser({
+                    name: "Local",
+                    base_api_url: "space00000"
+                });
+
+                globalDataService.setCurrentMasterUserStatus(true);
+
+                if (vm.isAuthenticationPage) {
+                    // $state.go('app.portal.home');
+                    console.log("redirection shellController init() 3");
+                    window.open(homepageUrl, '_self'); // REDIRECTION: app.portal.home
+                }
+
+                vm.readyStatus = true;
+                $scope.$apply();
+
+            } else {
+                toastNotificationService.error("Unknown Edition")
+            }
         } else {
             toastNotificationService.error("Auth error")
         }
