@@ -11,6 +11,7 @@ var KEYCLOAK_URL = process.env.KEYCLOAK_URL || 'https://stage-auth.finmars.com';
 var KEYCLOAK_REALM = process.env.KEYCLOAK_REALM || 'finmars';
 var KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || 'finmars';
 var USE_ACTIVENOTE = process.env.USE_ACTIVENOTE || false;
+var EDITION_TYPE = process.env.EDITION_TYPE || 'enterprise';
 
 
 // Function to replace placeholders in config file
@@ -27,6 +28,7 @@ function replaceConfigVars(configFilePath) {
     configData = configData.replace(/__KEYCLOAK_REALM__/g, KEYCLOAK_REALM);
     configData = configData.replace(/__KEYCLOAK_CLIENT_ID__/g, KEYCLOAK_CLIENT_ID);
     configData = configData.replace(/__USE_ACTIVENOTE__/g, USE_ACTIVENOTE);
+    configData = configData.replace(/__EDITION_TYPE__/g, EDITION_TYPE);
     // ... other replacements
 
     // Write the modified content back to the file

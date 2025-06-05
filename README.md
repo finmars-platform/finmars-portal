@@ -93,3 +93,6 @@ https://keycloak.discourse.group/t/issue-on-userinfo-endpoint-at-keycloak-20/184
 chrome://flags/#block-insecure-private-network-requests
 
 P.S. https://stackoverflow.com/questions/66534759/cors-error-on-request-to-localhost-dev-server-from-remote-site
+
+
+INSTALLATION_TYPE = community | enterprise

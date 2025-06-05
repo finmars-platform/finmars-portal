@@ -280,7 +280,8 @@ export default function () {
         },
 
         enableThemeDarkMode() {
-            data.user.data.dark_mode = true
+            // data.user.data.dark_mode = true
+            localStorage.setItem("isDarkMode", "true")
             document.body.classList.add('dark-mode'); // TODO probably should be moved to some other place?
             document.body.classList.remove('light-mode'); // TODO probably should be moved to some other place?
 
@@ -289,7 +290,8 @@ export default function () {
         },
 
         disableThemeDarkMode() {
-            data.user.data.dark_mode = false
+            // data.user.data.dark_mode = false
+            localStorage.setItem("isDarkMode", "false")
             document.body.classList.remove('dark-mode'); // TODO probably should be moved to some other place?
             document.body.classList.add('light-mode'); // TODO probably should be moved to some other place?
 
@@ -298,7 +300,8 @@ export default function () {
         },
 
         isThemeInDarkMode() {
-            return data.user.data?.dark_mode || false;
+            // return data.user.data?.dark_mode || false;
+            return JSON.parse(localStorage.getItem("isDarkMode")) || false;
         }
     }
 
