@@ -67,9 +67,13 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                 scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode(); // to update title in the switcher
 
-                const user = globalDataService.getUser();
+                if (window.EDITION_TYPE == 'enterprise') {
+                    const user = globalDataService.getUser();
 
-                authorizerService.updateUser(user.id, user);
+                    authorizerService.updateUser(user.id, user);
+                } else {
+                    // do nothing
+                }
 
                 scope.setLogoPath()
 
@@ -134,28 +138,58 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 // return usersService.getMasterList().then(function (data) {
                 return new Promise(function (resolve, reject) {
 
-                    // usersService.getMasterListLight().then(function (data) {
-                    authorizerService.getMasterUsersList().then(function (data) {
+                    if (window.EDITION_TYPE == 'enterprise') {
 
-                        if (data.hasOwnProperty('results')) {
+                        // usersService.getMasterListLight().then(function (data) {
+                        authorizerService.getMasterUsersList().then(function (data) {
 
-                            scope.masterUsers = data.results;
+                            if (data.hasOwnProperty('results')) {
 
-                            if (scope.masterUsers.length) {
-                                updateCurrentMasterUser();
+                                scope.masterUsers = data.results;
+
+                                if (scope.masterUsers.length) {
+                                    updateCurrentMasterUser();
+                                }
+
+                            } else {
+                                scope.masterUsers = []
                             }
 
-                        } else {
-                            scope.masterUsers = []
-                        }
+                            scope.$apply();
 
-                        scope.$apply();
+                            resolve();
 
-                        resolve();
+                        }).catch(error => {
+                            reject(error);
+                        });
 
-                    }).catch(error => {
-                        reject(error);
-                    });
+                    } else {
+                        scope.masterUsers = [
+                            {
+                                "id": 1,
+                                "name": "Local",
+                                "description": "Local Space",
+                                "status": 1,
+                                "timezone": "UTC",
+                                "is_initialized": true,
+                                "base_api_url": "space00000",
+                                "realm": 1,
+                                "realm_object": {
+                                    "id": 1,
+                                    "name": "Local Realm",
+                                    "realm_code": "realm00000",
+                                    "update_channel": "rc",
+                                    "is_update_allowed": true,
+                                    "status": "operational"
+                                },
+                                "space_code": "space00000",
+                                "realm_code": "realm00000",
+                                "is_update_available": true,
+                                "is_admin": true,
+                                "is_owner": true
+                            }
+                        ]
+                    }
 
                 });
 

@@ -162,7 +162,13 @@ export default function (cookieService, globalDataService, xhrService) {
 		const applyTheme = async function (member) {
 
 			member = await getTheme(member);
-			const isDarkMode = await globalDataService.getUser()?.data?.dark_mode;
+
+			let isDarkMode = false;
+
+			if (localStorage.getItem("isDarkMode")) {
+				isDarkMode = JSON.parse(localStorage.getItem("isDarkMode"))
+			}
+			// let isDarkMode = await globalDataService.getUser()?.data?.dark_mode;
 
 			if (typeof isDarkMode !== 'boolean') {
 
