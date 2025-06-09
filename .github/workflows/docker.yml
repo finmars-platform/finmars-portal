@@ -32,7 +32,7 @@ jobs:
       - name: Build image
         run: |
           TAG="${{ inputs.version }}"
-          docker build --pull --no-cache -t ${{ secrets.CI_REGISTRY_IMAGE }}:$TAG .
+          docker build --pull --no-cache -t ${{ secrets.CI_REGISTRY_IMAGE }}:$TAG . --build-arg PROJECT_ENV=production
 
       - name: Push image
         run: |
