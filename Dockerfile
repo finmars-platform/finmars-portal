@@ -13,7 +13,23 @@ RUN apk update && apk upgrade && \
 WORKDIR /var/www/portal
 
 # Copy the current directory contents into the container
-COPY . .
+COPY src ./src
+COPY docker ./docker
+COPY libs ./libs
+COPY vocabulary ./vocabulary
+COPY copy-config.js .
+COPY copy-content-files.js .
+COPY copy-html-files.js .
+COPY server.js .
+#COPY server-local.js server.js
+COPY package.json .
+COPY package-lock.json .
+COPY bootstrap.js .
+COPY index.html .
+COPY postcss.config.js .
+COPY protractor.config.js .
+COPY tailwind.config.js .
+COPY vite.config.js .
 
 # Change permission of the shell script
 RUN chmod +x docker/portal-run.sh
