@@ -25,10 +25,10 @@
 
         vm.resolveWorkflowIframeUrl = function (){
 
-            vm.iframeUrl = 'http://0.0.0.0:8084/space00000/workflow/'
+            vm.iframeUrl = 'http://0.0.0.0:3004/realm00000/space00000/w/workflow'
 
-            if (window.location.href.indexOf('finmars') !== -1) {
-                vm.iframeUrl = window.location.protocol + '//' + window.location.host + '/' + baseUrlService.getMasterUserPrefix() + '/workflow/'
+            if (window.location.href.indexOf('finmars') !== -1 || window.location.protocol === 'https:') {
+                vm.iframeUrl = window.location.protocol + '//' + window.location.host + '/' + baseUrlService.getMasterUserPrefix() + '/w/home'
             }
 
         }
