@@ -59,6 +59,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': resolve(__dirname, 'src'), // Adjust according to your project structure
+            'vite-plugin-node-polyfills/shims/buffer': 'buffer'
         }
     },
     css: {
