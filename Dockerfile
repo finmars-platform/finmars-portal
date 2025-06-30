@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:19.6-alpine
+FROM node:22-alpine
 
 # Define argument
 ARG PROJECT_ENV
@@ -39,6 +39,13 @@ RUN npm install
 
 # Build the application
 RUN npm run build -- --env $PROJECT_ENV
+
+# Node and npm use a non-root user provided by the base Node image
+# Creating a new user "finmars" for running the application
+RUN adduser -D finmars
+
+# Change to non-root privilege
+USER finmars
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
