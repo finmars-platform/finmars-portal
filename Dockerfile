@@ -47,6 +47,8 @@ RUN adduser -D finmars
 # Change to non-root privilege
 USER finmars
 
+RUN chown -R finmars:finmars /var/www/portal/dist
+
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
 
