@@ -40,10 +40,12 @@ RUN npm install
 # Build the application
 RUN npm run build -- --env $PROJECT_ENV
 
-RUN chown -R finmars:finmars /var/www/portal/dist
+
 # Node and npm use a non-root user provided by the base Node image
 # Creating a new user "finmars" for running the application
 RUN adduser -D finmars
+
+RUN chown -R finmars:finmars /var/www/portal/dist
 
 # Change to non-root privilege
 USER finmars
