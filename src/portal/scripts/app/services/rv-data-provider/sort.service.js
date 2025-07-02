@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper').default;
 
     function orderSort(property, sortOrder) {
 

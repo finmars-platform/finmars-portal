@@ -1,6 +1,6 @@
 (function () {
 
-	const metaHelper = require('../helpers/meta.helper');
+	const metaHelper = require('../helpers/meta.helper').default;
 	const md5Helper = require('../helpers/md5.helper');
 
 	const accrualCalculationModelService = require('../services/accrualCalculationModelService');

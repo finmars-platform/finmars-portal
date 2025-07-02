@@ -10,7 +10,7 @@
 	const GridTableDataService = require('../../services/gridTableDataService');
 	const GridTableEventService = require('../../services/gridTableEventService');
 
-	const metaHelper = require('../../helpers/meta.helper');
+	const metaHelper = require('../../helpers/meta.helper').default;
     // var gridTableHelperService = require('../../helpers/gridTableHelperService');
 
     module.exports = function singleInstrumentAddEventToTableDialogController($scope, $mdDialog, instrumentService, transactionTypeService, gridTableHelperService, multitypeFieldService, data) {

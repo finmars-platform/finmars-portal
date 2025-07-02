@@ -5,7 +5,7 @@
 
 	'use strict';
 
-	const metaHelper = require('../helpers/meta.helper');
+	const metaHelper = require('../helpers/meta.helper').default;
 	// const utilsHelper = require('../helpers/utils.helper');
 	const classifierEvents = require('../services/events/classifierEvents');
 

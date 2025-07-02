@@ -15,7 +15,7 @@
     var gridTableEvents = require('../../../services/gridTableEvents');
 	var evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
-    var metaHelper = require('../../../helpers/meta.helper');
+    var metaHelper = require('../../../helpers/meta.helper').default;
 
     var eventObj = {
         "name": '',

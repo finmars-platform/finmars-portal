@@ -1,6 +1,6 @@
 (function(){
 
-	var metaHelper = require('../../helpers/meta.helper');
+	var metaHelper = require('../../helpers/meta.helper').default;
 
     'use strict';
 

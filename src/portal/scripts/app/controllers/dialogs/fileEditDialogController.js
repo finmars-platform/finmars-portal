@@ -6,7 +6,7 @@
     'use strict';
 
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
-    var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper').default;
     var explorerService = require('../../services/explorerService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 

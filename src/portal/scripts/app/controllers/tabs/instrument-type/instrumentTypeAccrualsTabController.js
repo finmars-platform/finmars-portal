@@ -11,7 +11,7 @@
 	const gridTableEvents = require('../../../services/gridTableEvents');
 	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
-    const metaHelper = require('../../../helpers/meta.helper');
+    const metaHelper = require('../../../helpers/meta.helper').default;
 
 	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 	const accrualCalculationModelService = require('../../../services/accrualCalculationModelService');

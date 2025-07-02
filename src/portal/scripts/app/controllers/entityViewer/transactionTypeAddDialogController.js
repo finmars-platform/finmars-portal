@@ -19,7 +19,7 @@
     var instrumentTypeService = require('../../services/instrumentTypeService').default;
     // var usersService = require('../../services/usersService');
 
-    var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper').default;
 
     var EventService = require("../../services/eventService");
 

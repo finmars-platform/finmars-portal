@@ -6,7 +6,7 @@
     'use strict';
 
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
-    var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper').default;
 
 
     module.exports = function ($scope, $mdDialog, data) {

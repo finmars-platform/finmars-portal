@@ -8,7 +8,7 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var EventService = require('../../services/eventService');
 	var classifierEvents = require('../../services/events/classifierEvents');
-    const metaHelper = require('../../helpers/meta.helper');
+    const metaHelper = require('../../helpers/meta.helper').default;
 
     module.exports = function ($scope, $mdDialog, commonDialogsService, data) {
 

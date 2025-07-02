@@ -1,7 +1,7 @@
 (function () {
 
     const gtEvents = require('../../services/gridTableEvents');
-    const metaHelper = require('../../helpers/meta.helper');
+    const metaHelper = require('../../helpers/meta.helper').default;
 
     'use strict';
 
