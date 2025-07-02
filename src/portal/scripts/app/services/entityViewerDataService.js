@@ -55,7 +55,7 @@
     'use strict';
 
     var stringHelper = require('../helpers/stringHelper');
-    var metaHelper = require('../helpers/meta.helper');
+    var metaHelper = require('../helpers/meta.helper').default;
 
     var getDefaultInterfaceLayout = function () {
 

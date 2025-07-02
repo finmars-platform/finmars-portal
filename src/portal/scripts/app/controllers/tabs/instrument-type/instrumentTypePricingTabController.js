@@ -13,7 +13,7 @@ const GridTableDataService = require('../../../services/gridTableDataService');
 const GridTableEventService = require('../../../services/gridTableEventService');
 const gridTableEvents = require('../../../services/gridTableEvents');
 
-const metaHelper = require('../../../helpers/meta.helper');
+const metaHelper = require('../../../helpers/meta.helper').default;
 
 export default function InstrmentTypePricingTabController($scope, $mdDialog, configurationService, toastNotificationService) {
 

@@ -12,7 +12,7 @@
     'use strict';
 
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
-    var metaHelper = require('../../../helpers/meta.helper');
+    var metaHelper = require('../../../helpers/meta.helper').default;
 
     var ScrollHelper = require('../../../helpers/scrollHelper').default;
 

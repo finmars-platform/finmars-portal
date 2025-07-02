@@ -8,7 +8,7 @@ const EventService = require('../../../services/eventService');
 
 const popupEvents = require('../../../services/events/popupEvents');
 
-const metaHelper = require('../../../helpers/meta.helper');
+const metaHelper = require('../../../helpers/meta.helper').default;
 
 export default function PortfolioPerformanceTabController ($scope, $state, $mdDialog, commonDialogsService, toastNotificationService) {
 
