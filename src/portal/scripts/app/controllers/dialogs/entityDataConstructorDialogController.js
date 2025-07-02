@@ -15,7 +15,7 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var colorPalettesService = require('../../services/colorPalettesService');
 
-    var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper').default;
 
     var scrollHelper = new ScrollHelper();
 

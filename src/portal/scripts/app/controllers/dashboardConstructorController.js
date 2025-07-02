@@ -6,7 +6,7 @@
     'use strict';
 
     var md5Helper = require('../helpers/md5.helper');
-    var metaHelper = require('../helpers/meta.helper');
+    var metaHelper = require('../helpers/meta.helper').default;
 
     var DashboardConstructorDataService = require('../services/dashboard-constructor/dashboardConstructorDataService');
     var DashboardConstructorEventService = require('../services/dashboard-constructor/dashboardConstructorEventService');

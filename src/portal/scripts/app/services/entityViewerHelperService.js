@@ -26,7 +26,7 @@
     const evEvents = require('../services/entityViewerEvents');
     const evDataHelper = require('../helpers/ev-data.helper').default;
     const evRvCommonHelper = require('../helpers/ev-rv-common.helper').default;
-    const metaHelper = require('../helpers/meta.helper');
+    const metaHelper = require('../helpers/meta.helper').default;
 
     'use strict';
 

@@ -13,7 +13,7 @@
     const GridTableEventService = require('../../../services/gridTableEventService');
     const gridTableEvents = require('../../../services/gridTableEvents');
 
-    const metaHelper = require('../../../helpers/meta.helper');
+    const metaHelper = require('../../../helpers/meta.helper').default;
 
     const pricingPolicyService = require('../../../services/pricingPolicyService').default;
 

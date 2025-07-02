@@ -23,7 +23,7 @@
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
 
-    var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper').default;
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
     var transactionHelper = require('../../helpers/transaction.helper');

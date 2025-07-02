@@ -2,7 +2,7 @@
 
     const referenceTableService = require('../../../services/referenceTablesService');
 
-    const metaHelper = require('../../meta.helper');
+    const metaHelper = require('../../meta.helper').default;
 
     const gridTableEvents = require('../../../services/gridTableEvents');
     const directiveEvents = require('../../../services/events/directivesEvents');
