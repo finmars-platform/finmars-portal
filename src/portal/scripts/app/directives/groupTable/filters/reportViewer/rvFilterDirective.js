@@ -5,7 +5,7 @@
 	const popupEvents = require("../../../../services/events/popupEvents");
 	const evEvents = require("../../../../services/entityViewerEvents");
 
-	const metaHelper = require('../../../../helpers/meta.helper');
+	const metaHelper = require('../../../../helpers/meta.helper').default;
 
 	module.exports = function ($mdDialog, specificDataService, userFilterService, gFiltersHelper) {
 		return {

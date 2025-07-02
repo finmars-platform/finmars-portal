@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var metaHelper = require('../../../helpers/meta.helper');
+    var metaHelper = require('../../../helpers/meta.helper').default;
 
     var accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');

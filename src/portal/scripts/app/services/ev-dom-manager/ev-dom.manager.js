@@ -5,7 +5,7 @@
     var evDataHelper = require('../../helpers/ev-data.helper').default;
     var utilsHelper = require('../../helpers/utils.helper');
     // var evRvCommonHelper = require('../../helpers/ev-rv-csrc/portal/scripts/app/views/entity-viewer/entity-viewer-edit-content-view.htmlommon.helper').default;
-    var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper').default;
     var evHelperService = require('../../services/entityViewerHelperService').default;
     var evEvents = require('../../services/entityViewerEvents');
 

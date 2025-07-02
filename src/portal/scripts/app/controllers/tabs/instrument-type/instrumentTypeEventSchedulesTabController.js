@@ -18,7 +18,7 @@
 	// const popupEvents = require('../../../services/events/popupEvents');
 	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
-	const metaHelper = require('../../../helpers/meta.helper');
+	const metaHelper = require('../../../helpers/meta.helper').default;
 
 	/* const eventObj = {
         "name": '',

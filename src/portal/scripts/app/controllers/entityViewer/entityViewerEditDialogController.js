@@ -26,7 +26,7 @@
     var colorPalettesService = require('../../services/colorPalettesService');
 
 
-    var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper').default;
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var EntityViewerEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/entityViewerEditorSharedLogicHelper');
 

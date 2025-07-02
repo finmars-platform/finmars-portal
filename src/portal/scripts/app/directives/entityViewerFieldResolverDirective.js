@@ -8,7 +8,7 @@
     var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
 
     var metaService = require('../services/metaService').default;
-    var metaHelper = require('../helpers/meta.helper');
+    var metaHelper = require('../helpers/meta.helper').default;
 
     module.exports = function (metaContentTypesService, fieldResolverService) {
 

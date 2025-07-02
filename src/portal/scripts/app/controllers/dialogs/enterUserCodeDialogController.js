@@ -2,7 +2,7 @@
  * Created by mevstratov on 31.01.2022.
  */
 
-const metaHelper = require('../../helpers/meta.helper');
+const metaHelper = require('../../helpers/meta.helper').default;
 
 'use strict';
 

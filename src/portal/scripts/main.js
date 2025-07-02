@@ -536,7 +536,7 @@ export default (function () {
         'EntityViewerAddDialogController',
         ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'globalDataService', 'metaContentTypesService', 'instrumentService', 'priceHistoryService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'entityType', 'entity', 'data', 'configurationService', require('./app/controllers/entityViewer/entityViewerAddDialogController')]
     );
-    portal.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'metaContentTypesService', 'instrumentService', 'priceHistoryService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'configurationService', 'entityType', 'entityId', 'data',  require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
+    portal.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'metaContentTypesService', 'instrumentService', 'priceHistoryService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'configurationService', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
     portal.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
     portal.controller('EntityViewerDeleteBulkDialogController', ['$scope', '$mdDialog', 'entityResolverService', 'evDataService', 'evEventService', 'data', require('./app/controllers/entityViewer/entityViewerDeleteBulkDialogController')]);
     portal.controller('EntityViewerRestoreDeletedBulkDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/entityViewer/entityViewerRestoreDeletedBulkDialogController')]);
@@ -1114,22 +1114,26 @@ export default (function () {
 
         currentUrl = `${location.origin}${location.pathname}${hash}`; // Build the new clean URL
 
-        // _paq.push(['setReferrerUrl', currentUrl]);
-        // currentUrl = '/' + window.location.hash.substr(1);
-        _paq.push(['setCustomUrl', currentUrl]);
-        _paq.push(['setDocumentTitle', document.title]);
+        if (_paq) {
 
-        // remove all previously assigned custom variables, requires Matomo (formerly Piwik) 3.0.2
-        _paq.push(['deleteCustomVariables', 'page']);
-        _paq.push(['trackPageView']);
+            // _paq.push(['setReferrerUrl', currentUrl]);
+            // currentUrl = '/' + window.location.hash.substr(1);
+            _paq.push(['setCustomUrl', currentUrl]);
+            _paq.push(['setDocumentTitle', document.title]);
 
-        // make Matomo aware of newly added content
-        var content = document.body;
-        _paq.push(['MediaAnalytics::scanForMedia', content]);
-        _paq.push(['FormAnalytics::scanForForms', content]);
-        _paq.push(['trackContentImpressionsWithinNode', content]);
-        _paq.push(['enableLinkTracking']);
-        _paq.push(['enableHeartBeatTimer']);
+            // remove all previously assigned custom variables, requires Matomo (formerly Piwik) 3.0.2
+            _paq.push(['deleteCustomVariables', 'page']);
+            _paq.push(['trackPageView']);
+
+            // make Matomo aware of newly added content
+            var content = document.body;
+            _paq.push(['MediaAnalytics::scanForMedia', content]);
+            _paq.push(['FormAnalytics::scanForForms', content]);
+            _paq.push(['trackContentImpressionsWithinNode', content]);
+            _paq.push(['enableLinkTracking']);
+            _paq.push(['enableHeartBeatTimer']);
+
+        }
     });
 
 

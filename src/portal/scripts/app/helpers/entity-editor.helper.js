@@ -5,7 +5,7 @@
     var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
 	var directivesEvents = require('../services/events/directivesEvents');
 
-    var metaHelper = require('../helpers/meta.helper');
+    var metaHelper = require('../helpers/meta.helper').default;
 
     'use strict';
 

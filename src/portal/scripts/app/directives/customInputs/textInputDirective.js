@@ -3,7 +3,7 @@
 	"use strict";
 
 	const stringHelper = require('../../helpers/stringHelper');
-	const metaHelper = require('../../helpers/meta.helper');
+	const metaHelper = require('../../helpers/meta.helper').default;
 
 	module.exports = function ($mdDialog) {
 		return {

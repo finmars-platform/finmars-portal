@@ -14,7 +14,7 @@
 
     var dashboardEvents = require('../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
-    var metaHelper = require('../helpers/meta.helper');
+    var metaHelper = require('../helpers/meta.helper').default;
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService').default;
 

@@ -29,7 +29,7 @@
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var TransactionTypeEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/transactionTypeEditorSharedLogicHelper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
-    var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper').default;
     var evHelperService = require('../../services/entityViewerHelperService').default;
 
     module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, usersService, usersGroupService, ecosystemDefaultService, metaContentTypesService, entityResolverService, transactionTypeService, attributeTypeService, uiService, fieldResolverService, gridTableHelperService, entityType, entityId, data) {
