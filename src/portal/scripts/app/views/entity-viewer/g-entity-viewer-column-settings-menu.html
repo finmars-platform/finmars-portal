@@ -2,7 +2,7 @@
 
     <md-button aria-label="entity viewer column settings"
                class="md-icon-button column-btns column-settings-menu"
-               ng-click="$mdOpenMenu($event)">
+               ng-click="$mdMenu.open($event)">
         <ng-md-icon icon="settings"></ng-md-icon>
     </md-button>
 
@@ -49,7 +49,7 @@
         <md-menu-item data-ng-if="!isReport || !columnHasCorrespondingGroup(column.key);">
             <md-menu>
                 <md-button aria-label="Open phone interactions menu"
-                           ng-click="$mdOpenMenu($event)">
+                           ng-click="$mdMenu.open($event)">
                     <ng-md-icon icon="done"
                                 class="z-menu-icon"
                                 style="visibility: hidden;"></ng-md-icon>

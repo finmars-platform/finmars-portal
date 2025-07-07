@@ -43,8 +43,8 @@
 
                 };
 
-                scope.openGroupSettings = function ($mdOpenMenu, ev) {
-                    $mdOpenMenu(ev);
+                scope.openGroupSettings = function ($mdMenu, ev) {
+                    $mdMenu.open(ev);
                 };
 
                 scope.reportSetSubtotalType = function (type) {
