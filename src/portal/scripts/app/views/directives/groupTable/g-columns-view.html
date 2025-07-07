@@ -29,7 +29,7 @@
                 <md-menu>
                     <md-button class="g-cell-button g-row-settings-btn g-row-color-picker-btn"
                                data-ng-class="rowFilterColor"
-                               data-ng-click="$mdOpenMenu($event)">
+                               data-ng-click="$mdMenu.open($event)">
                         <span class="material-icons label-icon" data-ng-if="rowFilterColor === 'none'">label_outline</span>
                         <span class="material-icons" data-ng-if="rowFilterColor !== 'none'">label</span>
                         <span class="material-icons arrow-icon">arrow_drop_down</span>

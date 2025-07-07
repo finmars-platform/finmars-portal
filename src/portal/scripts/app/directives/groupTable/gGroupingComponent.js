@@ -196,8 +196,8 @@
                     scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
                 };
 
-                scope.openGroupSettings = function ($mdOpenMenu, ev) {
-                    $mdOpenMenu(ev);
+                scope.openGroupSettings = function ($mdMenu, ev) {
+                    $mdMenu.open(ev);
                 };
 
 

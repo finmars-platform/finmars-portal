@@ -6,7 +6,7 @@
 
 <md-menu data-ng-if="entityType == 'instrument'">
     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-               data-ng-click="$mdOpenMenu($event)">
+               data-ng-click="$mdMenu.open($event)">
         <span class="material-icons">add</span>
         <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
     </md-button>
@@ -37,7 +37,7 @@
 
 <md-menu data-ng-if="entityType == 'instrument-type'">
     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-               data-ng-click="$mdOpenMenu($event)">
+               data-ng-click="$mdMenu.open($event)">
         <span class="material-icons">add</span>
         <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
     </md-button>
@@ -60,7 +60,7 @@
 
 <md-menu data-ng-if="entityType == 'account-type'">
     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-               data-ng-click="$mdOpenMenu($event)">
+               data-ng-click="$mdMenu.open($event)">
         <span class="material-icons">add</span>
         <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
     </md-button>
@@ -83,7 +83,7 @@
 
 <md-menu data-ng-if="entityType == 'transaction-type'">
     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-               data-ng-click="$mdOpenMenu($event)">
+               data-ng-click="$mdMenu.open($event)">
         <span class="material-icons">add</span>
         <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
     </md-button>

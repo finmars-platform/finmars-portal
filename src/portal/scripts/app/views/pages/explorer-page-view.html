@@ -20,7 +20,7 @@
             <div class="explorer-toolbar" layout="row">
 
                 <md-menu>
-                    <md-button class="md-primary md-raised" data-ng-click="$mdOpenMenu($event)">
+                    <md-button class="md-primary md-raised" data-ng-click="$mdMenu.open($event)">
                         Create
                     </md-button>
 
@@ -54,7 +54,7 @@
 
                     <md-menu>
 
-                        <md-button class="md-raised md-icon-button" data-ng-click="$mdOpenMenu($event)">
+                        <md-button class="md-raised md-icon-button" data-ng-click="$mdMenu.open($event)">
                             <span class="material-icons">more_vert</span>
                         </md-button>
 
@@ -359,7 +359,7 @@
                                 <md-menu data-ng-if="item.type == 'file'">
 
                                     <md-button class="md-icon-button explorer-item-menu-button"
-                                               data-ng-click="$mdOpenMenu($event)">
+                                               data-ng-click="$mdMenu.open($event)">
                                         <md-icon>more_vert</md-icon>
                                     </md-button>
 
@@ -409,7 +409,7 @@
                                 <md-menu data-ng-if="item.type == 'dir'">
 
                                     <md-button class="md-icon-button explorer-item-menu-button"
-                                               data-ng-click="$mdOpenMenu($event)">
+                                               data-ng-click="$mdMenu.open($event)">
                                         <md-icon>more_vert</md-icon>
                                     </md-button>
 
@@ -475,7 +475,7 @@
                             >
 
                                 <md-menu>
-                                    <md-button class="outline-button" data-ng-click="$mdOpenMenu($event)">
+                                    <md-button class="outline-button" data-ng-click="$mdMenu.open($event)">
                                         Settings
                                     </md-button>
 
