@@ -410,8 +410,8 @@
 
                 };
 
-                scope.openFilterSettings = function ($mdOpenMenu, ev) {
-                    $mdOpenMenu(ev);
+                scope.openFilterSettings = function ($mdMenu, ev) {
+                    $mdMenu.open(ev);
                 };
 
                 scope.toggleFilterState = function () {
