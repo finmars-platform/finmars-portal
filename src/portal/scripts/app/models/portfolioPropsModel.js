@@ -122,6 +122,35 @@
                 "value_entity": "resource-group",
                 "code": "user_code"
             },
+
+            {
+                "key": "register_currency",
+                "name": "Register currency",
+                "value_content_type": "currencies.currency",
+                "value_entity": "currency",
+                "code": "user_code",
+                "value_type": "field"
+            },
+
+            {
+                "key": "register_instrument_type",
+                "name": "Register Instrument Type",
+                "value_type": "field",
+                "value_content_type": "instruments.instrumenttype",
+                "value_entity": "instrument-type",
+                "code": "user_code"
+            },
+
+            {
+                "key": "register_pricing_policy",
+                "name": "Register Pricing policy",
+                "value_content_type": "instruments.pricingpolicy",
+                "value_entity": "pricing_policy",
+                "code": "user_code",
+                "value_type": "field"
+            }
+
+
         ]
     };
 
