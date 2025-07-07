@@ -11,7 +11,7 @@
 
     'use strict';
 
-    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
+    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService').default;
     var metaHelper = require('../../../helpers/meta.helper').default;
 
     var ScrollHelper = require('../../../helpers/scrollHelper').default;

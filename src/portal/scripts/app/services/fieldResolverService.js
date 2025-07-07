@@ -273,6 +273,21 @@ export default function (instrumentService, transactionTypeService, metaContentT
                         return resolve({type: 'id', key: 'portfolio_register', data: data.results});
                     });
                     break;
+                case 'register_currency':
+                    currencyRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({type: 'id', key: 'register_currency', data: data.results});
+                    });
+                    break;
+                case 'register_instrument_type':
+                    instrumentTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({type: 'id', key: 'register_instrument_type', data: data.results});
+                    });
+                    break;
+                case 'register_pricing_policy':
+                    pricingPolicyRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({type: 'id', key: 'register_pricing_policy', data: data.results});
+                    });
+                    break;
                 case 'account':
                     accountRepository.getListLight({pageSize: 10000}).then(function (data) {
                         return resolve({type: 'id', key: 'account', data: data.results});
