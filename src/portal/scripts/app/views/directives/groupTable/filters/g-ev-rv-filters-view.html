@@ -17,7 +17,7 @@
                 <md-menu data-ng-if="viewContext !== 'dashboard'">
                     <md-button
                             class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-                            ng-click="$mdOpenMenu($event)"
+                            ng-click="$mdMenu.open($event)"
                             ng-disabled="viewContext === 'split_panel'"
                     >
                         <span class="material-icons">add</span>
@@ -53,7 +53,7 @@
 
                 <md-menu data-ng-if="entityType == 'instrument'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-                               data-ng-click="$mdOpenMenu($event)">
+                               data-ng-click="$mdMenu.open($event)">
                         <span class="material-icons">add</span>
                         <md-tooltip md-direction="top">ADD {{ evGetEntityNameByState() }}</md-tooltip>
                     </md-button>
@@ -84,7 +84,7 @@
 
                 <md-menu data-ng-if="entityType == 'instrument-type'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-                               data-ng-click="$mdOpenMenu($event)">
+                               data-ng-click="$mdMenu.open($event)">
                         <span class="material-icons">add</span>
                         <md-tooltip md-direction="top">ADD {{ evGetEntityNameByState() }}</md-tooltip>
                     </md-button>
@@ -107,7 +107,7 @@
 
                 <md-menu data-ng-if="entityType == 'account-type'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-                               data-ng-click="$mdOpenMenu($event)">
+                               data-ng-click="$mdMenu.open($event)">
                         <span class="material-icons">add</span>
                         <md-tooltip md-direction="top">ADD {{ evGetEntityNameByState() }}</md-tooltip>
                     </md-button>
@@ -130,7 +130,7 @@
 
                 <md-menu data-ng-if="entityType == 'transaction-type'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-                               data-ng-click="$mdOpenMenu($event)">
+                               data-ng-click="$mdMenu.open($event)">
                         <span class="material-icons">add</span>
                         <md-tooltip md-direction="top">ADD {{ evGetEntityNameByState() }}</md-tooltip>
                     </md-button>
@@ -244,7 +244,7 @@
             <md-menu data-ng-if="isRootEntityViewer && viewContext != 'dashboard'"
                      class="full-width">
 
-                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                <md-button class="signed-button" data-ng-click="$mdMenu.open($event)">
                     <div class="flex-column flex-i-center">
                         <span class="material-icons">view_stream</span>
                         <span>Split</span>
@@ -328,7 +328,7 @@
 
             <!--
             <md-menu class="full-width" data-ng-if="isRootEntityViewer && isReport && viewContext != 'dashboard'">
-                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                <md-button class="signed-button" data-ng-click="$mdMenu.open($event)">
                     <div class="flex-column flex-i-center">
                         <span class="material-icons">view_module</span>
                         <span>Matrix</span>
@@ -351,7 +351,7 @@
             -->
 
             <md-menu>
-                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                <md-button class="signed-button" data-ng-click="$mdMenu.open($event)">
                     <div class="flex-column flex-i-center">
                         <span class="material-icons">upgrade</span>
                         <span>Export</span>
@@ -392,7 +392,7 @@
             </md-menu>
 
             <md-menu>
-                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                <md-button class="signed-button" data-ng-click="$mdMenu.open($event)">
                     <div class="flex-column flex-i-center">
                         <span class="material-icons">more_vert</span>
                         <span>More</span>

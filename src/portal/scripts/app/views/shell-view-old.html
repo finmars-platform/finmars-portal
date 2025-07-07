@@ -34,7 +34,7 @@
                                     <div class="header-masteruser">
                                         <md-menu data-ng-if="vm.readyStatus.masterUsers">
                                             <md-button class="md-button header-account-btn" aria-label="Account button"
-                                                       ng-click="$mdOpenMenu($event)">
+                                                       ng-click="$mdMenu.open($event)">
                                                 <span class="header-masteruser-name"
                                                       data-ng-bind="vm.currentMasterUser.name"></span>
                                             </md-button>
@@ -63,7 +63,7 @@
                                     <div class="header-profile">
                                         <md-menu>
                                             <md-button class="md-button header-account-btn" aria-label="Account button"
-                                                       ng-click="$mdOpenMenu($event)">
+                                                       ng-click="$mdMenu.open($event)">
 
                                                 <user-profile></user-profile>
 
