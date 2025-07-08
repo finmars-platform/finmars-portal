@@ -47,11 +47,11 @@ jobs:
             --no-cache \
             .
         
-      - name: Tag and push as latest (with attestations)
-        if: inputs.tag_latest == true
-        run: |
-          TAG="${{ inputs.version }}"
-          # Re-tag using buildx to maintain attestations
-          docker buildx imagetools create \
-            --tag ${{ secrets.CI_REGISTRY_IMAGE }}:latest \
-            ${{ secrets.CI_REGISTRY_IMAGE }}:$TAG
+      # - name: Tag and push as latest (with attestations)
+      #   if: inputs.tag_latest == true
+      #   run: |
+      #     TAG="${{ inputs.version }}"
+      #     # Re-tag using buildx to maintain attestations
+      #     docker buildx imagetools create \
+      #       --tag ${{ secrets.CI_REGISTRY_IMAGE }}:latest \
+      #       ${{ secrets.CI_REGISTRY_IMAGE }}:$TAG
