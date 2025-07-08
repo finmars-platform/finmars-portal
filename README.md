@@ -96,3 +96,11 @@ P.S. https://stackoverflow.com/questions/66534759/cors-error-on-request-to-local
 
 
 INSTALLATION_TYPE = community | enterprise
+
+
+## License
+Please refer to the [LICENSE](https://github.com/finmars-platform/finmars-portal/blob/main/LICENSE.md) file for a copy of the license.
+
+
+## Support
+Please use the GitHub issues for support, feature requests and bug reports, or contact us by sending an email to support@finmars.com.
