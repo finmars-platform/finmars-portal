@@ -17,7 +17,7 @@
     var ScrollHelper = require('../../../helpers/scrollHelper').default;
 
 
-    var modelService = require('../../../services/modelService');
+    var modelService = require('../../../services/modelService').default;
 
     module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, metaContentTypesService, attributeTypeService, importSchemesMethodsService, data) {
 

@@ -5,10 +5,10 @@
 
     'use strict';
 
-    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
+    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService').default;
     var metaService = require('../../../services/metaService').default;
 
-    var modelService = require('../../../services/modelService');
+    var modelService = require('../../../services/modelService').default;
 
     module.exports = function simpleEntityImportSchemeCreateDialogController($scope, $mdDialog, toastNotificationService, metaContentTypesService, attributeTypeService, data, importSchemesMethodsService) {
 
