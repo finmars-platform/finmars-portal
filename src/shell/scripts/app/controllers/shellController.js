@@ -575,7 +575,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
                 globalDataService.setMasterUser({
                     name: "Local",
-                    base_api_url: "space00000"
+                    base_api_url: "space00000",
+                    realm_code: "realm00000"
                 });
 
                 globalDataService.setCurrentMasterUserStatus(true);
