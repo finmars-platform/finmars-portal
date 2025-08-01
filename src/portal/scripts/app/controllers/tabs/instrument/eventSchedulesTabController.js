@@ -5,9 +5,9 @@
 
     'use strict';
 
-    var metaNotificationClassService = require('../../../services/metaNotificationClassService');
-    var metaEventClassService = require('../../../services/metaEventClassService');
-    var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
+    var metaNotificationClassService = require('../../../services/metaNotificationClassService').default;
+    var metaEventClassService = require('../../../services/metaEventClassService').default;
+    var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService').default;
 
     var GridTableDataService = require('../../../services/gridTableDataService');
     var GridTableEventService = require('../../../services/gridTableEventService');
