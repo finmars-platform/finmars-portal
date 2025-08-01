@@ -165,11 +165,11 @@
             <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)"
                     data-md-active="vm.activeTab === tab">
                 <!-- Victor 2020.10.28 EntityTabs labels move to md-menu-->
-                <!--                         <md-tab-label>
-                                            <div class="tab-name-elem" data-tab-name="{{tab.label | lowercase}}">
-                                                <span class="grey-tab">{{tab.label}}</span>
-                                            </div>
-                                        </md-tab-label>-->
+                 <md-tab-label>
+                        <div class="tab-name-elem" data-tab-name="{{tab.label | lowercase}}">
+                            <span class="grey-tab">{{tab.label}}</span>
+                        </div>
+                    </md-tab-label>
 
                 <md-tab-body>
                     <md-content class="md-padding p-t-26"
