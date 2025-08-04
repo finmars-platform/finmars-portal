@@ -7,8 +7,8 @@
 
     const metaService = require('../../../services/metaService').default;
 	const metaNotificationClassService = require('../../../services/metaNotificationClassService').default;
-	const metaEventClassService = require('../../../services/metaEventClassService');
-	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
+	const metaEventClassService = require('../../../services/metaEventClassService').default;
+	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService').default;
 	const GridTableDataService = require('../../../services/gridTableDataService');
 	const EventService = require('../../../services/eventService');
     // const GridTableEventService = require('../../../services/gridTableEventService');
