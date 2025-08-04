@@ -13,8 +13,8 @@
 
     const metaHelper = require('../../../helpers/meta.helper').default;
 
-	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
-	const accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
+	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService').default;
+	const accrualCalculationModelService = require('../../../services/accrualCalculationModelService').default;
 
 	const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
