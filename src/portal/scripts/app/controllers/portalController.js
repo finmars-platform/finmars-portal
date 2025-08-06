@@ -12,7 +12,7 @@ const localStorageService = require('../../../../shell/scripts/app/services/loca
 var explorerService = require('../services/explorerService');
 var portalService = require('../services/portalService').default;
 
-export default function ($scope, $state, $transitions, $urlService, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService) {
+export default function ($scope, $state, $transitions, $urlService, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService, configurationService) {
 
     let vm = this;
 
@@ -183,8 +183,44 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
     const buildNavigationSidebar = async function () {
         const member = await usersService.getMyCurrentMember();
 
+
+        let data = await configurationService.getList({
+            pageSize: 100,
+            page: 1,
+            filters: {
+                'manifest.settings.ui.is_shown_in_sidenav': true
+            },
+            sort: {
+                direction: "ASC",
+                key: "name"
+            }
+        })
+
+        let addons = data.results.map((item) => {
+            return {
+                key: item.configuration_code,
+                label:
+                    item.manifest?.settings?.ui?.sidenav_label || item.name,
+                to: '/addons/' + item.configuration_code + '/',
+                href: null
+            };
+        })
+
+        console.log('addons', addons);
+
         if (member?.is_admin) {
             vm.allowedItems = NavigationRoutes;
+
+            console.log('vm.allowedItems', vm.allowedItems);
+
+            vm.allowedItems = vm.allowedItems.map((item) => {
+                if (item.key === 'add-ons') {
+                    item.children = addons;
+                }
+
+                return item;
+            });
+
         } else {
             const roles = member?.roles_object || [];
 
@@ -211,6 +247,17 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
                   const uniqueAllowedItems = Array.from(new Set(allAllowedItems));
 
                   vm.allowedItems = filterMenuItems(NavigationRoutes, uniqueAllowedItems);
+
+                  console.log("vm.allowedItems", vm.allowedItems);
+
+                  vm.allowedItems = vm.allowedItems.map((item) => {
+                      if (item.key === 'add-ons') {
+                          item.children = addons;
+                      }
+
+                      return item;
+                  });
+
               })
               .catch(error => {
                   console.log(`getNavigationRoutingList: ${error}`);
