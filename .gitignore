@@ -70,3 +70,4 @@ dist-ssr
 *.sln
 *.sw?
 .git-rewrite
+finmars-portal.iml

@@ -1,5 +1,5 @@
 
-const metaHelper = require("./meta.helper");
+const metaHelper = require("./meta.helper").default;
 
 const evEvents = require('../services/entityViewerEvents');
 
