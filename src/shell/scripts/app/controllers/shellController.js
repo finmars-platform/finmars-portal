@@ -10,7 +10,7 @@
 import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
 
-import Keycloak from '../../../../core/keycloak/keycloak.js'
+import Keycloak from 'keycloak-js'
 import explorerService from "../../../../portal/scripts/app/services/explorerService";
 
 export default function ($scope, $state, $transitions, $urlService, $uiRouterGlobals, $mdDialog, toastNotificationService, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService, usersService) {
@@ -477,20 +477,12 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
         const authenticated = await window.keycloak.init({
             onLoad: 'login-required',
-            token: cookieService.getCookie('access_token'),
-            refreshToken: cookieService.getCookie('refresh_token'),
-            idToken: cookieService.getCookie('id_token'),
-            checkLoginIframe: true,
-            checkLoginIframeInterval: 60, // Seconds
-            timeSkew: 0, // fix bag with update token
-            // checkLoginIframe: false
+            checkLoginIframe: false,
+            pkceMethod: 'S256'
         });
 
         if (authenticated) {
 
-            cookieService.setCookie('access_token', window.keycloak.token);
-            cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
-            cookieService.setCookie('id_token', window.keycloak.idToken);
 
             vm.isAuthenticated = true;
 

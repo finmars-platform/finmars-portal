@@ -29,7 +29,7 @@ import Pickr from '@simonwep/pickr'
 import '@simonwep/pickr/dist/themes/classic.min.css'
 window.Pickr = Pickr;
 
-import './src/core/keycloak/keycloak.js';
+import Keycloak from 'keycloak-js'
 
 // import './src/profile/scripts/app/services/baseUrlService.js';
 
