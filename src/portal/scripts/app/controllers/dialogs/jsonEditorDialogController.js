@@ -28,8 +28,9 @@
                 });
                 vm.editor.setFontSize(14)
                 vm.editor.setBehavioursEnabled(true);
-                vm.editor.setValue(vm.item.expression)
-
+                if (vm.item.expression) {
+                    vm.editor.setValue(vm.item.expression)
+                }
                 vm.editor.focus();
                 vm.editor.navigateFileStart();
 

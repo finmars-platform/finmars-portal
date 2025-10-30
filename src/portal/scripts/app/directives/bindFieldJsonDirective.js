@@ -45,6 +45,10 @@
 
                             // console.log('resultObject', resultObject);
 
+                            if (!scope.entity[scope.item.key]) {
+                                scope.entity[scope.item.key] = {};
+                            }
+
                             Object.assign(scope.entity[scope.item.key], resultObject);
 
                             // console.log("JSON dialog entity", scope.entity);

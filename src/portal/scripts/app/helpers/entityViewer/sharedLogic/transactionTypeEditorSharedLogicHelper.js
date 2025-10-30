@@ -41,6 +41,10 @@
                 "name": "Button",
                 "id": 120
             },
+            {
+                "name": "JSON",
+                "id": 130
+            }
         ];
         let ecosystemDefaultData = {};
 

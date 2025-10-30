@@ -31,6 +31,8 @@ var accrualCalculationModelRepository = require('../repositories/accrualCalculat
 var instrumentPeriodicityRepository = require('../repositories/instrumentPeriodicityRepository');
 var metaEventClassRepository = require('../repositories/metaEventClassRepository');
 var metaNotificationClassRepository = require('../repositories/metaNotificationClassRepository');
+var clientRepository = require('../repositories/clientRepository').default;
+var vaultRecordRepository = require('../repositories/vaultRecordRepository').default;
 
 
 var instrumentPricingSchemeRepository = require('../repositories/pricing/instrumentPricingSchemeRepository');
@@ -480,10 +482,12 @@ export default function (instrumentService, transactionTypeService, metaContentT
                     break;
                 case 'resource_groups':
                     resourceGroupRepository.getList({pageSize: 1000}).then(function (data) {
-                        return resolve({type: 'multiple-ids', key: 'resource_groups', data: data.results.map((item) => {
-                            item.id = item.user_code
-                            return item
-                        })});
+                        return resolve({
+                            type: 'multiple-ids', key: 'resource_groups', data: data.results.map((item) => {
+                                item.id = item.user_code
+                                return item
+                            })
+                        });
                     });
                     break;
                 default:
@@ -762,6 +766,32 @@ export default function (instrumentService, transactionTypeService, metaContentT
                             resolve(fieldsDataStore['fieldKeys'][contentType]);
                         });
                         break;
+                    case 'clients.client':
+                        clientRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'clients.client',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'vault.vaultrecord':
+                        vaultRecordRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'vault.vaultrecord',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+
+
                 }
 
             });

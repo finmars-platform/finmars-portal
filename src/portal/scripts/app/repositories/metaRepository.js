@@ -174,6 +174,10 @@
                 "display_name": "Button"
             },
             {
+                "value": 130,
+                "display_name": "JSON"
+            },
+            {
                 "value": "decoration",
                 "display_name": "Decoration"
             },
