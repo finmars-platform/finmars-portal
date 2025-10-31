@@ -1,4 +1,5 @@
-<div class="bind-field-content-holder" ng-class="{'disabled-field': !isEditableField()}" data-field-key="{{vm.fieldKey}}">
+<div class="bind-field-content-holder" ng-class="{'disabled-field': !isEditableField()}"
+     data-field-key="{{vm.fieldKey}}">
 
     <div ng-class="{'display-none': !vm.readyStatus.content}" class="bind-field-content">
 
@@ -179,7 +180,7 @@
         <div data-ng-if="vm.fieldType['display_name'] === 'Button'">
             <div class="custom-input-container">
                 <md-button class="outline-button" data-ng-click="recalculate()">
-                    {{getName()}}
+                    {{ getName() }}
                 </md-button>
             </div>
         </div>
@@ -192,8 +193,17 @@
             <bind-field-attachment item="item" entity="entity"></bind-field-attachment>
         </div>
 
-        <div ng-if="vm.fieldType['display_name'] === 'JSON'" style="padding: 0 10px;">
-            <bind-field-json item="item" entity="entity" data-on-change-callback="vm.itemChangeDeb(changedValue)">></bind-field-json>
+        <div ng-if="vm.fieldType['display_name'] === 'JSON' && vm.entityType != 'complex-transaction'"
+             style="padding: 0 10px;">
+            <bind-field-json item="item" entity="entity" data-on-change-callback="vm.itemChangeDeb(changedValue)">>
+            </bind-field-json>
+        </div>
+
+        <div ng-if="vm.fieldType['display_name'] === 'JSON' && vm.entityType == 'complex-transaction'"
+             style="padding: 0 10px;">
+            <bind-field-json item="item" entity="entity.values"
+                             data-on-change-callback="vm.itemChangeDeb(changedValue)">>
+            </bind-field-json>
         </div>
 
     </div>

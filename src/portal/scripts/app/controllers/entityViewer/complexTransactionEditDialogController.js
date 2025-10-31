@@ -888,6 +888,10 @@
 
                             }
 
+                            if (input.value_type === 130) {
+                                input.verbose_value_type = 'JSON'
+                            }
+
                         }
 
                     });

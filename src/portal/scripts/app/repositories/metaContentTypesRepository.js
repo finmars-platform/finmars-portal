@@ -100,6 +100,16 @@ export default function (cookieService, xhrService) {
                 name: 'Notification Class',
                 entity: 'notification-class',
                 key: 'transactions.notificationclass'
+            },
+            {
+                name: 'Client',
+                entity: 'client',
+                key: 'clients.client'
+            },
+            {
+                name: 'Vault Record',
+                entity: 'vault-record',
+                key: 'vault.vaultrecord'
             }
         ]
     };
