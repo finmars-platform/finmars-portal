@@ -56,6 +56,9 @@
         var complexTransactionAttrsComp = [
             'complex_transaction.code', 'complex_transaction.date', 'complex_transaction.text', 'complex_transaction.transaction_unique_code',
             'complex_transaction.is_canceled', 'complex_transaction.is_locked',
+            'complex_transaction.provider', 'complex_transaction.provider_version',
+            'complex_transaction.source', 'complex_transaction.source_version',
+            'complex_transaction.platform_version',
         ];
 
         var userFieldsComp = [
@@ -88,7 +91,11 @@
             'entry_currency.short_name',
             'entry_instrument.user_code',
             'entry_instrument.name',
-            'entry_instrument.short_name'
+            'entry_instrument.short_name',
+
+            'provider', 'provider_version',
+            'source', 'source_version',
+            'platform_version',
         ];
 
         var transactionClassAttrsComp = [

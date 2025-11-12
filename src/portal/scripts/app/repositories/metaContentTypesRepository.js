@@ -110,7 +110,32 @@ export default function (cookieService, xhrService) {
                 name: 'Vault Record',
                 entity: 'vault-record',
                 key: 'vault.vaultrecord'
-            }
+            },
+            {
+                name: 'Provider',
+                entity: 'provider',
+                key: 'provenance.provider'
+            },
+            {
+                name: 'Provider Version',
+                entity: 'provider-version',
+                key: 'provenance.providerversion'
+            },
+            {
+                name: 'Source',
+                entity: 'source',
+                key: 'provenance.source'
+            },
+            {
+                name: 'Source Version',
+                entity: 'source-version',
+                key: 'provenance.sourceversion'
+            },
+            {
+                name: 'Platform Version',
+                entity: 'platform-version',
+                key: 'provenance.platformversion'
+            },
         ]
     };
 

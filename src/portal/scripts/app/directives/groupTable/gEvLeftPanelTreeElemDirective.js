@@ -230,7 +230,7 @@
 
                         }
 
-                    } else if (scope.groupType.entity === 'portfolio' && scope.groupType?.key !== 'status') {
+                    } else if (scope.groupType.entity === 'portfolio' && scope.groupType?.key === 'portfolio_type') {
                         if (scope.item.___group_name === 1) {
                             scope.item.___group_name_pretty = 'General'
                         } else if (scope.item.___group_name === 3 || scope.item.___group_name === 4) {
@@ -261,6 +261,9 @@
                 }
 
                 var init = function () {
+
+                    console.log('gEvLeftPanelTreeElemDirective.init.item', scope.item);
+
                     scope.getGroupType()
                     scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
                         scope.getGroupType()
