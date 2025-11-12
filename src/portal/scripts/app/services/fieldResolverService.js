@@ -38,6 +38,13 @@ var vaultRecordRepository = require('../repositories/vaultRecordRepository').def
 var instrumentPricingSchemeRepository = require('../repositories/pricing/instrumentPricingSchemeRepository');
 var currencyPricingSchemeRepository = require('../repositories/pricing/currencyPricingSchemeRepository');
 
+
+var providerRepository = require('../repositories/provenance/providerRepository').default;
+var providerVersionRepository = require('../repositories/provenance/providerVersionRepository').default;
+var sourceRepository = require('../repositories/provenance/sourceRepository').default;
+var sourceVersionRepository = require('../repositories/provenance/sourceVersionRepository').default;
+var platformVersionRepository = require('../repositories/provenance/platformVersionRepository').default;
+
 export default function (instrumentService, transactionTypeService, metaContentTypesService) {
 
     const getFields = function (fieldKey, options, fieldsDataStore) {
@@ -485,6 +492,51 @@ export default function (instrumentService, transactionTypeService, metaContentT
                         return resolve({
                             type: 'multiple-ids', key: 'resource_groups', data: data.results.map((item) => {
                                 item.id = item.user_code
+                                return item
+                            })
+                        });
+                    });
+                    break;
+                case 'provider':
+                    providerRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({
+                            type: 'id', key: 'provider', data: data.results.map((item) => {
+                                return item
+                            })
+                        });
+                    });
+                    break;
+                case 'provider_version':
+                    providerVersionRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({
+                            type: 'id', key: 'provider_version', data: data.results.map((item) => {
+                                return item
+                            })
+                        });
+                    });
+                    break;
+                case 'source':
+                    sourceRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({
+                            type: 'id', key: 'source', data: data.results.map((item) => {
+                                return item
+                            })
+                        });
+                    });
+                    break;
+                case 'source_version':
+                    sourceVersionRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({
+                            type: 'id', key: 'source_version', data: data.results.map((item) => {
+                                return item
+                            })
+                        });
+                    });
+                    break;
+                case 'platform_version':
+                    platformVersionRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({
+                            type: 'id', key: 'platform_version', data: data.results.map((item) => {
                                 return item
                             })
                         });

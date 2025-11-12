@@ -88,6 +88,46 @@
                 "value_content_type": "iam.resourcegroup",
                 "value_entity": "resource-group",
                 "code": "user_code"
+            },
+            {
+                "key": "source",
+                "name": "Source",
+                "value_type": "field",
+                "value_content_type": "provenance.source",
+                "value_entity": "source",
+                "code": "user_code"
+            },
+            {
+                "key": "source_version",
+                "name": "Source Version",
+                "value_type": "field",
+                "value_content_type": "provenance.sourceversion",
+                "value_entity": "source-version",
+                "code": "user_code"
+            },
+            {
+                "key": "provider",
+                "name": "Provider",
+                "value_type": "field",
+                "value_content_type": "provenance.provider",
+                "value_entity": "provider",
+                "code": "user_code"
+            },
+            {
+                "key": "provider_version",
+                "name": "Provider Version",
+                "value_type": "field",
+                "value_content_type": "provenance.providerversion",
+                "value_entity": "provider-version",
+                "code": "user_code"
+            },
+            {
+                "key": "platform_version",
+                "name": "Platform Version",
+                "value_type": "field",
+                "value_content_type": "provenance.platform_version",
+                "value_entity": "platform-version",
+                "code": "user_code"
             }
         ]
     };
