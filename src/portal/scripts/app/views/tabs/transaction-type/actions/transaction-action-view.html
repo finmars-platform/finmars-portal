@@ -1065,6 +1065,71 @@
                                  class="ttype-action-input"></multitype-field>
             </div>
 
+
+
+        </div>
+
+        <div layout="row" class="ttype-action-inputs-container">
+
+            <div flex="33" layout="row">
+
+                <multitype-field label="Provider"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].provider"
+                                 is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
+                                 on-value-change="vm.onMultitypeFieldValChange(changedValue, 'provider', item, $index, 'transaction')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('provider', item, $index, 'transaction')"
+                                 class="ttype-action-input"></multitype-field>
+            </div>
+
+            <div flex="33" layout="row">
+
+                <multitype-field label="Provider Version"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].provider_version"
+                                 is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
+                                 on-value-change="vm.onMultitypeFieldValChange(changedValue, 'provider_version', item, $index, 'transaction')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('provider_version', item, $index, 'transaction')"
+                                 class="ttype-action-input"></multitype-field>
+            </div>
+
+            <div flex="33" layout="row">
+
+                <multitype-field label="Source"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].source"
+                                 is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
+                                 on-value-change="vm.onMultitypeFieldValChange(changedValue, 'source', item, $index, 'transaction')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('source', item, $index, 'transaction')"
+                                 class="ttype-action-input"></multitype-field>
+            </div>
+
+        </div>
+
+        <div layout="row" class="ttype-action-inputs-container">
+
+            <div flex="33" layout="row">
+
+                <multitype-field label="Source Version"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].source_version"
+                                 is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
+                                 on-value-change="vm.onMultitypeFieldValChange(changedValue, 'source_version', item, $index, 'transaction')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('source_version', item, $index, 'transaction')"
+                                 class="ttype-action-input"></multitype-field>
+            </div>
+
+            <div flex="33" layout="row">
+
+                <multitype-field label="Platform Version"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].platform_version"
+                                 is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
+                                 on-value-change="vm.onMultitypeFieldValChange(changedValue, 'platform_version', item, $index, 'transaction')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('platform_version', item, $index, 'transaction')"
+                                 class="ttype-action-input"></multitype-field>
+            </div>
+
         </div>
 
     </div>

@@ -2878,6 +2878,171 @@
                 }
             ];
 
+            multitypeFieldsData.provider = [
+                {
+                    'key': 'input',
+                    'model': action.transaction.provider_input,
+                    'fieldType': 'dropdownSelect',
+                    'isDefault': true,
+                    'isActive': !action.transaction.provider_toggle,
+                    'sign': '<div class="multitype-field-type-letter">I</div>',
+                    'value_type': 70,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'menuOptions': findInputs('provider')
+                    }
+                },
+                {
+                    'key': 'relation',
+                    'model': action.transaction.provider,
+                    'fieldType': 'entitySearchSelect',
+                    'isDefault': false,
+                    'isActive': !!action.transaction.provider_toggle,
+                    'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+                    'value_type': 100,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'entityType': 'provider',
+                        'itemName': action.transaction.provider_object ? action.transaction.provider_object.name : '',
+                        'itemProperty': 'user_code',
+                        'onMenuOpen': onESMenuOpen,
+                        'onMenuClose': onESMenuClose
+                    }
+                }
+            ];
+
+            multitypeFieldsData.provider_version = [
+                {
+                    'key': 'input',
+                    'model': action.transaction.provider_version_input,
+                    'fieldType': 'dropdownSelect',
+                    'isDefault': true,
+                    'isActive': !action.transaction.provider_version_toggle,
+                    'sign': '<div class="multitype-field-type-letter">I</div>',
+                    'value_type': 70,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'menuOptions': findInputs('provider_version')
+                    }
+                },
+                {
+                    'key': 'relation',
+                    'model': action.transaction.provider_version,
+                    'fieldType': 'entitySearchSelect',
+                    'isDefault': false,
+                    'isActive': !!action.transaction.provider_version_toggle,
+                    'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+                    'value_type': 100,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'entityType': 'provider-version',
+                        'itemName': action.transaction.provider_version_object ? action.transaction.provider_version_object.name : '',
+                        'itemProperty': 'user_code',
+                        'onMenuOpen': onESMenuOpen,
+                        'onMenuClose': onESMenuClose
+                    }
+                }
+            ];
+
+            multitypeFieldsData.source = [
+                {
+                    'key': 'input',
+                    'model': action.transaction.source_input,
+                    'fieldType': 'dropdownSelect',
+                    'isDefault': true,
+                    'isActive': !action.transaction.source_toggle,
+                    'sign': '<div class="multitype-field-type-letter">I</div>',
+                    'value_type': 70,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'menuOptions': findInputs('source')
+                    }
+                },
+                {
+                    'key': 'relation',
+                    'model': action.transaction.source,
+                    'fieldType': 'entitySearchSelect',
+                    'isDefault': false,
+                    'isActive': !!action.transaction.source_toggle,
+                    'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+                    'value_type': 100,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'entityType': 'source',
+                        'itemName': action.transaction.source_object ? action.transaction.source_object.name : '',
+                        'itemProperty': 'user_code',
+                        'onMenuOpen': onESMenuOpen,
+                        'onMenuClose': onESMenuClose
+                    }
+                }
+            ];
+
+            multitypeFieldsData.source_version = [
+                {
+                    'key': 'input',
+                    'model': action.transaction.source_version_input,
+                    'fieldType': 'dropdownSelect',
+                    'isDefault': true,
+                    'isActive': !action.transaction.source_version_toggle,
+                    'sign': '<div class="multitype-field-type-letter">I</div>',
+                    'value_type': 70,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'menuOptions': findInputs('source_version')
+                    }
+                },
+                {
+                    'key': 'relation',
+                    'model': action.transaction.source_version,
+                    'fieldType': 'entitySearchSelect',
+                    'isDefault': false,
+                    'isActive': !!action.transaction.source_version_toggle,
+                    'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+                    'value_type': 100,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'entityType': 'source-version',
+                        'itemName': action.transaction.source_version_object ? action.transaction.source_version_object.name : '',
+                        'itemProperty': 'user_code',
+                        'onMenuOpen': onESMenuOpen,
+                        'onMenuClose': onESMenuClose
+                    }
+                }
+            ];
+
+            multitypeFieldsData.platform_version = [
+                {
+                    'key': 'input',
+                    'model': action.transaction.platform_version_input,
+                    'fieldType': 'dropdownSelect',
+                    'isDefault': true,
+                    'isActive': !action.transaction.platform_version_toggle,
+                    'sign': '<div class="multitype-field-type-letter">I</div>',
+                    'value_type': 70,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'menuOptions': findInputs('platform_version')
+                    }
+                },
+                {
+                    'key': 'relation',
+                    'model': action.transaction.platform_version,
+                    'fieldType': 'entitySearchSelect',
+                    'isDefault': false,
+                    'isActive': !!action.transaction.platform_version_toggle,
+                    'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+                    'value_type': 100,
+                    'fieldData': {
+                        'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                        'entityType': 'platform-version',
+                        'itemName': action.transaction.platform_version_object ? action.transaction.platform_version_object.name : '',
+                        'itemProperty': 'user_code',
+                        'onMenuOpen': onESMenuOpen,
+                        'onMenuClose': onESMenuClose
+                    }
+                }
+            ];
+
             return multitypeFieldsData;
 
         };
