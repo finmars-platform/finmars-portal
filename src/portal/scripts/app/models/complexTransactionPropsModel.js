@@ -51,11 +51,11 @@
                 "name": "Description",
                 "value_type": 10
             },
-            // {
-            //     "key": "source",
-            //     "name": "Source",
-            //     "value_type": 10
-            // },
+            {
+                "key": "source_data",
+                "name": "Source Data",
+                "value_type": 10
+            },
             {
                 "key": "transaction_type",
                 "name": "Transaction Type",
