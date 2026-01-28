@@ -399,7 +399,14 @@
                 'strategy3_position', 'strategy3_position_input', 'trade_price', 'transaction_class', 'transaction_currency',
                 'transaction_currency_input',
 
-                'is_canceled'
+                'is_canceled',
+
+                'provider',
+                'provider_version',
+                'source',
+                'source_version',
+                'platform_version'
+
 
             ],
             'instrument': [
@@ -413,7 +420,14 @@
             'instrument_accrual_calculation_schedules': [
                 'accrual_calculation_model', 'accrual_calculation_model_input', 'accrual_size', 'accrual_start_date',
                 'first_payment_date', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'periodicity',
-                'periodicity_input', 'periodicity_n'
+                'periodicity_input', 'periodicity_n',
+
+                'provider',
+                'provider_version',
+                'source',
+                'source_version',
+                'platform_version'
+
             ],
             'instrument_event_schedule': [
                 'description', 'effective_date', 'event_class', 'event_class_input', 'final_date', 'instrument',
