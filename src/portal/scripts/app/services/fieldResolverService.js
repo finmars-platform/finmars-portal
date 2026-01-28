@@ -842,6 +842,66 @@ export default function (instrumentService, transactionTypeService, metaContentT
                             resolve(fieldsDataStore['fieldKeys'][contentType]);
                         });
                         break;
+                    case 'provenance.provider':
+                        providerRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'provenance.provider',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'provenance.providerversion':
+                        providerVersionRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'provenance.providerversion',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'provenance.source':
+                        sourceRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'provenance.source',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'provenance.sourceversion':
+                        sourceVersionRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'provenance.sourceversion',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'provenance.platformversion':
+                        platformVersionRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'provenance.platformversion',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
 
 
                 }

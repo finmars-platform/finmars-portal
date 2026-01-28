@@ -2050,6 +2050,11 @@
                 return showItemInAttrsList(input, 'userInput');
             });
 
+            if (vm.entityType === 'complex-transaction') {
+                availableAttrs = [];
+                availableEntityAttrs = [];
+            }
+
             vm.items = vm.items.concat(availableAttrs);
             vm.items = vm.items.concat(availableEntityAttrs);
             vm.items = vm.items.concat(availableUserInputs);
