@@ -43,6 +43,7 @@
             vm.reportOptions.depth_level = 'base_transaction'
         }
 
+        vm.pagination = vm.evDataService.getPagination()
         vm.pricingPolicies = [];
 
         /* vm.selectOptions = [
@@ -424,6 +425,7 @@
             $mdDialog.hide({
                 status: 'agree',
                 data: {
+                    pagination: vm.pagination,
                     reportOptions: vm.reportOptions,
                     reportLayoutOptions: vm.reportLayoutOptions
                 }
