@@ -1572,6 +1572,7 @@
 
                     if (options.isReport) {
 
+                        listLayout.data.pagination = metaHelper.recursiveDeepCopy(getPagination());
                         listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
                         listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
                         listLayout.data.rootGroupOptions = metaHelper.recursiveDeepCopy(getRootGroupOptions());
@@ -1644,6 +1645,7 @@
 
                 emptyUseFromAboveFilters(listLayout.data.filters);
 
+                listLayout.data.pagination = metaHelper.recursiveDeepCopy(getPagination());
                 listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
                 listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
 
@@ -1731,6 +1733,8 @@
 
             if (isReport) {
 
+
+                var pagination = getPagination()
                 var reportOptions = getReportOptions();
                 var reportLayoutOptions = getReportLayoutOptions();
                 var rootGroupOptions = getRootGroupOptions();
@@ -1738,10 +1742,12 @@
                 var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
                 var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
                 var newRootGroupOptions = Object.assign({}, rootGroupOptions, listLayout.data.rootGroupOptions);
+                var newPagination = Object.assign({}, pagination, listLayout.data.pagination);
 
                 setReportOptions(newReportOptions);
                 setReportLayoutOptions(newReportLayoutOptions);
                 setRootGroupOptions(newRootGroupOptions);
+                setPagination(newPagination);
 
                 setExportOptions(listLayout.data.export);
 

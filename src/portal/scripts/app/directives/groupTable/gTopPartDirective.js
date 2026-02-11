@@ -144,6 +144,7 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         if (res.status === 'agree') {
 
+                            scope.evDataService.setPagination(res.data.pagination)
                             scope.evDataService.setReportLayoutOptions(res.data.reportLayoutOptions);
                             scope.evDataService.setReportOptions(res.data.reportOptions);
 
