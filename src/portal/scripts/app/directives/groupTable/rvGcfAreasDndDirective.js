@@ -196,7 +196,7 @@
 					else if (droppedItemData.itemOrigin === 'columns') {
 
 						const groups = scope.evDataService.getGroups();
-						const groupToAdd = evHelperService.getTableAttrInFormOf('groups', scope.draggableItem);
+						const groupToAdd = evHelperService.getTableAttrInFormOf('group', scope.draggableItem);
 
 						if (!groupToAdd.frontOptions) {
 							groupToAdd.frontOptions = {};

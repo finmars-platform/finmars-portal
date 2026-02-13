@@ -107,7 +107,7 @@
 
 					let groups = scope.evDataService.getGroups();
 
-					const groupToAdd = evHelperService.getTableAttrInFormOf('groups', scope.draggableItem);
+					const groupToAdd = evHelperService.getTableAttrInFormOf('group', scope.draggableItem);
 					groups.push(groupToAdd);
 
 					scope.evDataService.setGroups(groups);

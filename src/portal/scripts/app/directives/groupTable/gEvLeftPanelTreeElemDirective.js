@@ -230,14 +230,6 @@
 
                         }
 
-                    } else if (scope.groupType.entity === 'portfolio' && scope.groupType?.key === 'portfolio_type') {
-                        if (scope.item.___group_name === 1) {
-                            scope.item.___group_name_pretty = 'General'
-                        } else if (scope.item.___group_name === 3 || scope.item.___group_name === 4) {
-                            scope.item.___group_name_pretty = 'Positional'
-                        } else {
-                            scope.item.___group_name_pretty = 'None'
-                        }
                     }
                     return scope.item.___group_name_pretty
                 }
