@@ -396,7 +396,7 @@
 
                                             <div layout="column">
 
-                                                <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
+                                                <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy:['order','name'] as results track by $index"
                                                      class="simple-entity-import-scheme-rows-container">
                                                     <div class="fields-holder" layout="row"
                                                          data-ng-if="item.system_property_key">
