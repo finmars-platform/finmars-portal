@@ -61,10 +61,9 @@
             controlCellWidth = 220
         }
 
-
         console.log('rv.control.render.canLoadMore', canLoadMore);
 
-        var content = `<div class="control-content g-cell-wrap" style="width: ${controlCellWidth}px">
+        var content = `<div class="control-content g-cell-wrap" style="width: auto">
                             <div class="g-cell" style="width: 100%;">
                                 <span class="display-inline-block m-0"
                                       style="color: #868686;">
