@@ -10,9 +10,13 @@ import angular from 'angular';
 
 
 
-import profile from '../../profile/scripts/main.js';
-import database from '../../database/scripts/main.js';
-import portal from '../../portal/scripts/main.js';
+import initProfile from '../../profile/scripts/main.js';
+import initDatabase from '../../database/scripts/main.js';
+import initPortal from '../../portal/scripts/main.js';
+
+initProfile()
+initDatabase()
+initPortal()
 
 // 2024-01-12 szhitenev update end
 
@@ -43,7 +47,7 @@ import inputsDialogController from "./app/controllers/dialogs/inputsDialogContro
 
 import dndFilesOnPageDirective from "./app/directives/dndFilesOnPageDirective.js";
 
-const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+const PROJECT_ENV = window.PROJECT_ENV; // Set by /public/config.js
 
 console.log("Shell Module inited")
 
@@ -114,8 +118,7 @@ app.factory('$exceptionHandler', [function () {
 
 //<editor-fold desc="Websocket initialization">
 app.run(['$rootScope', function ($rootScope) {
-
-    console.log('Project environment: ' + '__PROJECT_ENV__');
+    console.log('Project environment: ' + PROJECT_ENV);
     console.log('Project build date: ' + '__BUILD_DATE__');
 
     let controllersCount = 0;
@@ -177,46 +180,6 @@ app.run(['$rootScope', function ($rootScope) {
 
     console.log("angular.js info: " + controllersCount + ' controllers registered');
     console.log("angular.js info: " + directivesCount + ' directives registered');
-
-    // const developerConsoleService = require('../../portal/scripts/app/services/developerConsoleService');
-    // const websocketService = require('./app/services/websocketService');
-    const toastNotificationService = require('../../core/services/toastNotificationService');
-
-
-    // window.developerConsoleService = developerConsoleService;
-
-    // developerConsoleService.init();
-
-    // try {
-
-    // window.ws = new WebSocket("__WS_HOST__");
-
-    // if (PROJECT_ENV !== 'local') {
-
-        // DEPRECATED
-        // websocketService.connect();
-        // websocketService.reconnectIfError();
-        //
-        // websocketService.addEventListener('simple_message', function (data) {
-        //     toastNotificationService.info(data.message)
-        // })
-
-    // }
-
-    // window.ws.onopen = function () {
-    // 	console.log("Websocket. Initial Auth");
-    // 	window.ws.send(JSON.stringify({action: "initial_auth"}));
-    // }
-
-    // } catch (error) {
-    //
-    // 	console.error("Can't connect to Websocket server. Error ", error);
-    //
-    // 	window.ws = null;
-    //
-    // }
-
-
 }]);
 //</editor-fold>
 

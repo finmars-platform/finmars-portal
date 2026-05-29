@@ -1,1118 +1,1317 @@
-/**
- * Created by szhitenev on 05.05.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import logService from '../../../../../core/services/logService';
+import evDataHelper from '../../helpers/ev-data.helper';
+import evEvents from '../../services/entityViewerEvents';
+import ScrollHelper from '../../helpers/scrollHelper';
+import metaService from '../../services/metaService';
+import GModalSharedLogicHelper from '../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper';
+import evHelperService from '../../services/entityViewerHelperService';
 
-    var logService = require('../../../../../core/services/logService');
+export default function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
-    var evDataHelper = require('../../helpers/ev-data.helper').default;
-    var evEvents = require('../../services/entityViewerEvents');
-    var ScrollHelper = require('../../helpers/scrollHelper');
+    var vm = this;
 
-    var metaService = require('../../services/metaService').default;
-    var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
-    var evHelperService = require('../../services/entityViewerHelperService');
+    var sharedLogicHelper = new GModalSharedLogicHelper(vm);
 
-    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
+    vm.readyStatus = {content: false};
 
-        var vm = this;
+    vm.entityViewerDataService = entityViewerDataService;
+    vm.entityViewerEventService = entityViewerEventService;
+    vm.attributeDataService = attributeDataService;
 
-        var sharedLogicHelper = new GModalSharedLogicHelper(vm);
+    vm.entityType = vm.entityViewerDataService.getEntityType();
+    vm.contentType = vm.entityViewerDataService.getContentType();
 
-        vm.readyStatus = {content: false};
+    vm.shownFiltersType = 'backend'; // used for gFilterSettingsBtnDirective inside view
 
-        vm.entityViewerDataService = entityViewerDataService;
-        vm.entityViewerEventService = entityViewerEventService;
-        vm.attributeDataService = attributeDataService;
+    console.log('vm', vm);
 
-        vm.entityType = vm.entityViewerDataService.getEntityType();
-        vm.contentType = vm.entityViewerDataService.getContentType();
+    logService.property('vm.entityType', vm.entityType);
 
-        vm.shownFiltersType = 'backend'; // used for gFilterSettingsBtnDirective inside view
+    vm.attrs = [];
+    vm.pricingAttrs = [];
+    vm.entityAttrs = [];
 
-        console.log('vm', vm);
+    vm.userTextFields = [];
+    vm.userNumberFields = [];
+    vm.userDateFields = [];
 
-        logService.property('vm.entityType', vm.entityType);
+    vm.cardsDividedIntoTabs = true;
 
-        vm.attrs = [];
-        vm.pricingAttrs = [];
-        vm.entityAttrs = [];
+    var columns = vm.entityViewerDataService.getColumns();
+    var currentColumnsWidth = columns.length;
+    var filters = vm.entityViewerDataService.getFilters();
+    var groups = vm.entityViewerDataService.getGroups();
 
-        vm.userTextFields = [];
-        vm.userNumberFields = [];
-        vm.userDateFields = [];
+    var scrollHelper;
 
-        vm.cardsDividedIntoTabs = true;
+    vm.attrsList = [];
 
-        var columns = vm.entityViewerDataService.getColumns();
-        var currentColumnsWidth = columns.length;
-        var filters = vm.entityViewerDataService.getFilters();
-        var groups = vm.entityViewerDataService.getGroups();
+    var attrsWithoutGroups = ['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'content_types'];
+    var attrsWithoutFilters = ['notes'];
 
-        var scrollHelper;
+    $('body').addClass('drag-dialog'); // hide backdrop
 
-        vm.attrsList = [];
+    vm.getAttributes = function () {
 
-        var attrsWithoutGroups = ['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'content_types'];
-        var attrsWithoutFilters = ['notes'];
+        var viewContext = vm.entityViewerDataService.getViewContext();
 
-        $('body').addClass('drag-dialog'); // hide backdrop
+        if (viewContext === 'reconciliation_viewer') {
 
-        vm.getAttributes = function () {
+            /*var columns = vm.entityViewerDataService.getColumns();
 
-            var viewContext = vm.entityViewerDataService.getViewContext();
+            console.log('columns', columns);
 
-            if (viewContext === 'reconciliation_viewer') {
+            vm.entityAttrs = columns.map(function (item) {
+                return item
+            });*/
+            vm.entityAttrs = vm.attributeDataService.getReconciliationAttributes();
 
-                /*var columns = vm.entityViewerDataService.getColumns();
+            syncAttrs();
+            getSelectedAttrs();
 
-                console.log('columns', columns);
+            vm.readyStatus.content = true;
 
-                vm.entityAttrs = columns.map(function (item) {
-                    return item
-                });*/
-                vm.entityAttrs = vm.attributeDataService.getReconciliationAttributes();
+        } else {
 
-                syncAttrs();
-                getSelectedAttrs();
+            vm.entityAttrs = vm.attributeDataService.getEntityAttributesByEntityType(vm.entityType);
 
-                vm.readyStatus.content = true;
+            var transactionUserFields = vm.attributeDataService.getTransactionUserFields();
+            var instrumentUserFields = vm.attributeDataService.getInstrumentUserFields();
 
-            } else {
+            vm.entityAttrs = vm.entityAttrs.filter(function (item) {
 
-                vm.entityAttrs = vm.attributeDataService.getEntityAttributesByEntityType(vm.entityType);
+                var state = true;
+                
+                for (var i = 0; i < transactionUserFields.length; i = i + 1) {
 
-                var transactionUserFields = vm.attributeDataService.getTransactionUserFields();
-                var instrumentUserFields = vm.attributeDataService.getInstrumentUserFields();
-
-                vm.entityAttrs = vm.entityAttrs.filter(function (item) {
-
-                    var state = true;
+                    if (item.key === transactionUserFields[i].key) {
+                        state = transactionUserFields[i].is_active
+                        break;
+                    }
                     
-                    for (var i = 0; i < transactionUserFields.length; i = i + 1) {
+                }
 
-                        if (item.key === transactionUserFields[i].key) {
-                            state = transactionUserFields[i].is_active
+                
+                return state;
+
+            })
+
+
+            vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
+
+                if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                    item.name = 'Group';
+                }
+
+                item.entity = vm.entityType;
+
+                if (vm.entityType === 'instrument') {
+
+                    for (var i = 0; i < instrumentUserFields.length; i++) {
+                        var instrumentField = instrumentUserFields[i];
+
+                        if (item.key === instrumentField.key) {
+                            item.name = instrumentField.name;
                             break;
                         }
-                        
                     }
 
-                    
-                    return state;
-
-                })
-
-
-                vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
-
-                    if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
-                        item.name = 'Group';
+                    if (item.key.indexOf("user_text_") !== -1) {
+                        vm.userTextFields.push(item);
+                        return false;
                     }
 
-                    item.entity = vm.entityType;
+                } else {
 
-                    if (vm.entityType === 'instrument') {
+                    for (var i = 0; i < transactionUserFields.length; i++) {
+                        var transField = transactionUserFields[i];
 
-                        for (var i = 0; i < instrumentUserFields.length; i++) {
-                            var instrumentField = instrumentUserFields[i];
-
-                            if (item.key === instrumentField.key) {
-                                item.name = instrumentField.name;
-                                break;
-                            }
+                        if (item.key === transField.key) {
+                            item.name = transField.name;
+                            break;
                         }
+                    }
 
-                        if (item.key.indexOf("user_text_") !== -1) {
-                            vm.userTextFields.push(item);
-                            return false;
-                        }
+                    if (item.key.indexOf("user_text_") !== -1) {
 
-                    } else {
+                        vm.userTextFields.push(item);
+                        return false;
 
-                        for (var i = 0; i < transactionUserFields.length; i++) {
-                            var transField = transactionUserFields[i];
+                    } else if (item.key.indexOf("user_number_") !== -1) {
 
-                            if (item.key === transField.key) {
-                                item.name = transField.name;
-                                break;
-                            }
-                        }
+                        vm.userNumberFields.push(item);
+                        return false;
 
-                        if (item.key.indexOf("user_text_") !== -1) {
+                    } else if (item.key.indexOf("user_date_") !== -1) {
 
-                            vm.userTextFields.push(item);
-                            return false;
-
-                        } else if (item.key.indexOf("user_number_") !== -1) {
-
-                            vm.userNumberFields.push(item);
-                            return false;
-
-                        } else if (item.key.indexOf("user_date_") !== -1) {
-
-                            vm.userDateFields.push(item);
-                            return false;
-
-                        }
+                        vm.userDateFields.push(item);
+                        return false;
 
                     }
 
-                    return true;
-                });
+                }
 
-                vm.attrs = vm.attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
+                return true;
+            });
+
+            vm.attrs = vm.attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
 
 
-                console.log('vm.attrs', vm.attrs);
+            console.log('vm.attrs', vm.attrs);
 
-                vm.attrs = vm.attrs.map(function (attribute) {
+            vm.attrs = vm.attrs.map(function (attribute) {
 
-                    var result = {};
+                var result = {};
 
-                    result.attribute_type = Object.assign({}, attribute);
-                    result.value_type = attribute.value_type;
-                    result.content_type = vm.contentType;
-                    result.key = 'attributes.' + attribute.user_code;
-                    result.name = attribute.name;
+                result.attribute_type = Object.assign({}, attribute);
+                result.value_type = attribute.value_type;
+                result.content_type = vm.contentType;
+                result.key = 'attributes.' + attribute.user_code;
+                result.name = attribute.name;
 
-                    return result
-
-                });
-
-                vm.pricingAttrs = vm.attrs.filter(function (item) {
-                    return item.key.indexOf('pricing_policy_') !== -1
-                })
-
-                vm.attrs = vm.attrs.filter(function (item) {
-                    return item.key.indexOf('pricing_policy_') === -1
-                })
-
-                vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
-                vm.attrsList = vm.attrsList.concat(vm.userTextFields);
-                vm.attrsList = vm.attrsList.concat(vm.userNumberFields);
-                vm.attrsList = vm.attrsList.concat(vm.userDateFields);
-                vm.attrsList = vm.attrsList.concat(vm.attrs);
-                vm.attrsList = vm.attrsList.concat(vm.pricingAttrs);
-
-                syncAttrs();
-                getSelectedAttrs();
-
-                vm.readyStatus.content = true;
-
-            }
-
-        };
-
-        var updateCustomAttrs = function () {
-
-            vm.attributeDataService.downloadDynamicAttributesByEntityType(vm.entityType).then(function (data) {
-
-                vm.attrs = data;
-
-                vm.attrs = vm.attrs.map(function (attribute) {
-
-                    var result = {};
-
-                    result.attribute_type = Object.assign({}, attribute);
-                    result.value_type = attribute.value_type;
-                    result.content_type = vm.contentType;
-                    result.key = 'attributes.' + attribute.user_code;
-                    result.name = attribute.name;
-
-                    return result
-
-                });
-
-                vm.attrsList = [];
-
-                vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
-                vm.attrsList = vm.attrsList.concat(vm.userTextFields);
-                vm.attrsList = vm.attrsList.concat(vm.userNumberFields);
-                vm.attrsList = vm.attrsList.concat(vm.userDateFields);
-                vm.attrsList = vm.attrsList.concat(vm.attrs);
-
-                vm.updateAttrs(vm.attrs);
+                return result
 
             });
 
-        };
+            vm.pricingAttrs = vm.attrs.filter(function (item) {
+                return item.key.indexOf('pricing_policy_') !== -1
+            })
 
-        vm.checkAreaAccessibility = function (item, type) {
-            if (type === 'group') {
-                if (attrsWithoutGroups.indexOf(item.key) !== -1) {
-                    return true;
-                }
-                return false;
-            }
-            else if (type === 'filter') {
+            vm.attrs = vm.attrs.filter(function (item) {
+                return item.key.indexOf('pricing_policy_') === -1
+            })
 
-            	if (item.value_type === "mc_field") {
-            		return false;
-				}
+            vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.userTextFields);
+            vm.attrsList = vm.attrsList.concat(vm.userNumberFields);
+            vm.attrsList = vm.attrsList.concat(vm.userDateFields);
+            vm.attrsList = vm.attrsList.concat(vm.attrs);
+            vm.attrsList = vm.attrsList.concat(vm.pricingAttrs);
 
-                if (attrsWithoutFilters.indexOf(item.key) !== -1) {
-                    return true;
-                }
+            syncAttrs();
+            getSelectedAttrs();
 
-                return false;
-
-            }
-        };
-
-        var syncAttrs = function () {
-
-            syncTypeAttrs(vm.entityAttrs);
-            syncTypeAttrs(vm.attrs);
-
-            syncTypeAttrs(vm.userTextFields);
-            syncTypeAttrs(vm.userNumberFields);
-            syncTypeAttrs(vm.userDateFields);
-
-        };
-
-        function syncTypeAttrs(attrs) {
-
-            var i;
-            for (i = 0; i < attrs.length; i = i + 1) {
-
-                attrs[i].columns = false;
-                attrs[i].groups = false;
-                attrs[i].filters = false;
-
-                groups.map(function (item) {
-                    if (attrs[i].key === item.key) {
-                        attrs[i].groups = true;
-                    }
-                    return item;
-                });
-
-                columns.map(function (item) {
-                    if (attrs[i].key === item.key) {
-                        attrs[i].columns = true;
-                    }
-                    return item;
-                });
-
-                /* filters.frontend.map(function (item) {
-                    if (attrs[i].key === item.key) {
-                        attrs[i].filters = true;
-                    }
-                    return item;
-                }); */
-
-                filters.backend.map(function (item) {
-                    if (attrs[i].key === item.key) {
-                        attrs[i].filters = true;
-                    }
-                    return item;
-                });
-
-            }
-        }
-
-        function updateTypeAttrs(typeAttrs) {
-            var i, c, g, f;
-            var columnExist, groupExist, filterExist;
-
-            for (i = 0; i < typeAttrs.length; i = i + 1) {
-                columnExist = false;
-                groupExist = false;
-                filterExist = false;
-                for (c = 0; c < columns.length; c = c + 1) {
-                    if (typeAttrs[i].hasOwnProperty('key')) {
-                        if (typeAttrs[i].key === columns[c].key) {
-                            columnExist = true;
-                            if (typeAttrs[i].columns === false) {
-                                columns.splice(c, 1);
-                                c = c - 1;
-                            }
-                            break;
-                        }
-                    } else {
-                        if (typeAttrs[i].name === columns[c].name) { // for ttype inputs?
-                            columnExist = true;
-                            if (typeAttrs[i].columns === false) {
-                                columns.splice(c, 1);
-                                c = c - 1;
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                if (!columnExist) {
-
-                    if (typeAttrs[i].columns === true) {
-
-                        var columnToAdd = evHelperService.getTableAttrInFormOf( 'column', typeAttrs[i] );
-                        columns.push(columnToAdd);
-
-                    }
-
-                }
-
-                /////// GROUPING
-
-                for (g = 0; g < groups.length; g = g + 1) {
-                    if (typeAttrs[i].hasOwnProperty('key')) {
-                        if (typeAttrs[i].key === groups[g].key) {
-                            groupExist = true;
-                            if (typeAttrs[i].groups === false) {
-                                groups.splice(g, 1);
-                                g = g - 1;
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                if (!groupExist) {
-
-                    if (typeAttrs[i].groups === true) {
-
-                        var groupToAdd = evHelperService.getTableAttrInFormOf( 'group', typeAttrs[i] );
-                        groups.push(groupToAdd);
-
-                    }
-
-                }
-
-                //region FILTERING
-
-                var checkForFilterExistence = function (filtersList) {
-
-                    for (f = 0; f < filtersList.length; f = f + 1) {
-
-                        if (typeAttrs[i].key === filtersList[f].key) {
-
-                            filterExist = true;
-
-                            if (typeAttrs[i].filters === false) {
-                                filtersList.splice(f, 1);
-                                f = f - 1;
-                            }
-
-                            break;
-
-                        }
-
-                    }
-
-                    return filtersList;
-
-                };
-
-                // filters.frontend = checkForFilterExistence(filters.frontend);
-                filters.backend = checkForFilterExistence(filters.backend);
-
-                if (!filterExist) {
-
-                    if (typeAttrs[i].filters === true) {
-
-                        var filterToAdd = evHelperService.getTableAttrInFormOf( 'filter', typeAttrs[i] );
-                        filters.backend.push(filterToAdd);
-
-                    }
-
-                }
-                //endregion
-
-            }
-
-            vm.entityViewerDataService.setColumns(columns);
-            vm.entityViewerDataService.setGroups(groups);
-            vm.entityViewerDataService.setFilters(filters);
+            vm.readyStatus.content = true;
 
         }
 
-        vm.updateAttrs = function (attributes) {
+    };
 
-            updateTypeAttrs(attributes);
+    var updateCustomAttrs = function () {
 
-            addColumn();
+        vm.attributeDataService.downloadDynamicAttributesByEntityType(vm.entityType).then(function (data) {
 
-            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
-            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+            vm.attrs = data;
 
-            vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-            vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+            vm.attrs = vm.attrs.map(function (attribute) {
 
-            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                var result = {};
 
-        };
+                result.attribute_type = Object.assign({}, attribute);
+                result.value_type = attribute.value_type;
+                result.content_type = vm.contentType;
+                result.key = 'attributes.' + attribute.user_code;
+                result.name = attribute.name;
 
-        // format data for SELECTED tab
-        var selectedGroups = [];
-        var selectedColumns = [];
-        var selectedFilters = [];
+                return result
 
-        var isAttrInsideOfAnotherGroup = function (attrKey, groupType) {
+            });
 
-            let group1, group2;
+            vm.attrsList = [];
 
-            switch (groupType) {
-                case 'groups':
-                    group1 = columns;
-                    group2 = filters.backend;
-                    break;
+            vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.userTextFields);
+            vm.attrsList = vm.attrsList.concat(vm.userNumberFields);
+            vm.attrsList = vm.attrsList.concat(vm.userDateFields);
+            vm.attrsList = vm.attrsList.concat(vm.attrs);
 
-                case 'columns':
-                    group1 = groups;
-                    group2 = filters.backend;
-                    break;
+            vm.updateAttrs(vm.attrs);
 
-                case 'filters':
-                    group1 = groups;
-                    group2 = columns;
-                    break;
+        });
+
+    };
+
+    vm.checkAreaAccessibility = function (item, type) {
+        if (type === 'group') {
+            if (attrsWithoutGroups.indexOf(item.key) !== -1) {
+                return true;
+            }
+            return false;
+        }
+        else if (type === 'filter') {
+
+            if (item.value_type === "mc_field") {
+                return false;
             }
 
-            let attrIndex = group1.findIndex(attr => {
+            if (attrsWithoutFilters.indexOf(item.key) !== -1) {
+                return true;
+            }
+
+            return false;
+
+        }
+    };
+
+    var syncAttrs = function () {
+
+        syncTypeAttrs(vm.entityAttrs);
+        syncTypeAttrs(vm.attrs);
+
+        syncTypeAttrs(vm.userTextFields);
+        syncTypeAttrs(vm.userNumberFields);
+        syncTypeAttrs(vm.userDateFields);
+
+    };
+
+    function syncTypeAttrs(attrs) {
+
+        var i;
+        for (i = 0; i < attrs.length; i = i + 1) {
+
+            attrs[i].columns = false;
+            attrs[i].groups = false;
+            attrs[i].filters = false;
+
+            groups.map(function (item) {
+                if (attrs[i].key === item.key) {
+                    attrs[i].groups = true;
+                }
+                return item;
+            });
+
+            columns.map(function (item) {
+                if (attrs[i].key === item.key) {
+                    attrs[i].columns = true;
+                }
+                return item;
+            });
+
+            /* filters.frontend.map(function (item) {
+                if (attrs[i].key === item.key) {
+                    attrs[i].filters = true;
+                }
+                return item;
+            }); */
+
+            filters.backend.map(function (item) {
+                if (attrs[i].key === item.key) {
+                    attrs[i].filters = true;
+                }
+                return item;
+            });
+
+        }
+    }
+
+    function updateTypeAttrs(typeAttrs) {
+        var i, c, g, f;
+        var columnExist, groupExist, filterExist;
+
+        for (i = 0; i < typeAttrs.length; i = i + 1) {
+            columnExist = false;
+            groupExist = false;
+            filterExist = false;
+            for (c = 0; c < columns.length; c = c + 1) {
+                if (typeAttrs[i].hasOwnProperty('key')) {
+                    if (typeAttrs[i].key === columns[c].key) {
+                        columnExist = true;
+                        if (typeAttrs[i].columns === false) {
+                            columns.splice(c, 1);
+                            c = c - 1;
+                        }
+                        break;
+                    }
+                } else {
+                    if (typeAttrs[i].name === columns[c].name) { // for ttype inputs?
+                        columnExist = true;
+                        if (typeAttrs[i].columns === false) {
+                            columns.splice(c, 1);
+                            c = c - 1;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (!columnExist) {
+
+                if (typeAttrs[i].columns === true) {
+
+                    var columnToAdd = evHelperService.getTableAttrInFormOf( 'column', typeAttrs[i] );
+                    columns.push(columnToAdd);
+
+                }
+
+            }
+
+            /////// GROUPING
+
+            for (g = 0; g < groups.length; g = g + 1) {
+                if (typeAttrs[i].hasOwnProperty('key')) {
+                    if (typeAttrs[i].key === groups[g].key) {
+                        groupExist = true;
+                        if (typeAttrs[i].groups === false) {
+                            groups.splice(g, 1);
+                            g = g - 1;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (!groupExist) {
+
+                if (typeAttrs[i].groups === true) {
+
+                    var groupToAdd = evHelperService.getTableAttrInFormOf( 'group', typeAttrs[i] );
+                    groups.push(groupToAdd);
+
+                }
+
+            }
+
+            //region FILTERING
+
+            var checkForFilterExistence = function (filtersList) {
+
+                for (f = 0; f < filtersList.length; f = f + 1) {
+
+                    if (typeAttrs[i].key === filtersList[f].key) {
+
+                        filterExist = true;
+
+                        if (typeAttrs[i].filters === false) {
+                            filtersList.splice(f, 1);
+                            f = f - 1;
+                        }
+
+                        break;
+
+                    }
+
+                }
+
+                return filtersList;
+
+            };
+
+            // filters.frontend = checkForFilterExistence(filters.frontend);
+            filters.backend = checkForFilterExistence(filters.backend);
+
+            if (!filterExist) {
+
+                if (typeAttrs[i].filters === true) {
+
+                    var filterToAdd = evHelperService.getTableAttrInFormOf( 'filter', typeAttrs[i] );
+                    filters.backend.push(filterToAdd);
+
+                }
+
+            }
+            //endregion
+
+        }
+
+        vm.entityViewerDataService.setColumns(columns);
+        vm.entityViewerDataService.setGroups(groups);
+        vm.entityViewerDataService.setFilters(filters);
+
+    }
+
+    vm.updateAttrs = function (attributes) {
+
+        updateTypeAttrs(attributes);
+
+        addColumn();
+
+        evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+        evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+
+        vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+        vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+        vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
+        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+    };
+
+    // format data for SELECTED tab
+    var selectedGroups = [];
+    var selectedColumns = [];
+    var selectedFilters = [];
+
+    var isAttrInsideOfAnotherGroup = function (attrKey, groupType) {
+
+        let group1, group2;
+
+        switch (groupType) {
+            case 'groups':
+                group1 = columns;
+                group2 = filters.backend;
+                break;
+
+            case 'columns':
+                group1 = groups;
+                group2 = filters.backend;
+                break;
+
+            case 'filters':
+                group1 = groups;
+                group2 = columns;
+                break;
+        }
+
+        let attrIndex = group1.findIndex(attr => {
+            return attr.key === attrKey
+        });
+
+        if (attrIndex < 0) {
+            attrIndex = group2.findIndex(attr => {
                 return attr.key === attrKey
             });
+        }
 
-            if (attrIndex < 0) {
-                attrIndex = group2.findIndex(attr => {
-                    return attr.key === attrKey
-                });
+        return attrIndex > -1;
+
+    }
+
+    /* var updateSelectedAttr = function (attr, selectedAttrs) {
+
+        const existingAttrIndex = selectedAttrs.findIndex(selAttr => attr.key === selAttr.key);
+
+        if (existingAttrIndex < 0) {
+            selectedAttrs.push(attr);
+        } else {
+            selectedAttrs[existingAttrIndex] = attr;
+        }
+
+    };
+
+    var separateSelectedAttrs = function (attributes, attrsVmKey) {
+
+        for (var i = 0; i < attributes.length; i++) {
+
+            var attribute = JSON.parse(angular.toJson(attributes[i]));
+            attribute['attrsVmKey'] = attrsVmKey; // used inside HTML for vm.onSelectedAttrsChange()
+
+            // attrsVmKey used in vm.updateAttrs and selectedDnD
+            if (attribute.columns) {
+                updateSelectedAttr(attribute, selectedColumns);
+
+            } else if (attribute.groups) {
+                updateSelectedAttr(attribute, selectedGroups);
+
             }
 
-            return attrIndex > -1;
+            if (attribute.filters) {
+                updateSelectedAttr(attribute, selectedFilters);
+            }
 
         }
 
-        /* var updateSelectedAttr = function (attr, selectedAttrs) {
+    };
 
-            const existingAttrIndex = selectedAttrs.findIndex(selAttr => attr.key === selAttr.key);
+    var organizeSelectedAttrs = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
 
-            if (existingAttrIndex < 0) {
-                selectedAttrs.push(attr);
-            } else {
-                selectedAttrs[existingAttrIndex] = attr;
-            }
+        // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
+        let selectedAttrsObj = {};
+        let inactiveAttrs = [];
 
-        };
+        selectedAttrs.forEach((attr) => {
 
-        var separateSelectedAttrs = function (attributes, attrsVmKey) {
+            if (attr) {
 
-            for (var i = 0; i < attributes.length; i++) {
+                if (attr[groupType]) {
+                    selectedAttrsObj[attr.key] = attr
 
-                var attribute = JSON.parse(angular.toJson(attributes[i]));
-                attribute['attrsVmKey'] = attrsVmKey; // used inside HTML for vm.onSelectedAttrsChange()
+                } else if (!isAttrInsideOfAnotherGroup(attr.key, groupType)) {
 
-                // attrsVmKey used in vm.updateAttrs and selectedDnD
-                if (attribute.columns) {
-                    updateSelectedAttr(attribute, selectedColumns);
+                    inactiveAttrs.push(attr);
 
-                } else if (attribute.groups) {
-                    updateSelectedAttr(attribute, selectedGroups);
-
-                }
-
-                if (attribute.filters) {
-                    updateSelectedAttr(attribute, selectedFilters);
                 }
 
             }
 
-        };
+        });
 
-        var organizeSelectedAttrs = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
+        let orderedAttrs = insideTable.map(function (attr) {
 
-            // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
-            let selectedAttrsObj = {};
-            let inactiveAttrs = [];
+            return selectedAttrsObj[attr.key];
 
-            selectedAttrs.forEach((attr) => {
+        });
 
-                if (attr) {
+        orderedAttrs = orderedAttrs.concat(inactiveAttrs);
 
-                    if (attr[groupType]) {
-                        selectedAttrsObj[attr.key] = attr
+        return orderedAttrs;
 
-                    } else if (!isAttrInsideOfAnotherGroup(attr.key, groupType)) {
+    }; */
 
-                        inactiveAttrs.push(attr);
+    vm.selectedGroups = [];
+    vm.selectedColumns = [];
+    vm.selectedFilters = [];
 
-                    }
+    var getSelectedAttrs = function () {
 
-                }
+        /* selectedGroups = vm.selectedGroups;
+        selectedColumns = vm.selectedColumns;
+        selectedFilters = vm.selectedFilters;
 
-            });
+        separateSelectedAttrs(vm.entityAttrs, 'entityAttrs');
+        separateSelectedAttrs(vm.attrs, 'attrs');
 
-            let orderedAttrs = insideTable.map(function (attr) {
+        separateSelectedAttrs(vm.userTextFields, 'userTextFields');
+        separateSelectedAttrs(vm.userNumberFields, 'userNumberFields');
+        separateSelectedAttrs(vm.userDateFields, 'userDateFields');
 
-                return selectedAttrsObj[attr.key];
+        // Order selected as they are inside the table
+        vm.selectedGroups = organizeSelectedAttrs(groups, selectedGroups, 'groups');
+        vm.selectedColumns = organizeSelectedAttrs(columns, selectedColumns, 'columns');
+        vm.selectedFilters = organizeSelectedAttrs(filters.backend, selectedFilters, 'filters'); */
+        const attributesLists = [
+            'entityAttrs',
+            'attrs',
+            'userTextFields',
+            'userNumberFields',
+            'userDateFields',
+        ];
 
-            });
+        const attrGroups = {groups, columns, filters: filters.backend}; // Victor 2020.12.10 I need variables: groups, columns, filters in sharedLogicHelper
 
-            orderedAttrs = orderedAttrs.concat(inactiveAttrs);
+        sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
 
-            return orderedAttrs;
+        vm.selectedGroups = vm.selectedGroups.filter(group => {
+            const hasNoMatchingColumn = !!!vm.selectedColumns.find(column => column.key === group.key);
+            return hasNoMatchingColumn;
+        });
 
-        }; */
+    };
 
-        vm.selectedGroups = [];
-        vm.selectedColumns = [];
-        vm.selectedFilters = [];
+    // < format data for SELECTED tab >
 
-        var getSelectedAttrs = function () {
+    vm.onSelectedAttrsChange = function (attributesList, selectedAttr) {
+        console.log('onSelectedAttrsChange', attributesList, selectedAttr)
 
-            /* selectedGroups = vm.selectedGroups;
-            selectedColumns = vm.selectedColumns;
-            selectedFilters = vm.selectedFilters;
-
-            separateSelectedAttrs(vm.entityAttrs, 'entityAttrs');
-            separateSelectedAttrs(vm.attrs, 'attrs');
-
-            separateSelectedAttrs(vm.userTextFields, 'userTextFields');
-            separateSelectedAttrs(vm.userNumberFields, 'userNumberFields');
-            separateSelectedAttrs(vm.userDateFields, 'userDateFields');
-
-            // Order selected as they are inside the table
-            vm.selectedGroups = organizeSelectedAttrs(groups, selectedGroups, 'groups');
-            vm.selectedColumns = organizeSelectedAttrs(columns, selectedColumns, 'columns');
-            vm.selectedFilters = organizeSelectedAttrs(filters.backend, selectedFilters, 'filters'); */
-            const attributesLists = [
-                'entityAttrs',
-                'attrs',
-                'userTextFields',
-                'userNumberFields',
-                'userDateFields',
-            ];
-
-            const attrGroups = {groups, columns, filters: filters.backend}; // Victor 2020.12.10 I need variables: groups, columns, filters in sharedLogicHelper
-
-            sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
-
-            vm.selectedGroups = vm.selectedGroups.filter(group => {
-                const hasNoMatchingColumn = !!!vm.selectedColumns.find(column => column.key === group.key);
-                return hasNoMatchingColumn;
-            });
-
-        };
-
-        // < format data for SELECTED tab >
-
-        vm.onSelectedAttrsChange = function (attributesList, selectedAttr) {
-            console.log('onSelectedAttrsChange', attributesList, selectedAttr)
-
-            for (var i = 0; i < attributesList.length; i++) {
-                if (attributesList[i].key === selectedAttr.key) {
-                    attributesList[i].groups = selectedAttr.groups;
-                    attributesList[i].columns = selectedAttr.columns;
-                    attributesList[i].filters = selectedAttr.filters;
-                    break;
-                }
+        for (var i = 0; i < attributesList.length; i++) {
+            if (attributesList[i].key === selectedAttr.key) {
+                attributesList[i].groups = selectedAttr.groups;
+                attributesList[i].columns = selectedAttr.columns;
+                attributesList[i].filters = selectedAttr.filters;
+                break;
             }
+        }
 
-            vm.updateAttrs(attributesList);
+        vm.updateAttrs(attributesList);
 
-        };
+    };
 
 
-        /* var viewConstructorDnD = {
+    /* var viewConstructorDnD = {
 
-            init: function () {
-                this.dragula();
-                this.eventListeners();
-            },
+        init: function () {
+            this.dragula();
+            this.eventListeners();
+        },
 
-            eventListeners: function () {
+        eventListeners: function () {
 
-                var exist = false;
-                var existedAttrGroup = '';
+            var exist = false;
+            var existedAttrGroup = '';
 
-                this.dragula.on('over', function (elem, container, source) {
-                    $(container).addClass('active');
-                    $(container).on('mouseleave', function () {
-                        $(this).removeClass('active');
-                    })
+            this.dragula.on('over', function (elem, container, source) {
+                $(container).addClass('active');
+                $(container).on('mouseleave', function () {
+                    $(this).removeClass('active');
+                })
 
-                });
-                this.dragula.on('drop', function (elem, target) {
+            });
+            this.dragula.on('drop', function (elem, target) {
 
-                    $(target).removeClass('active');
-                    // var name = $(elem).html();
-                    var identifier = $(elem).attr('data-key-identifier');
-                    var i;
+                $(target).removeClass('active');
+                // var name = $(elem).html();
+                var identifier = $(elem).attr('data-key-identifier');
+                var i;
 
-                    exist = false;
+                exist = false;
 
-                    if (target === contentWrapElement.querySelector('#columnsbag') ||
-                        target === contentWrapElement.querySelector('.g-columns-holder')) {
-                        for (i = 0; i < columns.length; i = i + 1) {
-                            if (columns[i].key === identifier) {
-                                exist = true;
-                                existedAttrGroup = 'column';
-                            }
-                            /!*if (columns[i].name === name) {
-                                exist = true;
-                            }*!/
+                if (target === contentWrapElement.querySelector('#columnsbag') ||
+                    target === contentWrapElement.querySelector('.g-columns-holder')) {
+                    for (i = 0; i < columns.length; i = i + 1) {
+                        if (columns[i].key === identifier) {
+                            exist = true;
+                            existedAttrGroup = 'column';
                         }
+                        /!*if (columns[i].name === name) {
+                            exist = true;
+                        }*!/
+                    }
+                }
+
+                if (target === contentWrapElement.querySelector('#groupsbag') ||
+                    target === contentWrapElement.querySelector('.g-groups-holder')) {
+                    for (i = 0; i < groups.length; i = i + 1) {
+                        /!*if (groups[i].name === name) {
+                            exist = true;
+                        }*!/
+                        if (groups[i].key === identifier) {
+                            exist = true;
+                            existedAttrGroup = 'group';
+                        }
+                    }
+                }
+
+                if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
+                    target === contentWrapElement.querySelector('.g-filters-holder')) {
+                    for (i = 0; i < filters.length; i = i + 1) {
+                        /!*if (filters[i].name === name) {
+                            exist = true;
+                        }*!/
+
+                        if (filters[i].key === identifier) {
+                            exist = true;
+                            existedAttrGroup = 'filter';
+                        }
+                    }
+                }
+
+                if (!exist && target) {
+                    var a;
+
+                    var nodes = Array.prototype.slice.call(target.children);
+                    var index = nodes.indexOf(elem);
+
+                    if (target === contentWrapElement.querySelector('.g-columns-holder') ||
+                        target === contentWrapElement.querySelector('#columnsbag')) {
+
+                        for (a = 0; a < vm.attrsList.length; a = a + 1) {
+
+                            if (vm.attrsList[a].key === identifier) {
+
+                                if (target === contentWrapElement.querySelector('#columnsbag')) {
+                                    columns.push(vm.attrsList[a]);
+                                } else {
+                                    columns.splice(index, 0, vm.attrsList[a]);
+                                }
+
+                                //columns.push(vm.attrsList[a]);
+                            }
+
+                        }
+                        syncAttrs();
+                        evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                        evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     }
 
                     if (target === contentWrapElement.querySelector('#groupsbag') ||
                         target === contentWrapElement.querySelector('.g-groups-holder')) {
-                        for (i = 0; i < groups.length; i = i + 1) {
-                            /!*if (groups[i].name === name) {
-                                exist = true;
-                            }*!/
-                            if (groups[i].key === identifier) {
-                                exist = true;
-                                existedAttrGroup = 'group';
+
+                        for (a = 0; a < vm.attrsList.length; a = a + 1) {
+
+                            if (vm.attrsList[a].key === identifier) {
+
+                                if (target === contentWrapElement.querySelector('#groupsbag')) {
+                                    groups.push(vm.attrsList[a]);
+                                } else {
+                                    groups.splice(index, 0, vm.attrsList[a]);
+                                }
+
+                                //columns.push(vm.attrsList[a]);
                             }
+
                         }
+
+                        syncAttrs();
+                        evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                        evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+                        vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     }
 
                     if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
                         target === contentWrapElement.querySelector('.g-filters-holder')) {
-                        for (i = 0; i < filters.length; i = i + 1) {
-                            /!*if (filters[i].name === name) {
-                                exist = true;
-                            }*!/
 
-                            if (filters[i].key === identifier) {
-                                exist = true;
-                                existedAttrGroup = 'filter';
+                        for (a = 0; a < vm.attrsList.length; a = a + 1) {
+
+                            if (vm.attrsList[a].key === identifier) {
+
+                                if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter')) {
+                                    filters.push(vm.attrsList[a]);
+                                } else {
+                                    filters.splice(index, 0, vm.attrsList[a]);
+                                }
+
                             }
+
                         }
+                        syncAttrs();
+                        evDataHelper.updateColumnsIds(vm.entityViewerDataService);
+                        evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     }
 
-                    if (!exist && target) {
-                        var a;
+                } else if (exist && target) {
 
-                        var nodes = Array.prototype.slice.call(target.children);
-                        var index = nodes.indexOf(elem);
+                    var errorMessage = 'Item should be unique';
 
-                        if (target === contentWrapElement.querySelector('.g-columns-holder') ||
-                            target === contentWrapElement.querySelector('#columnsbag')) {
-
-                            for (a = 0; a < vm.attrsList.length; a = a + 1) {
-
-                                if (vm.attrsList[a].key === identifier) {
-
-                                    if (target === contentWrapElement.querySelector('#columnsbag')) {
-                                        columns.push(vm.attrsList[a]);
-                                    } else {
-                                        columns.splice(index, 0, vm.attrsList[a]);
-                                    }
-
-                                    //columns.push(vm.attrsList[a]);
-                                }
-
-                            }
-                            syncAttrs();
-                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
-                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        }
-
-                        if (target === contentWrapElement.querySelector('#groupsbag') ||
-                            target === contentWrapElement.querySelector('.g-groups-holder')) {
-
-                            for (a = 0; a < vm.attrsList.length; a = a + 1) {
-
-                                if (vm.attrsList[a].key === identifier) {
-
-                                    if (target === contentWrapElement.querySelector('#groupsbag')) {
-                                        groups.push(vm.attrsList[a]);
-                                    } else {
-                                        groups.splice(index, 0, vm.attrsList[a]);
-                                    }
-
-                                    //columns.push(vm.attrsList[a]);
-                                }
-
-                            }
-
-                            syncAttrs();
-                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
-                            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        }
-
-                        if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
-                            target === contentWrapElement.querySelector('.g-filters-holder')) {
-
-                            for (a = 0; a < vm.attrsList.length; a = a + 1) {
-
-                                if (vm.attrsList[a].key === identifier) {
-
-                                    if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter')) {
-                                        filters.push(vm.attrsList[a]);
-                                    } else {
-                                        filters.splice(index, 0, vm.attrsList[a]);
-                                    }
-
-                                }
-
-                            }
-                            syncAttrs();
-                            evDataHelper.updateColumnsIds(vm.entityViewerDataService);
-                            evDataHelper.setColumnsDefaultWidth(vm.entityViewerDataService);
-                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        }
-
-                    } else if (exist && target) {
-
-                        var errorMessage = 'Item should be unique';
-
-                        if (existedAttrGroup) {
-                            errorMessage = 'There is already such ' + existedAttrGroup + ' in Filter Area';
-                        }
-
-                        $mdDialog.show({
-                            controller: 'WarningDialogController as vm',
-                            templateUrl: 'views/dialogs/warning-dialog-view.html',
-                            parent: document.querySelector('.dialog-containers-wrap'),
-                            clickOutsideToClose: false,
-                            multiple: true,
-                            locals: {
-                                warning: {
-                                    title: 'Error',
-                                    description: errorMessage
-                                }
-                            }
-                        });
-
+                    if (existedAttrGroup) {
+                        errorMessage = 'There is already such ' + existedAttrGroup + ' in Filter Area';
                     }
 
-                    $scope.$apply();
-                });
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
+                        parent: document.querySelector('.dialog-containers-wrap'),
+                        clickOutsideToClose: false,
+                        multiple: true,
+                        locals: {
+                            warning: {
+                                title: 'Error',
+                                description: errorMessage
+                            }
+                        }
+                    });
 
-                this.dragula.on('dragend', function (el) {
-                    $scope.$apply();
-                    $(el).remove();
-                })
-            },
-
-            dragula: function () {
-
-                var items = [
-                    contentWrapElement.querySelector('.g-columns-holder'),
-                    contentWrapElement.querySelector('#columnsbag'),
-                    contentWrapElement.querySelector('.g-groups-holder'),
-                    contentWrapElement.querySelector('#groupsbag'),
-                    contentWrapElement.querySelector('.g-filters-holder'),
-                    contentWrapElement.querySelector('#filtersbag .drop-new-filter')
-                ];
-
-                var i;
-                var itemsElem = document.querySelectorAll('#dialogbag .vcDraggableCard');
-
-                for (i = 0; i < itemsElem.length; i = i + 1) {
-                    items.push(itemsElem[i]);
                 }
 
-                this.dragula = dragula(items,
-                    {
-                        accepts: function (el, target, source, sibling) {
+                $scope.$apply();
+            });
 
-                            //console.log('el', el, target, source);
+            this.dragula.on('dragend', function (el) {
+                $scope.$apply();
+                $(el).remove();
+            })
+        },
 
-                            if (target.classList.contains('vcDraggableCard')) {
-                                return false;
-                            }
+        dragula: function () {
 
-                            return true;
-                        },
-                        copy: true
-                    });
-            },
+            var items = [
+                contentWrapElement.querySelector('.g-columns-holder'),
+                contentWrapElement.querySelector('#columnsbag'),
+                contentWrapElement.querySelector('.g-groups-holder'),
+                contentWrapElement.querySelector('#groupsbag'),
+                contentWrapElement.querySelector('.g-filters-holder'),
+                contentWrapElement.querySelector('#filtersbag .drop-new-filter')
+            ];
 
-            destroy: function () {
-                this.dragula.destroy();
-            }
-        }; */
+            var i;
+            var itemsElem = document.querySelectorAll('#dialogbag .vcDraggableCard');
 
-        // scroll while dragging
-        /* var DnDScrollElem;
-        var DnDScrollTimeOutId;
-        var scrollSize = null;
-
-        var DnDWheel = function (event) {
-            event.preventDefault();
-
-            var scrolled = DnDScrollElem.scrollTop;
-
-            if (scrollSize === null) {
-                scrollSize = scrolled;
+            for (i = 0; i < itemsElem.length; i = i + 1) {
+                items.push(itemsElem[i]);
             }
 
-            if (event.deltaY > 0) {
-                scrollSize = scrollSize + 100;
-            } else {
-                scrollSize = scrollSize - 100;
-            }
+            this.dragula = dragula(items,
+                {
+                    accepts: function (el, target, source, sibling) {
 
-            clearTimeout(DnDScrollTimeOutId);
+                        //console.log('el', el, target, source);
 
-            DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
-                DnDScrollElem.scroll({
-                    top: Math.max(0, scrollSize)
+                        if (target.classList.contains('vcDraggableCard')) {
+                            return false;
+                        }
+
+                        return true;
+                    },
+                    copy: true
                 });
-                scrollSize = null;
-            }, 30);
+        },
 
-        }; */
-        // < scroll while dragging >
+        destroy: function () {
+            this.dragula.destroy();
+        }
+    }; */
 
-        var selectedDnD = {
+    // scroll while dragging
+    /* var DnDScrollElem;
+    var DnDScrollTimeOutId;
+    var scrollSize = null;
 
-            init: function () {
-                this.selectedDragulaInit();
-                this.eventListeners();
-            },
+    var DnDWheel = function (event) {
+        event.preventDefault();
 
-            eventListeners: function () {
+        var scrolled = DnDScrollElem.scrollTop;
 
-                var drake = this.dragula;
-                var containerWithShadow;
-                var sourceContainer;
+        if (scrollSize === null) {
+            scrollSize = scrolled;
+        }
 
-                drake.on('shadow', function (elem, container, source) {
+        if (event.deltaY > 0) {
+            scrollSize = scrollSize + 100;
+        } else {
+            scrollSize = scrollSize - 100;
+        }
 
-                    if (containerWithShadow) {
-                        containerWithShadow.classList.remove('remove-card-space');
-                    }
+        clearTimeout(DnDScrollTimeOutId);
 
-                    if (container === source) {
-                        source.classList.remove('dragged-out-card-space');
-                    } else {
-                        source.classList.add('dragged-out-card-space');
+        DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
+            DnDScrollElem.scroll({
+                top: Math.max(0, scrollSize)
+            });
+            scrollSize = null;
+        }, 30);
 
-                        container.classList.add('remove-card-space');
-                        containerWithShadow = container;
-                        sourceContainer = source;
-                    }
-                });
+    }; */
+    // < scroll while dragging >
 
-                drake.on('drag', function () {
-                    scrollHelper.enableDnDWheelScroll();
-                });
+    var selectedDnD = {
 
-                drake.on('drop', function (elem, target, source, nextSibling) {
+        init: function () {
+            this.selectedDragulaInit();
+            this.eventListeners();
+        },
 
-                    var attributeChanged = false; // needed to call view constructor data reload
-                    var attributeKey = elem.dataset.attributeKey;
-                    var attrsVmKey = elem.dataset.vmKey;
+        eventListeners: function () {
 
-                    /* var changeSelectedGroup = function (draggedTo) {
+            var drake = this.dragula;
+            var containerWithShadow;
+            var sourceContainer;
 
-                        for (var i = 0; i < vm[attrsVmKey].length; i++) {
+            drake.on('shadow', function (elem, container, source) {
 
-                            if (vm[attrsVmKey][i].key === attributeKey) {
-                                var GCFItems = [];
-                                var updateGCFMethod;
+                if (containerWithShadow) {
+                    containerWithShadow.classList.remove('remove-card-space');
+                }
 
-                                switch (draggedTo) {
-                                    case 'groups':
-                                        vm[attrsVmKey][i].groups = true;
-                                        GCFItems = groups;
-                                        updateGCFMethod = function () {
-                                            vm.entityViewerDataService.setGroups(GCFItems);
-                                        };
-                                        break;
-                                    case 'columns':
-                                        vm[attrsVmKey][i].groups = false;
-                                        vm[attrsVmKey][i].columns = true;
-                                        GCFItems = columns;
-                                        updateGCFMethod = function () {
-                                            vm.entityViewerDataService.setColumns(GCFItems);
-                                        };
-                                        break;
-                                    case 'filters':
-                                        vm[attrsVmKey][i].groups = false;
-                                        vm[attrsVmKey][i].columns = false;
-                                        vm[attrsVmKey][i].filters = true;
-                                        GCFItems = filters.backend;
+                if (container === source) {
+                    source.classList.remove('dragged-out-card-space');
+                } else {
+                    source.classList.add('dragged-out-card-space');
 
-                                        updateGCFMethod = function () {
-                                            vm.entityViewerDataService.setFilters(GCFItems);
-                                        };
+                    container.classList.add('remove-card-space');
+                    containerWithShadow = container;
+                    sourceContainer = source;
+                }
+            });
 
-                                        break;
-                                }
+            drake.on('drag', function () {
+                scrollHelper.enableDnDWheelScroll();
+            });
 
-                                var attrData = JSON.parse(JSON.stringify(vm[attrsVmKey][i]));
-                                var insertAttr = true;
+            drake.on('drop', function (elem, target, source, nextSibling) {
 
-                                if (nextSibling) {
-                                    var nextSiblingKey = nextSibling.dataset.attributeKey;
-                                }
+                var attributeChanged = false; // needed to call view constructor data reload
+                var attributeKey = elem.dataset.attributeKey;
+                var attrsVmKey = elem.dataset.vmKey;
 
-                                attributeChanged = true;
+                /* var changeSelectedGroup = function (draggedTo) {
 
-                                for (var a = 0; a < GCFItems.length; a++) { // search for the same attr
+                    for (var i = 0; i < vm[attrsVmKey].length; i++) {
 
-                                    if (GCFItems[a].key === attributeKey) {
+                        if (vm[attrsVmKey][i].key === attributeKey) {
+                            var GCFItems = [];
+                            var updateGCFMethod;
 
-                                        GCFItems[a].groups = attrData.groups
-                                        GCFItems[a].columns = attrData.columns
-                                        GCFItems[a].groups = attrData.groups
+                            switch (draggedTo) {
+                                case 'groups':
+                                    vm[attrsVmKey][i].groups = true;
+                                    GCFItems = groups;
+                                    updateGCFMethod = function () {
+                                        vm.entityViewerDataService.setGroups(GCFItems);
+                                    };
+                                    break;
+                                case 'columns':
+                                    vm[attrsVmKey][i].groups = false;
+                                    vm[attrsVmKey][i].columns = true;
+                                    GCFItems = columns;
+                                    updateGCFMethod = function () {
+                                        vm.entityViewerDataService.setColumns(GCFItems);
+                                    };
+                                    break;
+                                case 'filters':
+                                    vm[attrsVmKey][i].groups = false;
+                                    vm[attrsVmKey][i].columns = false;
+                                    vm[attrsVmKey][i].filters = true;
+                                    GCFItems = filters.backend;
 
-                                        if (nextSiblingKey === attributeKey) { // attr already in right place
+                                    updateGCFMethod = function () {
+                                        vm.entityViewerDataService.setFilters(GCFItems);
+                                    };
 
-                                            insertAttr = false;
-
-                                        } else { // remove attribute before inserting it into another index
-
-                                            attrData = JSON.parse(JSON.stringify(GCFItems[a]));
-                                            GCFItems.splice(a, 1);
-
-                                        }
-
-                                        break;
-                                    }
-
-                                }
-
-                                if (insertAttr) {
-
-                                    if (nextSibling) {
-
-                                        for (var a = 0; a < GCFItems.length; a++) {
-
-                                            var GCFElem = GCFItems[a];
-
-                                            if (GCFElem.key === nextSiblingKey) {
-
-                                                GCFItems.splice(a, 0, attrData);
-                                                break;
-
-                                            }
-
-                                        }
-
-                                    } else {
-                                        GCFItems.push(attrData);
-                                    }
-
-                                }
-
-                                updateGCFMethod();
-
-                                break;
+                                    break;
                             }
 
-                        }
-
-                    }; */
-                    var changeToColumn = function () {
-
-                        var draggedAttribute = vm[attrsVmKey].find(attr => attr.key === attributeKey);
-
-                        draggedAttribute.groups = false;
-                        draggedAttribute.columns = true;
-
-                        var attrData = JSON.parse(JSON.stringify(draggedAttribute));
-                        var insertAttr = true;
-
-                        if (nextSibling) {
-                            var nextSiblingKey = nextSibling.dataset.attributeKey;
-                        }
-
-                        attributeChanged = true;
-
-                        for (var a = 0; a < columns.length; a++) { // search for the same attr
-
-                            if (columns[a].key === attributeKey) {
-
-                                columns[a].groups = attrData.groups;
-                                columns[a].columns = attrData.columns;
-                                columns[a].groups = attrData.groups;
-
-                                if (nextSiblingKey === attributeKey) { // attr already in right place
-
-                                    insertAttr = false;
-
-                                } else { // remove attribute before inserting it into another index
-
-                                    attrData = JSON.parse(JSON.stringify(columns[a]));
-                                    columns.splice(a, 1);
-
-                                }
-
-                                break;
-                            }
-
-                        }
-
-                        if (insertAttr) {
+                            var attrData = JSON.parse(JSON.stringify(vm[attrsVmKey][i]));
+                            var insertAttr = true;
 
                             if (nextSibling) {
+                                var nextSiblingKey = nextSibling.dataset.attributeKey;
+                            }
 
-                                for (var a = 0; a < columns.length; a++) {
+                            attributeChanged = true;
 
-                                    if (columns[a].key === nextSiblingKey) {
+                            for (var a = 0; a < GCFItems.length; a++) { // search for the same attr
 
-                                        columns.splice(a, 0, attrData);
-                                        break;
+                                if (GCFItems[a].key === attributeKey) {
+
+                                    GCFItems[a].groups = attrData.groups
+                                    GCFItems[a].columns = attrData.columns
+                                    GCFItems[a].groups = attrData.groups
+
+                                    if (nextSiblingKey === attributeKey) { // attr already in right place
+
+                                        insertAttr = false;
+
+                                    } else { // remove attribute before inserting it into another index
+
+                                        attrData = JSON.parse(JSON.stringify(GCFItems[a]));
+                                        GCFItems.splice(a, 1);
 
                                     }
 
+                                    break;
                                 }
 
-                            } else {
-                                columns.push(attrData);
                             }
 
-                            vm.entityViewerDataService.setColumns(columns);
+                            if (insertAttr) {
+
+                                if (nextSibling) {
+
+                                    for (var a = 0; a < GCFItems.length; a++) {
+
+                                        var GCFElem = GCFItems[a];
+
+                                        if (GCFElem.key === nextSiblingKey) {
+
+                                            GCFItems.splice(a, 0, attrData);
+                                            break;
+
+                                        }
+
+                                    }
+
+                                } else {
+                                    GCFItems.push(attrData);
+                                }
+
+                            }
+
+                            updateGCFMethod();
+
+                            break;
+                        }
+
+                    }
+
+                }; */
+                var changeToColumn = function () {
+
+                    var draggedAttribute = vm[attrsVmKey].find(attr => attr.key === attributeKey);
+
+                    draggedAttribute.groups = false;
+                    draggedAttribute.columns = true;
+
+                    var attrData = JSON.parse(JSON.stringify(draggedAttribute));
+                    var insertAttr = true;
+
+                    if (nextSibling) {
+                        var nextSiblingKey = nextSibling.dataset.attributeKey;
+                    }
+
+                    attributeChanged = true;
+
+                    for (var a = 0; a < columns.length; a++) { // search for the same attr
+
+                        if (columns[a].key === attributeKey) {
+
+                            columns[a].groups = attrData.groups;
+                            columns[a].columns = attrData.columns;
+                            columns[a].groups = attrData.groups;
+
+                            if (nextSiblingKey === attributeKey) { // attr already in right place
+
+                                insertAttr = false;
+
+                            } else { // remove attribute before inserting it into another index
+
+                                attrData = JSON.parse(JSON.stringify(columns[a]));
+                                columns.splice(a, 1);
+
+                            }
+
+                            break;
+                        }
+
+                    }
+
+                    if (insertAttr) {
+
+                        if (nextSibling) {
+
+                            for (var a = 0; a < columns.length; a++) {
+
+                                if (columns[a].key === nextSiblingKey) {
+
+                                    columns.splice(a, 0, attrData);
+                                    break;
+
+                                }
+
+                            }
+
+                        } else {
+                            columns.push(attrData);
+                        }
+
+                        vm.entityViewerDataService.setColumns(columns);
+
+                    }
+
+                };
+
+                var changeOrder = function (orderOf) {
+
+                    var CGFElems = [];
+                    var GCFHtmlElems = [];
+                    var updateGCFMethod;
+
+                    var elemsAfterDragging = [];
+
+                    switch (orderOf) {
+                        case 'groups':
+                            CGFElems = groups;
+                            GCFHtmlElems = source.querySelectorAll('.vcSelectedGroupItem');
+                            updateGCFMethod = function () {
+                                vm.entityViewerDataService.setGroups(elemsAfterDragging);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                            };
+                            break;
+                        case 'columns':
+                            CGFElems = columns;
+                            GCFHtmlElems = source.querySelectorAll('.vcSelectedColumnItem');
+                            updateGCFMethod = function () {
+                                vm.entityViewerDataService.setColumns(elemsAfterDragging);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                            };
+                            break;
+                        /* case 'filters':
+                            CGFElems = filters;
+                            GCFHtmlElems = source.querySelectorAll('.vcSelectedFilterItem');
+                            updateGCFMethod = function () {
+                                vm.entityViewerDataService.setFilters(elemsAfterDragging);
+                                vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                            };
+                            break; */
+
+                    }
+
+                    for (var i = 0; i < GCFHtmlElems.length; i = i + 1) {
+
+                        var GCFElemKey = GCFHtmlElems[i].dataset.attributeKey;
+
+                        for (var x = 0; x < CGFElems.length; x = x + 1) {
+
+                            if (GCFElemKey === CGFElems[x].key) {
+                                elemsAfterDragging.push(CGFElems[x]);
+                                break;
+                            }
 
                         }
 
-                    };
+                    }
 
-                    var changeOrder = function (orderOf) {
+                    var isChanged = false;
 
-                        var CGFElems = [];
-                        var GCFHtmlElems = [];
-                        var updateGCFMethod;
+                    for (var i = 0; i < elemsAfterDragging.length; i++) {
+                        var CGFElem = elemsAfterDragging[i];
 
-                        var elemsAfterDragging = [];
+                        if (CGFElem.key !== CGFElems[i].key) {
+                            isChanged = true;
+                            break;
+                        }
+                    }
 
-                        switch (orderOf) {
-                            case 'groups':
-                                CGFElems = groups;
-                                GCFHtmlElems = source.querySelectorAll('.vcSelectedGroupItem');
-                                updateGCFMethod = function () {
-                                    vm.entityViewerDataService.setGroups(elemsAfterDragging);
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                                };
+                    if (isChanged) {
+                        updateGCFMethod();
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        $scope.$apply();
+                    }
+                };
+                // dragging from columns
+                if (source.classList.contains('vcSelectedColumns')) {
+
+                    // dragged to filters
+                    if (target.classList.contains('vcSelectedFilters')) {
+                        vm[attrsVmKey] = sharedLogicHelper.onDropToSelectedFilter(vm[attrsVmKey], attributeKey);
+                        attributeChanged = true;
+                        // < dragged to filters >
+
+                        // If column's order changed
+                    } else if (target.classList.contains('vcSelectedColumns')) {
+                        changeOrder('columns');
+                        // < If column's order changed >
+                    }
+
+                }
+                    // < dragging from columns >
+                // dragging from filters
+                else if (source.classList.contains('vcSelectedFilters')) {
+
+                    // dragged to columns
+                    if (target.classList.contains('vcSelectedColumns')) {
+                        changeToColumn();
+                    }
+
+                }
+                // < dragging from filters >
+
+                if (attributeChanged) { // do not trigger on order change
+
+                    vm.updateAttrs(vm[attrsVmKey]);
+                    drake.remove(); // adds delay when called after attributes order change in selected group
+
+                }
+
+            });
+
+            drake.on('dragend', function () {
+
+                if (sourceContainer) {
+                    sourceContainer.classList.remove('dragged-out-card-space');
+                }
+
+                if (containerWithShadow) {
+                    containerWithShadow.classList.remove('remove-card-space');
+                }
+
+                scrollHelper.disableDnDWheelScroll();
+
+            });
+
+        },
+
+        selectedDragulaInit: function () {
+
+            // var groupsContainer = document.querySelector('.vcSelectedGroups');
+            var columnsContainer = document.querySelector('.vcSelectedColumns');
+            var filtersContainer = document.querySelector('.vcSelectedFilters')
+
+            var items = [
+                // groupsContainer,
+                columnsContainer,
+                filtersContainer
+            ];
+
+            this.dragula = dragula(items, {
+                revertOnSpill: true,
+                moves: function (el, target, source, nextSibling) {
+                    if (el.classList.contains('itemWithError')) {
+                        return false;
+                    }
+
+                    return true;
+                },
+                accepts: function (el, target, source, nextSibling) {
+
+                    if (source === filtersContainer && target === filtersContainer) {
+                        return false;
+                    }
+
+                    return true;
+                }
+            });
+        },
+
+        destroy: function () {
+            this.dragula.destroy();
+        }
+    };
+
+    /*var selectedDnD = {
+
+        init: function () {
+            this.selectedDragulaInit();
+            this.eventListeners();
+        },
+
+        eventListeners: function () {
+
+            var attributeChanged = false;
+            var drake = this.dragula;
+
+            drake.on('drag', function () {
+                document.addEventListener('wheel', DnDWheel);
+            });
+
+            drake.on('shadow', function (elem, container, source) {
+
+                var attrKey = elem.dataset.attributeKey;
+
+                if (container.classList.contains('vcSelectedGroups')) {
+                    if (attrsWithoutGroups.indexOf(attrKey) !== -1) {
+                        $(elem).remove();
+                    }
+                }
+
+                if (container.classList.contains('vcSelectedFilters')) {
+                    if (attrsWithoutFilters.indexOf(attrKey) !== -1) {
+                        $(elem).remove();
+                    }
+                }
+            });
+
+            drake.on('drop', function (elem, target, source, nextSibling) {
+
+                var attributeKey = elem.dataset.attributeKey;
+                var attrsVmKey = elem.dataset.vmKey;
+
+                // dragging from groups
+                if (source.classList.contains('vcSelectedGroups')) {
+
+                    // dragged to columns
+                    if (target.classList.contains('vcSelectedColumns')) {
+
+                        attributeChanged = false;
+
+                        for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                            if (vm[attrsVmKey][i].key === attributeKey) {
+                                vm[attrsVmKey][i].groups = false;
+                                attributeChanged = true;
                                 break;
-                            case 'columns':
-                                CGFElems = columns;
-                                GCFHtmlElems = source.querySelectorAll('.vcSelectedColumnItem');
-                                updateGCFMethod = function () {
-                                    vm.entityViewerDataService.setColumns(elemsAfterDragging);
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                                };
-                                break;
-                            /* case 'filters':
-                                CGFElems = filters;
-                                GCFHtmlElems = source.querySelectorAll('.vcSelectedFilterItem');
-                                updateGCFMethod = function () {
-                                    vm.entityViewerDataService.setFilters(elemsAfterDragging);
-                                    vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                                };
-                                break; */
+                            }
+                        }
+                    // < dragged to columns >
+
+                    // dragged to filters
+                    } else if (target.classList.contains('vcSelectedFilters')) {
+
+                        if (attrsWithoutFilters.indexOf(attributeKey) !== -1) {
+
+                            drake.cancel();
+
+                        } else {
+
+                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                                if (vm[attrsVmKey][i].key === attributeKey) {
+                                    vm[attrsVmKey][i].groups = false;
+                                    vm[attrsVmKey][i].columns = false;
+                                    vm[attrsVmKey][i].filters = true;
+                                    attributeChanged = true;
+                                    break;
+                                }
+                            }
 
                         }
+                    // < dragged to filters >
 
-                        for (var i = 0; i < GCFHtmlElems.length; i = i + 1) {
+                    // If group's order changed
+                    } else if (target.classList.contains('vcSelectedGroups')) {
 
-                            var GCFElemKey = GCFHtmlElems[i].dataset.attributeKey;
+                        var groupElems = source.querySelectorAll('.vcSelectedGroupItem');
 
-                            for (var x = 0; x < CGFElems.length; x = x + 1) {
+                        var groupsAfterDragging = [];
 
-                                if (GCFElemKey === CGFElems[x].key) {
-                                    elemsAfterDragging.push(CGFElems[x]);
+                        for (var i = 0; i < groupElems.length; i = i + 1) {
+
+                            var groupElemKey = groupElems[i].dataset.attributeKey;
+
+                            for (var x = 0; x < groups.length; x = x + 1) {
+
+                                if (groupElemKey === groups[x].key) {
+                                    groupsAfterDragging.push(groups[x]);
                                     break;
                                 }
 
@@ -1122,599 +1321,391 @@
 
                         var isChanged = false;
 
-                        for (var i = 0; i < elemsAfterDragging.length; i++) {
-                            var CGFElem = elemsAfterDragging[i];
+                        for (var i = 0; i < groupsAfterDragging.length; i++) {
+                            var group = groupsAfterDragging[i];
 
-                            if (CGFElem.key !== CGFElems[i].key) {
+                            if (group.key !== groups[i].key) {
                                 isChanged = true;
                                 break;
                             }
                         }
 
                         if (isChanged) {
-                            updateGCFMethod();
+
+                            vm.entityViewerDataService.setGroups(groupsAfterDragging);
+
+                            vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                             vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                             $scope.$apply();
-                        }
-                    };
-                    // dragging from columns
-                    if (source.classList.contains('vcSelectedColumns')) {
 
-                        // dragged to filters
-                        if (target.classList.contains('vcSelectedFilters')) {
-                            vm[attrsVmKey] = sharedLogicHelper.onDropToSelectedFilter(vm[attrsVmKey], attributeKey);
-                            attributeChanged = true;
-                            // < dragged to filters >
-
-                            // If column's order changed
-                        } else if (target.classList.contains('vcSelectedColumns')) {
-                            changeOrder('columns');
-                            // < If column's order changed >
                         }
 
-                    }
-                        // < dragging from columns >
-                    // dragging from filters
-                    else if (source.classList.contains('vcSelectedFilters')) {
-
-                        // dragged to columns
-                        if (target.classList.contains('vcSelectedColumns')) {
-                            changeToColumn();
-                        }
-
-                    }
-                    // < dragging from filters >
-
-                    if (attributeChanged) { // do not trigger on order change
-
-                        vm.updateAttrs(vm[attrsVmKey]);
-                        drake.remove(); // adds delay when called after attributes order change in selected group
-
+                    // < If group's order changed >
                     }
 
-                });
+                // < dragging from groups >
 
-                drake.on('dragend', function () {
+                // dragging from columns
+                } else if (source.classList.contains('vcSelectedColumns')) {
 
-                    if (sourceContainer) {
-                        sourceContainer.classList.remove('dragged-out-card-space');
-                    }
+                    // dragged to groups
+                    if (target.classList.contains('vcSelectedGroups')) {
 
-                    if (containerWithShadow) {
-                        containerWithShadow.classList.remove('remove-card-space');
-                    }
+                        if (attrsWithoutGroups.indexOf(attributeKey) !== -1) {
 
-                    scrollHelper.disableDnDWheelScroll();
+                            drake.cancel();
 
-                });
-
-            },
-
-            selectedDragulaInit: function () {
-
-                // var groupsContainer = document.querySelector('.vcSelectedGroups');
-                var columnsContainer = document.querySelector('.vcSelectedColumns');
-                var filtersContainer = document.querySelector('.vcSelectedFilters')
-
-                var items = [
-                    // groupsContainer,
-                    columnsContainer,
-                    filtersContainer
-                ];
-
-                this.dragula = dragula(items, {
-                    revertOnSpill: true,
-                    moves: function (el, target, source, nextSibling) {
-                        if (el.classList.contains('itemWithError')) {
-                            return false;
-                        }
-
-                        return true;
-                    },
-                    accepts: function (el, target, source, nextSibling) {
-
-                        if (source === filtersContainer && target === filtersContainer) {
-                            return false;
-                        }
-
-                        return true;
-                    }
-                });
-            },
-
-            destroy: function () {
-                this.dragula.destroy();
-            }
-        };
-
-        /*var selectedDnD = {
-
-            init: function () {
-                this.selectedDragulaInit();
-                this.eventListeners();
-            },
-
-            eventListeners: function () {
-
-                var attributeChanged = false;
-                var drake = this.dragula;
-
-                drake.on('drag', function () {
-                    document.addEventListener('wheel', DnDWheel);
-                });
-
-                drake.on('shadow', function (elem, container, source) {
-
-                    var attrKey = elem.dataset.attributeKey;
-
-                    if (container.classList.contains('vcSelectedGroups')) {
-                        if (attrsWithoutGroups.indexOf(attrKey) !== -1) {
-                            $(elem).remove();
-                        }
-                    }
-
-                    if (container.classList.contains('vcSelectedFilters')) {
-                        if (attrsWithoutFilters.indexOf(attrKey) !== -1) {
-                            $(elem).remove();
-                        }
-                    }
-                });
-
-                drake.on('drop', function (elem, target, source, nextSibling) {
-
-                    var attributeKey = elem.dataset.attributeKey;
-                    var attrsVmKey = elem.dataset.vmKey;
-
-                    // dragging from groups
-                    if (source.classList.contains('vcSelectedGroups')) {
-
-                        // dragged to columns
-                        if (target.classList.contains('vcSelectedColumns')) {
-
-                            attributeChanged = false;
-
+                        } else {
                             for (var i = 0; i < vm[attrsVmKey].length; i++) {
                                 if (vm[attrsVmKey][i].key === attributeKey) {
-                                    vm[attrsVmKey][i].groups = false;
+                                    vm[attrsVmKey][i].groups = true;
                                     attributeChanged = true;
                                     break;
                                 }
                             }
-                        // < dragged to columns >
+                        }
+                    // < dragged to groups >
 
-                        // dragged to filters
-                        } else if (target.classList.contains('vcSelectedFilters')) {
+                    // dragged to filters
+                    } else if (target.classList.contains('vcSelectedFilters')) {
 
-                            if (attrsWithoutFilters.indexOf(attributeKey) !== -1) {
-
-                                drake.cancel();
-
-                            } else {
-
-                                for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                    if (vm[attrsVmKey][i].key === attributeKey) {
-                                        vm[attrsVmKey][i].groups = false;
-                                        vm[attrsVmKey][i].columns = false;
-                                        vm[attrsVmKey][i].filters = true;
-                                        attributeChanged = true;
-                                        break;
-                                    }
-                                }
-
-                            }
-                        // < dragged to filters >
-
-                        // If group's order changed
-                        } else if (target.classList.contains('vcSelectedGroups')) {
-
-                            var groupElems = source.querySelectorAll('.vcSelectedGroupItem');
-
-                            var groupsAfterDragging = [];
-
-                            for (var i = 0; i < groupElems.length; i = i + 1) {
-
-                                var groupElemKey = groupElems[i].dataset.attributeKey;
-
-                                for (var x = 0; x < groups.length; x = x + 1) {
-
-                                    if (groupElemKey === groups[x].key) {
-                                        groupsAfterDragging.push(groups[x]);
-                                        break;
-                                    }
-
-                                }
-
-                            }
-
-                            var isChanged = false;
-
-                            for (var i = 0; i < groupsAfterDragging.length; i++) {
-                                var group = groupsAfterDragging[i];
-
-                                if (group.key !== groups[i].key) {
-                                    isChanged = true;
+                        if (attrsWithoutFilters.indexOf(attributeKey) !== -1) {
+                            drake.cancel();
+                        } else {
+                            for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                                if (vm[attrsVmKey][i].key === attributeKey) {
+                                    vm[attrsVmKey][i].columns = false;
+                                    vm[attrsVmKey][i].filters = true;
+                                    attributeChanged = true;
                                     break;
                                 }
                             }
-
-                            if (isChanged) {
-
-                                vm.entityViewerDataService.setGroups(groupsAfterDragging);
-
-                                vm.entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                                $scope.$apply();
-
-                            }
-
-                        // < If group's order changed >
                         }
+                    // < dragged to filters >
 
-                    // < dragging from groups >
+                    // If column's order changed
+                    } else if (target.classList.contains('vcSelectedColumns')) {
 
-                    // dragging from columns
-                    } else if (source.classList.contains('vcSelectedColumns')) {
+                        var columnElems = source.querySelectorAll('.vcSelectedColumnItem');
 
-                        // dragged to groups
-                        if (target.classList.contains('vcSelectedGroups')) {
+                        var columnsAfterDragging = [];
 
-                            if (attrsWithoutGroups.indexOf(attributeKey) !== -1) {
+                        for (var i = 0; i < columnElems.length; i = i + 1) {
 
-                                drake.cancel();
+                            var colElemKey = columnElems[i].dataset.attributeKey;
 
-                            } else {
-                                for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                    if (vm[attrsVmKey][i].key === attributeKey) {
-                                        vm[attrsVmKey][i].groups = true;
-                                        attributeChanged = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        // < dragged to groups >
+                            for (var x = 0; x < columns.length; x = x + 1) {
 
-                        // dragged to filters
-                        } else if (target.classList.contains('vcSelectedFilters')) {
-
-                            if (attrsWithoutFilters.indexOf(attributeKey) !== -1) {
-                                drake.cancel();
-                            } else {
-                                for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                    if (vm[attrsVmKey][i].key === attributeKey) {
-                                        vm[attrsVmKey][i].columns = false;
-                                        vm[attrsVmKey][i].filters = true;
-                                        attributeChanged = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        // < dragged to filters >
-
-                        // If column's order changed
-                        } else if (target.classList.contains('vcSelectedColumns')) {
-
-                            var columnElems = source.querySelectorAll('.vcSelectedColumnItem');
-
-                            var columnsAfterDragging = [];
-
-                            for (var i = 0; i < columnElems.length; i = i + 1) {
-
-                                var colElemKey = columnElems[i].dataset.attributeKey;
-
-                                for (var x = 0; x < columns.length; x = x + 1) {
-
-                                    if (colElemKey === columns[x].key) {
-                                        columnsAfterDragging.push(columns[x]);
-                                        break;
-                                    }
-
-                                }
-
-                            }
-
-                            var isChanged = false;
-
-                            for (var i = 0; i < columnsAfterDragging.length; i++) {
-                                var column = columnsAfterDragging[i];
-
-                                if (column.key !== columns[i].key) {
-                                    isChanged = true;
+                                if (colElemKey === columns[x].key) {
+                                    columnsAfterDragging.push(columns[x]);
                                     break;
                                 }
-                            }
-
-                            if (isChanged) {
-
-                                vm.entityViewerDataService.setColumns(columnsAfterDragging);
-
-                                vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                                $scope.$apply();
 
                             }
 
-                        // < If column's order changed >
                         }
-                    // < dragging from columns >
 
-                    // dragging from filters
-                    } else if (source.classList.contains('vcSelectedFilters')) {
+                        var isChanged = false;
 
-                        // dragged to groups
-                        if (target.classList.contains('vcSelectedGroups')) {
+                        for (var i = 0; i < columnsAfterDragging.length; i++) {
+                            var column = columnsAfterDragging[i];
 
-                            if (attrsWithoutGroups.indexOf(attributeKey) !== -1) {
+                            if (column.key !== columns[i].key) {
+                                isChanged = true;
+                                break;
+                            }
+                        }
 
-                                drake.cancel();
+                        if (isChanged) {
 
-                            } else {
+                            vm.entityViewerDataService.setColumns(columnsAfterDragging);
 
-                                for (var i = 0; i < vm[attrsVmKey].length; i++) {
-                                    if (vm[attrsVmKey][i].key === attributeKey) {
-                                        vm[attrsVmKey][i].groups = true;
-                                        attributeChanged = true;
-                                        break;
-                                    };
-                                };
-                            };
-                        // < dragged to groups >
+                            vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        // dragged to columns
-                        } else if (target.classList.contains('vcSelectedColumns')) {
+                            $scope.$apply();
+
+                        }
+
+                    // < If column's order changed >
+                    }
+                // < dragging from columns >
+
+                // dragging from filters
+                } else if (source.classList.contains('vcSelectedFilters')) {
+
+                    // dragged to groups
+                    if (target.classList.contains('vcSelectedGroups')) {
+
+                        if (attrsWithoutGroups.indexOf(attributeKey) !== -1) {
+
+                            drake.cancel();
+
+                        } else {
 
                             for (var i = 0; i < vm[attrsVmKey].length; i++) {
                                 if (vm[attrsVmKey][i].key === attributeKey) {
-                                    vm[attrsVmKey][i].columns = true;
+                                    vm[attrsVmKey][i].groups = true;
                                     attributeChanged = true;
                                     break;
                                 };
                             };
-                        // < dragged to columns >
+                        };
+                    // < dragged to groups >
 
-                        // If filter's order changed
-                        } else if (target.classList.contains('vcSelectedFilters')) {
+                    // dragged to columns
+                    } else if (target.classList.contains('vcSelectedColumns')) {
 
-                            var filterElems = source.querySelectorAll('.vcSelectedFilterItem');
+                        for (var i = 0; i < vm[attrsVmKey].length; i++) {
+                            if (vm[attrsVmKey][i].key === attributeKey) {
+                                vm[attrsVmKey][i].columns = true;
+                                attributeChanged = true;
+                                break;
+                            };
+                        };
+                    // < dragged to columns >
 
-                            var filtersAfterDragging = [];
+                    // If filter's order changed
+                    } else if (target.classList.contains('vcSelectedFilters')) {
 
-                            for (var i = 0; i < filterElems.length; i = i + 1) {
+                        var filterElems = source.querySelectorAll('.vcSelectedFilterItem');
 
-                                var filterElemKey = filterElems[i].dataset.attributeKey;
+                        var filtersAfterDragging = [];
 
-                                for (var x = 0; x < filters.length; x = x + 1) {
+                        for (var i = 0; i < filterElems.length; i = i + 1) {
 
-                                    if (filterElemKey === filters[x].key) {
-                                        filtersAfterDragging.push(filters[x]);
-                                    }
+                            var filterElemKey = filterElems[i].dataset.attributeKey;
 
+                            for (var x = 0; x < filters.length; x = x + 1) {
+
+                                if (filterElemKey === filters[x].key) {
+                                    filtersAfterDragging.push(filters[x]);
                                 }
 
                             }
 
-                            var isChanged = false;
-
-                            for (var i = 0; i < filtersAfterDragging.length; i++) {
-                                var filter = filtersAfterDragging[i];
-
-                                if (filter.key !== filters[i].key) {
-                                    isChanged = true;
-                                    break;
-                                }
-                            }
-
-                            if (isChanged) {
-
-                                vm.entityViewerDataService.setFilters(filtersAfterDragging);
-
-                                vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                                $scope.$apply();
-
-                            }
-
-                        // < If filter's order changed >
                         }
 
-                    };
-                    // < dragging from filters >
+                        var isChanged = false;
 
-                    if (attributeChanged) {
-                        $(elem).remove();
-                        vm.updateAttrs(vm[attrsVmKey]);
-                    };
+                        for (var i = 0; i < filtersAfterDragging.length; i++) {
+                            var filter = filtersAfterDragging[i];
 
-                });
-
-                drake.on('dragend', function () {
-                    document.removeEventListener('wheel', DnDWheel);
-                });
-
-            },
-
-            selectedDragulaInit: function () {
-
-                var items = [
-                    document.querySelector('.vcSelectedGroups'),
-                    document.querySelector('.vcSelectedColumns'),
-                    document.querySelector('.vcSelectedFilters')
-                ];
-
-                this.dragula = dragula(items, {
-                    revertOnSpill: true
-                });
-            },
-
-            destroy: function () {
-                this.dragula.destroy();
-            }
-        };*/
-
-        var addColumn = function () {
-            if (currentColumnsWidth < columns.length) {
-                metaService.columnsWidthGroups(true);
-            } else {
-                metaService.columnsWidthGroups(false);
-            }
-        };
-
-
-        vm.selectAttribute = function (selectedGroup, event) {
-
-            var availableAttrs = vm.attrsList.filter(function (attr) {
-				return attr.value_type !== "mc_field";
-			});
-            var dialogTitle;
-
-            switch (selectedGroup) {
-                case 'column':
-                    dialogTitle = 'Choose column to add';
-                    availableAttrs = vm.attrsList.filter(function (attr) {
-                        return !attr.columns;
-                    });
-                    break;
-                case 'filter':
-                    dialogTitle = 'Choose filter to add';
-                    availableAttrs = vm.attrsList.filter(function (attr) {
-                        if (attrsWithoutFilters.indexOf(attr.key) === -1 || attr.filters) {
-                            return true;
+                            if (filter.key !== filters[i].key) {
+                                isChanged = true;
+                                break;
+                            }
                         }
 
-                        return false;
-                    });
-                    break;
+                        if (isChanged) {
+
+                            vm.entityViewerDataService.setFilters(filtersAfterDragging);
+
+                            vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            $scope.$apply();
+
+                        }
+
+                    // < If filter's order changed >
+                    }
+
+                };
+                // < dragging from filters >
+
+                if (attributeChanged) {
+                    $(elem).remove();
+                    vm.updateAttrs(vm[attrsVmKey]);
+                };
+
+            });
+
+            drake.on('dragend', function () {
+                document.removeEventListener('wheel', DnDWheel);
+            });
+
+        },
+
+        selectedDragulaInit: function () {
+
+            var items = [
+                document.querySelector('.vcSelectedGroups'),
+                document.querySelector('.vcSelectedColumns'),
+                document.querySelector('.vcSelectedFilters')
+            ];
+
+            this.dragula = dragula(items, {
+                revertOnSpill: true
+            });
+        },
+
+        destroy: function () {
+            this.dragula.destroy();
+        }
+    };*/
+
+    var addColumn = function () {
+        if (currentColumnsWidth < columns.length) {
+            metaService.columnsWidthGroups(true);
+        } else {
+            metaService.columnsWidthGroups(false);
+        }
+    };
+
+
+    vm.selectAttribute = function (selectedGroup, event) {
+
+        var availableAttrs = vm.attrsList.filter(function (attr) {
+            return attr.value_type !== "mc_field";
+        });
+        var dialogTitle;
+
+        switch (selectedGroup) {
+            case 'column':
+                dialogTitle = 'Choose column to add';
+                availableAttrs = vm.attrsList.filter(function (attr) {
+                    return !attr.columns;
+                });
+                break;
+            case 'filter':
+                dialogTitle = 'Choose filter to add';
+                availableAttrs = vm.attrsList.filter(function (attr) {
+                    if (attrsWithoutFilters.indexOf(attr.key) === -1 || attr.filters) {
+                        return true;
+                    }
+
+                    return false;
+                });
+                break;
+        }
+
+        $mdDialog.show({
+            controller: "TableAttributeSelectorDialogController as vm",
+            templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+            targetEvent: event,
+            multiple: true,
+            locals: {
+                data: {
+                    availableAttrs: availableAttrs,
+                    title: dialogTitle,
+                    isReport: false,
+                    multiselector: true
+                }
+            }
+        }).then(function (res) {
+
+            if (res && res.status === "agree") {
+
+                for (var j = 0; j < res.data.items.length; j++) {
+
+                    for (var i = 0; i < vm.attrsList.length; i++) {
+
+                        if (vm.attrsList[i].key === res.data.items[j].key) {
+
+                            if (selectedGroup === 'column') {
+                                vm.attrsList[i].columns = true;
+                            } else {
+                                vm.attrsList[i].filters = true;
+                            }
+                            break;
+                        }
+                    }
+
+                }
+
+                vm.updateAttrs(vm.attrsList);
+
             }
 
-            $mdDialog.show({
-                controller: "TableAttributeSelectorDialogController as vm",
-                templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
-                targetEvent: event,
-                multiple: true,
-                locals: {
-                    data: {
-                        availableAttrs: availableAttrs,
-                        title: dialogTitle,
-                        isReport: false,
-						multiselector: true
-                    }
+        });
+
+    };
+
+    vm.manageAttrs = function (ev) {
+
+        $mdDialog.show({
+            controller: 'AttributesManagerDialogController as vm',
+            templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: ev,
+            multiple: true,
+            locals: {
+                data: {
+                    entityType: vm.entityType
                 }
-            }).then(function (res) {
+            }
 
-                if (res && res.status === "agree") {
+        }).then(function (res) {
 
-					for (var j = 0; j < res.data.items.length; j++) {
+            if (res && res.status === 'agree') {
+                updateCustomAttrs();
+            }
 
-						for (var i = 0; i < vm.attrsList.length; i++) {
+        });
 
-							if (vm.attrsList[i].key === res.data.items[j].key) {
+    };
 
-								if (selectedGroup === 'column') {
-									vm.attrsList[i].columns = true;
-								} else {
-									vm.attrsList[i].filters = true;
-								}
-								break;
-							}
-						}
+    vm.initDnd = function () {
 
-					}
+        setTimeout(function () {
 
-					vm.updateAttrs(vm.attrsList);
+            var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
+            scrollHelper.setDnDScrollElem(DnDScrollElem);
 
-                }
+            // viewConstructorDnD.init();
+            selectedDnD.init();
 
-            });
+        }, 500);
 
-        };
+    };
 
-        vm.manageAttrs = function (ev) {
+    vm.cancel = function () {
+        $('body').removeClass('drag-dialog');
+        // viewConstructorDnD.destroy();
+        selectedDnD.destroy();
 
-            $mdDialog.show({
-                controller: 'AttributesManagerDialogController as vm',
-                templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: ev,
-                multiple: true,
-                locals: {
-                    data: {
-                        entityType: vm.entityType
-                    }
-                }
+        $mdDialog.hide();
+    };
 
-            }).then(function (res) {
+    vm.MABtnVisibility = function (entityType) {
+        return metaService.checkRestrictedEntityTypesForAM(entityType);
+    };
 
-                if (res && res.status === 'agree') {
-                    updateCustomAttrs();
-                }
+    var init = function () {
 
-            });
+        scrollHelper = new ScrollHelper();
 
-        };
+        vm.getAttributes();
 
-        vm.initDnd = function () {
+        vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-            setTimeout(function () {
+            columns = vm.entityViewerDataService.getColumns();
+            syncAttrs();
+            getSelectedAttrs();
 
-                var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
-                scrollHelper.setDnDScrollElem(DnDScrollElem);
+        });
 
-                // viewConstructorDnD.init();
-                selectedDnD.init();
+        vm.entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-            }, 500);
+            groups = vm.entityViewerDataService.getGroups();
+            syncAttrs();
+            getSelectedAttrs();
 
-        };
+        });
 
-        vm.cancel = function () {
-            $('body').removeClass('drag-dialog');
-            // viewConstructorDnD.destroy();
-            selectedDnD.destroy();
+        vm.entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-            $mdDialog.hide();
-        };
+            filters = vm.entityViewerDataService.getFilters();
+            syncAttrs();
+            getSelectedAttrs();
 
-        vm.MABtnVisibility = function (entityType) {
-            return metaService.checkRestrictedEntityTypesForAM(entityType);
-        };
+        });
 
-        var init = function () {
+    };
 
-            scrollHelper = new ScrollHelper();
-
-            vm.getAttributes();
-
-            vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
-
-                columns = vm.entityViewerDataService.getColumns();
-                syncAttrs();
-                getSelectedAttrs();
-
-            });
-
-            vm.entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
-
-                groups = vm.entityViewerDataService.getGroups();
-                syncAttrs();
-                getSelectedAttrs();
-
-            });
-
-            vm.entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
-
-                filters = vm.entityViewerDataService.getFilters();
-                syncAttrs();
-                getSelectedAttrs();
-
-            });
-
-        };
-
-        init();
+    init();
 
 
-    }
-
-}());
+};

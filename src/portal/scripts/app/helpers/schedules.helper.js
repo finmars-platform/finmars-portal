@@ -1,93 +1,91 @@
-(function (){
-    'use strict';
+'use strict';
 
-    const ScrollHelper = require('./scrollHelper');
-    const scrollHelper = new ScrollHelper();
+import ScrollHelper from './scrollHelper';
+const scrollHelper = new ScrollHelper();
 
 
-    const createDragAndDropObject = function ($scope, viewModel) {
+const createDragAndDropObject = function ($scope, viewModel) {
 
-        setTimeout(() => {
-            const scrollElem = document.querySelector('.pricingSchedulesScrollElemOnDrag');
-            scrollHelper.setDnDScrollElem(scrollElem);
-        });
+    setTimeout(() => {
+        const scrollElem = document.querySelector('.pricingSchedulesScrollElemOnDrag');
+        scrollHelper.setDnDScrollElem(scrollElem);
+    });
 
-        return {
-            init: function () {
-                this.dragulaInit();
-                this.eventListeners();
-                viewModel.dragAndDropInited = true;
-            },
+    return {
+        init: function () {
+            this.dragulaInit();
+            this.eventListeners();
+            viewModel.dragAndDropInited = true;
+        },
 
-            eventListeners: function () {
-                var drake = this.dragula;
+        eventListeners: function () {
+            var drake = this.dragula;
 
-                drake.on('drag', function () {
-                    scrollHelper.enableDnDWheelScroll();
-                });
+            drake.on('drag', function () {
+                scrollHelper.enableDnDWheelScroll();
+            });
 
-                drake.on('drop', function (elem, target, source, nextSiblings) {
+            drake.on('drop', function (elem, target, source, nextSiblings) {
 
-                    var draggedRowOrder = parseInt(elem.dataset.rowOrder);
-                    var siblingRowOrder = null;
-                    if (nextSiblings) {
-                        siblingRowOrder = parseInt(nextSiblings.dataset.rowOrder);
-                    }
+                var draggedRowOrder = parseInt(elem.dataset.rowOrder);
+                var siblingRowOrder = null;
+                if (nextSiblings) {
+                    siblingRowOrder = parseInt(nextSiblings.dataset.rowOrder);
+                }
 
-                    var rowToInsert = viewModel.schedule.procedures[draggedRowOrder];
-                    viewModel.schedule.procedures.splice(draggedRowOrder, 1);
+                var rowToInsert = viewModel.schedule.procedures[draggedRowOrder];
+                viewModel.schedule.procedures.splice(draggedRowOrder, 1);
 
-                    if (siblingRowOrder !== null) {
-
-                        for (var i = 0; i < viewModel.schedule.procedures.length; i++) {
-                            if (viewModel.schedule.procedures[i].order === siblingRowOrder) {
-
-                                viewModel.schedule.procedures.splice(i, 0, rowToInsert);
-                                break;
-
-                            }
-                        }
-
-                    } else {
-                        viewModel.schedule.procedures.push(rowToInsert);
-                    }
+                if (siblingRowOrder !== null) {
 
                     for (var i = 0; i < viewModel.schedule.procedures.length; i++) {
-                        viewModel.schedule.procedures[i].order = i;
+                        if (viewModel.schedule.procedures[i].order === siblingRowOrder) {
+
+                            viewModel.schedule.procedures.splice(i, 0, rowToInsert);
+                            break;
+
+                        }
                     }
 
-                    $scope.$apply();
+                } else {
+                    viewModel.schedule.procedures.push(rowToInsert);
+                }
 
-                });
+                for (var i = 0; i < viewModel.schedule.procedures.length; i++) {
+                    viewModel.schedule.procedures[i].order = i;
+                }
 
-                drake.on('dragend', function (elem) {
-                    scrollHelper.disableDnDWheelScroll();
-                });
-            },
+                $scope.$apply();
 
-            dragulaInit: function () {
-                var items = [
-                    document.querySelector('.pricingSchedulesTableRowsHolder')
-                ];
+            });
 
-                this.dragula = dragula(items, {
-                    moves: function () {
+            drake.on('dragend', function (elem) {
+                scrollHelper.disableDnDWheelScroll();
+            });
+        },
 
-                        return viewModel.dragIconGrabbed;
+        dragulaInit: function () {
+            var items = [
+                document.querySelector('.pricingSchedulesTableRowsHolder')
+            ];
 
-                    },
-                    revertOnSpill: true
-                })
-            }
-        };
+            this.dragula = dragula(items, {
+                moves: function () {
+
+                    return viewModel.dragIconGrabbed;
+
+                },
+                revertOnSpill: true
+            })
+        }
     };
+};
 
 
 
 
-    module.exports = {
+export default {
 
-        createDragAndDropObject: createDragAndDropObject
+    createDragAndDropObject: createDragAndDropObject
 
-    }
-}());
+};

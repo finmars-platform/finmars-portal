@@ -1,18 +1,11 @@
-/**
- * Created by szhitenev on 16.05.2022.
- */
-(function(){
+'use strict';
 
-    'use strict';
+import importCurrencyCbondsRepository from '../../repositories/import/importCurrencyCbondsRepository';
 
-    var importCurrencyCbondsRepository = require('../../repositories/import/importCurrencyCbondsRepository');
+var download = function(config){
+    return importCurrencyCbondsRepository.download(config);
+};
 
-    var download = function(config){
-        return importCurrencyCbondsRepository.download(config);
-    };
-
-    module.exports = {
-        download: download
-    }
-
-}());
+export default {
+    download: download
+};

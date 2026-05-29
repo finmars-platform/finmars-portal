@@ -4,7 +4,7 @@ import baseUrlService from "./baseUrlService";
 
 export default function () {
 
-	const PROJECT_ENV = '__PROJECT_ENV__';
+	const PROJECT_ENV = window.PROJECT_ENV; // Set by /public/config.js
 
 	function getUrlByState (stateName) {
 

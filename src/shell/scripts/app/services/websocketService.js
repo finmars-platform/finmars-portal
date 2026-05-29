@@ -6,10 +6,10 @@
 
 let callbacks = {}
 
-const toastNotificationService = require('../../../../core/services/toastNotificationService');
-const cookieService = require('../../../../core/services/cookieService').default;
+import toastNotificationService from '../../../../core/services/toastNotificationService';
+import cookieService from '../../../../core/services/cookieService';
 
-const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+const PROJECT_ENV = window.PROJECT_ENV;
 
 const send = function (data) {
 

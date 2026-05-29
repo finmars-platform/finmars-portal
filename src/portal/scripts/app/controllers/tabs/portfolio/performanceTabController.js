@@ -1,14 +1,11 @@
 'use strict';
 
-const metaService = require('../../../services/metaService').default;
-const portfolioRegisterService = require('../../../services/portfolioRegisterService').default;
-
-const GridTableDataService = require('../../../services/gridTableDataService');
-const EventService = require('../../../services/eventService');
-
-const popupEvents = require('../../../services/events/popupEvents');
-
-const metaHelper = require('../../../helpers/meta.helper').default;
+import metaService from '../../../services/metaService';
+import portfolioRegisterService from '../../../services/portfolioRegisterService';
+import GridTableDataService from '../../../services/gridTableDataService';
+import EventService from '../../../services/eventService';
+import popupEvents from '../../../services/events/popupEvents';
+import metaHelper from '../../../helpers/meta.helper';
 
 export default function PortfolioPerformanceTabController ($scope, $state, $mdDialog, commonDialogsService, toastNotificationService) {
 
@@ -364,4 +361,4 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 
 	init();
 
-};
+}

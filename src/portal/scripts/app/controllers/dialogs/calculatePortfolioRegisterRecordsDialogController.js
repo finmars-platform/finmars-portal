@@ -1,64 +1,57 @@
-/**
- * Created by szhitenev on 26.07.2021.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import portfolioRegisterService from '../../services/portfolioRegisterService';
 
-    var portfolioRegisterService = require('../../services/portfolioRegisterService')
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.agree = function () {
 
-        vm.agree = function () {
+        var ids = [];
 
-            var ids = [];
+        vm.portfolioRegisters.forEach(function (item) {
 
-            vm.portfolioRegisters.forEach(function (item) {
-
-                if (item.checked) {
-                    ids.push(item.id)
-                }
-
-            })
-
-            if (ids) {
-
-                portfolioRegisterService.calculateRecords({portfolio_register_ids: ids}).then(function (data) {
-
-                    $mdDialog.hide({status: 'agree'});
-
-                })
-
-            } else {
-                $mdDialog.hide({status: 'agree'});
+            if (item.checked) {
+                ids.push(item.id)
             }
 
-        };
+        })
 
-        vm.getPortfolioRegisters = function () {
+        if (ids) {
 
-            portfolioRegisterService.getList().then(function (data) {
+            portfolioRegisterService.calculateRecords({portfolio_register_ids: ids}).then(function (data) {
 
-                vm.portfolioRegisters = data.results;
-                $scope.$apply();
+                $mdDialog.hide({status: 'agree'});
 
             })
 
+        } else {
+            $mdDialog.hide({status: 'agree'});
         }
 
-        vm.init = function () {
+    };
 
-            vm.getPortfolioRegisters();
+    vm.getPortfolioRegisters = function () {
 
-        }
+        portfolioRegisterService.getList().then(function (data) {
 
-        vm.init()
+            vm.portfolioRegisters = data.results;
+            $scope.$apply();
+
+        })
+
     }
 
-}());
+    vm.init = function () {
+
+        vm.getPortfolioRegisters();
+
+    }
+
+    vm.init()
+};

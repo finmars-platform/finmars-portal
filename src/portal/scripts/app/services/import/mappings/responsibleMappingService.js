@@ -1,38 +1,31 @@
-/**
- * Created by szhitenev on 19.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import responsibleMappingRepository from '../../../repositories/import/mappings/responsibleMappingRepository';
 
-    var responsibleMappingRepository = require('../../../repositories/import/mappings/responsibleMappingRepository');
+var getList = function (options) {
+    return responsibleMappingRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return responsibleMappingRepository.getList(options);
-    };
+var getByKey = function (id) {
+    return responsibleMappingRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return responsibleMappingRepository.getByKey(id);
-    };
+var create = function (map) {
+    return responsibleMappingRepository.create(map);
+};
 
-    var create = function (map) {
-        return responsibleMappingRepository.create(map);
-    };
+var update = function (id, map) {
+    return responsibleMappingRepository.update(id, map);
+};
 
-    var update = function (id, map) {
-        return responsibleMappingRepository.update(id, map);
-    };
+var deleteByKey = function (id) {
+    return responsibleMappingRepository.deleteByKey(id);
+};
 
-    var deleteByKey = function (id) {
-        return responsibleMappingRepository.deleteByKey(id);
-    };
-
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey
-    }
-
-}());
+export default {
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey
+};

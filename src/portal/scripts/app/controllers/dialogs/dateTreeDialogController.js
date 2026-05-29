@@ -1,529 +1,522 @@
-/**
- * Created by mevstratov on 31.05.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.title = data.title;
 
-        vm.title = data.title;
+    if (!data.datesTree) {
+        vm.datesTree = [];
+    } else {
+        vm.datesTree = JSON.parse(JSON.stringify(data.datesTree));
+    }
 
-        if (!data.datesTree) {
-            vm.datesTree = [];
-        } else {
-            vm.datesTree = JSON.parse(JSON.stringify(data.datesTree));
-        }
+    var datesList = data.datesList;
 
-        var datesList = data.datesList;
+    if (!datesList) {
+        datesList = [];
+    }
 
-        if (!datesList) {
-            datesList = [];
-        }
+    vm.readyStatus = false;
 
-        vm.readyStatus = false;
+    vm.allItemsSelected = false;
+    vm.allGroupsExpanded = false;
 
-        vm.allItemsSelected = false;
-        vm.allGroupsExpanded = false;
+    var formatDatesList = function () {
+        datesList = datesList.map(function (date) {
+            return {
+                value: new Date(date.value),
+                available: true,
+                active: false
+            };
+        });
 
-        var formatDatesList = function () {
-            datesList = datesList.map(function (date) {
-                return {
-                    value: new Date(date.value),
-                    available: true,
-                    active: false
-                };
-            });
+    };
 
-        };
+    /*var checkForDatesAvailability = function () {
 
-        /*var checkForDatesAvailability = function () {
+        vm.savedDatesList.map(function (sDate) {
 
-            vm.savedDatesList.map(function (sDate) {
+            var dateIsAvailable = false;
 
-                var dateIsAvailable = false;
-
-                sDate.value = new Date(sDate.value);
-
-                var i;
-                for (i = 0; i < datesList.length; i++) {
-                    console.log("date tree compare dates", datesList[i], sDate);
-                    console.log("date tree compare dates", datesList[i].value.toDateString(), new Date(sDate.value).toDateString());
-                    if (datesList[i].value.toDateString() === new Date(sDate.value).toDateString()) {
-
-                        datesList[i].available = true;
-                        datesList[i].active = sDate.active;
-                        dateIsAvailable = true;
-                        break;
-                    }
-
-                }
-
-                if (!dateIsAvailable) {
-                    sDate.available = false;
-
-                    datesList.push(sDate);
-
-                }
-
-            });
-
-            console.log("date tree unavailableDates", datesList, unavailableDates);
-
-        };*/
-
-        var checkForInactiveYears = function () {
-
-            var allItemsSelected = false;
+            sDate.value = new Date(sDate.value);
 
             var i;
-            for (i = 0; i < vm.datesTree.length; i++) {
+            for (i = 0; i < datesList.length; i++) {
+                console.log("date tree compare dates", datesList[i], sDate);
+                console.log("date tree compare dates", datesList[i].value.toDateString(), new Date(sDate.value).toDateString());
+                if (datesList[i].value.toDateString() === new Date(sDate.value).toDateString()) {
 
-                if (!vm.datesTree[i].available) {
-
-                    if (!vm.datesTree[i].active) { // Only inactive unavailable checkboxes affect Select All checkbox status
-                        allItemsSelected = false;
-                        break;
-                    }
-
-                } else {
-
-                    if (vm.datesTree[i].active) {
-                        allItemsSelected = true;
-                    } else {
-                        allItemsSelected = false;
-                        break;
-                    }
-
+                    datesList[i].available = true;
+                    datesList[i].active = sDate.active;
+                    dateIsAvailable = true;
+                    break;
                 }
 
             }
 
-            vm.allItemsSelected = allItemsSelected;
+            if (!dateIsAvailable) {
+                sDate.available = false;
 
-        };
+                datesList.push(sDate);
 
-        /*var setDateGroupsCheckboxesState = function () {
+            }
 
-            vm.datesTree.map(function (yearGroup) {
+        });
 
-                var monthsSelected = false;
-                var monthsNotSelected = false;
+        console.log("date tree unavailableDates", datesList, unavailableDates);
 
-                yearGroup.items.map(function (monthGroup) {
+    };*/
 
-                    var daysSelected = false;
-                    var daysNotSelected = false;
+    var checkForInactiveYears = function () {
 
-                    monthGroup.items.map(function (date) {
+        var allItemsSelected = false;
 
-                        if (date.active) {
-                            daysSelected = true;
-                        } else {
-                            daysNotSelected = true;
-                        }
+        var i;
+        for (i = 0; i < vm.datesTree.length; i++) {
 
-                    });
+            if (!vm.datesTree[i].available) {
 
-                    if (daysSelected && !daysNotSelected) {
+                if (!vm.datesTree[i].active) { // Only inactive unavailable checkboxes affect Select All checkbox status
+                    allItemsSelected = false;
+                    break;
+                }
 
-                        monthGroup.active = true;
-                        monthGroup.someChildrenActive = false;
+            } else {
 
-                        monthsSelected = true;
+                if (vm.datesTree[i].active) {
+                    allItemsSelected = true;
+                } else {
+                    allItemsSelected = false;
+                    break;
+                }
 
-                    } else if (daysSelected && daysNotSelected) {
+            }
 
-                        monthGroup.active = false;
-                        monthGroup.someChildrenActive = true;
+        }
 
-                        monthsNotSelected = true;
+        vm.allItemsSelected = allItemsSelected;
 
+    };
+
+    /*var setDateGroupsCheckboxesState = function () {
+
+        vm.datesTree.map(function (yearGroup) {
+
+            var monthsSelected = false;
+            var monthsNotSelected = false;
+
+            yearGroup.items.map(function (monthGroup) {
+
+                var daysSelected = false;
+                var daysNotSelected = false;
+
+                monthGroup.items.map(function (date) {
+
+                    if (date.active) {
+                        daysSelected = true;
                     } else {
-
-                        monthGroup.active = false;
-                        monthGroup.someChildrenActive = false;
-
-                        monthsNotSelected = true;
+                        daysNotSelected = true;
                     }
 
                 });
 
-                if (monthsSelected && !monthsNotSelected) {
+                if (daysSelected && !daysNotSelected) {
 
-                    yearGroup.active = true;
-                    yearGroup.someChildrenActive = false;
+                    monthGroup.active = true;
+                    monthGroup.someChildrenActive = false;
 
-                } else if (monthsSelected && monthsNotSelected) {
+                    monthsSelected = true;
 
-                    yearGroup.active = false;
-                    yearGroup.someChildrenActive = true;
+                } else if (daysSelected && daysNotSelected) {
 
+                    monthGroup.active = false;
+                    monthGroup.someChildrenActive = true;
+
+                    monthsNotSelected = true;
 
                 } else {
 
-                    yearGroup.active = false;
-                    yearGroup.someChildrenActive = false;
+                    monthGroup.active = false;
+                    monthGroup.someChildrenActive = false;
 
+                    monthsNotSelected = true;
                 }
 
             });
 
-        };*/
+            if (monthsSelected && !monthsNotSelected) {
 
-        var checkDatesTreeForUnavailableGroups = function () {
+                yearGroup.active = true;
+                yearGroup.someChildrenActive = false;
 
-            vm.datesTree.forEach(function (yearGroup) {
+            } else if (monthsSelected && monthsNotSelected) {
 
-                var noAvailableMonths = true;
+                yearGroup.active = false;
+                yearGroup.someChildrenActive = true;
 
-                yearGroup.items.forEach(function (monthGroup) {
 
-                    var noAvailableDays = true;
+            } else {
 
-                    monthGroup.items.map(function (date) {
+                yearGroup.active = false;
+                yearGroup.someChildrenActive = false;
 
-                        if (date.available) {
-                            noAvailableDays = false;
-                        }
+            }
 
-                    });
+        });
 
-                    if (!noAvailableDays) {
+    };*/
 
-                        monthGroup.available = true;
-                        noAvailableMonths = false;
+    var checkDatesTreeForUnavailableGroups = function () {
 
+        vm.datesTree.forEach(function (yearGroup) {
+
+            var noAvailableMonths = true;
+
+            yearGroup.items.forEach(function (monthGroup) {
+
+                var noAvailableDays = true;
+
+                monthGroup.items.map(function (date) {
+
+                    if (date.available) {
+                        noAvailableDays = false;
                     }
 
                 });
 
-                if (!noAvailableMonths) {
-                    yearGroup.available = true;
+                if (!noAvailableDays) {
+
+                    monthGroup.available = true;
+                    noAvailableMonths = false;
+
                 }
 
             });
 
-        };
+            if (!noAvailableMonths) {
+                yearGroup.available = true;
+            }
 
-        var createDatesTree = function () {
+        });
 
-            datesList.map(function (listDate) {
+    };
 
-                var dateYear = listDate.value.getFullYear();
-                var dateMonth = listDate.value.getMonth();
-                var dateMonthName = listDate.value.toLocaleDateString('default', {month: "long"});
-                var dateDay = listDate.value.toLocaleDateString('default', {day: "2-digit"});
+    var createDatesTree = function () {
 
-                listDate.dayNumber = dateDay;
+        datesList.map(function (listDate) {
 
-                var noMatchingYearGroup = true;
-                var noMatchingMonthGroup = true;
-                var noMatchingDay = true;
+            var dateYear = listDate.value.getFullYear();
+            var dateMonth = listDate.value.getMonth();
+            var dateMonthName = listDate.value.toLocaleDateString('default', {month: "long"});
+            var dateDay = listDate.value.toLocaleDateString('default', {day: "2-digit"});
 
-                var monthGroup = {
-                    number: dateMonth,
-                    name: dateMonthName,
-                    showDays: true,
-                    items: [listDate],
-                    available: true,
-                    active: false,
-                    someChildrenActive: false
-                };
+            listDate.dayNumber = dateDay;
 
-                var yearGroup = {
-                    yearNumber: dateYear,
-                    showMonths: true,
-                    items: [monthGroup],
-                    available: true,
-                    active: false,
-                    someChildrenActive: false
-                };
+            var noMatchingYearGroup = true;
+            var noMatchingMonthGroup = true;
+            var noMatchingDay = true;
 
-                if (vm.datesTree.length > 0) { // if there are already groups by year, check if date belong to one of existing groups
+            var monthGroup = {
+                number: dateMonth,
+                name: dateMonthName,
+                showDays: true,
+                items: [listDate],
+                available: true,
+                active: false,
+                someChildrenActive: false
+            };
 
-                    vm.datesTree.forEach(function (yearGroup) {
+            var yearGroup = {
+                yearNumber: dateYear,
+                showMonths: true,
+                items: [monthGroup],
+                available: true,
+                active: false,
+                someChildrenActive: false
+            };
 
-                        if (yearGroup.yearNumber === dateYear) {
+            if (vm.datesTree.length > 0) { // if there are already groups by year, check if date belong to one of existing groups
 
-                            noMatchingYearGroup = false;
+                vm.datesTree.forEach(function (yearGroup) {
 
-                            if (yearGroup.items && yearGroup.items.length > 0) { // if there are already groups by month, check if date belong to one of existing groups
+                    if (yearGroup.yearNumber === dateYear) {
 
-                                yearGroup.items.forEach(function (monthGroup) {
+                        noMatchingYearGroup = false;
 
-                                    if (monthGroup.number === dateMonth) {
+                        if (yearGroup.items && yearGroup.items.length > 0) { // if there are already groups by month, check if date belong to one of existing groups
 
-                                        noMatchingMonthGroup = false;
+                            yearGroup.items.forEach(function (monthGroup) {
 
-                                        monthGroup.items.forEach(function (treeDate) {
+                                if (monthGroup.number === dateMonth) {
 
-                                            if (new Date(treeDate.value).toDateString() === listDate.value.toDateString()) {
+                                    noMatchingMonthGroup = false;
 
-                                                treeDate.available = true;
-                                                noMatchingDay = false;
-                                                treeDate.dayNumber = dateDay;
+                                    monthGroup.items.forEach(function (treeDate) {
 
-                                            }
+                                        if (new Date(treeDate.value).toDateString() === listDate.value.toDateString()) {
 
-                                        });
-
-                                        if (noMatchingDay) {
-
-                                            monthGroup.items.push(listDate);
+                                            treeDate.available = true;
+                                            noMatchingDay = false;
+                                            treeDate.dayNumber = dateDay;
 
                                         }
 
+                                    });
+
+                                    if (noMatchingDay) {
+
+                                        monthGroup.items.push(listDate);
+
                                     }
 
-                                });
+                                }
 
-                            }
-
-                            if (noMatchingMonthGroup) { // if there is no eligible month group, add it
-
-                                yearGroup.items.push(monthGroup);
-
-                            }
+                            });
 
                         }
 
-                    });
+                        if (noMatchingMonthGroup) { // if there is no eligible month group, add it
 
-                }
+                            yearGroup.items.push(monthGroup);
 
-                if (noMatchingYearGroup) { // if there is no eligible year group, add it
+                        }
 
-                    vm.datesTree.push(yearGroup);
-
-                }
-
-            });
-
-            checkDatesTreeForUnavailableGroups();
-            checkForInactiveYears();
-
-        };
-
-        vm.expandCollapseAll = function () {
-
-            var action = vm.allGroupsExpanded;
-
-            vm.datesTree.map(function (yearGroup) {
-
-                yearGroup.showMonths = action;
-
-                yearGroup.items.map(function (monthGroup) {
-
-                    monthGroup.showDays = action;
+                    }
 
                 });
 
+            }
+
+            if (noMatchingYearGroup) { // if there is no eligible year group, add it
+
+                vm.datesTree.push(yearGroup);
+
+            }
+
+        });
+
+        checkDatesTreeForUnavailableGroups();
+        checkForInactiveYears();
+
+    };
+
+    vm.expandCollapseAll = function () {
+
+        var action = vm.allGroupsExpanded;
+
+        vm.datesTree.map(function (yearGroup) {
+
+            yearGroup.showMonths = action;
+
+            yearGroup.items.map(function (monthGroup) {
+
+                monthGroup.showDays = action;
+
             });
 
-            vm.allGroupsExpanded = !vm.allGroupsExpanded;
+        });
 
-        };
+        vm.allGroupsExpanded = !vm.allGroupsExpanded;
 
-        vm.toggleAllCheckboxes = function () {
+    };
 
-            vm.allItemsSelected = !vm.allItemsSelected;
+    vm.toggleAllCheckboxes = function () {
 
-            var active = vm.allItemsSelected;
+        vm.allItemsSelected = !vm.allItemsSelected;
 
-            vm.datesTree.forEach(function (yearGroup, yearIndex) {
+        var active = vm.allItemsSelected;
 
-                if (!yearGroup.available) {
+        vm.datesTree.forEach(function (yearGroup, yearIndex) {
+
+            if (!yearGroup.available) {
+
+                if (!active) {
+                    vm.datesTree.splice(yearIndex, 1);
+                }
+
+            } else {
+
+                yearGroup.active = active;
+                yearGroup.someChildrenActive = false;
+
+                yearGroup.items.forEach(function (monthGroup, monthIndex) {
+
+                    if (!monthGroup.available) {
+
+                        if (!active) {
+                            yearGroup.items.splice(monthIndex, 1);
+                        }
+
+                    } else {
+
+                        monthGroup.active = active;
+                        monthGroup.someChildrenActive = false;
+
+                        monthGroup.items.forEach(function (date, dateIndex) {
+
+                            if (!date.available) {
+
+                                if (!active) {
+                                    monthGroup.items.splice(dateIndex, 1);
+                                }
+
+                            } else {
+                                date.active = active;
+                            }
+
+                        });
+
+                    }
+
+                });
+
+            }
+
+        });
+
+    };
+
+    vm.onCheckboxClick = function (checkboxData, options) {
+
+        checkboxData.active = !checkboxData.active;
+
+        if (checkboxData.someChildrenActive) {
+            checkboxData.someChildrenActive = false;
+        }
+
+        var active = checkboxData.active;
+
+        if (options.items) {
+
+            options.items.forEach(function (item, index) {
+
+                if (!item.available) {
 
                     if (!active) {
-                        vm.datesTree.splice(yearIndex, 1);
+                        options.items.splice(index, 1);
                     }
 
                 } else {
 
-                    yearGroup.active = active;
-                    yearGroup.someChildrenActive = false;
+                    item.active = active;
+                    item.someChildrenActive = false;
 
-                    yearGroup.items.forEach(function (monthGroup, monthIndex) {
+                    if (item.items) {
 
-                        if (!monthGroup.available) {
+                        item.items.forEach(function (chItem, chIndex) {
 
-                            if (!active) {
-                                yearGroup.items.splice(monthIndex, 1);
-                            }
+                            if (!chItem.available) {
 
-                        } else {
-
-                            monthGroup.active = active;
-                            monthGroup.someChildrenActive = false;
-
-                            monthGroup.items.forEach(function (date, dateIndex) {
-
-                                if (!date.available) {
-
-                                    if (!active) {
-                                        monthGroup.items.splice(dateIndex, 1);
-                                    }
-
-                                } else {
-                                    date.active = active;
+                                if (!active) {
+                                    item.items.splice(chIndex, 1);
                                 }
 
-                            });
+                            } else {
+                                chItem.active = active;
+                            }
 
-                        }
+                        });
 
-                    });
+                    }
 
                 }
 
             });
 
-        };
+        }
 
-        vm.onCheckboxClick = function (checkboxData, options) {
+        if (options.parents) { // change parent's checkbox status
 
-            checkboxData.active = !checkboxData.active;
+            options.parents = options.parents.map(function (parent) { // in array child group must precede parent group
 
-            if (checkboxData.someChildrenActive) {
-                checkboxData.someChildrenActive = false;
-            }
+                var itemsSelected = false;
+                var itemsNotSelected = false;
 
-            var active = checkboxData.active;
+                parent.items.map(function (parentItem) {
 
-            if (options.items) {
+                    if (parentItem.available) {
 
-                options.items.forEach(function (item, index) {
-
-                    if (!item.available) {
-
-                        if (!active) {
-                            options.items.splice(index, 1);
-                        }
-
-                    } else {
-
-                        item.active = active;
-                        item.someChildrenActive = false;
-
-                        if (item.items) {
-
-                            item.items.forEach(function (chItem, chIndex) {
-
-                                if (!chItem.available) {
-
-                                    if (!active) {
-                                        item.items.splice(chIndex, 1);
-                                    }
-
-                                } else {
-                                    chItem.active = active;
-                                }
-
-                            });
-
+                        if (parentItem.active) {
+                            itemsSelected = true;
+                        } else {
+                            itemsNotSelected = true;
                         }
 
                     }
 
                 });
 
-            }
+                if (itemsSelected && !itemsNotSelected) {
 
-            if (options.parents) { // change parent's checkbox status
+                    parent.active = true;
+                    parent.someChildrenActive = false;
 
-                options.parents = options.parents.map(function (parent) { // in array child group must precede parent group
+                } else if (itemsSelected && itemsNotSelected) {
 
-                    var itemsSelected = false;
-                    var itemsNotSelected = false;
+                    parent.active = false;
+                    parent.someChildrenActive = true;
 
-                    parent.items.map(function (parentItem) {
+                } else {
 
-                        if (parentItem.available) {
+                    parent.active = false;
+                    parent.someChildrenActive = false;
 
-                            if (parentItem.active) {
-                                itemsSelected = true;
-                            } else {
-                                itemsNotSelected = true;
-                            }
+                }
 
-                        }
-
-                    });
-
-                    if (itemsSelected && !itemsNotSelected) {
-
-                        parent.active = true;
-                        parent.someChildrenActive = false;
-
-                    } else if (itemsSelected && itemsNotSelected) {
-
-                        parent.active = false;
-                        parent.someChildrenActive = true;
-
-                    } else {
-
-                        parent.active = false;
-                        parent.someChildrenActive = false;
-
-                    }
-
-                    return parent;
-
-                });
-
-            }
-
-            checkForInactiveYears();
-
-        };
-
-        var init = function () {
-
-            formatDatesList();
-
-            /*if (vm.savedDatesList && vm.savedDatesList.length > 0) {
-                checkForDatesAvailability();
-            }*/
-
-            createDatesTree();
-            vm.readyStatus = true;
-        };
-
-        init();
-
-        vm.agree = function () {
-
-            vm.datesTree.forEach(function (yearGroup) {
-
-                delete yearGroup.available;
-
-                yearGroup.items.forEach(function (monthGroup) {
-
-                    delete monthGroup.available;
-
-                    monthGroup.items.forEach(function (date) {
-
-                        delete date.available;
-                        date.value = moment(date.value).format('YYYY-MM-DD');
-
-                    });
-
-                })
+                return parent;
 
             });
 
-            var datesTree = JSON.parse(angular.toJson(vm.datesTree));
+        }
 
-            $mdDialog.hide({status: 'agree', data: {datesTree: datesTree}});
-        };
+        checkForInactiveYears();
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    };
 
-    }
+    var init = function () {
 
-}());
+        formatDatesList();
+
+        /*if (vm.savedDatesList && vm.savedDatesList.length > 0) {
+            checkForDatesAvailability();
+        }*/
+
+        createDatesTree();
+        vm.readyStatus = true;
+    };
+
+    init();
+
+    vm.agree = function () {
+
+        vm.datesTree.forEach(function (yearGroup) {
+
+            delete yearGroup.available;
+
+            yearGroup.items.forEach(function (monthGroup) {
+
+                delete monthGroup.available;
+
+                monthGroup.items.forEach(function (date) {
+
+                    delete date.available;
+                    date.value = moment(date.value).format('YYYY-MM-DD');
+
+                });
+
+            })
+
+        });
+
+        var datesTree = JSON.parse(angular.toJson(vm.datesTree));
+
+        $mdDialog.hide({status: 'agree', data: {datesTree: datesTree}});
+    };
+
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+};

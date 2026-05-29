@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 
     'TREE_CHANGED_FROM_OUTSIDE': 'TREE_CHANGED_FROM_OUTSIDE',
     'EDIT_NODE': 'EDIT_NODE',

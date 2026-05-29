@@ -1,40 +1,32 @@
-/**
- * Created by szhitenev on 25.08.2016.
- */
-// import baseUrlService from "../../services/baseUrlService";
-(function () {
+'use strict';
 
-    'use strict';
+import baseUrlService from "../../services/baseUrlService";
+import cookieService from '../../../../../core/services/cookieService';
+import xhrService from '../../../../../core/services/xhrService';
+import configureRepositoryUrlService from '../../services/configureRepositoryUrlService';
+// var baseUrlService = require('../../services/baseUrlService');
 
-    var baseUrlService = require("../../services/baseUrlService").default;
-    var cookieService = require('../../../../../core/services/cookieService').default;
-    var xhrService = require('../../../../../core/services/xhrService').default;
-    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService').default;
-    // var baseUrlService = require('../../services/baseUrlService');
+var baseUrl = baseUrlService.resolve();
 
-    var baseUrl = baseUrlService.resolve();
-
-    var create = function (price) {
-        
+var create = function (price) {
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/pricing/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(price)
-            })
-    };
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(price)
+        })
+};
 
-    module.exports = {
-        create: create
-    }
-
-}());
+export default {
+    create: create
+};

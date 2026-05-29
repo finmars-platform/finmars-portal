@@ -1,4 +1,4 @@
-const metaHelper = require('../../helpers/meta.helper').default;
+import metaHelper from '../../helpers/meta.helper';
 
 export default function (uiService, dashboardHelper) {
 

@@ -1,114 +1,111 @@
-(function () {
+import popupEvents from "../../../../services/events/popupEvents";
+import evEvents from "../../../../services/entityViewerEvents";
 
-	const popupEvents = require("../../../../services/events/popupEvents");
-	const evEvents = require("../../../../services/entityViewerEvents");
+'use strict';
 
-	'use strict';
+export default function (gFiltersHelper) {
+    return {
+        restrict: 'E',
+        scope: {
+            filterKey: '<',
+            filterType: '@', // ('frontend', 'backend')
+            evDataService: '=',
+            evEventService: '=',
+            attributeDataService: '=',
+            popupEventService: '=',
 
-	module.exports = function (gFiltersHelper) {
-		return {
-			restrict: 'E',
-			scope: {
-				filterKey: '<',
-				filterType: '@', // ('frontend', 'backend')
-				evDataService: '=',
-				evEventService: '=',
-				attributeDataService: '=',
-				popupEventService: '=',
+            onCancel: '&',
+            onSave: '&'
+        },
+        templateUrl: 'views/directives/groupTable/filters/entityViewer/ev-filter-view.html',
+        controllerAs: 'vm',
+        controller: ['$scope', function EvFilterController ($scope) {
 
-				onCancel: '&',
-				onSave: '&'
-			},
-			templateUrl: 'views/directives/groupTable/filters/entityViewer/ev-filter-view.html',
-			controllerAs: 'vm',
-			controller: ['$scope', function EvFilterController ($scope) {
+            let vm = this;
 
-				let vm = this;
+            vm.filterType = $scope.filterType;
+            vm.evDataService = $scope.evDataService;
+            vm.evEventService = $scope.evEventService;
+            vm.attributeDataService = $scope.attributeDataService;
+            vm.popupEventService = $scope.popupEventService;
+            vm.filterNotFound = false;
 
-				vm.filterType = $scope.filterType;
-				vm.evDataService = $scope.evDataService;
-				vm.evEventService = $scope.evEventService;
-				vm.attributeDataService = $scope.attributeDataService;
-				vm.popupEventService = $scope.popupEventService;
-				vm.filterNotFound = false;
+            /**
+             * Frontend or backend filters
+             * @type {Array}
+             */
+            let filtersList;
+            let filterIndex;
 
-				/**
-				 * Frontend or backend filters
-				 * @type {Array}
-				 */
-				let filtersList;
-				let filterIndex;
+            const findFilter = function () {
 
-				const findFilter = function () {
+                let filtersData = vm.evDataService.getFilters();
 
-					let filtersData = vm.evDataService.getFilters();
+                filtersList = JSON.parse(JSON.stringify(filtersData[vm.filterType]));
 
-					filtersList = JSON.parse(JSON.stringify(filtersData[vm.filterType]));
+                filterIndex = filtersList.findIndex(filter => filter.key === $scope.filterKey)
 
-					filterIndex = filtersList.findIndex(filter => filter.key === $scope.filterKey)
+                if (filterIndex > -1) {
 
-					if (filterIndex > -1) {
+                    vm.filter = filtersList[filterIndex];
 
-						vm.filter = filtersList[filterIndex];
+                    vm.filter = gFiltersHelper.setFilterDefaultOptions(vm.filter);
 
-						vm.filter = gFiltersHelper.setFilterDefaultOptions(vm.filter);
+                } else {
+                    vm.filterNotFound = true;
+                }
 
-					} else {
-						vm.filterNotFound = true;
-					}
+            };
 
-				};
+            vm.getActiveFilterType = (filterTypesList) => {
 
-				vm.getActiveFilterType = (filterTypesList) => {
+                const activeType = filterTypesList.find(type => {
+                    // return type.value === vm.filter.options.filter_type;
+                    return type.id === vm.filter.options.filter_type;
+                });
 
-					const activeType = filterTypesList.find(type => {
-						// return type.value === vm.filter.options.filter_type;
-						return type.id === vm.filter.options.filter_type;
-					});
+                // return activeType ? activeType.value : null;
+                return activeType ? activeType.id : null;
 
-					// return activeType ? activeType.value : null;
-					return activeType ? activeType.id : null;
+            };
 
-				};
+            vm.save = function () {
 
-				vm.save = function () {
+                let filters = vm.evDataService.getFilters();
+                filters[vm.filterType] = filtersList;
 
-					let filters = vm.evDataService.getFilters();
-					filters[vm.filterType] = filtersList;
+                vm.evDataService.setFilters(filters);
 
-					vm.evDataService.setFilters(filters);
+                vm.evDataService.resetTableContent(false);
+                vm.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-					vm.evDataService.resetTableContent(false);
-					vm.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                $scope.onSave();
+                $scope.$destroy();
 
-					$scope.onSave();
-					$scope.$destroy();
+            };
 
-				};
+            vm.cancel = function () {
+                $scope.onCancel();
+                $scope.$destroy();
+            };
 
-				vm.cancel = function () {
-					$scope.onCancel();
-					$scope.$destroy();
-				};
+            const init = function () {
 
-				const init = function () {
+                findFilter();
 
-					findFilter();
-
-					vm.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
-						findFilter();
-					});
+                vm.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+                    findFilter();
+                });
 
 
-					vm.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, function () {
-						$scope.$destroy();
-					});
+                vm.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, function () {
+                    $scope.$destroy();
+                });
 
-				};
+            };
 
-				init();
+            init();
 
-			}]
-		}
-	}
-})();
+        }]
+    }
+};

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     'INIT': 'INIT', // component status when created
     'START': 'START', // status triggered by dashboard controller
     'PROCESSING': 'PROCESSING', // component processing

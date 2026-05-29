@@ -1,146 +1,137 @@
-/**
- * Created by szhitenev on 25.09.2020.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import dataProcedureService from '../../../services/procedures/dataProcedureService';
+import dataProvidersService from '../../../services/import/dataProvidersService';
+import csvImportSchemeService from '../../../services/import/csvImportSchemeService';
+import entityResolverService from '../../../services/entityResolverService';
 
-    var dataProcedureService = require('../../../services/procedures/dataProcedureService').default;
-    var dataProvidersService = require('../../../services/import/dataProvidersService');
+export default function ($scope, $mdDialog, transactionImportSchemeService, data) {
 
-    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService')
+    var vm = this;
 
-    var entityResolverService = require('../../../services/entityResolverService')
+    vm.item = {};
 
-    module.exports = function ($scope, $mdDialog, transactionImportSchemeService, data) {
+    vm.schemes = [];
+    vm.providers = [];
 
-        var vm = this;
+    vm.toggleStatus = {
+        'date_from': 'datepicker',
+        'date_to': 'datepicker'
+    };
 
-        vm.item = {};
+    vm.toggle = function (key) {
 
-        vm.schemes = [];
-        vm.providers = [];
-
-        vm.toggleStatus = {
-            'date_from': 'datepicker',
-            'date_to': 'datepicker'
-        };
-
-        vm.toggle = function (key) {
-
-            if (vm.toggleStatus[key] === 'datepicker') {
-                vm.toggleStatus[key] = 'expr'
-            } else {
-                vm.toggleStatus[key] = 'datepicker'
-            }
-
-            vm.item[key] = null;
-            vm.item[key + '_expr'] = null;
-
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.getTransactionImportSchemes = function(){
-
-            transactionImportSchemeService.getListLight().then(function (data) {
-
-                vm.transactionImportSchemes = data.results;
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.getSimpleImportSchemes = function(){
-
-            csvImportSchemeService.getListLight().then(function (data) {
-
-                vm.simpleImportSchemes = data.results;
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.getProviders = function(){
-
-            dataProvidersService.getPersonalProvidersList().then(function (data) {
-
-                vm.providers = data;
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.getCurrencyCodes = function (){
-
-            entityResolverService.getListLight('currency').then(function (data){
-
-                vm.currencyCodes = data.results.map(function (item){
-
-                    item.id = item.user_code
-
-                    return item
-
-                })
-
-            })
-
+        if (vm.toggleStatus[key] === 'datepicker') {
+            vm.toggleStatus[key] = 'expr'
+        } else {
+            vm.toggleStatus[key] = 'datepicker'
         }
 
-        vm.agree = function () {
+        vm.item[key] = null;
+        vm.item[key + '_expr'] = null;
 
-            vm.item.data = JSON.parse(vm.item.data_string)
+    };
 
-            dataProcedureService.create(vm.item).then(function (data) {
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-                $mdDialog.hide({status: 'agree', data: {item: data}});
+    vm.getTransactionImportSchemes = function(){
+
+        transactionImportSchemeService.getListLight().then(function (data) {
+
+            vm.transactionImportSchemes = data.results;
+
+            $scope.$apply();
+
+        })
+
+    };
+
+    vm.getSimpleImportSchemes = function(){
+
+        csvImportSchemeService.getListLight().then(function (data) {
+
+            vm.simpleImportSchemes = data.results;
+
+            $scope.$apply();
+
+        })
+
+    };
+
+    vm.getProviders = function(){
+
+        dataProvidersService.getPersonalProvidersList().then(function (data) {
+
+            vm.providers = data;
+
+            $scope.$apply();
+
+        })
+
+    };
+
+    vm.getCurrencyCodes = function (){
+
+        entityResolverService.getListLight('currency').then(function (data){
+
+            vm.currencyCodes = data.results.map(function (item){
+
+                item.id = item.user_code
+
+                return item
 
             })
 
-        };
-
-        vm.providerChange = function (){
-
-            if (vm.item.provider === 6) {
-                vm.item.data_string = JSON.stringify({}, 0, 4)
-            }
-
-        }
-
-        vm.universalOptionsChange = function () {
-
-            vm.item.data = JSON.parse(vm.item.data_string)
-        }
-
-        vm.universalFieldChange = function () {
-            vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
-        }
-
-
-        vm.init = function () {
-
-            if (data.item) {
-                vm.item = data.item;
-            }
-
-            vm.getTransactionImportSchemes();
-            vm.getSimpleImportSchemes();
-            vm.getProviders();
-
-            vm.getCurrencyCodes();
-
-        };
-
-        vm.init();
+        })
 
     }
 
-}());
+    vm.agree = function () {
+
+        vm.item.data = JSON.parse(vm.item.data_string)
+
+        dataProcedureService.create(vm.item).then(function (data) {
+
+            $mdDialog.hide({status: 'agree', data: {item: data}});
+
+        })
+
+    };
+
+    vm.providerChange = function (){
+
+        if (vm.item.provider === 6) {
+            vm.item.data_string = JSON.stringify({}, 0, 4)
+        }
+
+    }
+
+    vm.universalOptionsChange = function () {
+
+        vm.item.data = JSON.parse(vm.item.data_string)
+    }
+
+    vm.universalFieldChange = function () {
+        vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
+    }
+
+
+    vm.init = function () {
+
+        if (data.item) {
+            vm.item = data.item;
+        }
+
+        vm.getTransactionImportSchemes();
+        vm.getSimpleImportSchemes();
+        vm.getProviders();
+
+        vm.getCurrencyCodes();
+
+    };
+
+    vm.init();
+
+};

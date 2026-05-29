@@ -1,104 +1,93 @@
-/**
- * Created by mevstratov on 28.06.2022.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import dashboardEvents from '../../services/dashboard/dashboardEvents';
+import dashboardComponentStatuses from '../../services/dashboard/dashboardComponentStatuses';
+import transactionTypeService from '../../services/transactionTypeService';
+import csvImportSchemeService from '../../services/import/csvImportSchemeService';
+import complexImportSchemeService from '../../services/import/complexImportSchemeService';
+import instrumentDownloadSchemeService from '../../services/import/instrumentDownloadSchemeService';
+import pricingProcedureService from '../../services/procedures/pricingProcedureService';
+import supersetService from "../../services/supersetService";
+import toastNotificationService from '../../../../../core/services/toastNotificationService';
+import embeddedsdk from "@superset-ui/embedded-sdk";
 
-    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
-    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
+export default function dashboardSupersetDashboardDirective($mdDialog, $state) {
+    return {
+        restriction: 'E',
+        templateUrl: 'views/directives/dashboard/dashboard-superset-dashboard-view.html',
+        scope: {
+            tabNumber: '=',
+            rowNumber: '=',
+            columnNumber: '=',
+            item: '=',
+            dashboardDataService: '=',
+            dashboardEventService: '='
+        },
+        link: function (scope, elem, attr) {
 
-    var transactionTypeService = require('../../services/transactionTypeService');
-    var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
-    var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
+            scope.itemsList = [];
 
-    var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
+            scope.initEventListeners = function () {
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService').default;
-    var supersetService = require("../../services/supersetService");
+                scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
-    var embeddedsdk = require("@superset-ui/embedded-sdk");
+                    var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
 
+                    if (status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    }
 
-    module.exports = function dashboardSupersetDashboardDirective($mdDialog, $state) {
-        return {
-            restriction: 'E',
-            templateUrl: 'views/directives/dashboard/dashboard-superset-dashboard-view.html',
-            scope: {
-                tabNumber: '=',
-                rowNumber: '=',
-                columnNumber: '=',
-                item: '=',
-                dashboardDataService: '=',
-                dashboardEventService: '='
-            },
-            link: function (scope, elem, attr) {
+                });
 
-                scope.itemsList = [];
+            };
 
-                scope.initEventListeners = function () {
+            scope.init = function () {
 
-                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+                scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
-                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
-
-                        if (status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                        }
-
-                    });
-
-                };
-
-                scope.init = function () {
-
-                    scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
-
-                    scope.componentName = scope.componentData.custom_component_name
+                scope.componentName = scope.componentData.custom_component_name
 
 
-                    scope.id = scope.componentData.settings.id;
-                    scope.supersetDomain = scope.componentData.settings.supersetDomain
+                scope.id = scope.componentData.settings.id;
+                scope.supersetDomain = scope.componentData.settings.supersetDomain
 
-                    scope.containerId = 'superset-container-' + scope.id
+                scope.containerId = 'superset-container-' + scope.id
 
-                    setTimeout(() => {
-                        embeddedsdk.embedDashboard({
-                            id: scope.id, // given by the Superset embedding UI
-                            supersetDomain: scope.supersetDomain,
-                            mountPoint: document.getElementById(scope.containerId), // any html element that can contain an iframe
-                            fetchGuestToken: function () {
+                setTimeout(() => {
+                    embeddedsdk.embedDashboard({
+                        id: scope.id, // given by the Superset embedding UI
+                        supersetDomain: scope.supersetDomain,
+                        mountPoint: document.getElementById(scope.containerId), // any html element that can contain an iframe
+                        fetchGuestToken: function () {
 
-                                return new Promise(function (resolve, reject) {
-                                    supersetService.getSecurityToken(scope.id).then((data) => {
-                                        resolve(data.token);
-                                    })
+                            return new Promise(function (resolve, reject) {
+                                supersetService.getSecurityToken(scope.id).then((data) => {
+                                    resolve(data.token);
                                 })
+                            })
 
-                            },
-                            dashboardUiConfig: {hideTitle: true}, // dashboard UI config: hideTitle, hideTab, hideChartControls (optional)
-                            debug: false
-                        });
-                    }, 500)
+                        },
+                        dashboardUiConfig: {hideTitle: true}, // dashboard UI config: hideTitle, hideTab, hideChartControls (optional)
+                        debug: false
+                    });
+                }, 500)
 
-                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    scope.initEventListeners();
+                scope.initEventListeners();
 
-                };
+            };
 
-                scope.getSelectedText = function () {
-                    return scope.componentName;
-                }
-
-
-                scope.init()
-
-
+            scope.getSelectedText = function () {
+                return scope.componentName;
             }
+
+
+            scope.init()
+
+
         }
     }
-}());
+};

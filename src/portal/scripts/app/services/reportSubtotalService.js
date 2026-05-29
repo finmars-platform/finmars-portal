@@ -1,341 +1,334 @@
-/**
- * Created by szhitenev on 23.11.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+function sum(calculatedColumns, column, group) {
 
-    function sum(calculatedColumns, column, group) {
+    //console.log('calculatedColumns', calculatedColumns);
+    //console.log('column', column);
+    //console.log('group', group);
 
-        //console.log('calculatedColumns', calculatedColumns);
-        //console.log('column', column);
-        //console.log('group', group);
-
-        if (!calculatedColumns[column.key]) {
-            calculatedColumns[column.key] = 0;
-        }
-
-        group.items.forEach(function (groupedItem) {
-
-            calculatedColumns[column.key] = calculatedColumns[column.key] + parseFloat(groupedItem[column.key]);
-
-        });
-
+    if (!calculatedColumns[column.key]) {
+        calculatedColumns[column.key] = 0;
     }
 
-    function weightedMarketValue(calculatedColumns, column, group) {
+    group.items.forEach(function (groupedItem) {
 
-        if (!calculatedColumns[column.key]) {
-            calculatedColumns[column.key] = 0;
-        }
+        calculatedColumns[column.key] = calculatedColumns[column.key] + parseFloat(groupedItem[column.key]);
 
-        group.items.forEach(function (groupedItem) {
+    });
 
-            if (groupedItem["market_value"]) {
+}
 
-                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["market_value"]));
-            }
+function weightedMarketValue(calculatedColumns, column, group) {
 
-        });
-
+    if (!calculatedColumns[column.key]) {
+        calculatedColumns[column.key] = 0;
     }
 
-    function weightedMarketValuePercent(calculatedColumns, column, group) {
-        if (!calculatedColumns[column.key]) {
-            calculatedColumns[column.key] = 0;
+    group.items.forEach(function (groupedItem) {
+
+        if (groupedItem["market_value"]) {
+
+            calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["market_value"]));
         }
 
-        group.items.forEach(function (groupedItem) {
+    });
 
-            if (groupedItem["market_value_percent"]) {
+}
 
-                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["market_value_percent"]));
-            }
-
-        });
+function weightedMarketValuePercent(calculatedColumns, column, group) {
+    if (!calculatedColumns[column.key]) {
+        calculatedColumns[column.key] = 0;
     }
 
-    function weightedExposure(calculatedColumns, column, group) {
+    group.items.forEach(function (groupedItem) {
 
-        if (!calculatedColumns[column.key]) {
-            calculatedColumns[column.key] = 0;
+        if (groupedItem["market_value_percent"]) {
+
+            calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["market_value_percent"]));
         }
 
-        group.items.forEach(function (groupedItem) {
+    });
+}
 
-            if (groupedItem["exposure"]) {
+function weightedExposure(calculatedColumns, column, group) {
 
-                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["exposure"]));
-            }
-
-        });
-
+    if (!calculatedColumns[column.key]) {
+        calculatedColumns[column.key] = 0;
     }
 
-    function weightedExposurePercent(calculatedColumns, column, group) {
+    group.items.forEach(function (groupedItem) {
 
-        if (!calculatedColumns[column.key]) {
-            calculatedColumns[column.key] = 0;
+        if (groupedItem["exposure"]) {
+
+            calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["exposure"]));
         }
 
-        group.items.forEach(function (groupedItem) {
+    });
 
-            if (groupedItem["exposure_percent"]) {
+}
 
-                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["exposure_percent"]));
-            }
+function weightedExposurePercent(calculatedColumns, column, group) {
 
-        });
-
+    if (!calculatedColumns[column.key]) {
+        calculatedColumns[column.key] = 0;
     }
 
-    function weightedAverageMarketValue(calculatedColumns, column, group) {
+    group.items.forEach(function (groupedItem) {
 
-        if (!calculatedColumns[column.key]) {
-            calculatedColumns[column.key] = 0;
+        if (groupedItem["exposure_percent"]) {
+
+            calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["exposure_percent"]));
         }
 
-        var total = 0;
+    });
 
-        group.items.forEach(function (groupedItem) {
+}
 
-            if (groupedItem["market_value"]) {
-                total = total + groupedItem["market_value"];
-            }
+function weightedAverageMarketValue(calculatedColumns, column, group) {
 
-        });
-
-        group.items.forEach(function (groupedItem) {
-
-            if (groupedItem["market_value"]) {
-
-                var average = groupedItem["market_value"] / total;
-
-                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
-            }
-
-        });
-
+    if (!calculatedColumns[column.key]) {
+        calculatedColumns[column.key] = 0;
     }
 
-    function weightedAverageMarketValuePercent(calculatedColumns, column, group) {
+    var total = 0;
 
-        if (!calculatedColumns[column.key]) {
-            calculatedColumns[column.key] = 0;
+    group.items.forEach(function (groupedItem) {
+
+        if (groupedItem["market_value"]) {
+            total = total + groupedItem["market_value"];
         }
 
-        var total = 0;
+    });
 
-        group.items.forEach(function (groupedItem) {
+    group.items.forEach(function (groupedItem) {
 
-            if (groupedItem["market_value_percent"]) {
-                total = total + groupedItem["market_value_percent"];
-            }
+        if (groupedItem["market_value"]) {
 
-        });
+            var average = groupedItem["market_value"] / total;
 
-        group.items.forEach(function (groupedItem) {
+            calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
+        }
 
-            if (groupedItem["market_value_percent"]) {
+    });
 
-                var average = groupedItem["market_value_percent"] / total;
+}
 
-                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
-            }
+function weightedAverageMarketValuePercent(calculatedColumns, column, group) {
 
-        });
-
-
+    if (!calculatedColumns[column.key]) {
+        calculatedColumns[column.key] = 0;
     }
 
-    function weightedAverageExposure(calculatedColumns, column, group) {
+    var total = 0;
 
-        if (!calculatedColumns[column.key]) {
-            calculatedColumns[column.key] = 0;
+    group.items.forEach(function (groupedItem) {
+
+        if (groupedItem["market_value_percent"]) {
+            total = total + groupedItem["market_value_percent"];
         }
 
-        var total = 0;
+    });
 
-        group.items.forEach(function (groupedItem) {
+    group.items.forEach(function (groupedItem) {
 
-            if (groupedItem["exposure"]) {
-                total = total + groupedItem["exposure"];
-            }
+        if (groupedItem["market_value_percent"]) {
 
-        });
+            var average = groupedItem["market_value_percent"] / total;
 
-        group.items.forEach(function (groupedItem) {
+            calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
+        }
 
-            if (groupedItem["exposure"]) {
+    });
 
-                var average = groupedItem["exposure"] / total;
 
-                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
-            }
+}
 
-        });
+function weightedAverageExposure(calculatedColumns, column, group) {
 
+    if (!calculatedColumns[column.key]) {
+        calculatedColumns[column.key] = 0;
     }
 
-    function weightedAverageExposurePercent(calculatedColumns, column, group) {
+    var total = 0;
 
-        if (!calculatedColumns[column.key]) {
-            calculatedColumns[column.key] = 0;
+    group.items.forEach(function (groupedItem) {
+
+        if (groupedItem["exposure"]) {
+            total = total + groupedItem["exposure"];
         }
 
-        var total = 0;
+    });
 
-        group.items.forEach(function (groupedItem) {
+    group.items.forEach(function (groupedItem) {
 
-            if (groupedItem["exposure_percent"]) {
-                total = total + groupedItem["exposure_percent"];
-            }
+        if (groupedItem["exposure"]) {
 
-        });
+            var average = groupedItem["exposure"] / total;
 
-        group.items.forEach(function (groupedItem) {
+            calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
+        }
 
-            if (groupedItem["exposure_percent"]) {
+    });
 
-                var average = groupedItem["exposure_percent"] / total;
+}
 
-                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
-            }
+function weightedAverageExposurePercent(calculatedColumns, column, group) {
 
-        });
-
+    if (!calculatedColumns[column.key]) {
+        calculatedColumns[column.key] = 0;
     }
 
-    function resolveSubtotalFunction(calculatedColumns, column, group) {
+    var total = 0;
 
-        if (column.report_settings && column.report_settings.subtotal_formula_id) {
+    group.items.forEach(function (groupedItem) {
 
-            switch (column.report_settings.subtotal_formula_id) {
-                case 1:
-                    sum(calculatedColumns, column, group);
-                    break;
-                case 2:
-                    weightedMarketValue(calculatedColumns, column, group);
-                    break;
-                case 3:
-                    weightedMarketValuePercent(calculatedColumns, column, group);
-                    break;
-                case 4:
-                    weightedExposure(calculatedColumns, column, group);
-                    break;
-                case 5:
-                    weightedExposurePercent(calculatedColumns, column, group);
-                    break;
-                case 6:
-                    weightedAverageMarketValue(calculatedColumns, column, group);
-                    break;
-                case 7:
-                    weightedAverageMarketValuePercent(calculatedColumns, column, group);
-                    break;
-                case 8:
-                    weightedAverageExposure(calculatedColumns, column, group);
-                    break;
-                case 9:
-                    weightedAverageExposurePercent(calculatedColumns, column, group);
-                    break;
-            }
+        if (groupedItem["exposure_percent"]) {
+            total = total + groupedItem["exposure_percent"];
         }
 
+    });
 
+    group.items.forEach(function (groupedItem) {
+
+        if (groupedItem["exposure_percent"]) {
+
+            var average = groupedItem["exposure_percent"] / total;
+
+            calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
+        }
+
+    });
+
+}
+
+function resolveSubtotalFunction(calculatedColumns, column, group) {
+
+    if (column.report_settings && column.report_settings.subtotal_formula_id) {
+
+        switch (column.report_settings.subtotal_formula_id) {
+            case 1:
+                sum(calculatedColumns, column, group);
+                break;
+            case 2:
+                weightedMarketValue(calculatedColumns, column, group);
+                break;
+            case 3:
+                weightedMarketValuePercent(calculatedColumns, column, group);
+                break;
+            case 4:
+                weightedExposure(calculatedColumns, column, group);
+                break;
+            case 5:
+                weightedExposurePercent(calculatedColumns, column, group);
+                break;
+            case 6:
+                weightedAverageMarketValue(calculatedColumns, column, group);
+                break;
+            case 7:
+                weightedAverageMarketValuePercent(calculatedColumns, column, group);
+                break;
+            case 8:
+                weightedAverageExposure(calculatedColumns, column, group);
+                break;
+            case 9:
+                weightedAverageExposurePercent(calculatedColumns, column, group);
+                break;
+        }
     }
 
 
-    var calcColumnSubTotal = function (group, columns) {
+}
 
-        var calculatedColumns = {};
 
-        columns.forEach(function (column) {
+var calcColumnSubTotal = function (group, columns) {
 
-            if (column.value_type == 'float') {
+    var calculatedColumns = {};
 
-                resolveSubtotalFunction(calculatedColumns, column, group);
-            }
-        });
+    columns.forEach(function (column) {
 
-        return calculatedColumns;
-    };
+        if (column.value_type == 'float') {
 
-    var groupByAndCalc = function (items, options) {
+            resolveSubtotalFunction(calculatedColumns, column, group);
+        }
+    });
 
-        var groups = [];
+    return calculatedColumns;
+};
 
-        if (options.calculationGroup) {
+var groupByAndCalc = function (items, options) {
 
-            items.forEach(function (item) {
+    var groups = [];
 
-                if (groups.length) {
+    if (options.calculationGroup) {
 
-                    var exist = false;
+        items.forEach(function (item) {
 
-                    groups.forEach(function (groupItem) {
-                        if (groupItem.name == options.calculationGroup + '_' + item[options.calculationGroup + '_object'].id) {
-                            groupItem.items.push(item);
-                            exist = true;
-                        }
-                    });
+            if (groups.length) {
 
-                    if (!exist) {
-                        groups.push({
-                            name: options.calculationGroup + '_' + item[options.calculationGroup + '_object'].id,
-                            items: [item]
-                        });
+                var exist = false;
+
+                groups.forEach(function (groupItem) {
+                    if (groupItem.name == options.calculationGroup + '_' + item[options.calculationGroup + '_object'].id) {
+                        groupItem.items.push(item);
+                        exist = true;
                     }
+                });
 
-                } else {
+                if (!exist) {
                     groups.push({
                         name: options.calculationGroup + '_' + item[options.calculationGroup + '_object'].id,
                         items: [item]
                     });
                 }
 
-            });
-
-        } else {
-            groups.push({name: '', items: items});
-        }
-
-        groups.forEach(function (group) {
-
-            var marketValueTotal = 0;
-            var exposureValueTotal = 0;
-
-            group.items.forEach(function (item) {
-                marketValueTotal = marketValueTotal + item.market_value;
-                exposureValueTotal = exposureValueTotal + item.exposure;
-            });
-
-            //console.log('marketValueTotal', marketValueTotal);
-            //console.log('exposureValueTotal', exposureValueTotal);
-
-            group.items.forEach(function (item) {
-
-                if (marketValueTotal != 0) {
-                    item.market_value_percent = item.market_value / marketValueTotal * 100;
-                } else {
-                    item.market_value_percent = 0;
-                }
-                if (exposureValueTotal != 0) {
-                    item.exposure_percent = item.exposure / exposureValueTotal * 100;
-                } else {
-                    item.exposure_percent = 0;
-                }
-            })
-
+            } else {
+                groups.push({
+                    name: options.calculationGroup + '_' + item[options.calculationGroup + '_object'].id,
+                    items: [item]
+                });
+            }
 
         });
 
-
-        return items;
-    };
-
-    module.exports = {
-        calcColumnSubTotal: calcColumnSubTotal,
-        groupByAndCalc: groupByAndCalc
+    } else {
+        groups.push({name: '', items: items});
     }
 
-}());
+    groups.forEach(function (group) {
+
+        var marketValueTotal = 0;
+        var exposureValueTotal = 0;
+
+        group.items.forEach(function (item) {
+            marketValueTotal = marketValueTotal + item.market_value;
+            exposureValueTotal = exposureValueTotal + item.exposure;
+        });
+
+        //console.log('marketValueTotal', marketValueTotal);
+        //console.log('exposureValueTotal', exposureValueTotal);
+
+        group.items.forEach(function (item) {
+
+            if (marketValueTotal != 0) {
+                item.market_value_percent = item.market_value / marketValueTotal * 100;
+            } else {
+                item.market_value_percent = 0;
+            }
+            if (exposureValueTotal != 0) {
+                item.exposure_percent = item.exposure / exposureValueTotal * 100;
+            } else {
+                item.exposure_percent = 0;
+            }
+        })
+
+
+    });
+
+
+    return items;
+};
+
+export default {
+    calcColumnSubTotal: calcColumnSubTotal,
+    groupByAndCalc: groupByAndCalc
+};

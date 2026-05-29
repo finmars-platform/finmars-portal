@@ -1219,19 +1219,7 @@
  * @license 0BSD
  */
 
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD
-        //noinspection JSUnresolvedFunction
-        define(factory);
-    } else if (typeof exports === 'object') {
-        // CommonJS
-        module.exports = factory();
-    } else {
-        // Browser globals
-        root.pickmeup = factory();
-    }
-}(this, function () {
+export default function () {
     /**
      * Functions prefixed with `dom_` are simple convenient wrappers for various operations with DOM
      */
@@ -2603,4 +2591,4 @@
     };
 
     return pickmeup_init;
-}));
+}

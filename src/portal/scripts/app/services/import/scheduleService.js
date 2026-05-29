@@ -1,23 +1,16 @@
-/**
- * Created by szhitenev on 19.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import scheduleRepository from '../../repositories/import/scheduleRepository';
 
-    var scheduleRepository = require('../../repositories/import/scheduleRepository');
+var getAccrualScheduleDownloadMethodList = function () {
+    return scheduleRepository.getAccrualScheduleDownloadMethodList();
+};
 
-    var getAccrualScheduleDownloadMethodList = function () {
-        return scheduleRepository.getAccrualScheduleDownloadMethodList();
-    };
+var getFactorScheduleDownloadMethodList = function () {
+    return scheduleRepository.getFactorScheduleDownloadMethodList();
+};
 
-    var getFactorScheduleDownloadMethodList = function () {
-        return scheduleRepository.getFactorScheduleDownloadMethodList();
-    };
-
-    module.exports = {
-        getAccrualScheduleDownloadMethodList: getAccrualScheduleDownloadMethodList,
-        getFactorScheduleDownloadMethodList: getFactorScheduleDownloadMethodList
-    }
-
-}());
+export default {
+    getAccrualScheduleDownloadMethodList: getAccrualScheduleDownloadMethodList,
+    getFactorScheduleDownloadMethodList: getFactorScheduleDownloadMethodList
+};

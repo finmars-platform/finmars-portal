@@ -1,167 +1,160 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import logService from '../../../../../core/services/logService';
+import attributeTypeService from '../../services/attributeTypeService';
+import entityTypeClassifierMappingResolveService from '../../services/entityTypeClassifierMappingResolveService';
 
-    var logService = require('../../../../../core/services/logService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var entityTypeClassifierMappingResolveService = require('../../services/entityTypeClassifierMappingResolveService');
+export default function ($scope, $mdDialog, options) {
 
-    module.exports = function ($scope, $mdDialog, options) {
+    logService.controller('EntityTypeClassifierMappingDialogController', 'initialized');
 
-        logService.controller('EntityTypeClassifierMappingDialogController', 'initialized');
+    var vm = this;
 
-        var vm = this;
+    vm.init = function () {
 
-        vm.init = function () {
-
-            vm.readyStatus = {content: false};
-            vm.items = [];
-            vm.options = options;
+        vm.readyStatus = {content: false};
+        vm.items = [];
+        vm.options = options;
 
 
-            vm.getClassifier();
+        vm.getClassifier();
 
-        };
+    };
 
 
-        vm.getClassifier = function () {
+    vm.getClassifier = function () {
 
-            attributeTypeService.getByKey(vm.options.entityType, vm.options.id).then(function (data) {
+        attributeTypeService.getByKey(vm.options.entityType, vm.options.id).then(function (data) {
 
-                vm.classifier = data;
+            vm.classifier = data;
 
-                vm.items = data.classifiers_flat;
+            vm.items = data.classifiers_flat;
 
-                entityTypeClassifierMappingResolveService.getList(vm.options.entityType, vm.options.id).then(function (data) {
+            entityTypeClassifierMappingResolveService.getList(vm.options.entityType, vm.options.id).then(function (data) {
 
-                    var mappingItems = data.results;
+                var mappingItems = data.results;
 
-                    vm.items = vm.items.map(function (item) {
+                vm.items = vm.items.map(function (item) {
 
-                        item.mapping = [];
+                    item.mapping = [];
 
-                        mappingItems.forEach(function (mapItem) {
+                    mappingItems.forEach(function (mapItem) {
 
-                            if (mapItem.content_object === item.id) {
-                                item.mapping.push(mapItem);
-                            }
-
-                        });
-
-                        return item;
-
-                    });
-
-                    vm.items = vm.items.map(function (item) {
-
-                        if (!item.mapping.length) {
-                            item.mapping = [{value: ''}]
+                        if (mapItem.content_object === item.id) {
+                            item.mapping.push(mapItem);
                         }
 
-                        return item;
-
                     });
 
-                    vm.readyStatus.content = true;
-
-                    $scope.$apply();
+                    return item;
 
                 });
 
+                vm.items = vm.items.map(function (item) {
+
+                    if (!item.mapping.length) {
+                        item.mapping = [{value: ''}]
+                    }
+
+                    return item;
+
+                });
+
+                vm.readyStatus.content = true;
+
+                $scope.$apply();
 
             });
 
-        };
 
-        vm.toggleQuery = function () {
-            vm.queryStatus = !vm.queryStatus;
-            vm.query = {};
-        };
+        });
 
-        vm.setSort = function (propertyName) {
-            vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
-            vm.sort = propertyName;
-        };
+    };
 
-        vm.addMapping = function (item, index) {
-            item.mapping.splice(index, 0, {value: ''});
-        };
+    vm.toggleQuery = function () {
+        vm.queryStatus = !vm.queryStatus;
+        vm.query = {};
+    };
 
-        vm.removeMapping = function (item, mappingItem, index) {
+    vm.setSort = function (propertyName) {
+        vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
+        vm.sort = propertyName;
+    };
 
-            if (mappingItem.hasOwnProperty('id')) {
-                mappingItem.isDeleted = true;
-            } else {
-                item.mapping.splice(index, 1);
-            }
+    vm.addMapping = function (item, index) {
+        item.mapping.splice(index, 0, {value: ''});
+    };
 
-        };
+    vm.removeMapping = function (item, mappingItem, index) {
 
-        vm.fancyEntity = function () {
+        if (mappingItem.hasOwnProperty('id')) {
+            mappingItem.isDeleted = true;
+        } else {
+            item.mapping.splice(index, 1);
+        }
 
-            return vm.options.entityType;
-        };
+    };
+
+    vm.fancyEntity = function () {
+
+        return vm.options.entityType;
+    };
 
 
-        vm.getAction = function (mapItem) {
+    vm.getAction = function (mapItem) {
 
-            if (!mapItem.hasOwnProperty('id')) {
-                return 'create';
-            }
+        if (!mapItem.hasOwnProperty('id')) {
+            return 'create';
+        }
 
-            if (mapItem.isDeleted === true) {
-                return 'delete';
-            }
+        if (mapItem.isDeleted === true) {
+            return 'delete';
+        }
 
-            return 'update'
+        return 'update'
 
-        };
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.agree = function () {
+    vm.agree = function () {
 
-            vm.items.forEach(function (item) {
+        vm.items.forEach(function (item) {
 
-                item.mapping.forEach(function (mapItem) {
+            item.mapping.forEach(function (mapItem) {
 
-                    var action = vm.getAction(mapItem);
+                var action = vm.getAction(mapItem);
 
-                    mapItem.provider = 1; //TODO fix it later?
-                    mapItem.content_object = item.id;
-                    mapItem.attribute_type = vm.classifier.id;
+                mapItem.provider = 1; //TODO fix it later?
+                mapItem.content_object = item.id;
+                mapItem.attribute_type = vm.classifier.id;
 
-                    if (action === 'create' && mapItem.value) {
-                        entityTypeClassifierMappingResolveService.create(vm.options.entityType, mapItem);
-                    }
+                if (action === 'create' && mapItem.value) {
+                    entityTypeClassifierMappingResolveService.create(vm.options.entityType, mapItem);
+                }
 
-                    if (action === 'update') {
+                if (action === 'update') {
 
-                        if (mapItem.value) {
-                            entityTypeClassifierMappingResolveService.update(vm.options.entityType, mapItem.id, mapItem);
-                        } else {
-                            entityTypeClassifierMappingResolveService.deleteByKey(vm.options.entityType, mapItem.id);
-                        }
-                    }
-
-                    if (action === 'delete') {
+                    if (mapItem.value) {
+                        entityTypeClassifierMappingResolveService.update(vm.options.entityType, mapItem.id, mapItem);
+                    } else {
                         entityTypeClassifierMappingResolveService.deleteByKey(vm.options.entityType, mapItem.id);
                     }
+                }
 
-                })
+                if (action === 'delete') {
+                    entityTypeClassifierMappingResolveService.deleteByKey(vm.options.entityType, mapItem.id);
+                }
 
-            });
+            })
+
+        });
 
 
-            $mdDialog.hide({status: 'agree'});
-        };
+        $mdDialog.hide({status: 'agree'});
+    };
 
-        vm.init();
-    }
-
-}());
+    vm.init();
+};

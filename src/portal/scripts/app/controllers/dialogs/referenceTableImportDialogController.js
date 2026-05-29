@@ -1,233 +1,144 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import referenceTablesService from '../../services/referenceTablesService';
 
-    var referenceTablesService = require('../../services/referenceTablesService');
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.item = data.item;
 
-        vm.item = data.item;
+    console.log('vm.item', vm.item);
 
-        console.log('vm.item', vm.item);
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
+    vm.file = null;
+    vm.mode = 'skip';
 
-        vm.file = null;
-        vm.mode = 'skip';
+    vm.checkExtension = function (file, extension, $event) {
+        console.log('file', file);
 
-        vm.checkExtension = function (file, extension, $event) {
-            console.log('file', file);
+        if (file) {
 
-            if (file) {
+            var ext = file.name.split('.').at(-1);
 
-                var ext = file.name.split('.').at(-1);
+            if (ext !== extension) {
 
-                if (ext !== extension) {
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    parent: document.querySelector(".dialog-containers-wrap"),
+                    targetEvent: $event,
+                    locals: {
+                        success: {
+                            title: "Warning!",
+                            description: 'You are trying to load incorrect file'
+                        }
+                    },
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                }).then(function () {
 
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        parent: document.querySelector(".dialog-containers-wrap"),
-                        targetEvent: $event,
-                        locals: {
-                            success: {
-                                title: "Warning!",
-                                description: 'You are trying to load incorrect file'
-                            }
-                        },
-                        multiple: true,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    }).then(function () {
-
-                        vm.file = null;
-                    });
-
-                }
+                    vm.file = null;
+                });
 
             }
 
-        };
+        }
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    };
 
-        vm.agree = function ($event) {
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-            var reader = new FileReader();
+    vm.agree = function ($event) {
 
-            reader.readAsText(vm.file);
+        var reader = new FileReader();
 
-            reader.onload = function (evt) {
+        reader.readAsText(vm.file);
 
-                try {
+        reader.onload = function (evt) {
 
-                    console.log('evt.target', evt.target);
+            try {
 
-                    var file = evt.target.result;
+                console.log('evt.target', evt.target);
 
-                    console.log('file', file);
+                var file = evt.target.result;
 
-                    var lines = file.split(/\r\n|\n|\r/);
+                console.log('file', file);
 
-                    console.log('lines', lines);
+                var lines = file.split(/\r\n|\n|\r/);
 
-                    lines.splice(0, 1);
+                console.log('lines', lines);
 
-                    console.log('lines', lines);
+                lines.splice(0, 1);
+
+                console.log('lines', lines);
 
 
-                    if (vm.mode === 'skip') {
+                if (vm.mode === 'skip') {
 
-                        var itemsExists = [];
+                    var itemsExists = [];
 
-                        vm.referenceTable.rows.forEach(function (item) {
-                            itemsExists.push(item.key);
-                        });
+                    vm.referenceTable.rows.forEach(function (item) {
+                        itemsExists.push(item.key);
+                    });
 
-                        lines.forEach(function (line) {
+                    lines.forEach(function (line) {
 
-                            var pieces = line.split(',');
-                            var key = pieces[0];
-                            var value = pieces[1];
+                        var pieces = line.split(',');
+                        var key = pieces[0];
+                        var value = pieces[1];
 
-                            if (itemsExists.indexOf(key) === -1) {
+                        if (itemsExists.indexOf(key) === -1) {
 
-                                vm.referenceTable.rows.push({
-                                    key: key,
-                                    value: value
-                                })
-
-                            }
-
-                        });
-
-                        vm.referenceTable.rows = vm.referenceTable.rows.filter(function (row) {
-
-                            return row.key !== '' && row.value !== '';
-
-                        });
-
-                        referenceTablesService.update(vm.referenceTable.id, vm.referenceTable).then(function () {
-
-                            $mdDialog.show({
-                                controller: 'SuccessDialogController as vm',
-                                templateUrl: 'views/dialogs/success-dialog-view.html',
-                                parent: document.querySelector(".dialog-containers-wrap"),
-                                targetEvent: $event,
-                                locals: {
-                                    success: {
-                                        title: "Success!",
-                                        description: 'You are successfully import Reference Table'
-                                    }
-                                },
-                                multiple: true,
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true
-                            }).then(function (value) {
-
-                                $mdDialog.hide({status: 'agree'});
-
+                            vm.referenceTable.rows.push({
+                                key: key,
+                                value: value
                             })
 
-                        });
+                        }
 
+                    });
 
-                    }
+                    vm.referenceTable.rows = vm.referenceTable.rows.filter(function (row) {
 
-                    if (vm.mode === 'overwrite') {
+                        return row.key !== '' && row.value !== '';
+
+                    });
+
+                    referenceTablesService.update(vm.referenceTable.id, vm.referenceTable).then(function () {
 
                         $mdDialog.show({
-                            controller: 'WarningDialogController as vm',
-                            templateUrl: 'views/dialogs/warning-dialog-view.html',
-                            parent: document.querySelector('.dialog-containers-wrap'),
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
-                            clickOutsideToClose: false,
                             locals: {
-                                warning: {
-                                    title: 'Warning',
-                                    description: 'The current Reference Table will be permanently deleted and all the assigned keys for this Reference Table will be lost.<br/> Do you want to proceed?',
-                                    actionsButtons: [
-                                        {
-                                            name: "CANCEL",
-                                            response: {}
-                                        },
-                                        {
-                                            name: "OK, PROCEED",
-                                            response: {status: 'agree'}
-                                        }
-                                    ]
+                                success: {
+                                    title: "Success!",
+                                    description: 'You are successfully import Reference Table'
                                 }
                             },
+                            multiple: true,
                             preserveScope: true,
                             autoWrap: true,
-                            skipHide: true,
-                            multiple: true
-                        }).then(function (res) {
-                            console.log('res', res);
-                            if (res.status === 'agree') {
+                            skipHide: true
+                        }).then(function (value) {
 
-                                vm.referenceTable.rows = [];
+                            $mdDialog.hide({status: 'agree'});
 
-                                lines.forEach(function (line) {
+                        })
 
-                                    var pieces = line.split(',');
-                                    var key = pieces[0];
-                                    var value = pieces[1];
-
-                                    vm.referenceTable.rows.push({
-                                        key: key,
-                                        value: value
-                                    })
+                    });
 
 
-                                });
+                }
 
-                                vm.referenceTable.rows = vm.referenceTable.rows.filter(function (row) {
-
-                                    return row.key !== '' && row.value !== '';
-
-                                });
-
-                                referenceTablesService.update(vm.referenceTable.id, vm.referenceTable).then(function () {
-
-                                    $mdDialog.show({
-                                        controller: 'SuccessDialogController as vm',
-                                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                                        parent: document.querySelector(".dialog-containers-wrap"),
-                                        targetEvent: $event,
-                                        locals: {
-                                            success: {
-                                                title: "Success!",
-                                                description: 'You are successfully import Reference Table'
-                                            }
-                                        },
-                                        multiple: true,
-                                        preserveScope: true,
-                                        autoWrap: true,
-                                        skipHide: true
-                                    }).then(function (value) {
-                                        $mdDialog.hide({status: 'agree'});
-                                    });
-
-                                })
-
-                            }
-                        });
-                    }
-
-
-                } catch (error) {
-
-                    console.log('error', error);
+                if (vm.mode === 'overwrite') {
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
@@ -237,45 +148,127 @@
                         clickOutsideToClose: false,
                         locals: {
                             warning: {
-                                title: 'Error',
-                                description: 'Unable to read it. This file is corrupted.'
+                                title: 'Warning',
+                                description: 'The current Reference Table will be permanently deleted and all the assigned keys for this Reference Table will be lost.<br/> Do you want to proceed?',
+                                actionsButtons: [
+                                    {
+                                        name: "CANCEL",
+                                        response: {}
+                                    },
+                                    {
+                                        name: "OK, PROCEED",
+                                        response: {status: 'agree'}
+                                    }
+                                ]
                             }
                         },
                         preserveScope: true,
                         autoWrap: true,
-                        skipHide: true
+                        skipHide: true,
+                        multiple: true
+                    }).then(function (res) {
+                        console.log('res', res);
+                        if (res.status === 'agree') {
+
+                            vm.referenceTable.rows = [];
+
+                            lines.forEach(function (line) {
+
+                                var pieces = line.split(',');
+                                var key = pieces[0];
+                                var value = pieces[1];
+
+                                vm.referenceTable.rows.push({
+                                    key: key,
+                                    value: value
+                                })
+
+
+                            });
+
+                            vm.referenceTable.rows = vm.referenceTable.rows.filter(function (row) {
+
+                                return row.key !== '' && row.value !== '';
+
+                            });
+
+                            referenceTablesService.update(vm.referenceTable.id, vm.referenceTable).then(function () {
+
+                                $mdDialog.show({
+                                    controller: 'SuccessDialogController as vm',
+                                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                                    parent: document.querySelector(".dialog-containers-wrap"),
+                                    targetEvent: $event,
+                                    locals: {
+                                        success: {
+                                            title: "Success!",
+                                            description: 'You are successfully import Reference Table'
+                                        }
+                                    },
+                                    multiple: true,
+                                    preserveScope: true,
+                                    autoWrap: true,
+                                    skipHide: true
+                                }).then(function (value) {
+                                    $mdDialog.hide({status: 'agree'});
+                                });
+
+                            })
+
+                        }
                     });
-
-                    vm.file = null;
-
-
                 }
+
+
+            } catch (error) {
+
+                console.log('error', error);
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    locals: {
+                        warning: {
+                            title: 'Error',
+                            description: 'Unable to read it. This file is corrupted.'
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                });
+
+                vm.file = null;
+
 
             }
 
+        }
 
-        };
 
-        vm.getReferenceTable = function () {
+    };
 
-            vm.readyStatus.content = false;
+    vm.getReferenceTable = function () {
 
-            referenceTablesService.getByKey(vm.item.id).then(function (data) {
+        vm.readyStatus.content = false;
 
-                vm.referenceTable = data;
+        referenceTablesService.getByKey(vm.item.id).then(function (data) {
 
-                vm.readyStatus.content = true;
+            vm.referenceTable = data;
 
-                $scope.$apply();
+            vm.readyStatus.content = true;
 
-            })
-        };
+            $scope.$apply();
 
-        vm.init = function () {
-            vm.getReferenceTable()
-        };
+        })
+    };
 
-        vm.init();
-    }
+    vm.init = function () {
+        vm.getReferenceTable()
+    };
 
-}());
+    vm.init();
+};

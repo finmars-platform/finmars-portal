@@ -1,37 +1,30 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function(){
+'use strict';
 
-    'use strict';
+export default function($scope, $mdDialog, warning){
 
-    module.exports = function($scope, $mdDialog, warning){
+    var vm = this;
 
-        var vm = this;
+    vm.warning = warning;
 
-        vm.warning = warning;
+    vm.actionsButtons = undefined;
 
-        vm.actionsButtons = undefined;
+    if (warning.actionsButtons && warning.actionsButtons.length) {
 
-        if (warning.actionsButtons && warning.actionsButtons.length) {
+        vm.actionsButtons = warning.actionsButtons;
 
-            vm.actionsButtons = warning.actionsButtons;
-
-        }
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.agree = function (responseData) {
-
-            if (responseData !== undefined) {
-                $mdDialog.hide(responseData);
-            } else {
-                $mdDialog.hide({status: 'agree'});
-            }
-
-        };
     }
 
-}());
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+    vm.agree = function (responseData) {
+
+        if (responseData !== undefined) {
+            $mdDialog.hide(responseData);
+        } else {
+            $mdDialog.hide({status: 'agree'});
+        }
+
+    };
+};

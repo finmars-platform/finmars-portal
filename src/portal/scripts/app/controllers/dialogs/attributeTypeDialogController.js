@@ -1,195 +1,187 @@
-/**
- * Created by szhitenev on 30.05.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import metaService from '../../services/metaService';
+import attributeTypeService from '../../services/attributeTypeService';
 
-    var metaService = require('../../services/metaService').default;
+export default function ($scope, $mdDialog, usersService, usersGroupService,metaContentTypesService, data) {
 
-    var attributeTypeService = require('../../services/attributeTypeService');
+    var vm = this;
 
-    module.exports = function ($scope, $mdDialog, usersService, usersGroupService,metaContentTypesService, data) {
+    vm.readyStatus = {attribute: false};
 
-        var vm = this;
+    vm.processing = false;
 
-        vm.readyStatus = {attribute: false};
+    vm.attribute = {};
 
-        vm.processing = false;
+    vm.valueTypes = [
+        {
+            name: 'Number',
+            value: 20
+        },
+        {
+            name: 'Text',
+            value: 10
+        },
+        {
+            name: 'Date',
+            value: 40
+        },
+        {
+            name: 'Classification',
+            value: 30
+        }
+    ];
 
-        vm.attribute = {};
+    vm.agree = function ($event) {
 
-        vm.valueTypes = [
-            {
-                name: 'Number',
-                value: 20
-            },
-            {
-                name: 'Text',
-                value: 10
-            },
-            {
-                name: 'Date',
-                value: 40
-            },
-            {
-                name: 'Classification',
-                value: 30
-            }
-        ];
+        console.log('vm.attribute', vm.attribute);
 
-        vm.agree = function ($event) {
+        vm.processing = true;
 
-            console.log('vm.attribute', vm.attribute);
+        if (vm.id) {
 
-            vm.processing = true;
+            attributeTypeService.update(vm.entityType, vm.attribute.id, vm.attribute).then(function (value) {
 
-            if (vm.id) {
+                $mdDialog.hide({status: 'agree'});
 
-                attributeTypeService.update(vm.entityType, vm.attribute.id, vm.attribute).then(function (value) {
+            }).catch(function (reason) {
 
-                    $mdDialog.hide({status: 'agree'});
-
-                }).catch(function (reason) {
-
-                    vm.processing = false;
-                    $mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/info-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
-                        clickOutsideToClose: true,
-                        locals: {
-                            info: {
-                                title: 'Warning',
-                                description: reason
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true
-                    })
+                vm.processing = false;
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    clickOutsideToClose: true,
+                    locals: {
+                        info: {
+                            title: 'Warning',
+                            description: reason
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
                 })
+            })
 
-            } else {
+        } else {
 
-                attributeTypeService.create(vm.entityType, vm.attribute).then(function (value) {
+            attributeTypeService.create(vm.entityType, vm.attribute).then(function (value) {
 
-                    $mdDialog.hide({status: 'agree'});
+                $mdDialog.hide({status: 'agree'});
 
-                }).catch(function (reason) {
+            }).catch(function (reason) {
 
-                    vm.processing = false;
+                vm.processing = false;
 
-                    $mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/info-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
-                        clickOutsideToClose: true,
-                        locals: {
-                            info: {
-                                title: 'Warning',
-                                description: reason
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true
-                    })
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    clickOutsideToClose: true,
+                    locals: {
+                        info: {
+                            title: 'Warning',
+                            description: reason
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
                 })
+            })
 
-
-            }
-
-        };
-
-        vm.getItem = function () {
-
-            attributeTypeService.getByKey(vm.entityType, vm.id).then(function (data) {
-
-                vm.attribute = data;
-
-                console.log('vm.attribute', vm.attribute);
-
-                vm.readyStatus.attribute = true;
-
-                $scope.$apply();
-            });
 
         }
 
-        vm.makeCopy = function ($event) {
+    };
 
-            var attribute = JSON.parse(JSON.stringify(vm.attribute));
+    vm.getItem = function () {
 
-            delete attribute.id;
-            attribute.user_code = attribute.user_code + '_copy';
+        attributeTypeService.getByKey(vm.entityType, vm.id).then(function (data) {
 
-            if (attribute.classifiers) {
+            vm.attribute = data;
 
-                delete attribute.classifiers_flat
+            console.log('vm.attribute', vm.attribute);
 
-                attribute.classifiers = attribute.classifiers.map(function (item){
+            vm.readyStatus.attribute = true;
 
-                    delete item.id; // TODO maybe an issue if nested classifiers, refactor later 2023-05-16
-
-                    return item
-                })
-
-            }
-
-            var copyPromise = $mdDialog.show({
-                controller: 'AttributeTypeDialogController as vm',
-                templateUrl: 'views/attribute-type-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                locals: {
-                    data: {
-                        entityType: vm.entityType,
-                        attribute: attribute
-                    }
-                }
-            });
-
-            $mdDialog.hide({status: 'copy', dialogPromise: copyPromise});
-
-        };
-
-        var init = function () {
-
-            vm.entityType = data.entityType;
-            vm.id = data.id;
-
-            if (data.attribute) {
-                vm.attribute = data.attribute;
-            }
-
-            if (vm.id) {
-
-                vm.getItem();
-
-            } else {
-
-                vm.attribute.content_type = metaContentTypesService.findContentTypeByEntity(vm.entityType);
-
-                vm.readyStatus.attribute = true;
-
-            }
-
-            setTimeout(function () {
-                vm.dialogElemToResize = document.querySelector('.attrManagerElemToResize');
-            }, 100);
-        };
-
-        init();
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+            $scope.$apply();
+        });
 
     }
 
-}());
+    vm.makeCopy = function ($event) {
+
+        var attribute = JSON.parse(JSON.stringify(vm.attribute));
+
+        delete attribute.id;
+        attribute.user_code = attribute.user_code + '_copy';
+
+        if (attribute.classifiers) {
+
+            delete attribute.classifiers_flat
+
+            attribute.classifiers = attribute.classifiers.map(function (item){
+
+                delete item.id; // TODO maybe an issue if nested classifiers, refactor later 2023-05-16
+
+                return item
+            })
+
+        }
+
+        var copyPromise = $mdDialog.show({
+            controller: 'AttributeTypeDialogController as vm',
+            templateUrl: 'views/attribute-type-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            locals: {
+                data: {
+                    entityType: vm.entityType,
+                    attribute: attribute
+                }
+            }
+        });
+
+        $mdDialog.hide({status: 'copy', dialogPromise: copyPromise});
+
+    };
+
+    var init = function () {
+
+        vm.entityType = data.entityType;
+        vm.id = data.id;
+
+        if (data.attribute) {
+            vm.attribute = data.attribute;
+        }
+
+        if (vm.id) {
+
+            vm.getItem();
+
+        } else {
+
+            vm.attribute.content_type = metaContentTypesService.findContentTypeByEntity(vm.entityType);
+
+            vm.readyStatus.attribute = true;
+
+        }
+
+        setTimeout(function () {
+            vm.dialogElemToResize = document.querySelector('.attrManagerElemToResize');
+        }, 100);
+    };
+
+    init();
+
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+};

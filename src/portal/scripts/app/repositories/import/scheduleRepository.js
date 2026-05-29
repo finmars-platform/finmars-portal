@@ -1,56 +1,48 @@
-/**
- * Created by szhitenev on 19.08.2016.
- */
-// import baseUrlService from "../../services/baseUrlService";
-(function () {
+'use strict';
 
-    'use strict';
+import baseUrlService from "../../services/baseUrlService";
+import cookieService from '../../../../../core/services/cookieService';
+import xhrService from '../../../../../core/services/xhrService';
+import configureRepositoryUrlService from '../../services/configureRepositoryUrlService';
+// var baseUrlService = require('../../services/baseUrlService');
 
-    var baseUrlService = require("../../services/baseUrlService").default;
-    var cookieService = require('../../../../../core/services/cookieService').default;
-    var xhrService = require('../../../../../core/services/xhrService').default;
-    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService').default;
-    // var baseUrlService = require('../../services/baseUrlService');
+var baseUrl = baseUrlService.resolve();
 
-    var baseUrl = baseUrlService.resolve();
-
-    var getAccrualScheduleDownloadMethodList = function () {
-        
+var getAccrualScheduleDownloadMethodList = function () {
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/accrual-schedule-download-method/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-    var getFactorScheduleDownloadMethodList = function () {
-        
+var getFactorScheduleDownloadMethodList = function () {
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/factor-schedule-download-method/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-    module.exports = {
-        getAccrualScheduleDownloadMethodList: getAccrualScheduleDownloadMethodList,
-        getFactorScheduleDownloadMethodList: getFactorScheduleDownloadMethodList
-    }
-
-}());
+export default {
+    getAccrualScheduleDownloadMethodList: getAccrualScheduleDownloadMethodList,
+    getFactorScheduleDownloadMethodList: getFactorScheduleDownloadMethodList
+};

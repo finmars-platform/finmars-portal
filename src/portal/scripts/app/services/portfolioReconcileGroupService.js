@@ -1,53 +1,45 @@
-/**
- * Created by szhitenev on 02.02.2024.
- */
-(function ($mdDialog) {
+import portfolioReconcileGroupRepository from '../repositories/portfolioReconcileGroupRepository';
 
-    const portfolioReconcileGroupRepository = require('../repositories/portfolioReconcileGroupRepository');
+const getList = function (options) {
+    return portfolioReconcileGroupRepository.getList(options);
+};
 
-    const getList = function (options) {
-        return portfolioReconcileGroupRepository.getList(options);
-    };
+const getListLight = function (options) {
+    return portfolioReconcileGroupRepository.getListLight(options);
+};
 
-    const getListLight = function (options) {
-        return portfolioReconcileGroupRepository.getListLight(options);
-    };
+const getByKey = function (id) {
+    return portfolioReconcileGroupRepository.getByKey(id);
+};
 
-    const getByKey = function (id) {
-        return portfolioReconcileGroupRepository.getByKey(id);
-    };
+const create = function (account) {
+    return portfolioReconcileGroupRepository.create(account);
+};
 
-    const create = function (account) {
-        return portfolioReconcileGroupRepository.create(account);
-    };
+const update = function (id, account) {
+    return portfolioReconcileGroupRepository.update(id, account);
+};
 
-    const update = function (id, account) {
-        return portfolioReconcileGroupRepository.update(id, account);
-    };
+const deleteByKey = function (id) {
+    return portfolioReconcileGroupRepository.deleteByKey(id);
+};
 
-    const deleteByKey = function (id) {
-        return portfolioReconcileGroupRepository.deleteByKey(id);
-    };
+const updateBulk = function (data) {
+    return portfolioReconcileGroupRepository.updateBulk(data)
+};
 
-    const updateBulk = function (data) {
-        return portfolioReconcileGroupRepository.updateBulk(data)
-    };
+const deleteBulk = function (data) {
+    return portfolioReconcileGroupRepository.deleteBulk(data)
+};
 
-    const deleteBulk = function (data) {
-        return portfolioReconcileGroupRepository.deleteBulk(data)
-    };
+export default {
+    getList: getList,
+    getListLight: getListLight,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey,
 
-    module.exports = {
-        getList: getList,
-        getListLight: getListLight,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
-
-        updateBulk: updateBulk,
-        deleteBulk: deleteBulk
-    }
-
-
-}());
+    updateBulk: updateBulk,
+    deleteBulk: deleteBulk
+};

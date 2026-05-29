@@ -1,71 +1,43 @@
-(function () {
+var getCellValueByKey = function (entityViewerDataService, key) {
 
-    var getCellValueByKey = function (entityViewerDataService, key) {
+    var data = entityViewerDataService.getUnfilteredFlatList();
+    var result = [];
 
-        var data = entityViewerDataService.getUnfilteredFlatList();
-        var result = [];
+    data.forEach(function (item) {
 
-        data.forEach(function (item) {
+        var cellValue = '';
 
-            var cellValue = '';
+        if (item.hasOwnProperty('attributes') && key.indexOf("attributes.") === 0) { // if field is a dynamic attribute
 
-            if (item.hasOwnProperty('attributes') && key.indexOf("attributes.") === 0) { // if field is a dynamic attribute
+            var dynamicAttrKey = key.slice(11);
 
-                var dynamicAttrKey = key.slice(11);
+            for (var da = 0; da < item.attributes.length; da++) {
+                var dynamicAttributeData = item.attributes[da];
 
-                for (var da = 0; da < item.attributes.length; da++) {
-                    var dynamicAttributeData = item.attributes[da];
+                if (dynamicAttributeData.attribute_type_object.user_code === dynamicAttrKey) {
 
-                    if (dynamicAttributeData.attribute_type_object.user_code === dynamicAttrKey) {
+                    if (dynamicAttributeData.attribute_type_object.value_type === 30) {
 
-                        if (dynamicAttributeData.attribute_type_object.value_type === 30) {
-
-                            if (dynamicAttributeData.classifier_object) {
-                                cellValue = dynamicAttributeData.classifier_object.name;
-                            } else {
-                                cellValue = '';
-                            }
-
-                            break;
-
+                        if (dynamicAttributeData.classifier_object) {
+                            cellValue = dynamicAttributeData.classifier_object.name;
                         } else {
-
-                            switch (dynamicAttributeData.attribute_type_object.value_type) {
-                                case 10:
-                                    cellValue = dynamicAttributeData.value_string;
-                                    break;
-                                case 40:
-                                    cellValue = dynamicAttributeData.value_date;
-                                    break;
-                            }
-
-                            break;
-
+                            cellValue = '';
                         }
 
-                    }
-
-                }
-
-            } else {
-
-                if (item.hasOwnProperty(key)) {
-
-                    var fieldObjKey = key + '_object';
-
-                    if (item.hasOwnProperty(fieldObjKey)) { // if field is a relation field
-
-                        cellValue = item[fieldObjKey].name;
-
-                        if (item[fieldObjKey].display_name) {
-
-                            cellValue = item[fieldObjKey].display_name;
-
-                        }
+                        break;
 
                     } else {
 
-                        cellValue = item[key];
+                        switch (dynamicAttributeData.attribute_type_object.value_type) {
+                            case 10:
+                                cellValue = dynamicAttributeData.value_string;
+                                break;
+                            case 40:
+                                cellValue = dynamicAttributeData.value_date;
+                                break;
+                        }
+
+                        break;
 
                     }
 
@@ -73,18 +45,42 @@
 
             }
 
-            if (cellValue && result.indexOf(cellValue) === -1) {
-                result.push(cellValue);
+        } else {
+
+            if (item.hasOwnProperty(key)) {
+
+                var fieldObjKey = key + '_object';
+
+                if (item.hasOwnProperty(fieldObjKey)) { // if field is a relation field
+
+                    cellValue = item[fieldObjKey].name;
+
+                    if (item[fieldObjKey].display_name) {
+
+                        cellValue = item[fieldObjKey].display_name;
+
+                    }
+
+                } else {
+
+                    cellValue = item[key];
+
+                }
+
             }
 
-        });
+        }
 
-        return result;
+        if (cellValue && result.indexOf(cellValue) === -1) {
+            result.push(cellValue);
+        }
 
-    };
+    });
 
-    module.exports = {
-        getCellValueByKey: getCellValueByKey
-    }
+    return result;
 
-}());
+};
+
+export default {
+    getCellValueByKey: getCellValueByKey
+};

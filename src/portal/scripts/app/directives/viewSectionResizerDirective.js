@@ -1,35 +1,33 @@
-(function() {
-	'use strict';
-	// TO DELETE: probably deprecated
+'use strict';
 
-	var logService = require('../../../../../core/services/logService');
+// TO DELETE: probably deprecated
 
-	return {
-		restrict: 'A',
-		scope: {},
-		link: function (scope, elem, attr) {
+import logService from '../../../../../core/services/logService';
 
-			logService.component('viewSectionResizer', 'initialized');
+export default {
+    restrict: 'A',
+    scope: {},
+    link: function (scope, elem, attr) {
 
-			var workAreaElem = $(elem).parents('.g-workarea');
-			var filterSidebarWidth = 246;
+        logService.component('viewSectionResizer', 'initialized');
 
-			workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
+        var workAreaElem = $(elem).parents('.g-workarea');
+        var filterSidebarWidth = 246;
 
-			var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-			$('.g-scroll-wrapper').width(wrapperWidth);
-			$('.g-scrollable-area').width(wrapperWidth);
+        workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
 
-			window.addEventListener('resize', function () {
-				workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
-				var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-				$('.g-scroll-wrapper').width(wrapperWidth);
-				$('.g-scrollable-area').width(wrapperWidth);
+        var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+        $('.g-scroll-wrapper').width(wrapperWidth);
+        $('.g-scrollable-area').width(wrapperWidth);
 
-				resizeScrollableArea();
-				resize();
-			});			
-		}
-	}
+        window.addEventListener('resize', function () {
+            workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
+            var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+            $('.g-scroll-wrapper').width(wrapperWidth);
+            $('.g-scrollable-area').width(wrapperWidth);
+
+            resizeScrollableArea();
+            resize();
+        });			
+    }
 }
-());

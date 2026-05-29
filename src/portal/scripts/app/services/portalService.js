@@ -1,15 +1,9 @@
-/**
- * Created by szhitenev on 06.09.2023.
- */
-(function () {
+import portalRepository from '../repositories/portalRepository';
 
-  var portalRepository = require('../repositories/portalRepository');
+var getNavigationRoutingList = function (options) {
+  return portalRepository.getNavigationRoutingList(options);
+};
 
-  var getNavigationRoutingList = function (options) {
-    return portalRepository.getNavigationRoutingList(options);
-  };
-
-  module.exports = {
-    getNavigationRoutingList: getNavigationRoutingList,
-  }
-}());
+export default {
+  getNavigationRoutingList: getNavigationRoutingList,
+};

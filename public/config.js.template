@@ -1,0 +1,17 @@
+// These variables are replaced with environment variabels
+// by the vite dev server through the DynamicConfig plugin or by envsubst in the
+// Docker image
+(function(window) {
+  window.API_HOST = '${API_HOST}'
+  window.WS_HOST = '${WS_HOST}'
+  window.AUTHORIZER_URL = '${AUTHORIZER_URL}'
+  window.HEALTHCHECK_HOST = '${HEALTHCHECK_HOST}'
+  window.KEYCLOAK_ACCOUNT_PAGE = '${KEYCLOAK_ACCOUNT_PAGE}'
+  window.KEYCLOAK_URL = '${KEYCLOAK_URL}'
+  window.KEYCLOAK_REALM = '${KEYCLOAK_REALM}'
+  window.KEYCLOAK_CLIENT_ID = '${KEYCLOAK_CLIENT_ID}'
+  window.USE_ACTVENOTE = '${USE_ACTIVENOTE}'
+  window.EDITION_TYPE = '${EDITION_TYPE}'
+  window.SENTRY_DSN = '${SENTRY_DSN}'
+  window.PROJECT_ENV = '${PROJECT_ENV}'
+})(this)

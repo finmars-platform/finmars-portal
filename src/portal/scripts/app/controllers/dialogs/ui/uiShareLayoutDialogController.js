@@ -1,245 +1,201 @@
-/**
- * Created by szhitenev on 17.01.2020.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import evEvents from '../../../services/entityViewerEvents';
+import uiService from '../../../services/uiService';
+import memberService from '../../../services/membersAndGroupsService';
+import shareConfigurationFileService from '../../../services/shareConfigurationFileService';
+import inviteToSharedConfigurationFileService from '../../../services/inviteToSharedConfigurationFileService';
 
-    var evEvents = require('../../../services/entityViewerEvents');
+export default function ($scope, $mdDialog, options) {
 
-    var uiService = require('../../../services/uiService').default;
-    var memberService = require('../../../services/membersAndGroupsService');
+    var vm = this;
 
-    var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
-    var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
+    vm.layout = options.layout;
 
-    module.exports = function ($scope, $mdDialog, options) {
+    vm.readyStatus = {members: false, configurationFile: false};
 
-        var vm = this;
+    vm.globalConfigurationFile = {};
 
-        vm.layout = options.layout;
+    vm.assignedMembersList = [];
+    vm.inviteNotes = '';
 
-        vm.readyStatus = {members: false, configurationFile: false};
+    vm.getMemberList = function () {
 
-        vm.globalConfigurationFile = {};
+        memberService.getMembersList().then(function (data) {
 
-        vm.assignedMembersList = [];
-        vm.inviteNotes = '';
+            vm.members = data.results;
 
-        vm.getMemberList = function () {
+            console.log('vm.members', vm.members);
 
-            memberService.getMembersList().then(function (data) {
+            vm.readyStatus.members = true;
 
-                vm.members = data.results;
+            // vm.getSentInvites();
 
-                console.log('vm.members', vm.members);
+            $scope.$apply();
 
-                vm.readyStatus.members = true;
+        })
 
-                // vm.getSentInvites();
+    };
 
-                $scope.$apply();
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+    vm.getAllReportLayouts = function () {
+
+        return new Promise(function (resolve, reject) {
+
+
+            var promises = [];
+
+            /* promises.push(uiService.getListLayoutDefault(
+                {
+                    filters: {
+                        content_type: 'reports.balancereport'
+                    }
+                }
+            )); */
+            promises.push(uiService.getListLayout(
+                null,
+                {
+                    pageSize: 1000,
+                    filters: {
+                        content_type: 'reports.balancereport'
+                    }
+                }
+            ));
+
+            /* promises.push(uiService.getListLayoutDefault(
+                {
+                    filters: {
+                        content_type: 'reports.plreport'
+                    }
+                }
+            )); */
+            promises.push(uiService.getListLayout(
+                null,
+                {
+                    pageSize: 1000,
+                    filters: {
+                        content_type: 'reports.plreport'
+                    }
+                }
+            ));
+
+            /* promises.push(uiService.getListLayoutDefault(
+                {
+                    filters: {
+                        content_type: 'reports.transactionreport'
+                    }
+                }
+            )); */
+            promises.push(uiService.getListLayout(
+                null,
+                {
+                    pageSize: 1000,
+                    filters: {
+                        content_type: 'reports.transactionreport'
+                    }
+                }
+            ));
+
+            Promise.all(promises).then(function (data) {
+
+                console.log('data', data);
+
+                var result = [];
+
+                data.forEach(function (dataItem) {
+                    dataItem.results.forEach(function (layout) {
+                        result.push(layout)
+                    })
+                });
+
+                console.log('result', result);
+
+                resolve(result)
 
             })
 
-        };
+        })
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    };
 
-        vm.getAllReportLayouts = function () {
+    vm.getReportLayoutsFromDashboardLayout = function (dashboardLayout) {
 
-            return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
 
+            vm.getAllReportLayouts().then(function (data) {
 
-                var promises = [];
+                var layouts = data;
 
-                /* promises.push(uiService.getListLayoutDefault(
-                    {
-                        filters: {
-                            content_type: 'reports.balancereport'
-                        }
-                    }
-                )); */
-                promises.push(uiService.getListLayout(
-                    null,
-                    {
-                        pageSize: 1000,
-                        filters: {
-                            content_type: 'reports.balancereport'
-                        }
-                    }
-                ));
-
-                /* promises.push(uiService.getListLayoutDefault(
-                    {
-                        filters: {
-                            content_type: 'reports.plreport'
-                        }
-                    }
-                )); */
-                promises.push(uiService.getListLayout(
-                    null,
-                    {
-                        pageSize: 1000,
-                        filters: {
-                            content_type: 'reports.plreport'
-                        }
-                    }
-                ));
-
-                /* promises.push(uiService.getListLayoutDefault(
-                    {
-                        filters: {
-                            content_type: 'reports.transactionreport'
-                        }
-                    }
-                )); */
-                promises.push(uiService.getListLayout(
-                    null,
-                    {
-                        pageSize: 1000,
-                        filters: {
-                            content_type: 'reports.transactionreport'
-                        }
-                    }
-                ));
-
-                Promise.all(promises).then(function (data) {
-
-                    console.log('data', data);
-
-                    var result = [];
-
-                    data.forEach(function (dataItem) {
-                        dataItem.results.forEach(function (layout) {
-                            result.push(layout)
-                        })
-                    });
-
-                    console.log('result', result);
-
-                    resolve(result)
-
-                })
-
-            })
-
-        };
-
-        vm.getReportLayoutsFromDashboardLayout = function (dashboardLayout) {
-
-            return new Promise(function (resolve, reject) {
-
-                vm.getAllReportLayouts().then(function (data) {
-
-                    var layouts = data;
-
-                    var result = [];
-                    var addedLayouts = {};
+                var result = [];
+                var addedLayouts = {};
 
 
-                    dashboardLayout.data.components_types.forEach(function (component) {
+                dashboardLayout.data.components_types.forEach(function (component) {
 
 
-                        if (['report_viewer', 'report_viewer_matrix',
-                            'report_viewer_split_panel', 'report_viewer_bars_chart'].indexOf(component.type) !== -1) {
+                    if (['report_viewer', 'report_viewer_matrix',
+                        'report_viewer_split_panel', 'report_viewer_bars_chart'].indexOf(component.type) !== -1) {
 
 
-                            layouts.forEach(function (layout) {
+                        layouts.forEach(function (layout) {
 
 
-                                if (component.settings.layout_name === layout.name && component.settings.content_type === layout.content_type) {
+                            if (component.settings.layout_name === layout.name && component.settings.content_type === layout.content_type) {
 
-                                    delete layout.id;
-                                    delete layout.is_default;
-                                    delete layout.is_active;
+                                delete layout.id;
+                                delete layout.is_default;
+                                delete layout.is_active;
 
-                                    if (!addedLayouts.hasOwnProperty(layout.content_type)) {
-                                        addedLayouts[layout.content_type] = [];
-                                    }
-
-                                    if (addedLayouts[layout.content_type].indexOf(layout.name) === -1) {
-
-                                        addedLayouts[layout.content_type].push(layout.name);
-
-                                        result.push(layout);
-
-                                    }
+                                if (!addedLayouts.hasOwnProperty(layout.content_type)) {
+                                    addedLayouts[layout.content_type] = [];
                                 }
 
+                                if (addedLayouts[layout.content_type].indexOf(layout.name) === -1) {
 
-                            })
-                        }
+                                    addedLayouts[layout.content_type].push(layout.name);
+
+                                    result.push(layout);
+
+                                }
+                            }
 
 
-                    });
+                        })
+                    }
 
-
-                    resolve(result);
 
                 });
 
-            })
 
-        };
+                resolve(result);
 
-        vm.createConfigurationFile = function () {
+            });
 
-            return new Promise(function (resolve, reject) {
+        })
 
-                var configuration;
+    };
 
-                var date = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
+    vm.createConfigurationFile = function () {
 
-                var layout = JSON.parse(JSON.stringify(vm.layout));
+        return new Promise(function (resolve, reject) {
 
-                delete layout.origin_for_global_layout;
-                delete layout.sourced_from_global_layout;
+            var configuration;
 
-                if (options.type === 'dashboard_viewer') {
+            var date = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
 
-                    vm.getReportLayoutsFromDashboardLayout(layout).then(function (data) {
+            var layout = JSON.parse(JSON.stringify(vm.layout));
 
-                        var reportLayouts = data;
+            delete layout.origin_for_global_layout;
+            delete layout.sourced_from_global_layout;
 
-                        configuration = {
-                            "head": {
-                                "date": date
-                            },
-                            "body": [
-                                {
-                                    "section_name": "configuration",
-                                    "items": [
-                                        {
-                                            "entity": "ui.dashboardlayout",
-                                            "content": [
-                                                layout
-                                            ],
-                                            "count": 1
-                                        },
-                                        {
-                                            "entity": "ui.reportlayout",
-                                            "content": reportLayouts,
-                                            "count": reportLayouts.length
-                                        }
-                                    ]
-                                }
-                            ]
-                        };
+            if (options.type === 'dashboard_viewer') {
 
-                        resolve(configuration)
+                vm.getReportLayoutsFromDashboardLayout(layout).then(function (data) {
 
-                    })
-
-                } else {
-
-                    var contentType = "ui.listlayout";
-
-                    if (options.type === 'report_viewer') {
-                        contentType = 'ui.reportlayout';
-                    }
+                    var reportLayouts = data;
 
                     configuration = {
                         "head": {
@@ -250,11 +206,16 @@
                                 "section_name": "configuration",
                                 "items": [
                                     {
-                                        "entity": contentType,
+                                        "entity": "ui.dashboardlayout",
                                         "content": [
                                             layout
                                         ],
                                         "count": 1
+                                    },
+                                    {
+                                        "entity": "ui.reportlayout",
+                                        "content": reportLayouts,
+                                        "count": reportLayouts.length
                                     }
                                 ]
                             }
@@ -263,242 +224,272 @@
 
                     resolve(configuration)
 
-                }
-
-            })
-
-
-        };
-
-
-        vm.sendInvite = function (member) {
-
-            return new Promise(function (resolve, reject) {
-
-                inviteToSharedConfigurationFileService.create({
-                    shared_configuration_file: vm.globalConfigurationFile.id,
-                    notes: vm.inviteNotes,
-                    member_to: member.id
-                }).then(function (data) {
-                    resolve(data);
                 })
 
-            })
+            } else {
 
-        };
+                var contentType = "ui.listlayout";
 
-        vm.getSentInvites = function () {
-
-            inviteToSharedConfigurationFileService.getList({
-                filters: {
-                    status: 1
+                if (options.type === 'report_viewer') {
+                    contentType = 'ui.reportlayout';
                 }
-            }).then(function (data) {
 
-                vm.sentInvites = data.results;
-
-                console.log('vm.sentInvites', vm.sentInvites);
-
-                vm.members = vm.members.filter(function (member) {
-
-                    var isSent = false;
-
-                    vm.sentInvites.forEach(function (invite) {
-
-                        if (invite.member_to === member.id) {
-                            isSent = true;
+                configuration = {
+                    "head": {
+                        "date": date
+                    },
+                    "body": [
+                        {
+                            "section_name": "configuration",
+                            "items": [
+                                {
+                                    "entity": contentType,
+                                    "content": [
+                                        layout
+                                    ],
+                                    "count": 1
+                                }
+                            ]
                         }
+                    ]
+                };
 
-                    });
-
-                    return !isSent
-
-                });
-
-                console.log("Members left: ", vm.members);
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.createOrUpdateGlobalConfigurationFile = function (force) {
-
-            return new Promise(function (resolve, reject) {
-
-                if (vm.globalConfigurationFile.id) {
-                    shareConfigurationFileService.update(vm.globalConfigurationFile.id, vm.globalConfigurationFile, force).then(function (data) {
-
-                        resolve(data);
-
-                    })
-                } else {
-                    shareConfigurationFileService.create(vm.globalConfigurationFile).then(function (data) {
-
-                        resolve(data);
-
-                    })
-                }
-
-            });
-
-        };
-
-        vm.updateLayout = function (id, item) {
-
-            return new Promise(function (resolve, reject) {
-
-                if (options.type === 'dashboard_viewer') {
-
-                    uiService.updateDashboardLayout(item.id, item).then(function (data) {
-
-                        resolve(data)
-
-                    })
-
-                } else {
-
-                    uiService.updateListLayout(item.id, item).then(function (data) {
-
-                        resolve(data)
-
-                    })
-
-                }
-
-            })
-
-        };
-
-        vm.agree = function () {
-
-            console.log("vm.globalConfigurationFile", vm.globalConfigurationFile);
-            console.log("vm.layout", vm.layout);
-            console.log("vm.assignedMembersList", vm.assignedMembersList);
-
-            vm.createConfigurationFile().then(function (configuration) {
-
-                vm.globalConfigurationFile.data = configuration;
-
-                vm.createOrUpdateGlobalConfigurationFile().then(function (globalConfigurationFile) {
-
-                    vm.layout.origin_for_global_layout = globalConfigurationFile.id;
-                    vm.layout.sourced_from_global_layout = globalConfigurationFile.id;
-
-                    vm.updateLayout(vm.layout.id, vm.layout).then(function (data) {
-
-                        vm.layout = data;
-
-                        vm.globalConfigurationFile = globalConfigurationFile;
-
-                        var promises = [];
-
-                        vm.assignedMembersList.forEach(function (member) {
-
-                            promises.push(vm.sendInvite(member))
-
-                        });
-
-                        Promise.all(promises).then(function (data) {
-
-                            console.log("Sent Invites data", data);
-
-                            console.log("Saved Configuration File", vm.globalConfigurationFile);
-
-                            $mdDialog.hide({status: 'agree', data: {layout: vm.layout}});
-                        })
-
-                    })
-
-                })
-
-            })
-
-        };
-
-        vm.agreeForce = function (){
-
-            console.log("vm.globalConfigurationFile", vm.globalConfigurationFile);
-            console.log("vm.layout", vm.layout);
-            console.log("vm.assignedMembersList", vm.assignedMembersList);
-
-            vm.createConfigurationFile().then(function (configuration) {
-
-                vm.globalConfigurationFile.data = configuration;
-
-                var force = true;
-
-                vm.createOrUpdateGlobalConfigurationFile(force).then(function (globalConfigurationFile) {
-
-                    vm.layout.origin_for_global_layout = globalConfigurationFile.id;
-                    vm.layout.sourced_from_global_layout = globalConfigurationFile.id;
-
-                    vm.updateLayout(vm.layout.id, vm.layout).then(function (data) {
-
-                        vm.layout = data;
-
-                        vm.globalConfigurationFile = globalConfigurationFile;
-
-                        var promises = [];
-
-                        vm.assignedMembersList.forEach(function (member) {
-
-                            promises.push(vm.sendInvite(member))
-
-                        });
-
-                        Promise.all(promises).then(function (data) {
-
-                            console.log("Sent Invites data", data);
-
-                            console.log("Saved Configuration File", vm.globalConfigurationFile);
-
-                            $mdDialog.hide({status: 'agree', data: {layout: vm.layout}});
-                        })
-
-                    })
-
-                })
-
-            })
-
-        }
-
-        vm.init = function () {
-
-            console.log('vm.layout', vm.layout);
-
-            if (vm.layout) {
-
-                if (vm.layout.origin_for_global_layout) {
-
-                    shareConfigurationFileService.getByKey(vm.layout.origin_for_global_layout).then(function (data) {
-
-                        vm.globalConfigurationFile = data;
-
-                        vm.readyStatus.configurationFile = true;
-
-                        $scope.$apply();
-
-                    })
-
-
-                } else {
-
-                    vm.globalConfigurationFile.name = vm.layout.name;
-
-                    vm.readyStatus.configurationFile = true;
-                }
+                resolve(configuration)
 
             }
 
-            vm.getMemberList();
+        })
 
-        };
 
-        vm.init();
+    };
+
+
+    vm.sendInvite = function (member) {
+
+        return new Promise(function (resolve, reject) {
+
+            inviteToSharedConfigurationFileService.create({
+                shared_configuration_file: vm.globalConfigurationFile.id,
+                notes: vm.inviteNotes,
+                member_to: member.id
+            }).then(function (data) {
+                resolve(data);
+            })
+
+        })
+
+    };
+
+    vm.getSentInvites = function () {
+
+        inviteToSharedConfigurationFileService.getList({
+            filters: {
+                status: 1
+            }
+        }).then(function (data) {
+
+            vm.sentInvites = data.results;
+
+            console.log('vm.sentInvites', vm.sentInvites);
+
+            vm.members = vm.members.filter(function (member) {
+
+                var isSent = false;
+
+                vm.sentInvites.forEach(function (invite) {
+
+                    if (invite.member_to === member.id) {
+                        isSent = true;
+                    }
+
+                });
+
+                return !isSent
+
+            });
+
+            console.log("Members left: ", vm.members);
+
+            $scope.$apply();
+
+        })
+
+    };
+
+    vm.createOrUpdateGlobalConfigurationFile = function (force) {
+
+        return new Promise(function (resolve, reject) {
+
+            if (vm.globalConfigurationFile.id) {
+                shareConfigurationFileService.update(vm.globalConfigurationFile.id, vm.globalConfigurationFile, force).then(function (data) {
+
+                    resolve(data);
+
+                })
+            } else {
+                shareConfigurationFileService.create(vm.globalConfigurationFile).then(function (data) {
+
+                    resolve(data);
+
+                })
+            }
+
+        });
+
+    };
+
+    vm.updateLayout = function (id, item) {
+
+        return new Promise(function (resolve, reject) {
+
+            if (options.type === 'dashboard_viewer') {
+
+                uiService.updateDashboardLayout(item.id, item).then(function (data) {
+
+                    resolve(data)
+
+                })
+
+            } else {
+
+                uiService.updateListLayout(item.id, item).then(function (data) {
+
+                    resolve(data)
+
+                })
+
+            }
+
+        })
+
+    };
+
+    vm.agree = function () {
+
+        console.log("vm.globalConfigurationFile", vm.globalConfigurationFile);
+        console.log("vm.layout", vm.layout);
+        console.log("vm.assignedMembersList", vm.assignedMembersList);
+
+        vm.createConfigurationFile().then(function (configuration) {
+
+            vm.globalConfigurationFile.data = configuration;
+
+            vm.createOrUpdateGlobalConfigurationFile().then(function (globalConfigurationFile) {
+
+                vm.layout.origin_for_global_layout = globalConfigurationFile.id;
+                vm.layout.sourced_from_global_layout = globalConfigurationFile.id;
+
+                vm.updateLayout(vm.layout.id, vm.layout).then(function (data) {
+
+                    vm.layout = data;
+
+                    vm.globalConfigurationFile = globalConfigurationFile;
+
+                    var promises = [];
+
+                    vm.assignedMembersList.forEach(function (member) {
+
+                        promises.push(vm.sendInvite(member))
+
+                    });
+
+                    Promise.all(promises).then(function (data) {
+
+                        console.log("Sent Invites data", data);
+
+                        console.log("Saved Configuration File", vm.globalConfigurationFile);
+
+                        $mdDialog.hide({status: 'agree', data: {layout: vm.layout}});
+                    })
+
+                })
+
+            })
+
+        })
+
+    };
+
+    vm.agreeForce = function (){
+
+        console.log("vm.globalConfigurationFile", vm.globalConfigurationFile);
+        console.log("vm.layout", vm.layout);
+        console.log("vm.assignedMembersList", vm.assignedMembersList);
+
+        vm.createConfigurationFile().then(function (configuration) {
+
+            vm.globalConfigurationFile.data = configuration;
+
+            var force = true;
+
+            vm.createOrUpdateGlobalConfigurationFile(force).then(function (globalConfigurationFile) {
+
+                vm.layout.origin_for_global_layout = globalConfigurationFile.id;
+                vm.layout.sourced_from_global_layout = globalConfigurationFile.id;
+
+                vm.updateLayout(vm.layout.id, vm.layout).then(function (data) {
+
+                    vm.layout = data;
+
+                    vm.globalConfigurationFile = globalConfigurationFile;
+
+                    var promises = [];
+
+                    vm.assignedMembersList.forEach(function (member) {
+
+                        promises.push(vm.sendInvite(member))
+
+                    });
+
+                    Promise.all(promises).then(function (data) {
+
+                        console.log("Sent Invites data", data);
+
+                        console.log("Saved Configuration File", vm.globalConfigurationFile);
+
+                        $mdDialog.hide({status: 'agree', data: {layout: vm.layout}});
+                    })
+
+                })
+
+            })
+
+        })
 
     }
 
-}());
+    vm.init = function () {
+
+        console.log('vm.layout', vm.layout);
+
+        if (vm.layout) {
+
+            if (vm.layout.origin_for_global_layout) {
+
+                shareConfigurationFileService.getByKey(vm.layout.origin_for_global_layout).then(function (data) {
+
+                    vm.globalConfigurationFile = data;
+
+                    vm.readyStatus.configurationFile = true;
+
+                    $scope.$apply();
+
+                })
+
+
+            } else {
+
+                vm.globalConfigurationFile.name = vm.layout.name;
+
+                vm.readyStatus.configurationFile = true;
+            }
+
+        }
+
+        vm.getMemberList();
+
+    };
+
+    vm.init();
+
+};

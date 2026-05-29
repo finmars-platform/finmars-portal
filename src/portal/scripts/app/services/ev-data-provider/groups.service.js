@@ -1,44 +1,40 @@
-// import baseUrlService from "../../services/baseUrlService";
-(function () {
+import baseUrlService from "../../services/baseUrlService";
+import cookieService from '../../../../../core/services/cookieService';
+import configureRepositoryUrlService from '../../services/configureRepositoryUrlService';
 
-    var baseUrlService = require("../../services/baseUrlService").default;
-    var cookieService = require('../../../../../core/services/cookieService').default;
-    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService').default;
-    // var baseUrlService = require('../../services/baseUrlService');
-    var entityUrlService = require('../../services/entityUrlService');
-    var queryParamsHelper = require('../../helpers/queryParamsHelper');
+// var baseUrlService = require('../../services/baseUrlService');
+import entityUrlService from '../../services/entityUrlService';
 
-    var baseUrl = baseUrlService.resolve();
-    var xhrService = require('../../../../../core/services/xhrService').default;
+import queryParamsHelper from '../../helpers/queryParamsHelper';
 
-
-    var getFilteredList = function (entityType, options) {
-
-        var entityUrl = entityUrlService.resolve(entityType);
+var baseUrl = baseUrlService.resolve();
+import xhrService from '../../../../../core/services/xhrService';
 
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var getFilteredList = function (entityType, options) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + entityUrl + '/ev-group/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(options)
-            })
+    var entityUrl = entityUrlService.resolve(entityType);
 
 
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    module.exports = {
-        getFilteredList: getFilteredList
-    }
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + entityUrl + '/ev-group/',
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(options)
+        })
 
 
-}());
+};
+
+export default {
+    getFilteredList: getFilteredList
+};

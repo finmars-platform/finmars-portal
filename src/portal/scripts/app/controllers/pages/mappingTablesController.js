@@ -1,147 +1,140 @@
-/**
- * Created by mevstratov on 24.06.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+export default function ($scope, $mdDialog) {
 
-    module.exports = function ($scope, $mdDialog) {
+    var vm = this;
 
-        var vm = this;
+    vm.mappingFile = null;
 
-        vm.mappingFile = null;
+    vm.mappingFileIsAvailable = function () {
+        return vm.mappingFile !== null && vm.mappingFile !== undefined;
+    };
 
-        vm.mappingFileIsAvailable = function () {
-            return vm.mappingFile !== null && vm.mappingFile !== undefined;
-        };
+    vm.checkExtension = function (file, $event) {
+        console.log('file', file);
 
-        vm.checkExtension = function (file, $event) {
-            console.log('file', file);
+        if (file) {
 
-            if (file) {
+            var ext = file.name.split('.').at(-1);
 
-                var ext = file.name.split('.').at(-1);
+            if (ext !== 'fcfg') {
 
-                if (ext !== 'fcfg') {
-
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            success: {
-                                title: "Warning!",
-                                description: 'You are trying to load incorrect file'
-                            }
-                        },
-                        multiple: true,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    }).then(function () {
-
-                        if (file === vm.configurationFile) {
-                            vm.configurationFile = null;
-                        } else {
-                            vm.mappingFile = null;
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        success: {
+                            title: "Warning!",
+                            description: 'You are trying to load incorrect file'
                         }
+                    },
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                }).then(function () {
 
-                    });
+                    if (file === vm.configurationFile) {
+                        vm.configurationFile = null;
+                    } else {
+                        vm.mappingFile = null;
+                    }
 
-                }
+                });
 
             }
 
-        };
+        }
 
-        vm.openImportMappingManager = function ($event) {
+    };
 
-            var reader = new FileReader();
+    vm.openImportMappingManager = function ($event) {
 
-            reader.readAsText(vm.mappingFile);
+        var reader = new FileReader();
 
-            reader.onload = function (evt) {
+        reader.readAsText(vm.mappingFile);
 
-                try {
+        reader.onload = function (evt) {
 
-                    var file = JSON.parse(evt.target.result);
+            try {
 
-                    $mdDialog.show({
-                        controller: 'SettingGeneralMappingPreviewFileDialogController as vm',
-                        templateUrl: 'views/dialogs/settings-general-mapping-preview-file-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            file: file
-                        }
-                    }).then(function (res) {
+                var file = JSON.parse(evt.target.result);
 
-                        vm.mappingFile = null;
-
-                    });
-
-                } catch (error) {
-
-                    $mdDialog.show({
-                        controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/dialogs/warning-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        locals: {
-                            warning: {
-                                title: 'Error',
-                                description: 'Unable to read it. This file is corrupted.'
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    });
+                $mdDialog.show({
+                    controller: 'SettingGeneralMappingPreviewFileDialogController as vm',
+                    templateUrl: 'views/dialogs/settings-general-mapping-preview-file-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        file: file
+                    }
+                }).then(function (res) {
 
                     vm.mappingFile = null;
 
-                }
+                });
+
+            } catch (error) {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    locals: {
+                        warning: {
+                            title: 'Error',
+                            description: 'Unable to read it. This file is corrupted.'
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                });
+
+                vm.mappingFile = null;
 
             }
 
-        };
+        }
 
-        vm.openExportMappingManager = function ($event) {
+    };
 
-            $mdDialog.show({
-                controller: 'SettingGeneralMappingExportFileDialogController as vm',
-                templateUrl: 'views/dialogs/settings-general-mapping-export-file-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
+    vm.openExportMappingManager = function ($event) {
 
-            })
+        $mdDialog.show({
+            controller: 'SettingGeneralMappingExportFileDialogController as vm',
+            templateUrl: 'views/dialogs/settings-general-mapping-export-file-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+
+        })
 
 
-        };
+    };
 
-        vm.openMapping = function ($event, mapItem) {
+    vm.openMapping = function ($event, mapItem) {
 
-            $mdDialog.show({
-                controller: 'EntityTypeMappingDialogController as vm',
-                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    mapItem: mapItem
-                }
-            })
-        };
+        $mdDialog.show({
+            controller: 'EntityTypeMappingDialogController as vm',
+            templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            locals: {
+                mapItem: mapItem
+            }
+        })
+    };
 
-    }
-
-}());
+};

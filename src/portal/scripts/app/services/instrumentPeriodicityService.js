@@ -1,18 +1,11 @@
-/**
- * Created by szhitenev on 26.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import instrumentPeriodicityRepository from '../repositories/instrumentPeriodicityRepository';
 
-    var instrumentPeriodicityRepository = require('../repositories/instrumentPeriodicityRepository');
+var getList = function (options) {
+    return instrumentPeriodicityRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return instrumentPeriodicityRepository.getList(options);
-    };
-
-    module.exports = {
-        getList: getList
-    }
-
-}());
+export default {
+    getList: getList
+};

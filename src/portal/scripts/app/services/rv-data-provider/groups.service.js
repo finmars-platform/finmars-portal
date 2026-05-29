@@ -4,8 +4,8 @@
  */
 import rvSubtotalHelper from "../../helpers/rv-subtotal.service";
 
-var filterService = require('./filter.service').default;
-var sortService = require('./sort.service').default;
+import filterService from './filter.service';
+import sortService from './sort.service';
 
 export default function (entityResolverService) {
 

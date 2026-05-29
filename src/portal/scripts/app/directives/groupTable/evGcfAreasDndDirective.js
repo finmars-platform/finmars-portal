@@ -1,170 +1,164 @@
-(function () {
+'use strict';
 
-	'use strict';
+import evEvents from '../../services/entityViewerEvents';
+import metaService from '../../services/metaService';
+import evHelperService from '../../services/entityViewerHelperService';
+import GcfAreasDndSharedLogicHelper from '../../helpers/entityViewer/sharedLogic/gcfAreasDndSharedLogicHelper';
 
-	const evEvents = require('../../services/entityViewerEvents');
+export default function ($mdDialog) {
+    return {
+        restrict: 'A',
+        scope: {
+            evDataService: '=',
+            evEventService: '=',
+            contentWrapElement: '='
+        },
+        link: function (scope, elem, attrs) {
 
-	const metaService = require('../../services/metaService').default;
-	const evHelperService = require('../../services/entityViewerHelperService');
+            const sharedLogic = new GcfAreasDndSharedLogicHelper(scope, $mdDialog, false);
 
-	const GcfAreasDndSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gcfAreasDndSharedLogicHelper');
+            scope.shownFiltersType = 'backend';
 
-	module.exports = function ($mdDialog) {
-		return {
-			restrict: 'A',
-			scope: {
-				evDataService: '=',
-				evEventService: '=',
-				contentWrapElement: '='
-			},
-			link: function (scope, elem, attrs) {
+            scope.dndAreas = {};
 
-				const sharedLogic = new GcfAreasDndSharedLogicHelper(scope, $mdDialog, false);
+            scope.hiddenDnDAreas = sharedLogic.defaultHiddenDnDAreas;
 
-				scope.shownFiltersType = 'backend';
+            // value assigned inside gcfAreasDndSharedLogicHelper
+            scope.draggableItem;
+            scope.draggableItemIndex;
 
-				scope.dndAreas = {};
+            //region Dragstart
 
-				scope.hiddenDnDAreas = sharedLogic.defaultHiddenDnDAreas;
+            const initItemListeners = function () {
 
-				// value assigned inside gcfAreasDndSharedLogicHelper
-				scope.draggableItem;
-				scope.draggableItemIndex;
+                scope.dndAreas.columns.addEventListener('dragenter', sharedLogic.onSameHolderDragenter);
+                scope.dndAreas.columns.addEventListener('dragleave', sharedLogic.removeDraggedOverClasses);
 
-				//region Dragstart
+                // dndAreas.groups.addEventListener('drop', onDropToGroups, {once: true});
+                scope.dndAreas.columns.addEventListener('drop', onDropToColumns, {once: true});
 
-				const initItemListeners = function () {
+                scope.dndAreas.filtersHolder.addEventListener('drop', sharedLogic.onDropToFilters);
+                scope.dndAreas.deletionAreaHolder.addEventListener('drop', sharedLogic.onDropToDeletionArea);
+                scope.dndAreas.leftSideGroupsHolder.addEventListener('drop', onDropToGroups);
+                scope.dndAreas.rightSideColumnsHolder.addEventListener('drop', onDropToColumns);
 
-					scope.dndAreas.columns.addEventListener('dragenter', sharedLogic.onSameHolderDragenter);
-					scope.dndAreas.columns.addEventListener('dragleave', sharedLogic.removeDraggedOverClasses);
+                scope.hiddenDnDAreas.forEach(hiddenAreaProp => {
 
-					// dndAreas.groups.addEventListener('drop', onDropToGroups, {once: true});
-					scope.dndAreas.columns.addEventListener('drop', onDropToColumns, {once: true});
+                    scope.dndAreas[hiddenAreaProp].addEventListener('dragenter', sharedLogic.onDropAreaDragenter);
+                    scope.dndAreas[hiddenAreaProp].addEventListener('dragleave', sharedLogic.onDropAreaDragleave);
 
-					scope.dndAreas.filtersHolder.addEventListener('drop', sharedLogic.onDropToFilters);
-					scope.dndAreas.deletionAreaHolder.addEventListener('drop', sharedLogic.onDropToDeletionArea);
-					scope.dndAreas.leftSideGroupsHolder.addEventListener('drop', onDropToGroups);
-					scope.dndAreas.rightSideColumnsHolder.addEventListener('drop', onDropToColumns);
+                });
 
-					scope.hiddenDnDAreas.forEach(hiddenAreaProp => {
+                scope.colsElems.forEach(gcElem => {
 
-						scope.dndAreas[hiddenAreaProp].addEventListener('dragenter', sharedLogic.onDropAreaDragenter);
-						scope.dndAreas[hiddenAreaProp].addEventListener('dragleave', sharedLogic.onDropAreaDragleave);
+                    const draggableArea = gcElem.querySelector(".gDraggableHeadArea"); // gDraggableHeadArea used to prevent call of event "dragleave" by children of gcAreaDnD
+                    draggableArea.addEventListener('dragleave', sharedLogic.removeDraggedOverClasses);
 
-					});
+                });
 
-					scope.colsElems.forEach(gcElem => {
+            };
 
-						const draggableArea = gcElem.querySelector(".gDraggableHeadArea"); // gDraggableHeadArea used to prevent call of event "dragleave" by children of gcAreaDnD
-						draggableArea.addEventListener('dragleave', sharedLogic.removeDraggedOverClasses);
+            const onColumnDragstartListeners = function () {
 
-					});
+                if (scope.draggableItem.error_data && scope.draggableItem.error_data.code === 10) {
+                    sharedLogic.initErroredItemListeners();
 
-				};
+                } else {
+                    initItemListeners();
+                }
 
-				const onColumnDragstartListeners = function () {
+            };
 
-					if (scope.draggableItem.error_data && scope.draggableItem.error_data.code === 10) {
-						sharedLogic.initErroredItemListeners();
+            //endregion Dragstart
 
-					} else {
-						initItemListeners();
-					}
+            //region Dragend
 
-				};
+            const removeListenersOnDragend = function () {
 
-				//endregion Dragstart
+                scope.dndAreas.filtersHolder.removeEventListener('drop', sharedLogic.onDropToFilters);
+                scope.dndAreas.deletionAreaHolder.removeEventListener('drop', sharedLogic.onDropToDeletionArea);
+                scope.dndAreas.leftSideGroupsHolder.removeEventListener('drop', onDropToGroups);
+                scope.dndAreas.rightSideColumnsHolder.removeEventListener('drop', onDropToColumns);
 
-				//region Dragend
+                const removeElemDragListeners = function (gcElem) {
 
-				const removeListenersOnDragend = function () {
+                    const draggableArea = gcElem.querySelector(".gDraggableHeadArea");
+                    draggableArea.removeEventListener('dragleave', sharedLogic.removeDraggedOverClasses);
 
-					scope.dndAreas.filtersHolder.removeEventListener('drop', sharedLogic.onDropToFilters);
-					scope.dndAreas.deletionAreaHolder.removeEventListener('drop', sharedLogic.onDropToDeletionArea);
-					scope.dndAreas.leftSideGroupsHolder.removeEventListener('drop', onDropToGroups);
-					scope.dndAreas.rightSideColumnsHolder.removeEventListener('drop', onDropToColumns);
+                };
 
-					const removeElemDragListeners = function (gcElem) {
+                scope.dndAreas.columns.removeEventListener('dragenter', sharedLogic.onSameHolderDragenter);
+                scope.dndAreas.columns.removeEventListener('dragleave', sharedLogic.removeDraggedOverClasses);
+                scope.dndAreas.columns.removeEventListener('drop', onDropToColumns);
 
-						const draggableArea = gcElem.querySelector(".gDraggableHeadArea");
-						draggableArea.removeEventListener('dragleave', sharedLogic.removeDraggedOverClasses);
+                scope.colsElems.forEach(removeElemDragListeners);
 
-					};
+            };
 
-					scope.dndAreas.columns.removeEventListener('dragenter', sharedLogic.onSameHolderDragenter);
-					scope.dndAreas.columns.removeEventListener('dragleave', sharedLogic.removeDraggedOverClasses);
-					scope.dndAreas.columns.removeEventListener('drop', onDropToColumns);
+            //endregion Dragend
 
-					scope.colsElems.forEach(removeElemDragListeners);
+            const onDropToGroups = function (ev) {
 
-				};
+                ev.preventDefault();
 
-				//endregion Dragend
+                let groups = scope.evDataService.getGroups();
 
-				const onDropToGroups = function (ev) {
+                const groupToAdd = evHelperService.getTableAttrInFormOf('group', scope.draggableItem);
+                groups.push(groupToAdd);
 
-					ev.preventDefault();
+                scope.evDataService.setGroups(groups);
 
-					let groups = scope.evDataService.getGroups();
+                scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-					const groupToAdd = evHelperService.getTableAttrInFormOf('group', scope.draggableItem);
-					groups.push(groupToAdd);
+            };
 
-					scope.evDataService.setGroups(groups);
+            const onDropToColumns = function (ev) {
 
-					scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-					scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                ev.preventDefault();
 
-				};
+                const nextSibling = ev.target.closest('.gDraggableHead');
+                // changeOrder('columns', nextSibling);
+                sharedLogic.changeOrder('columns', nextSibling);
 
-				const onDropToColumns = function (ev) {
+            };
 
-					ev.preventDefault();
+            const init = function () {
 
-					const nextSibling = ev.target.closest('.gDraggableHead');
-					// changeOrder('columns', nextSibling);
-					sharedLogic.changeOrder('columns', nextSibling);
+                sharedLogic.setInitListenersOnColumnDragStart(onColumnDragstartListeners);
+                sharedLogic.setRemoveListenersOnDragend(removeListenersOnDragend);
 
-				};
+                setTimeout(() => {
 
-				const init = function () {
+                    scope.dndAreas = sharedLogic.getDndAreas();
 
-					sharedLogic.setInitListenersOnColumnDragStart(onColumnDragstartListeners);
-					sharedLogic.setRemoveListenersOnDragend(removeListenersOnDragend);
+                    scope.columns = scope.evDataService.getColumns();
 
-					setTimeout(() => {
+                    scope.colsElems = sharedLogic.initDnDFromColumns();
 
-						scope.dndAreas = sharedLogic.getDndAreas();
+                    scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-						scope.columns = scope.evDataService.getColumns();
+                        scope.columns = scope.evDataService.getColumns();
 
-						scope.colsElems = sharedLogic.initDnDFromColumns();
+                        // wait for columns ngRepeat inside gColumnsComponent
+                        setTimeout(() => {
+                            scope.colsElems = sharedLogic.initDnDFromColumns();
+                        }, 500);
 
-						scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+                    });
 
-							scope.columns = scope.evDataService.getColumns();
+                }, 500);
 
-							// wait for columns ngRepeat inside gColumnsComponent
-							setTimeout(() => {
-								scope.colsElems = sharedLogic.initDnDFromColumns();
-							}, 500);
+                scope.evEventService.addEventListener(evEvents.FILTERS_TO_SHOW_CHANGE, function () {
 
-						});
+                    scope.shownFiltersType = (scope.shownFiltersType === 'frontend') ? 'backend' : 'frontend';
 
-					}, 500);
+                });
 
-					scope.evEventService.addEventListener(evEvents.FILTERS_TO_SHOW_CHANGE, function () {
+            };
 
-						scope.shownFiltersType = (scope.shownFiltersType === 'frontend') ? 'backend' : 'frontend';
+            init();
 
-					});
-
-				};
-
-				init();
-
-			}
-		};
-	}
-
-})();
+        }
+    };
+};

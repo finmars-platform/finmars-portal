@@ -1,7 +1,6 @@
 
-const metaHelper = require("./meta.helper").default;
-
-const evEvents = require('../services/entityViewerEvents');
+import metaHelper from "./meta.helper";
+import evEvents from '../services/entityViewerEvents';
 
 /** @module: gFiltersHelper */
 export default function () {

@@ -1,788 +1,780 @@
-/**
- * Created by szhitenev on 14.03.2018.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import complexImportSchemeService from '../../../services/import/complexImportSchemeService';
+import complexImportService from '../../../services/complex-import/complexImportService';
+import complexImportValidateService from '../../../services/complex-import/complexImportValidateService';
 
-    var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
+// var usersService = require('../../../services/usersService');
 
-    var complexImportService = require('../../../services/complex-import/complexImportService');
-    var complexImportValidateService = require('../../../services/complex-import/complexImportValidateService');
+export default function complexImportDialogController($scope, $mdDialog, data, usersService) {
 
-    // var usersService = require('../../../services/usersService');
+    var vm = this;
 
-    module.exports = function complexImportDialogController($scope, $mdDialog, data, usersService) {
+    vm.config = {
+        delimiter: ','
+    };
 
-        var vm = this;
+    vm.readyStatus = {
+        scheme: false,
+        processing: false
+    };
 
-        vm.config = {
-            delimiter: ','
-        };
+    vm.state = null; // validate or import
+    vm.counter = 0;
+    vm.activeItemTotal = 0;
+    vm.skippedItemTotal = 0;
 
-        vm.readyStatus = {
-            scheme: false,
-            processing: false
-        };
+    vm.processing = false;
+    vm.loaderData = {};
+    vm.schemeIsValid = true;
 
-        vm.state = null; // validate or import
-        vm.counter = 0;
-        vm.activeItemTotal = 0;
-        vm.skippedItemTotal = 0;
+    vm.hasSchemeEditPermission = false;
 
-        vm.processing = false;
-        vm.loaderData = {};
-        vm.schemeIsValid = true;
+    vm.loadIsAvailable = function () {
+        if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.schemeIsValid) {
+            return true;
+        }
+        return false;
+    };
 
-        vm.hasSchemeEditPermission = false;
+    vm.getSchemeList = function () {
 
-        vm.loadIsAvailable = function () {
-            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.schemeIsValid) {
-                return true;
+        complexImportSchemeService.getList().then(function (data) {
+
+            vm.schemes = data.results;
+            vm.readyStatus.scheme = true;
+
+            if (vm.config.scheme) {
+                vm.validateScheme();
             }
-            return false;
-        };
 
-        vm.getSchemeList = function () {
+            $scope.$apply();
 
-            complexImportSchemeService.getList().then(function (data) {
+        });
+    };
 
-                vm.schemes = data.results;
-                vm.readyStatus.scheme = true;
+    vm.updateEntitySchemes = function () {
+        vm.getSchemeList();
+    };
 
-                if (vm.config.scheme) {
-                    vm.validateScheme();
-                }
+    vm.createScheme = function ($event) {
 
-                $scope.$apply();
+        $mdDialog.show({
+            controller: 'ComplexImportSchemeCreateDialogController as vm',
+            templateUrl: 'views/dialogs/complex-import/complex-import-scheme-create-dialog-view.html',
+            targetEvent: $event,
+            preserveScope: true,
+            multiple: true,
+            autoWrap: true,
+            skipHide: true,
+            locals: {
+                data: {}
+            }
+        }).then(function () {
 
-            });
-        };
-
-        vm.updateEntitySchemes = function () {
             vm.getSchemeList();
-        };
 
-        vm.createScheme = function ($event) {
+        })
 
-            $mdDialog.show({
-                controller: 'ComplexImportSchemeCreateDialogController as vm',
-                templateUrl: 'views/dialogs/complex-import/complex-import-scheme-create-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    data: {}
-                }
-            }).then(function () {
+    };
+
+    vm.editScheme = function ($event) {
+
+        $mdDialog.show({
+            controller: 'ComplexImportSchemeEditDialogController as vm',
+            templateUrl: 'views/dialogs/complex-import/complex-import-scheme-edit-dialog-view.html',
+            targetEvent: $event,
+            preserveScope: true,
+            multiple: true,
+            autoWrap: true,
+            skipHide: true,
+            locals: {
+                schemeId: vm.config.scheme
+            }
+        }).then(function (res) {
+
+            if (res && res.status === 'agree') {
 
                 vm.getSchemeList();
 
-            })
+            }
 
-        };
+        })
 
-        vm.editScheme = function ($event) {
+    };
 
-            $mdDialog.show({
-                controller: 'ComplexImportSchemeEditDialogController as vm',
-                templateUrl: 'views/dialogs/complex-import/complex-import-scheme-edit-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    schemeId: vm.config.scheme
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+    vm.counterData = {};
+
+    function updateCounter(index, config) {
+
+        vm.counterData[index] = config;
+
+        vm.counter = Object.keys(vm.counterData).length;
+
+
+        vm.loaderData.current = vm.counter;
+        vm.loaderData.total = vm.activeItemTotal;
+        vm.loaderData.skippedTotal = vm.skippedItemTotal;
+        vm.loaderData.status = vm.status;
+
+        vm.loaderData.additional = [
+            vm.getTransactionImportProgress(),
+            vm.getSimpleImportProgress()
+        ];
+
+        $scope.$apply()
+    }
+
+    vm.getSimpleImportProgress = function () {
+
+        var result = {};
+
+        var keys = Object.keys(vm.counterData);
+
+        var currentAction;
+        var currentActionIndex;
+
+        var schemeObject;
+
+        vm.schemes.forEach(function (scheme) {
+
+            if (scheme.id === vm.config.scheme) {
+                schemeObject = scheme;
+            }
+
+        });
+
+        keys.forEach(function (key) {
+
+            if (vm.counterData[key].hasOwnProperty('error_handler') && vm.counterData[key].hasOwnProperty('task_status')) {
+
+                if (vm.counterData[key].task_status !== 'SUCCESS') {
+                    currentAction = vm.counterData[key];
+                    currentActionIndex = key;
                 }
-            }).then(function (res) {
 
-                if (res && res.status === 'agree') {
+            }
 
-                    vm.getSchemeList();
+        });
 
+
+        if (currentAction && currentActionIndex && schemeObject) {
+
+            // console.log('currentActionIndex', currentActionIndex);
+
+            result.text = 'Processing ' + schemeObject.actions[currentActionIndex].action_notes + ':';
+            result.current = currentAction.processed_rows;
+            result.total = currentAction.total_rows;
+        }
+
+        // console.log('getTransactionImportProgress.result', result);
+
+        return result;
+
+    };
+
+    vm.getTransactionImportProgress = function () {
+
+        var result = {};
+
+        var keys = Object.keys(vm.counterData);
+
+        var currentAction;
+        var currentActionIndex;
+
+        var schemeObject;
+
+        vm.schemes.forEach(function (scheme) {
+
+            if (scheme.id === vm.config.scheme) {
+                schemeObject = scheme;
+            }
+
+        });
+
+        keys.forEach(function (key) {
+
+            if (vm.counterData[key].hasOwnProperty('error_handling') && vm.counterData[key].hasOwnProperty('task_status')) {
+
+                if (vm.counterData[key].task_status !== 'SUCCESS') {
+                    currentAction = vm.counterData[key];
+                    currentActionIndex = key;
                 }
 
-            })
+            }
 
-        };
+        });
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+
+        if (currentAction && currentActionIndex && schemeObject) {
+
+            // console.log('currentActionIndex', currentActionIndex);
+
+            result.text = 'Processing ' + schemeObject.actions[currentActionIndex].action_notes + ':';
+            result.current = currentAction.processed_rows;
+            result.total = currentAction.total_rows;
+        }
+
+        // console.log('getTransactionImportProgress.result', result);
+
+        return result;
+    };
+
+    vm.validate = function ($event) {
 
         vm.counterData = {};
 
-        function updateCounter(index, config) {
+        vm.processing = true;
 
-            vm.counterData[index] = config;
+        var formData = new FormData();
 
-            vm.counter = Object.keys(vm.counterData).length;
+        formData.append('file', vm.config.file);
+        formData.append('scheme', vm.config.scheme);
 
+        // console.log('vm.config', vm.config);
 
-            vm.loaderData.current = vm.counter;
-            vm.loaderData.total = vm.activeItemTotal;
-            vm.loaderData.skippedTotal = vm.skippedItemTotal;
-            vm.loaderData.status = vm.status;
+        var schemeObject;
 
-            vm.loaderData.additional = [
-                vm.getTransactionImportProgress(),
-                vm.getSimpleImportProgress()
-            ];
+        vm.schemes.forEach(function (scheme) {
 
-            $scope.$apply()
-        }
-
-        vm.getSimpleImportProgress = function () {
-
-            var result = {};
-
-            var keys = Object.keys(vm.counterData);
-
-            var currentAction;
-            var currentActionIndex;
-
-            var schemeObject;
-
-            vm.schemes.forEach(function (scheme) {
-
-                if (scheme.id === vm.config.scheme) {
-                    schemeObject = scheme;
-                }
-
-            });
-
-            keys.forEach(function (key) {
-
-                if (vm.counterData[key].hasOwnProperty('error_handler') && vm.counterData[key].hasOwnProperty('task_status')) {
-
-                    if (vm.counterData[key].task_status !== 'SUCCESS') {
-                        currentAction = vm.counterData[key];
-                        currentActionIndex = key;
-                    }
-
-                }
-
-            });
-
-
-            if (currentAction && currentActionIndex && schemeObject) {
-
-                // console.log('currentActionIndex', currentActionIndex);
-
-                result.text = 'Processing ' + schemeObject.actions[currentActionIndex].action_notes + ':';
-                result.current = currentAction.processed_rows;
-                result.total = currentAction.total_rows;
+            if (scheme.id === vm.config.scheme) {
+                schemeObject = scheme;
             }
 
-            // console.log('getTransactionImportProgress.result', result);
+        });
 
-            return result;
+        vm.status = 'PROGRESS';
+        vm.state = 'validate';
+        vm.counter = 0;
 
-        };
+        vm.activeItemTotal = schemeObject.actions.length;
 
-        vm.getTransactionImportProgress = function () {
-
-            var result = {};
-
-            var keys = Object.keys(vm.counterData);
-
-            var currentAction;
-            var currentActionIndex;
-
-            var schemeObject;
-
-            vm.schemes.forEach(function (scheme) {
-
-                if (scheme.id === vm.config.scheme) {
-                    schemeObject = scheme;
-                }
-
-            });
-
-            keys.forEach(function (key) {
-
-                if (vm.counterData[key].hasOwnProperty('error_handling') && vm.counterData[key].hasOwnProperty('task_status')) {
-
-                    if (vm.counterData[key].task_status !== 'SUCCESS') {
-                        currentAction = vm.counterData[key];
-                        currentActionIndex = key;
-                    }
-
-                }
-
-            });
+        vm.skippedItemTotal = schemeObject.actions.filter(function (item) {
+            return item.skip
+        }).length;
 
 
-            if (currentAction && currentActionIndex && schemeObject) {
+        var schemeErrorsInActions = [];
 
-                // console.log('currentActionIndex', currentActionIndex);
+        schemeObject.actions.forEach(function (action) {
 
-                result.text = 'Processing ' + schemeObject.actions[currentActionIndex].action_notes + ':';
-                result.current = currentAction.processed_rows;
-                result.total = currentAction.total_rows;
+            var actionFields = {};
+            var actionKeys = [];
+            var actionFieldsErrors = {
+                action_notes: action.action_notes,
+                action_number: action.order + 1,
+                empty_fields: ""
+            };
+
+            if (action.csv_import_scheme) {
+
+                actionFields = action.csv_import_scheme;
+
+            } else if (action.complex_transaction_import_scheme) {
+
+                actionFields = action.complex_transaction_import_scheme;
+
             }
 
-            // console.log('getTransactionImportProgress.result', result);
+            actionKeys = Object.keys(actionFields);
 
-            return result;
-        };
+            actionKeys.forEach(function (actionField, index) {
+                if (actionField !== 'csv_import_scheme' && actionField !== 'complex_transaction_import_scheme') {
 
-        vm.validate = function ($event) {
+                    if (actionFields[actionField] === null) {
 
-            vm.counterData = {};
+                        actionFieldsErrors.empty_fields += actionField;
 
-            vm.processing = true;
+                        if (index !== actionKeys.length - 1) { // add comma and space if it is not the last empty field
 
-            var formData = new FormData();
+                            actionFieldsErrors.empty_fields += ", "
 
-            formData.append('file', vm.config.file);
-            formData.append('scheme', vm.config.scheme);
+                        }
+                    }
 
-            // console.log('vm.config', vm.config);
-
-            var schemeObject;
-
-            vm.schemes.forEach(function (scheme) {
-
-                if (scheme.id === vm.config.scheme) {
-                    schemeObject = scheme;
                 }
 
             });
 
-            vm.status = 'PROGRESS';
-            vm.state = 'validate';
-            vm.counter = 0;
-
-            vm.activeItemTotal = schemeObject.actions.length;
-
-            vm.skippedItemTotal = schemeObject.actions.filter(function (item) {
-                return item.skip
-            }).length;
-
-
-            var schemeErrorsInActions = [];
-
-            schemeObject.actions.forEach(function (action) {
-
-                var actionFields = {};
-                var actionKeys = [];
-                var actionFieldsErrors = {
-                    action_notes: action.action_notes,
-                    action_number: action.order + 1,
-                    empty_fields: ""
-                };
-
-                if (action.csv_import_scheme) {
-
-                    actionFields = action.csv_import_scheme;
-
-                } else if (action.complex_transaction_import_scheme) {
-
-                    actionFields = action.complex_transaction_import_scheme;
-
-                }
-
-                actionKeys = Object.keys(actionFields);
-
-                actionKeys.forEach(function (actionField, index) {
-                    if (actionField !== 'csv_import_scheme' && actionField !== 'complex_transaction_import_scheme') {
-
-                        if (actionFields[actionField] === null) {
-
-                            actionFieldsErrors.empty_fields += actionField;
-
-                            if (index !== actionKeys.length - 1) { // add comma and space if it is not the last empty field
-
-                                actionFieldsErrors.empty_fields += ", "
-
-                            }
-                        }
-
-                    }
-
-                });
-
-                if (actionFieldsErrors.empty_fields) {
-                    schemeErrorsInActions.push(actionFieldsErrors);
-                }
-
-            });
-
-            if (schemeErrorsInActions.length > 0) {
-
-                $mdDialog.show({
-                    controller: 'ComplexImportSchemeErrorsDialogController as vm',
-                    templateUrl: 'views/dialogs/complex-import/complex-import-scheme-error-dialog-view.html',
-                    targetEvent: $event,
-                    skipHide: false,
-                    locals: {
-                        data: {
-                            errorsInScheme: schemeErrorsInActions
-                        }
-                    }
-                });
-
-            } else {
-
-                vm.loaderData = {
-                    current: vm.counter,
-                    total: vm.activeItemTotal,
-                    skippedTotal: vm.skippedItemTotal,
-                    text: 'Validation Progress: Step',
-                    status: vm.status,
-                    additional: [
-                        vm.getTransactionImportProgress(),
-                        vm.getSimpleImportProgress()
-                    ]
-                };
-
-                complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
-
-                    // console.log('data', data);
-
-                    vm.processing = false;
-
-                    vm.status = 'SUCCESS';
-
-                    vm.processing = false;
-
-                    if (data.errors.length === 0) {
-
-                        $mdDialog.show({
-                            controller: 'SuccessDialogController as vm',
-                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                success: {
-                                    title: "Success validation",
-                                    description: '<p>File is valid.</p>'
-                                }
-                            }
-
-                        });
-
-                    } else {
-
-                        $mdDialog.show({
-                            controller: 'ComplexImportValidationErrorsDialogController as vm',
-                            templateUrl: 'views/dialogs/complex-import/complex-import-validation-errors-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                data: {
-                                    complexImportScheme: schemeObject,
-                                    validationResults: data
-                                }
-                            }
-                        })
-
-                    }
-
-
-                });
+            if (actionFieldsErrors.empty_fields) {
+                schemeErrorsInActions.push(actionFieldsErrors);
             }
 
-        };
+        });
 
-        vm.import = function ($event) {
+        if (schemeErrorsInActions.length > 0) {
 
-            vm.processing = true;
-
-            var formData = new FormData();
-
-            formData.append('file', vm.config.file);
-            formData.append('scheme', vm.config.scheme);
-
-            // console.log('vm.config', vm.config);
-
-            var schemeObject;
-
-            vm.schemes.forEach(function (scheme) {
-
-                if (scheme.id === vm.config.scheme) {
-                    schemeObject = scheme;
+            $mdDialog.show({
+                controller: 'ComplexImportSchemeErrorsDialogController as vm',
+                templateUrl: 'views/dialogs/complex-import/complex-import-scheme-error-dialog-view.html',
+                targetEvent: $event,
+                skipHide: false,
+                locals: {
+                    data: {
+                        errorsInScheme: schemeErrorsInActions
+                    }
                 }
-
             });
 
-            vm.counterData = {};
-            vm.status = 'PROGRESS';
-            vm.state = 'validate';
-            vm.counter = 0;
-            vm.activeItemTotal = schemeObject.actions.length;
+        } else {
 
-            vm.skippedItemTotal = schemeObject.actions.filter(function (item) {
-                return item.skip
-            }).length;
+            vm.loaderData = {
+                current: vm.counter,
+                total: vm.activeItemTotal,
+                skippedTotal: vm.skippedItemTotal,
+                text: 'Validation Progress: Step',
+                status: vm.status,
+                additional: [
+                    vm.getTransactionImportProgress(),
+                    vm.getSimpleImportProgress()
+                ]
+            };
 
-            var schemeErrorsInActions = [];
+            complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
-            schemeObject.actions.forEach(function (action) {
+                // console.log('data', data);
 
-                var actionFields = {};
-                var actionKeys = [];
-                var actionFieldsErrors = {
-                    action_notes: action.action_notes,
-                    action_number: action.order + 1,
-                    empty_fields: ""
-                };
+                vm.processing = false;
 
-                if (action.csv_import_scheme) {
+                vm.status = 'SUCCESS';
 
-                    actionFields = action.csv_import_scheme;
+                vm.processing = false;
 
-                } else if (action.complex_transaction_import_scheme) {
+                if (data.errors.length === 0) {
 
-                    actionFields = action.complex_transaction_import_scheme;
-
-                }
-
-                actionKeys = Object.keys(actionFields);
-
-                actionKeys.forEach(function (actionField, index) {
-                    if (actionField !== 'csv_import_scheme' && actionField !== 'complex_transaction_import_scheme') {
-
-                        if (actionFields[actionField] === null) {
-
-                            actionFieldsErrors.empty_fields += actionField;
-
-                            if (index !== actionKeys.length - 1) { // add comma and space if it is not the last empty field
-
-                                actionFieldsErrors.empty_fields += ", "
-
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            success: {
+                                title: "Success validation",
+                                description: '<p>File is valid.</p>'
                             }
                         }
 
-                    }
-
-                });
-
-                if (actionFieldsErrors.empty_fields) {
-                    schemeErrorsInActions.push(actionFieldsErrors);
-                }
-
-            });
-
-            if (schemeErrorsInActions.length > 0) {
-
-                $mdDialog.show({
-                    controller: 'ComplexImportSchemeErrorsDialogController as vm',
-                    templateUrl: 'views/dialogs/complex-import/complex-import-scheme-error-dialog-view.html',
-                    targetEvent: $event,
-                    skipHide: false,
-                    locals: {
-                        data: {
-                            errorsInScheme: schemeErrorsInActions
-                        }
-                    }
-                });
-
-            } else {
-
-                vm.loaderData = {
-                    current: vm.counter,
-                    total: vm.activeItemTotal,
-                    skippedTotal: vm.skippedItemTotal,
-                    text: 'Validation Progress: Step',
-                    status: vm.status,
-                    additional: [
-                        vm.getTransactionImportProgress(),
-                        vm.getSimpleImportProgress()
-                    ]
-                };
-
-                complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
-
-                    // console.log('validation data', data);
-
-                    vm.processing = false;
-
-                    vm.status = 'SUCCESS';
-
-                    var errorsCount = 0;
-
-                    data.errors.forEach(function (error) {
-                        errorsCount = errorsCount + error.length;
                     });
 
-                    if (errorsCount === 0) {
+                } else {
 
-                        vm.state = 'import';
-                        vm.counter = 0;
+                    $mdDialog.show({
+                        controller: 'ComplexImportValidationErrorsDialogController as vm',
+                        templateUrl: 'views/dialogs/complex-import/complex-import-validation-errors-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: {
+                                complexImportScheme: schemeObject,
+                                validationResults: data
+                            }
+                        }
+                    })
 
-                        vm.activeItemTotal = schemeObject.actions.length
-
-                        vm.skippedItemTotal = schemeObject.actions.filter(function (item) {
-                            return item.skip
-                        }).length;
-
-                        setTimeout(function () {
-
-                            vm.processing = true;
-
-                            vm.status = 'PROGRESS';
-
-                            vm.loaderData = {
-                                current: vm.counter,
-                                total: vm.activeItemTotal,
-                                skippedTotal: vm.skippedItemTotal,
-                                text: 'Import Progress: Step',
-                                status: vm.status,
-                                additional: [
-                                    vm.getTransactionImportProgress(),
-                                    vm.getSimpleImportProgress()
-                                ]
-                            };
-
-                            vm.counterData = {};
-
-                            complexImportService.startImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
-
-                                // console.log('data', data);
-
-                                vm.status = 'SUCCESS';
-                                vm.processing = false;
-
-                                errorsCount = 0;
-
-                                data.errors.forEach(function (error) {
-                                    errorsCount = errorsCount + error.length;
-                                });
-
-                                if (errorsCount === 0) {
-
-                                    $mdDialog.hide();
-
-                                    var description = '';
-
-                                    description = '<div>' +
-                                        '<div>Imports in total: ' + schemeObject.actions.length + '</div>' +
-                                        '</div><br/>';
-
-                                    // console.log('description', description);
-
-                                    description = description + '<div> You have successfully imported file </div>';
-
-                                    $mdDialog.show({
-                                        controller: 'SuccessDialogController as vm',
-                                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                                        targetEvent: $event,
-                                        preserveScope: true,
-                                        multiple: true,
-                                        autoWrap: true,
-                                        skipHide: true,
-                                        locals: {
-                                            success: {
-                                                title: "Success",
-                                                description: description
-                                            }
-                                        }
-
-                                    });
-
-                                } else {
-
-                                    $mdDialog.show({
-                                        controller: 'ComplexImportValidationErrorsDialogController as vm',
-                                        templateUrl: 'views/dialogs/complex-import/complex-import-validation-errors-dialog-view.html',
-                                        targetEvent: $event,
-                                        preserveScope: true,
-                                        multiple: true,
-                                        autoWrap: true,
-                                        skipHide: true,
-                                        locals: {
-                                            data: {
-                                                complexImportScheme: schemeObject,
-                                                validationResults: data
-                                            }
-                                        }
-                                    })
-
-                                }
+                }
 
 
-                            }).catch(function (reason) {
+            });
+        }
 
-                                // console.log('here? ', reason);
+    };
 
-                                vm.processing = false;
+    vm.import = function ($event) {
 
-                                vm.status = 'SUCCESS';
+        vm.processing = true;
+
+        var formData = new FormData();
+
+        formData.append('file', vm.config.file);
+        formData.append('scheme', vm.config.scheme);
+
+        // console.log('vm.config', vm.config);
+
+        var schemeObject;
+
+        vm.schemes.forEach(function (scheme) {
+
+            if (scheme.id === vm.config.scheme) {
+                schemeObject = scheme;
+            }
+
+        });
+
+        vm.counterData = {};
+        vm.status = 'PROGRESS';
+        vm.state = 'validate';
+        vm.counter = 0;
+        vm.activeItemTotal = schemeObject.actions.length;
+
+        vm.skippedItemTotal = schemeObject.actions.filter(function (item) {
+            return item.skip
+        }).length;
+
+        var schemeErrorsInActions = [];
+
+        schemeObject.actions.forEach(function (action) {
+
+            var actionFields = {};
+            var actionKeys = [];
+            var actionFieldsErrors = {
+                action_notes: action.action_notes,
+                action_number: action.order + 1,
+                empty_fields: ""
+            };
+
+            if (action.csv_import_scheme) {
+
+                actionFields = action.csv_import_scheme;
+
+            } else if (action.complex_transaction_import_scheme) {
+
+                actionFields = action.complex_transaction_import_scheme;
+
+            }
+
+            actionKeys = Object.keys(actionFields);
+
+            actionKeys.forEach(function (actionField, index) {
+                if (actionField !== 'csv_import_scheme' && actionField !== 'complex_transaction_import_scheme') {
+
+                    if (actionFields[actionField] === null) {
+
+                        actionFieldsErrors.empty_fields += actionField;
+
+                        if (index !== actionKeys.length - 1) { // add comma and space if it is not the last empty field
+
+                            actionFieldsErrors.empty_fields += ", "
+
+                        }
+                    }
+
+                }
+
+            });
+
+            if (actionFieldsErrors.empty_fields) {
+                schemeErrorsInActions.push(actionFieldsErrors);
+            }
+
+        });
+
+        if (schemeErrorsInActions.length > 0) {
+
+            $mdDialog.show({
+                controller: 'ComplexImportSchemeErrorsDialogController as vm',
+                templateUrl: 'views/dialogs/complex-import/complex-import-scheme-error-dialog-view.html',
+                targetEvent: $event,
+                skipHide: false,
+                locals: {
+                    data: {
+                        errorsInScheme: schemeErrorsInActions
+                    }
+                }
+            });
+
+        } else {
+
+            vm.loaderData = {
+                current: vm.counter,
+                total: vm.activeItemTotal,
+                skippedTotal: vm.skippedItemTotal,
+                text: 'Validation Progress: Step',
+                status: vm.status,
+                additional: [
+                    vm.getTransactionImportProgress(),
+                    vm.getSimpleImportProgress()
+                ]
+            };
+
+            complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
+
+                // console.log('validation data', data);
+
+                vm.processing = false;
+
+                vm.status = 'SUCCESS';
+
+                var errorsCount = 0;
+
+                data.errors.forEach(function (error) {
+                    errorsCount = errorsCount + error.length;
+                });
+
+                if (errorsCount === 0) {
+
+                    vm.state = 'import';
+                    vm.counter = 0;
+
+                    vm.activeItemTotal = schemeObject.actions.length
+
+                    vm.skippedItemTotal = schemeObject.actions.filter(function (item) {
+                        return item.skip
+                    }).length;
+
+                    setTimeout(function () {
+
+                        vm.processing = true;
+
+                        vm.status = 'PROGRESS';
+
+                        vm.loaderData = {
+                            current: vm.counter,
+                            total: vm.activeItemTotal,
+                            skippedTotal: vm.skippedItemTotal,
+                            text: 'Import Progress: Step',
+                            status: vm.status,
+                            additional: [
+                                vm.getTransactionImportProgress(),
+                                vm.getSimpleImportProgress()
+                            ]
+                        };
+
+                        vm.counterData = {};
+
+                        complexImportService.startImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
+
+                            // console.log('data', data);
+
+                            vm.status = 'SUCCESS';
+                            vm.processing = false;
+
+                            errorsCount = 0;
+
+                            data.errors.forEach(function (error) {
+                                errorsCount = errorsCount + error.length;
+                            });
+
+                            if (errorsCount === 0) {
+
+                                $mdDialog.hide();
+
+                                var description = '';
+
+                                description = '<div>' +
+                                    '<div>Imports in total: ' + schemeObject.actions.length + '</div>' +
+                                    '</div><br/>';
+
+                                // console.log('description', description);
+
+                                description = description + '<div> You have successfully imported file </div>';
 
                                 $mdDialog.show({
-                                    controller: 'ValidationDialogController as vm',
-                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                    controller: 'SuccessDialogController as vm',
+                                    templateUrl: 'views/dialogs/success-dialog-view.html',
                                     targetEvent: $event,
                                     preserveScope: true,
                                     multiple: true,
                                     autoWrap: true,
                                     skipHide: true,
                                     locals: {
-                                        validationData: {
-                                            message: "An error occurred. Please try again later"
+                                        success: {
+                                            title: "Success",
+                                            description: description
                                         }
                                     }
+
                                 });
 
-                                $scope.$apply();
+                            } else {
 
-                            })
+                                $mdDialog.show({
+                                    controller: 'ComplexImportValidationErrorsDialogController as vm',
+                                    templateUrl: 'views/dialogs/complex-import/complex-import-validation-errors-dialog-view.html',
+                                    targetEvent: $event,
+                                    preserveScope: true,
+                                    multiple: true,
+                                    autoWrap: true,
+                                    skipHide: true,
+                                    locals: {
+                                        data: {
+                                            complexImportScheme: schemeObject,
+                                            validationResults: data
+                                        }
+                                    }
+                                })
 
-                        }, 500)
-
-                    } else {
-
-                        vm.processing = false;
-                        vm.status = 'SUCCESS';
-
-                        $mdDialog.show({
-                            controller: 'ComplexImportValidationErrorsDialogController as vm',
-                            templateUrl: 'views/dialogs/complex-import/complex-import-validation-errors-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                data: {
-                                    complexImportScheme: schemeObject,
-                                    validationResults: data
-                                }
                             }
-                        })
 
-                    }
-                });
-            }
-        };
 
-        vm.getMember = function () {
+                        }).catch(function (reason) {
 
-            usersService.getMyCurrentMember().then(function (data) {
+                            // console.log('here? ', reason);
 
-                vm.currentMember = data;
+                            vm.processing = false;
 
-                if (vm.currentMember.is_admin) {
-                    vm.hasSchemeEditPermission = true
-                }
+                            vm.status = 'SUCCESS';
 
-                vm.currentMember.groups_object.forEach(function (group) {
-
-                    if (group.permission_table) {
-
-                        group.permission_table.configuration.forEach(function (item) {
-
-                            if (item.content_type === 'complex_import.compleximportscheme') {
-                                if (item.data.creator_change) {
-                                    vm.hasSchemeEditPermission = true
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                preserveScope: true,
+                                multiple: true,
+                                autoWrap: true,
+                                skipHide: true,
+                                locals: {
+                                    validationData: {
+                                        message: "An error occurred. Please try again later"
+                                    }
                                 }
-                            }
+                            });
+
+                            $scope.$apply();
 
                         })
 
-                    }
+                    }, 500)
 
-                });
+                } else {
 
-                console.log('hasSchemeEditPermission', vm.hasSchemeEditPermission);
+                    vm.processing = false;
+                    vm.status = 'SUCCESS';
 
-                $scope.$apply();
+                    $mdDialog.show({
+                        controller: 'ComplexImportValidationErrorsDialogController as vm',
+                        templateUrl: 'views/dialogs/complex-import/complex-import-validation-errors-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: {
+                                complexImportScheme: schemeObject,
+                                validationResults: data
+                            }
+                        }
+                    })
 
+                }
             });
+        }
+    };
 
-        };
+    vm.getMember = function () {
 
-        vm.validateScheme = function () {
+        usersService.getMyCurrentMember().then(function (data) {
 
-            vm.schemeIsValid = true;
+            vm.currentMember = data;
 
-            var schemeObject;
+            if (vm.currentMember.is_admin) {
+                vm.hasSchemeEditPermission = true
+            }
 
-            vm.schemes.forEach(function (scheme) {
+            vm.currentMember.groups_object.forEach(function (group) {
 
-                if (scheme.id === vm.config.scheme) {
-                    schemeObject = scheme;
+                if (group.permission_table) {
+
+                    group.permission_table.configuration.forEach(function (item) {
+
+                        if (item.content_type === 'complex_import.compleximportscheme') {
+                            if (item.data.creator_change) {
+                                vm.hasSchemeEditPermission = true
+                            }
+                        }
+
+                    })
+
                 }
 
             });
 
-            if (schemeObject.actions && schemeObject.actions.length) {
+            console.log('hasSchemeEditPermission', vm.hasSchemeEditPermission);
 
-                schemeObject.actions.forEach(function (action) {
+            $scope.$apply();
 
-                    if (action.complex_transaction_import_scheme) {
-
-                        if (!action.complex_transaction_import_scheme.complex_transaction_import_scheme && !action.skip) {
-
-                            vm.schemeIsValid = false;
-
-                            vm.schemeValidationErrorMessage = 'Action #' + action.order + ' has wrong configuration.'
-                        }
-
-                    }
-
-                    if (action.csv_import_scheme) {
-
-                        if (!action.csv_import_scheme.csv_import_scheme && !action.skip) {
-
-                            vm.schemeIsValid = false;
-
-                            vm.schemeValidationErrorMessage = 'Action #' + action.order + ' has wrong configuration.'
-
-                        }
-
-                    }
-
-
-                });
-
-            } else {
-
-                vm.schemeIsValid = false;
-
-                vm.schemeValidationErrorMessage = 'Scheme has no actions to process.'
-
-            }
-
-            if (vm.schemeIsValid) {
-                vm.schemeValidationErrorMessage = '';
-            }
-
-            console.log('vm.validateScheme.scheme', schemeObject)
-
-        };
-
-        vm.init = function () {
-            vm.getSchemeList();
-            vm.getMember();
-
-
-            if (data && data.scheme) {
-
-                vm.config.scheme = data.scheme.id;
-            }
-
-        };
-
-        vm.init();
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-
+        });
 
     };
 
-}());
+    vm.validateScheme = function () {
+
+        vm.schemeIsValid = true;
+
+        var schemeObject;
+
+        vm.schemes.forEach(function (scheme) {
+
+            if (scheme.id === vm.config.scheme) {
+                schemeObject = scheme;
+            }
+
+        });
+
+        if (schemeObject.actions && schemeObject.actions.length) {
+
+            schemeObject.actions.forEach(function (action) {
+
+                if (action.complex_transaction_import_scheme) {
+
+                    if (!action.complex_transaction_import_scheme.complex_transaction_import_scheme && !action.skip) {
+
+                        vm.schemeIsValid = false;
+
+                        vm.schemeValidationErrorMessage = 'Action #' + action.order + ' has wrong configuration.'
+                    }
+
+                }
+
+                if (action.csv_import_scheme) {
+
+                    if (!action.csv_import_scheme.csv_import_scheme && !action.skip) {
+
+                        vm.schemeIsValid = false;
+
+                        vm.schemeValidationErrorMessage = 'Action #' + action.order + ' has wrong configuration.'
+
+                    }
+
+                }
+
+
+            });
+
+        } else {
+
+            vm.schemeIsValid = false;
+
+            vm.schemeValidationErrorMessage = 'Scheme has no actions to process.'
+
+        }
+
+        if (vm.schemeIsValid) {
+            vm.schemeValidationErrorMessage = '';
+        }
+
+        console.log('vm.validateScheme.scheme', schemeObject)
+
+    };
+
+    vm.init = function () {
+        vm.getSchemeList();
+        vm.getMember();
+
+
+        if (data && data.scheme) {
+
+            vm.config.scheme = data.scheme.id;
+        }
+
+    };
+
+    vm.init();
+
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+
+
+};

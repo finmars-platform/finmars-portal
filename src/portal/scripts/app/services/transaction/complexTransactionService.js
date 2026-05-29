@@ -1,109 +1,101 @@
-/**
- * Created by szhitenev on 04.05.2016.
- */
-(function () {
+import complexTransactionRepository from '../../repositories/transaction/complexTransactionRepository';
 
-    var complexTransactionRepository = require('../../repositories/transaction/complexTransactionRepository');
+var getList = function (options) {
+    return complexTransactionRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return complexTransactionRepository.getList(options);
-    };
+var getListLight = function (options) {
+    return complexTransactionRepository.getListLight(options);
+};
 
-    var getListLight = function (options) {
-        return complexTransactionRepository.getListLight(options);
-    };
+var getByKey = function (id) {
+    return complexTransactionRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return complexTransactionRepository.getByKey(id);
-    };
+var create = function (transaction) {
+    return complexTransactionRepository.create(transaction);
+};
 
-    var create = function (transaction) {
-        return complexTransactionRepository.create(transaction);
-    };
+var update = function (id, transaction) {
+    return complexTransactionRepository.update(id, transaction);
+};
 
-    var update = function (id, transaction) {
-        return complexTransactionRepository.update(id, transaction);
-    };
+var updateProperties = function (id, transaction) {
+    return complexTransactionRepository.updateProperties(id, transaction)
+};
 
-    var updateProperties = function (id, transaction) {
-        return complexTransactionRepository.updateProperties(id, transaction)
-    };
+var updatePropertiesBulk = function (transactions) {
+    return complexTransactionRepository.updatePropertiesBulk(transactions)
+};
 
-    var updatePropertiesBulk = function (transactions) {
-        return complexTransactionRepository.updatePropertiesBulk(transactions)
-    };
+var deleteByKey = function (id) {
+    return complexTransactionRepository.deleteByKey(id);
+};
 
-    var deleteByKey = function (id) {
-        return complexTransactionRepository.deleteByKey(id);
-    };
+var initRebookComplexTransaction = function (id) {
+    return complexTransactionRepository.initRebookComplexTransaction(id);
+};
 
-    var initRebookComplexTransaction = function (id) {
-        return complexTransactionRepository.initRebookComplexTransaction(id);
-    };
+var rebookComplexTransaction = function (id, transaction) {
+    return complexTransactionRepository.rebookComplexTransaction(id, transaction);
+};
 
-    var rebookComplexTransaction = function (id, transaction) {
-        return complexTransactionRepository.rebookComplexTransaction(id, transaction);
-    };
+var recalculateComplexTransaction = function (id, transaction){
+    return complexTransactionRepository.recalculateComplexTransaction(id, transaction);
+}
 
-    var recalculateComplexTransaction = function (id, transaction){
-        return complexTransactionRepository.recalculateComplexTransaction(id, transaction);
-    }
+var initRebookPendingComplexTransaction = function (id) {
+    return complexTransactionRepository.initRebookPendingComplexTransaction(id);
+};
 
-    var initRebookPendingComplexTransaction = function (id) {
-        return complexTransactionRepository.initRebookPendingComplexTransaction(id);
-    };
+var rebookPendingComplexTransaction = function (id, transaction) {
+    return complexTransactionRepository.rebookPendingComplexTransaction(id, transaction);
+};
 
-    var rebookPendingComplexTransaction = function (id, transaction) {
-        return complexTransactionRepository.rebookPendingComplexTransaction(id, transaction);
-    };
+var deleteBulk = function (data) {
+    return complexTransactionRepository.deleteBulk(data);
+};
+var restoreBulk = function (data) {
+    return complexTransactionRepository.restoreBulk(data)
+}
 
-    var deleteBulk = function (data) {
-        return complexTransactionRepository.deleteBulk(data);
-    };
-    var restoreBulk = function (data) {
-        return complexTransactionRepository.restoreBulk(data)
-    }
+var recalculatePermissionTransaction = function (data) {
+    return complexTransactionRepository.recalculatePermissionTransaction(data)
+};
 
-    var recalculatePermissionTransaction = function (data) {
-        return complexTransactionRepository.recalculatePermissionTransaction(data)
-    };
+var recalculatePermissionComplexTransaction = function(data){
+    return complexTransactionRepository.recalculatePermissionComplexTransaction(data)
+};
 
-    var recalculatePermissionComplexTransaction = function(data){
-        return complexTransactionRepository.recalculatePermissionComplexTransaction(data)
-    };
-
-    var viewComplexTransaction = function (id) {
-        return complexTransactionRepository.viewComplexTransaction(id);
-    };
+var viewComplexTransaction = function (id) {
+    return complexTransactionRepository.viewComplexTransaction(id);
+};
 
 
 
-    module.exports = {
-        getList: getList,
-        getListLight: getListLight,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
+export default {
+    getList: getList,
+    getListLight: getListLight,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey,
 
-        updateProperties: updateProperties,
-        updatePropertiesBulk: updatePropertiesBulk,
+    updateProperties: updateProperties,
+    updatePropertiesBulk: updatePropertiesBulk,
 
-        initRebookComplexTransaction: initRebookComplexTransaction,
-        rebookComplexTransaction: rebookComplexTransaction,
-        recalculateComplexTransaction: recalculateComplexTransaction,
+    initRebookComplexTransaction: initRebookComplexTransaction,
+    rebookComplexTransaction: rebookComplexTransaction,
+    recalculateComplexTransaction: recalculateComplexTransaction,
 
-        initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
-        rebookPendingComplexTransaction: rebookPendingComplexTransaction,
+    initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
+    rebookPendingComplexTransaction: rebookPendingComplexTransaction,
 
-        deleteBulk: deleteBulk,
-        restoreBulk: restoreBulk,
+    deleteBulk: deleteBulk,
+    restoreBulk: restoreBulk,
 
-        recalculatePermissionTransaction: recalculatePermissionTransaction,
-        recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction,
+    recalculatePermissionTransaction: recalculatePermissionTransaction,
+    recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction,
 
-        viewComplexTransaction: viewComplexTransaction
-    }
-
-
-}());
+    viewComplexTransaction: viewComplexTransaction
+};

@@ -1,167 +1,144 @@
-/**
- * Created by szhitenev on 10.12.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import reconciliationProcessFileService from '../../../services/reconciliation/reconciliationProcessFileService';
 
-    var reconciliationProcessFileService = require('../../../services/reconciliation/reconciliationProcessFileService');
+export default function reconProcessBankFileDialogController($scope, $mdDialog, transactionImportSchemeService, data) {
 
-    module.exports = function reconProcessBankFileDialogController($scope, $mdDialog, transactionImportSchemeService, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.data = data;
 
-        vm.data = data;
+    vm.config = {
+        delimiter: ',',
+        mode: 1,
+        missing_data_handler: 'throw_error',
+        error_handling: 'break'
+    };
 
-        vm.config = {
-            delimiter: ',',
-            mode: 1,
-            missing_data_handler: 'throw_error',
-            error_handling: 'break'
-        };
+    vm.readyStatus = {
+        schemes: false,
+        processing: false
+    };
 
-        vm.readyStatus = {
-            schemes: false,
-            processing: false
-        };
+    vm.loadIsAvailable = function () {
+        return !vm.readyStatus.processing && vm.config.scheme;
+    };
 
-        vm.loadIsAvailable = function () {
-            return !vm.readyStatus.processing && vm.config.scheme;
-        };
+    vm.schemes = [];
 
-        vm.schemes = [];
+    vm.checkExtension = function (file, extension, $event) {
+        console.log('file', file);
 
-        vm.checkExtension = function (file, extension, $event) {
-            console.log('file', file);
+        if (file) {
 
-            if (file) {
+            var ext = file.name.split('.').at(-1);
 
-                var ext = file.name.split('.').at(-1);
+            if (ext !== extension) {
 
-                if (ext !== extension) {
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        success: {
+                            title: "Warning!",
+                            description: 'You are trying to load incorrect file'
+                        }
+                    },
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                }).then(function () {
 
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            success: {
-                                title: "Warning!",
-                                description: 'You are trying to load incorrect file'
-                            }
-                        },
-                        multiple: true,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    }).then(function () {
+                    vm.config.file = null;
 
-                        vm.config.file = null;
-
-                    });
-
-                }
+                });
 
             }
 
-        };
+        }
 
-        vm.getSchemesList = function () {
+    };
 
-            transactionImportSchemeService.getListLight().then(function (data) {
-                vm.schemes = data.results;
-                vm.readyStatus.schemes = true;
-                $scope.$apply();
-            });
+    vm.getSchemesList = function () {
 
-        };
+        transactionImportSchemeService.getListLight().then(function (data) {
+            vm.schemes = data.results;
+            vm.readyStatus.schemes = true;
+            $scope.$apply();
+        });
 
-        vm.editScheme = function ($event) {
-            $mdDialog.show({
-                controller: 'TransactionImportSchemeEditDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
-                locals: {
-                    schemeId: vm.config.scheme
-                },
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true
-            }).then(function (res) {
+    };
 
-                if (res.status === 'agree') {
+    vm.editScheme = function ($event) {
+        $mdDialog.show({
+            controller: 'TransactionImportSchemeEditDialogController as vm',
+            templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
+            locals: {
+                schemeId: vm.config.scheme
+            },
+            targetEvent: $event,
+            preserveScope: true,
+            multiple: true,
+            autoWrap: true,
+            skipHide: true
+        }).then(function (res) {
 
-                    vm.getSchemesList();
+            if (res.status === 'agree') {
 
-                } else if (res.status === 'copy') {
+                vm.getSchemesList();
 
-                    res.dialogPromise.then(function (copyRes) {
+            } else if (res.status === 'copy') {
 
-                        if (copyRes.status === 'agree') {
-                            vm.getSchemesList();
-                        }
+                res.dialogPromise.then(function (copyRes) {
 
-                    });
+                    if (copyRes.status === 'agree') {
+                        vm.getSchemesList();
+                    }
 
-                }
+                });
 
-            });
-        };
+            }
 
-        vm.process = function ($event) {
+        });
+    };
 
-            vm.readyStatus.processing = true;
+    vm.process = function ($event) {
 
-            new Promise(function (resolve, reject) {
+        vm.readyStatus.processing = true;
 
-
-                var formData = new FormData();
-
-                if (vm.config.task_id) {
-                    formData.append('task_id', vm.config.task_id);
-
-                    resolve(formData)
-                } else {
-
-                    formData.append('file', vm.config.file);
-                    formData.append('scheme', vm.config.scheme);
-                    formData.append('error_handling', vm.config.error_handling);
-                    formData.append('delimiter', vm.config.delimiter);
-                    formData.append('missing_data_handler', vm.config.missing_data_handler);
-
-                    var reader = new FileReader();
-
-                    reader.onload = function(e) {
-                        var text = reader.result;                 // the entire file
-
-                        vm.parsedFile = text.split('\n')
-
-                        console.log("File readed", vm.parsedFile);
-
-                        resolve(formData);
-
-                    };
-
-                    reader.readAsText(vm.config.file, 'UTF-8');
-
-                    vm.loaderData = {
-                        current: vm.config.processed_rows,
-                        total: vm.config.total_rows,
-                        text: 'Parse Progress:',
-                        status: vm.config.task_status
-                    };
-
-                    vm.fileLocal = vm.config.local;
-
-                }
-
-            }).then(function (formData) {
+        new Promise(function (resolve, reject) {
 
 
-            reconciliationProcessFileService.process(formData).then(function (data) {
+            var formData = new FormData();
 
-                vm.config = data;
+            if (vm.config.task_id) {
+                formData.append('task_id', vm.config.task_id);
+
+                resolve(formData)
+            } else {
+
+                formData.append('file', vm.config.file);
+                formData.append('scheme', vm.config.scheme);
+                formData.append('error_handling', vm.config.error_handling);
+                formData.append('delimiter', vm.config.delimiter);
+                formData.append('missing_data_handler', vm.config.missing_data_handler);
+
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var text = reader.result;                 // the entire file
+
+                    vm.parsedFile = text.split('\n')
+
+                    console.log("File readed", vm.parsedFile);
+
+                    resolve(formData);
+
+                };
+
+                reader.readAsText(vm.config.file, 'UTF-8');
 
                 vm.loaderData = {
                     current: vm.config.processed_rows,
@@ -170,44 +147,60 @@
                     status: vm.config.task_status
                 };
 
-                $scope.$apply();
+                vm.fileLocal = vm.config.local;
 
-                if (vm.config.task_status === 'SUCCESS') {
+            }
 
-                    console.log('Processing is finished', data);
+        }).then(function (formData) {
 
-                    $mdDialog.hide({
-                        status: 'agree', data: {
-                            config: vm.config,
-                            results: data.results,
-                            parsedFile: vm.parsedFile
-                        }
-                    });
 
-                } else {
+        reconciliationProcessFileService.process(formData).then(function (data) {
 
-                    setTimeout(function () {
-                        vm.process($event);
-                    }, 1000)
+            vm.config = data;
 
-                }
+            vm.loaderData = {
+                current: vm.config.processed_rows,
+                total: vm.config.total_rows,
+                text: 'Parse Progress:',
+                status: vm.config.task_status
+            };
 
-            })
+            $scope.$apply();
 
-            })
-        };
+            if (vm.config.task_status === 'SUCCESS') {
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+                console.log('Processing is finished', data);
 
-        vm.init = function () {
+                $mdDialog.hide({
+                    status: 'agree', data: {
+                        config: vm.config,
+                        results: data.results,
+                        parsedFile: vm.parsedFile
+                    }
+                });
 
-            vm.getSchemesList();
+            } else {
 
-        };
+                setTimeout(function () {
+                    vm.process($event);
+                }, 1000)
 
-        vm.init();
-    }
+            }
 
-}());
+        })
+
+        })
+    };
+
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+    vm.init = function () {
+
+        vm.getSchemesList();
+
+    };
+
+    vm.init();
+};

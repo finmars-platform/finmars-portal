@@ -1,29 +1,22 @@
-/**
- * Created by szhitenev on 03.03.2020.
- */
-(function(){
+'use strict';
 
-    'use strict';
+export default function($scope){
 
-    module.exports = function($scope){
+    var vm = this;
 
-        var vm = this;
+    vm.entityType = 'price-history-error'; // deprecated
+    vm.contentType = 'pricing.pricehistoryerror';
 
-        vm.entityType = 'price-history-error'; // deprecated
-        vm.contentType = 'pricing.pricehistoryerror';
+    vm.entityRaw = [];
 
-        vm.entityRaw = [];
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
+    vm.entityViewer = {extraFeatures: []};
 
-        vm.entityViewer = {extraFeatures: []};
+    vm.init = function(){
+        vm.readyStatus.content = true
+    };
 
-        vm.init = function(){
-            vm.readyStatus.content = true
-        };
+    vm.init()
 
-        vm.init()
-
-    }
-
-}());
+};

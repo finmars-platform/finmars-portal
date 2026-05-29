@@ -1,9 +1,9 @@
-const evEvents = require('../entityViewerEvents');
-const groupsService = require('./groups.service');
-const objectsService = require('./objects.service');
-const evDataHelper = require('../../helpers/ev-data.helper').default;
-const evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
-const queryParamsHelper = require('../../helpers/queryParamsHelper');
+import evEvents from '../entityViewerEvents';
+import groupsService from './groups.service';
+import objectsService from './objects.service';
+import evDataHelper from '../../helpers/ev-data.helper';
+import evRvCommonHelper from '../../helpers/ev-rv-common.helper';
+import queryParamsHelper from '../../helpers/queryParamsHelper';
 
 export default function (entityResolverService, reportHelper) {
 

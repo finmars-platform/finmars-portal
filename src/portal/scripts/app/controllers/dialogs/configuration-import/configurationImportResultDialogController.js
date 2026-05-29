@@ -1,159 +1,152 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import logService from '../../../../../../core/services/logService';
 
-    var logService = require('../../../../../../core/services/logService');
+export default function ($scope, $mdDialog, metaContentTypesService, data) {
 
-    module.exports = function ($scope, $mdDialog, metaContentTypesService, data) {
+    logService.controller('SimpleEntityImportErrorsDialogController', 'initialized');
 
-        logService.controller('SimpleEntityImportErrorsDialogController', 'initialized');
+    var vm = this;
 
-        var vm = this;
+    vm.data = data;
 
-        vm.data = data;
+    vm.records = [];
 
-        vm.records = [];
+    vm.createFile = function () {
 
-        vm.createFile = function () {
+        var result = [];
 
-            var result = [];
+        var columns = ['Object', 'Issue', 'Reaction'];
 
-            var columns = ['Object', 'Issue', 'Reaction'];
+        var columnRow = columns.map(function (item) {
 
-            var columnRow = columns.map(function (item) {
+            return '"' + item + '"';
 
-                return '"' + item + '"';
+        }).join(',');
 
-            }).join(',');
+        result.push(columnRow);
 
-            result.push(columnRow);
+        vm.records.forEach(function (errorItem) {
 
-            vm.records.forEach(function (errorItem) {
+            var content = [];
 
-                var content = [];
+            content.push(vm.getName(errorItem));
 
-                content.push(vm.getName(errorItem));
-
-                if (errorItem.error) {
-                    if (errorItem.error.message) {
-                        content.push('"' + errorItem.error.message + '"');
-                    } else {
-                        content.push('""');
-                    }
+            if (errorItem.error) {
+                if (errorItem.error.message) {
+                    content.push('"' + errorItem.error.message + '"');
                 } else {
                     content.push('""');
                 }
-
-                content.push(errorItem.mode);
-
-                result.push(content.join(','));
-
-            });
-
-            result = result.join('\n');
-
-            return result;
-
-        };
-
-        vm.setDownloadLink = function () {
-
-            var link = document.querySelector('.download-error-link');
-
-            var text = vm.createFile();
-
-            var file = new Blob([text], {type: 'text/plain'});
-
-            link.href = URL.createObjectURL(file);
-            link.download = 'configuration_import_error_file.csv';
-
-
-        };
-
-        vm.getName = function (item) {
-
-            var result = '';
-
-            if (item.content_type) {
-                result = result + metaContentTypesService.getEntityNameByContentType(item.content_type)
+            } else {
+                content.push('""');
             }
 
-            if (item.item) {
+            content.push(errorItem.mode);
 
-                result = result + ': ';
+            result.push(content.join(','));
 
-                if (item.item.user_code) {
-                    result = result + item.item.user_code
+        });
+
+        result = result.join('\n');
+
+        return result;
+
+    };
+
+    vm.setDownloadLink = function () {
+
+        var link = document.querySelector('.download-error-link');
+
+        var text = vm.createFile();
+
+        var file = new Blob([text], {type: 'text/plain'});
+
+        link.href = URL.createObjectURL(file);
+        link.download = 'configuration_import_error_file.csv';
+
+
+    };
+
+    vm.getName = function (item) {
+
+        var result = '';
+
+        if (item.content_type) {
+            result = result + metaContentTypesService.getEntityNameByContentType(item.content_type)
+        }
+
+        if (item.item) {
+
+            result = result + ': ';
+
+            if (item.item.user_code) {
+                result = result + item.item.user_code
+            } else {
+
+                if (item.item.short_name) {
+
+                    result = result + item.item.short_name + ' (' + item.item.user_code + ')';
+
                 } else {
 
-                    if (item.item.short_name) {
+                    if (item.item.user_code) {
 
-                        result = result + item.item.short_name + ' (' + item.item.user_code + ')';
+                        result = result + item.item.user_code;
 
                     } else {
 
-                        if (item.item.user_code) {
-
-                            result = result + item.item.user_code;
-
-                        } else {
-
-                            if (item.item.name) {
-                                result = result + item.item.name;
-                            }
-
+                        if (item.item.name) {
+                            result = result + item.item.name;
                         }
+
                     }
-
-
                 }
+
 
             }
 
-            return result
+        }
 
-        };
+        return result
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    };
 
-        vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
-        };
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.init = function () {
+    vm.agree = function () {
+        $mdDialog.hide({status: 'agree'});
+    };
 
-            console.log('vm.data', vm.data);
+    vm.init = function () {
 
-            Object.keys(vm.data.stats).forEach(function (sectionKey) {
+        console.log('vm.data', vm.data);
 
-                Object.keys(vm.data.stats[sectionKey]).forEach(function (entityKey) {
+        Object.keys(vm.data.stats).forEach(function (sectionKey) {
 
-                    vm.data.stats[sectionKey][entityKey].forEach(function (item) {
+            Object.keys(vm.data.stats[sectionKey]).forEach(function (entityKey) {
 
-                        vm.records.push(item)
+                vm.data.stats[sectionKey][entityKey].forEach(function (item) {
 
-
-                    });
-
-                })
-
-            });
-
-            console.log('vm.records', vm.records);
+                    vm.records.push(item)
 
 
-            setTimeout(function () {
-                vm.setDownloadLink();
-            }, 100)
+                });
 
-        };
+            })
 
-        vm.init();
-    }
+        });
 
-}());
+        console.log('vm.records', vm.records);
+
+
+        setTimeout(function () {
+            vm.setDownloadLink();
+        }, 100)
+
+    };
+
+    vm.init();
+};

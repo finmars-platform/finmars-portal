@@ -1,95 +1,84 @@
-/**
- * Created by szhitenev on 20.07.2020.
- *
- * Deprecated with creation of separate page of authentication 'app.authentication'.
- *
- */
-(function(){
+'use strict';
 
-    'use strict';
+// var authorizerService = require('../../services/authorizerService');
+import cookieService from '../../../../../core/services/cookieService';
 
-    // var authorizerService = require('../../services/authorizerService');
-    var cookieService = require('../../../../../core/services/cookieService').default;
+export default function LoginDialogController($scope, $mdDialog, data, authorizerService){
 
+    var vm = this;
 
-    module.exports = function LoginDialogController($scope, $mdDialog, data, authorizerService){
+    vm.data = data;
 
-        var vm = this;
+    vm.processing = false;
+    vm.error = false;
 
-        vm.data = data;
+    vm.agree = function ($event) {
 
-        vm.processing = false;
-        vm.error = false;
+        vm.processing = true;
 
-        vm.agree = function ($event) {
+        authorizerService.tokenLogin(vm.username, vm.password).then(function (data) {
 
-            vm.processing = true;
+            console.log('authorizerService.login.data', data);
 
-            authorizerService.tokenLogin(vm.username, vm.password).then(function (data) {
+            vm.processing = false;
 
-                console.log('authorizerService.login.data', data);
+            $scope.$apply();
 
-                vm.processing = false;
+            if (data.success === false) {
+                vm.error = true;
+                vm.errorMessage = data.message
+            }
 
-                $scope.$apply();
-
-                if (data.success === false) {
-                    vm.error = true;
-                    vm.errorMessage = data.message
-                }
-
-                if (data.token) {
-                    console.log('authorizerService.login.setCookie auth token', data.token);
-                    cookieService.setCookie('authtoken', data.token);
-                }
+            if (data.token) {
+                console.log('authorizerService.login.setCookie auth token', data.token);
+                cookieService.setCookie('authtoken', data.token);
+            }
 
 
-                if (!data.two_factor_check) {
+            if (!data.two_factor_check) {
+
+                $mdDialog.hide({status: 'agree'});
+
+                return;
+
+            }
+
+
+
+
+            $mdDialog.show({
+                controller: 'TwoFactorLoginDialogController as vm',
+                templateUrl: 'views/dialogs/two-factor-login-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                locals: {
+                    username: vm.username
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                targetEvent: $event
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
 
                     $mdDialog.hide({status: 'agree'});
 
-                    return;
-
                 }
 
+            });
+
+        }).catch(function(error){
+
+            vm.processing = false;
+
+            vm.error = true;
+
+            $scope.$apply();
 
 
-
-                $mdDialog.show({
-                    controller: 'TwoFactorLoginDialogController as vm',
-                    templateUrl: 'views/dialogs/two-factor-login-dialog-view.html',
-                    parent: document.querySelector('.dialog-containers-wrap'),
-                    locals: {
-                        username: vm.username
-                    },
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    targetEvent: $event
-                }).then(function (res) {
-
-                    if (res.status === 'agree') {
-
-                        $mdDialog.hide({status: 'agree'});
-
-                    }
-
-                });
-
-            }).catch(function(error){
-
-                vm.processing = false;
-
-                vm.error = true;
-
-                $scope.$apply();
+        })
 
 
-            })
-
-
-        };
-    }
-
-}());
+    };
+};

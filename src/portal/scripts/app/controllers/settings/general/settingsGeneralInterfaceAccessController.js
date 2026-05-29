@@ -1,36 +1,29 @@
-/**
- * Created by szhitenev on 17.08.2016.
- */
-(function () {
+import timeZonesService from '../../../services/timeZonesService';
 
-    var timeZonesService = require('../../../services/timeZonesService');
+// var usersService = require('../../../services/usersService');
 
-    // var usersService = require('../../../services/usersService');
+export default function ($scope, $state, usersService, globalDataService) {
 
-    module.exports = function ($scope, $state, usersService, globalDataService) {
+    var vm = this;
 
-        var vm = this;
+    vm.readyStatus = {member: false};
 
-        vm.readyStatus = {member: false};
+    vm.timeZones = timeZonesService.getList();
 
-        vm.timeZones = timeZonesService.getList();
+    /*usersService.getOwnMemberSettings().then(function (data) {
+        vm.member = data.results[0];
+        vm.readyStatus.member = true;
+        $scope.$apply();
+    });*/
+    vm.member = globalDataService.getMember();
+    vm.readyStatus.member = true;
 
-        /*usersService.getOwnMemberSettings().then(function (data) {
-            vm.member = data.results[0];
-            vm.readyStatus.member = true;
+    vm.save = function () {
+        usersService.updateOwnMemberSettings(vm.member.id, vm.member).then(function () {
+
+            $state.go('app.portal.settings.interface-access', null, { reload: 'app' });
+
             $scope.$apply();
-        });*/
-		vm.member = globalDataService.getMember();
-		vm.readyStatus.member = true;
-
-        vm.save = function () {
-            usersService.updateOwnMemberSettings(vm.member.id, vm.member).then(function () {
-
-                $state.go('app.portal.settings.interface-access', null, { reload: 'app' });
-
-                $scope.$apply();
-            })
-        }
+        })
     }
-
-}());
+};

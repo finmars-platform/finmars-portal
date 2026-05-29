@@ -1,51 +1,43 @@
-/**
- * Created by szhitenev on 09.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import logService from '../../../../../core/services/logService';
+import strategySubgroupService from '../../services/strategySubgroupService';
 
-    var logService = require('../../../../../core/services/logService');
+export default function ($scope, $stateParams) {
 
-    var strategySubgroupService = require('../../services/strategySubgroupService');
+    logService.controller('DataStrategySubGroupController', 'initialized');
 
-    module.exports = function ($scope, $stateParams) {
+    console.log('$stateParams', $stateParams);
 
-        logService.controller('DataStrategySubGroupController', 'initialized');
+    var vm = this;
 
-        console.log('$stateParams', $stateParams);
+    vm.readyStatus = {content: false};
 
-        var vm = this;
+    vm.strategyNumber = $stateParams.strategyNumber;
 
-        vm.readyStatus = {content: false};
+    vm.entityType = 'strategy-' + vm.strategyNumber + '-subgroup'; // deprecated
+    vm.contentType = 'strategies.strategy' + vm.strategyNumber + 'subgroup';
+    vm.entityRaw = [];
 
-        vm.strategyNumber = $stateParams.strategyNumber;
+    vm.entityViewer = {extraFeatures: []};
 
-        vm.entityType = 'strategy-' + vm.strategyNumber + '-subgroup'; // deprecated
-        vm.contentType = 'strategies.strategy' + vm.strategyNumber + 'subgroup';
-        vm.entityRaw = [];
+    // strategySubgroupService.getList(vm.strategyNumber).then(function(data){
+    //     vm.entityRaw = data.results;
+    //     vm.readyStatus.content = true;
+    //     console.log('vm.entityRaw', vm.entityRaw);
+    //     $scope.$apply();
+    // });
 
-        vm.entityViewer = {extraFeatures: []};
+    vm.getList = function(options){
+        return strategySubgroupService.getList(vm.strategyNumber, options).then(function(data){
+            return data;
+        })
+    };
 
-        // strategySubgroupService.getList(vm.strategyNumber).then(function(data){
-        //     vm.entityRaw = data.results;
-        //     vm.readyStatus.content = true;
-        //     console.log('vm.entityRaw', vm.entityRaw);
-        //     $scope.$apply();
-        // });
+    vm.init = function(){
+        vm.readyStatus.content = true
+    };
 
-        vm.getList = function(options){
-            return strategySubgroupService.getList(vm.strategyNumber, options).then(function(data){
-                return data;
-            })
-        };
+    vm.init()
 
-        vm.init = function(){
-            vm.readyStatus.content = true
-        };
-
-        vm.init()
-
-    }
-
-}());
+};

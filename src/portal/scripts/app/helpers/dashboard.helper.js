@@ -1,4 +1,4 @@
-const dashboardEvents = require('../services/dashboard/dashboardEvents');
+import dashboardEvents from '../services/dashboard/dashboardEvents';
 
 export default function (toastNotificationService, uiService, evRvLayoutsHelper) {
 

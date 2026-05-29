@@ -1,196 +1,188 @@
-/**
- * Created by szhitenev on 04.05.2016.
- */
-// import baseUrlService from "../services/baseUrlService";
-(function () {
+'use strict';
 
-    'use strict';
+import baseUrlService from "../services/baseUrlService";
+import cookieService from '../../../../core/services/cookieService';
+import xhrService from '../../../../core/services/xhrService';
+import configureRepositoryUrlService from '../services/configureRepositoryUrlService';
+// var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrlService = require("../services/baseUrlService").default;
-    var cookieService = require('../../../../core/services/cookieService').default;
-    var xhrService = require('../../../../core/services/xhrService').default;
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService').default;
-    // var baseUrlService = require('../services/baseUrlService');
+var baseUrl = baseUrlService.resolve();
 
-    var baseUrl = baseUrlService.resolve();
+var getList = function (strategyNumber, options) {
 
-    var getList = function (strategyNumber, options) {
+    if (!options) {
+        options = {};
+    }
 
-        if (!options) {
-            options = {};
-        }
-
-        
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-    var getListLight = function (strategyNumber, options) {
+var getListLight = function (strategyNumber, options) {
 
-        if (!options) {
-            options = {};
-        }
+    if (!options) {
+        options = {};
+    }
 
-        
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/light/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-    var getByKey = function (strategyNumber, id) {
-        
+var getByKey = function (strategyNumber, id) {
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-    var create = function (strategyNumber, strategy) {
-        
+var create = function (strategyNumber, strategy) {
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(strategy)
-            })
-    };
-
-    var update = function (strategyNumber, id, strategy) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
-
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/' + id + '/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(strategy)
-            })
-    };
-
-    var deleteByKey = function (strategyNumber, id) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
-
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/' + id + '/',
-            {
-                method: 'DELETE',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                resolve({status: 'deleted'});
-            });
-            //return data.json();
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(strategy)
         })
-    };
+};
 
-    var updateBulk = function (strategyNumber, data) {
-        
+var update = function (strategyNumber, id, strategy) {
+    
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/' + id + '/',
+        {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(strategy)
+        })
+};
+
+var deleteByKey = function (strategyNumber, id) {
+    
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/' + id + '/',
+        {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+        return new Promise(function (resolve, reject) {
+            resolve({status: 'deleted'});
+        });
+        //return data.json();
+    })
+};
+
+var updateBulk = function (strategyNumber, data) {
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/bulk-update/',
-            {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-    };
+        {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+};
 
-    var deleteBulk = function (strategyNumber, data) {
-        
+var deleteBulk = function (strategyNumber, data) {
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/bulk-delete/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(function (data) {
-                return new Promise(function (resolve, reject) {
-                    resolve({status: 'deleted'});
-                });
-            })
-    };
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(function (data) {
+            return new Promise(function (resolve, reject) {
+                resolve({status: 'deleted'});
+            });
+        })
+};
 
-    module.exports = {
+export default {
 
-        getList: getList,
-        getListLight: getListLight,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
+    getList: getList,
+    getListLight: getListLight,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey,
 
-        updateBulk: updateBulk,
-        deleteBulk: deleteBulk
+    updateBulk: updateBulk,
+    deleteBulk: deleteBulk
 
-    }
-
-}());
+};

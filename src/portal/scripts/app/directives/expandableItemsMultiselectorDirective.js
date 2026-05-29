@@ -1,106 +1,102 @@
-(function () {
+'use strict';
 
-    'use strict';
+export default function ($mdDialog) {
+    return {
+        restriction: 'E',
+        scope: {
+            title: '@',
+            dialogTitle: '@',
+            model: '=',
+            items: '='
+        },
+        templateUrl: 'views/directives/dialog-selector-input-with-tooltip-view.html',
+        link: function (scope, elem, attr) {
 
-    module.exports = function ($mdDialog) {
-        return {
-            restriction: 'E',
-            scope: {
-                title: '@',
-                dialogTitle: '@',
-                model: '=',
-                items: '='
-            },
-            templateUrl: 'views/directives/dialog-selector-input-with-tooltip-view.html',
-            link: function (scope, elem, attr) {
+            /*var setInputText = function () {
 
-                /*var setInputText = function () {
+                if (scope.model && scope.items) {
 
-                    if (scope.model && scope.items) {
+                    for (var i = 0; i < scope.items.length; i++) {
 
-                        for (var i = 0; i < scope.items.length; i++) {
-
-                            if (scope.items[i].id === scope.model) {
-                                scope.inputText = scope.items[i].name;
-                            }
-
+                        if (scope.items[i].id === scope.model) {
+                            scope.inputText = scope.items[i].name;
                         }
 
-                    } else {
-                        scope.inputText = "";
                     }
 
-                };*/
+                } else {
+                    scope.inputText = "";
+                }
 
-                var setInputAndTooltipText = function () {
-                    if (scope.model && scope.model.length > 0) {
+            };*/
 
-                        var selectedAttrsString = '';
+            var setInputAndTooltipText = function () {
+                if (scope.model && scope.model.length > 0) {
 
-                        scope.model.forEach(function (attribute) {
-                            if (selectedAttrsString) {
-                                selectedAttrsString += ', '
-                            }
+                    var selectedAttrsString = '';
 
-                            if (attribute.layout_name) {
-
-                                selectedAttrsString += attribute.layout_name;
-
-                            } else {
-                                selectedAttrsString += attribute.attribute_data.name;
-                            }
-
-                        });
-
-                        scope.inputText = '[' + selectedAttrsString + ']';
-                        scope.tooltipText = "Values selected: " + selectedAttrsString;
-
-                    } else if (scope.nothingSelectedText) {
-
-                        scope.inputText = scope.nothingSelectedText;
-
-                    } else {
-
-                        scope.inputText = "[ ]";
-
-                    }
-                };
-
-                /*scope.$watch('items', function () {
-                    setInputText();
-                });*/
-
-                $(elem).click(function (event) {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    $mdDialog.show({
-                        controller: "ExpandableItemsMultiselectorDialogController as vm",
-                        templateUrl: "views/dialogs/expandable-items-multiselector-dialog-view.html",
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: event,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                dialogTitle: scope.dialogTitle,
-                                selectedItem: scope.model,
-                                availableItems: scope.items
-                            }
+                    scope.model.forEach(function (attribute) {
+                        if (selectedAttrsString) {
+                            selectedAttrsString += ', '
                         }
-                    }).then(function (res) {
 
-                        if (res.status === "agree") {
+                        if (attribute.layout_name) {
 
-                            scope.model = res.selectedItems;
+                            selectedAttrsString += attribute.layout_name;
 
+                        } else {
+                            selectedAttrsString += attribute.attribute_data.name;
                         }
 
                     });
-                });
 
-            }
+                    scope.inputText = '[' + selectedAttrsString + ']';
+                    scope.tooltipText = "Values selected: " + selectedAttrsString;
+
+                } else if (scope.nothingSelectedText) {
+
+                    scope.inputText = scope.nothingSelectedText;
+
+                } else {
+
+                    scope.inputText = "[ ]";
+
+                }
+            };
+
+            /*scope.$watch('items', function () {
+                setInputText();
+            });*/
+
+            $(elem).click(function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                $mdDialog.show({
+                    controller: "ExpandableItemsMultiselectorDialogController as vm",
+                    templateUrl: "views/dialogs/expandable-items-multiselector-dialog-view.html",
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: event,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            dialogTitle: scope.dialogTitle,
+                            selectedItem: scope.model,
+                            availableItems: scope.items
+                        }
+                    }
+                }).then(function (res) {
+
+                    if (res.status === "agree") {
+
+                        scope.model = res.selectedItems;
+
+                    }
+
+                });
+            });
+
         }
     }
-
-}());
+};

@@ -4,8 +4,8 @@
 
 'use strict';
 
-const baseUrlService = require('./baseUrlService').default;
-const xhrService = require('../../../../core/services/xhrService').default;
+import baseUrlService from './baseUrlService';
+import xhrService from '../../../../core/services/xhrService';
 
 export default function (cookieService) {
 
@@ -34,4 +34,4 @@ export default function (cookieService) {
 		importConfigurationAsJson: importConfigurationAsJson,
 	}
 
-};
+}

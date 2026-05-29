@@ -1,20 +1,13 @@
-/**
- * Created by szhitenev on 27.06.2022.
- */
-(function () {
-
-    var supersetRepository = require('../repositories/supersetRepository');
+import supersetRepository from '../repositories/supersetRepository';
 
 
-    var getSecurityToken = function(id) {
-        return supersetRepository.getSecurityToken(id);
-    };
+var getSecurityToken = function(id) {
+    return supersetRepository.getSecurityToken(id);
+};
 
 
-    module.exports = {
+export default {
 
-        getSecurityToken: getSecurityToken
+    getSecurityToken: getSecurityToken
 
-    }
-
-}());
+};

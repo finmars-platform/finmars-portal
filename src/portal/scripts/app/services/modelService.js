@@ -1,167 +1,203 @@
-/**
- * Created by szhitenev on 04.05.2016.
- */
-(function () {
+import * as portfolioPropsModel from "../models/portfolioPropsModel";
+import * as portfolioTypePropsModel from "../models/portfolioTypePropsModel";
+import * as portfolioReconcileGroupPropsModel from "../models/portfolioReconcileGroupPropsModel";
+import * as auditTransactionPropsModel from "../models/auditTransactionPropsModel";
+import * as auditInstrumentPropsModel from "../models/auditInstrumentPropsModel";
+import * as accountPropsModel from "../models/accountPropsModel";
+import * as tagPropsModel from "../models/tagPropsModel";
+import * as accountTypePropsModel from "../models/accountTypePropsModel";
+import * as counterpartyPropsModel from "../models/counterpartyPropsModel";
+import * as counterpartyGroupPropsModel from "../models/counterpartyGroupPropsModel";
+import * as responsiblePropsModel from "../models/responsiblePropsModel";
+import * as responsibleGroupPropsModel from "../models/responsibleGroupPropsModel";
+import * as pricingPolicyPropsModel from "../models/pricingPolicyPropsModel";
+import * as instrumentTypePropsModel from "../models/instrumentTypePropsModel";
+import * as instrumentPropsModel from "../models/instrumentPropsModel";
+import * as generatedEventPropsModel from "../models/generatedEventPropsModel";
+import * as transactionPropsModel from "../models/transactionPropsModel";
+import * as transactionTypeGroupPropsModel from "../models/transactionTypeGroupPropsModel";
+import * as transactionTypePropsModel from "../models/transactionTypePropsModel";
+import * as currencyPropsModel from "../models/currencyPropsModel";
+import * as currencyHistoryPropsModel from "../models/currencyHistoryPropsModel";
+import * as priceHistoryPropsModel from "../models/priceHistoryPropsModel";
+import * as strategy1PropsModel from "../models/strategy1PropsModel";
+import * as strategy2PropsModel from "../models/strategy2PropsModel";
+import * as strategy3PropsModel from "../models/strategy3PropsModel";
+import * as strategy1subgroupPropsModel from "../models/strategy1subgroupPropsModel";
+import * as strategy2subgroupPropsModel from "../models/strategy2subgroupPropsModel";
+import * as strategy3subgroupPropsModel from "../models/strategy3subgroupPropsModel";
+import * as strategy1groupPropsModel from "../models/strategy1groupPropsModel";
+import * as strategy2groupPropsModel from "../models/strategy2groupPropsModel";
+import * as strategy3groupPropsModel from "../models/strategy3groupPropsModel";
+import * as complexTransactionPropsModel from "../models/complexTransactionPropsModel";
+import * as instrumentSchemePropsModel from "../models/instrumentSchemePropsModel";
+import * as balanceReportPropsModel from "../models/balanceReportPropsModel";
+import * as reportAddonPerformancePropsModel from "../models/reportAddonPerformancePropsModel";
+import * as reportMismatchPropsModel from "../models/reportMismatchPropsModel";
+import * as pnlReportPropsModel from "../models/pnlReportPropsModel";
+import * as reportAddonPerformancePnlPropsModel from "../models/reportAddonPerformancePnlPropsModel";
+import * as reportMismatchPnlPropsModel from "../models/reportMismatchPnlPropsModel";
+import * as transactionReportPropsModel from "../models/transactionReportPropsModel";
+import * as cashFlowProjectionReportPropsModel from "../models/cashFlowProjectionReportPropsModel";
+import * as performanceReportPropsModel from "../models/performanceReportPropsModel";
+import * as countryPropsModel from "../models/countryPropsModel";
+import * as transactionClassPropsModel from "../models/transactionClassPropsModel";
+"use strict";
 
-    "use strict";
 
+var getAttributesByEntityType = function (entityType) {
 
-    var getAttributesByEntityType = function (entityType) {
-
-        var models = {
-            "portfolio": require('../models/portfolioPropsModel').getAttributes(),
-            "portfolio-type": require('../models/portfolioTypePropsModel').getAttributes(),
-            "portfolio-reconcile-group": require('../models/portfolioReconcileGroupPropsModel').getAttributes(),
-            "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
-            "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
-            "account": require('../models/accountPropsModel').getAttributes(),
-            "tag": require('../models/tagPropsModel').getAttributes(),
-            "account-type": require('../models/accountTypePropsModel').getAttributes(),
-            "counterparty": require('../models/counterpartyPropsModel').getAttributes(),
-            "counterparty-group": require('../models/counterpartyGroupPropsModel').getAttributes(),
-            "responsible": require('../models/responsiblePropsModel').getAttributes(),
-            "responsible-group": require('../models/responsibleGroupPropsModel').getAttributes(),
-            "pricing-policy": require('../models/pricingPolicyPropsModel').getAttributes(),
-            "instrument-type": require('../models/instrumentTypePropsModel').getAttributes(),
-            "instrument": require('../models/instrumentPropsModel').getAttributes(),
-            "generated-event": require('../models/generatedEventPropsModel').getAttributes(),
-            "transaction": require('../models/transactionPropsModel').getAttributes(),
-            "transaction-type-group": require('../models/transactionTypeGroupPropsModel').getAttributes(),
-            "transaction-type": require('../models/transactionTypePropsModel').getAttributes(),
-            "currency": require('../models/currencyPropsModel').getAttributes(),
-            "currency-history": require('../models/currencyHistoryPropsModel').getAttributes(),
-            "price-history": require('../models/priceHistoryPropsModel').getAttributes(),
-            "strategy-1": require('../models/strategy1PropsModel').getAttributes(),
-            "strategy-2": require('../models/strategy2PropsModel').getAttributes(),
-            "strategy-3": require('../models/strategy3PropsModel').getAttributes(),
-            "strategy-1-subgroup": require('../models/strategy1subgroupPropsModel').getAttributes(),
-            "strategy-2-subgroup": require('../models/strategy2subgroupPropsModel').getAttributes(),
-            "strategy-3-subgroup": require('../models/strategy3subgroupPropsModel').getAttributes(),
-            "strategy-1-group": require('../models/strategy1groupPropsModel').getAttributes(),
-            "strategy-2-group": require('../models/strategy2groupPropsModel').getAttributes(),
-            "strategy-3-group": require('../models/strategy3groupPropsModel').getAttributes(),
-            "complex-transaction": require('../models/complexTransactionPropsModel').getAttributes(),
-            "instrument-scheme": require('../models/instrumentSchemePropsModel').getAttributes(),
-            "balance-report": require('../models/balanceReportPropsModel').getAttributes(),
-            'balance-report-performance': require('../models/reportAddonPerformancePropsModel').getAttributes(),
-            'balance-report-mismatch': require('../models/reportMismatchPropsModel').getAttributes(),
-            "pl-report": require('../models/pnlReportPropsModel').getAttributes(),
-            'pl-report-performance': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
-            'pl-report-mismatch': require('../models/reportMismatchPnlPropsModel').getAttributes(),
-            "transaction-report": require('../models/transactionReportPropsModel').getAttributes(),
-            "cash-flow-projection-report": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
-            "performance-report": require('../models/performanceReportPropsModel').getAttributes(),
-        };
-
-        return models[entityType];
+    var models = {
+        "portfolio": portfolioPropsModel.getAttributes(),
+        "portfolio-type": portfolioTypePropsModel.getAttributes(),
+        "portfolio-reconcile-group": portfolioReconcileGroupPropsModel.getAttributes(),
+        "audit-transaction": auditTransactionPropsModel.getAttributes(),
+        "audit-instrument": auditInstrumentPropsModel.getAttributes(),
+        "account": accountPropsModel.getAttributes(),
+        "tag": tagPropsModel.getAttributes(),
+        "account-type": accountTypePropsModel.getAttributes(),
+        "counterparty": counterpartyPropsModel.getAttributes(),
+        "counterparty-group": counterpartyGroupPropsModel.getAttributes(),
+        "responsible": responsiblePropsModel.getAttributes(),
+        "responsible-group": responsibleGroupPropsModel.getAttributes(),
+        "pricing-policy": pricingPolicyPropsModel.getAttributes(),
+        "instrument-type": instrumentTypePropsModel.getAttributes(),
+        "instrument": instrumentPropsModel.getAttributes(),
+        "generated-event": generatedEventPropsModel.getAttributes(),
+        "transaction": transactionPropsModel.getAttributes(),
+        "transaction-type-group": transactionTypeGroupPropsModel.getAttributes(),
+        "transaction-type": transactionTypePropsModel.getAttributes(),
+        "currency": currencyPropsModel.getAttributes(),
+        "currency-history": currencyHistoryPropsModel.getAttributes(),
+        "price-history": priceHistoryPropsModel.getAttributes(),
+        "strategy-1": strategy1PropsModel.getAttributes(),
+        "strategy-2": strategy2PropsModel.getAttributes(),
+        "strategy-3": strategy3PropsModel.getAttributes(),
+        "strategy-1-subgroup": strategy1subgroupPropsModel.getAttributes(),
+        "strategy-2-subgroup": strategy2subgroupPropsModel.getAttributes(),
+        "strategy-3-subgroup": strategy3subgroupPropsModel.getAttributes(),
+        "strategy-1-group": strategy1groupPropsModel.getAttributes(),
+        "strategy-2-group": strategy2groupPropsModel.getAttributes(),
+        "strategy-3-group": strategy3groupPropsModel.getAttributes(),
+        "complex-transaction": complexTransactionPropsModel.getAttributes(),
+        "instrument-scheme": instrumentSchemePropsModel.getAttributes(),
+        "balance-report": balanceReportPropsModel.getAttributes(),
+        'balance-report-performance': reportAddonPerformancePropsModel.getAttributes(),
+        'balance-report-mismatch': reportMismatchPropsModel.getAttributes(),
+        "pl-report": pnlReportPropsModel.getAttributes(),
+        'pl-report-performance': reportAddonPerformancePnlPropsModel.getAttributes(),
+        'pl-report-mismatch': reportMismatchPnlPropsModel.getAttributes(),
+        "transaction-report": transactionReportPropsModel.getAttributes(),
+        "cash-flow-projection-report": cashFlowProjectionReportPropsModel.getAttributes(),
+        "performance-report": performanceReportPropsModel.getAttributes(),
     };
 
-    var getAttributesByContentType = function (contentType) {
+    return models[entityType];
+};
 
-        var models = {
-            "portfolios.portfolio": require('../models/portfolioPropsModel').getAttributes(),
-            "audit.transactionaudit": require('../models/auditTransactionPropsModel').getAttributes(),
-            "audit.instrumentaudit": require('../models/auditInstrumentPropsModel').getAttributes(),
-            "accounts.account": require('../models/accountPropsModel').getAttributes(),
-            "accounts.accounttype": require('../models/accountTypePropsModel').getAttributes(),
-            "counterparties.counterparty": require('../models/counterpartyPropsModel').getAttributes(),
-            "counterparties.counterpartygroup": require('../models/counterpartyGroupPropsModel').getAttributes(),
-            "counterparties.responsible": require('../models/responsiblePropsModel').getAttributes(),
-            "counterparties.responsiblegroup": require('../models/responsibleGroupPropsModel').getAttributes(),
-            "instruments.pricingpolicy": require('../models/pricingPolicyPropsModel').getAttributes(),
-            "instruments.instrumenttype": require('../models/instrumentTypePropsModel').getAttributes(),
-            "instruments.instrument": require('../models/instrumentPropsModel').getAttributes(),
-            "instruments.generatedevent": require('../models/generatedEventPropsModel').getAttributes(),
-            "instruments.country": require('../models/countryPropsModel').getAttributes(),
-            "transactions.transaction": require('../models/transactionPropsModel').getAttributes(),
-            "transactions.transactionclass": require('../models/transactionClassPropsModel').getAttributes(),
-            "transactions.transactiontypegroup": require('../models/transactionTypeGroupPropsModel').getAttributes(),
-            "transactions.transactiontype": require('../models/transactionTypePropsModel').getAttributes(),
-            "transactions.complextransaction": require('../models/complexTransactionPropsModel').getAttributes(),
-            "currencies.currency": require('../models/currencyPropsModel').getAttributes(),
-            "currencies.currencyhistory": require('../models/currencyHistoryPropsModel').getAttributes(),
-            "instruments.pricehistory": require('../models/priceHistoryPropsModel').getAttributes(),
-            "strategies.strategy1": require('../models/strategy1PropsModel').getAttributes(),
-            "strategies.strategy2": require('../models/strategy2PropsModel').getAttributes(),
-            "strategies.strategy3": require('../models/strategy3PropsModel').getAttributes(),
-            "strategies.strategy1subgroup": require('../models/strategy1subgroupPropsModel').getAttributes(),
-            "strategies.strategy2subgroup": require('../models/strategy2subgroupPropsModel').getAttributes(),
-            "strategies.strategy3subgroup": require('../models/strategy3subgroupPropsModel').getAttributes(),
-            "strategies.strategy1group": require('../models/strategy1groupPropsModel').getAttributes(),
-            "strategies.strategy2group": require('../models/strategy2groupPropsModel').getAttributes(),
-            "strategies.strategy3group": require('../models/strategy3groupPropsModel').getAttributes(),
-            "reports.balancereport": require('../models/balanceReportPropsModel').getAttributes(),
-            "reports.balancereportperformance": require('../models/reportAddonPerformancePropsModel').getAttributes(),
-            "reports.balancereportmismatch":  require('../models/reportMismatchPropsModel').getAttributes(),
-            "reports.plreport": require('../models/pnlReportPropsModel').getAttributes(),
-            'reports.plreportperformance': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
-            'reports.plreportmismatch': require('../models/reportMismatchPnlPropsModel').getAttributes(),
-            "reports.transactionreport": require('../models/transactionReportPropsModel').getAttributes(),
-            "reports.cashflowreport": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
-            "reports.performancereport": require('../models/performanceReportPropsModel').getAttributes()
+var getAttributesByContentType = function (contentType) {
 
-        };
+    var models = {
+        "portfolios.portfolio": portfolioPropsModel.getAttributes(),
+        "audit.transactionaudit": auditTransactionPropsModel.getAttributes(),
+        "audit.instrumentaudit": auditInstrumentPropsModel.getAttributes(),
+        "accounts.account": accountPropsModel.getAttributes(),
+        "accounts.accounttype": accountTypePropsModel.getAttributes(),
+        "counterparties.counterparty": counterpartyPropsModel.getAttributes(),
+        "counterparties.counterpartygroup": counterpartyGroupPropsModel.getAttributes(),
+        "counterparties.responsible": responsiblePropsModel.getAttributes(),
+        "counterparties.responsiblegroup": responsibleGroupPropsModel.getAttributes(),
+        "instruments.pricingpolicy": pricingPolicyPropsModel.getAttributes(),
+        "instruments.instrumenttype": instrumentTypePropsModel.getAttributes(),
+        "instruments.instrument": instrumentPropsModel.getAttributes(),
+        "instruments.generatedevent": generatedEventPropsModel.getAttributes(),
+        "instruments.country": countryPropsModel.getAttributes(),
+        "transactions.transaction": transactionPropsModel.getAttributes(),
+        "transactions.transactionclass": transactionClassPropsModel.getAttributes(),
+        "transactions.transactiontypegroup": transactionTypeGroupPropsModel.getAttributes(),
+        "transactions.transactiontype": transactionTypePropsModel.getAttributes(),
+        "transactions.complextransaction": complexTransactionPropsModel.getAttributes(),
+        "currencies.currency": currencyPropsModel.getAttributes(),
+        "currencies.currencyhistory": currencyHistoryPropsModel.getAttributes(),
+        "instruments.pricehistory": priceHistoryPropsModel.getAttributes(),
+        "strategies.strategy1": strategy1PropsModel.getAttributes(),
+        "strategies.strategy2": strategy2PropsModel.getAttributes(),
+        "strategies.strategy3": strategy3PropsModel.getAttributes(),
+        "strategies.strategy1subgroup": strategy1subgroupPropsModel.getAttributes(),
+        "strategies.strategy2subgroup": strategy2subgroupPropsModel.getAttributes(),
+        "strategies.strategy3subgroup": strategy3subgroupPropsModel.getAttributes(),
+        "strategies.strategy1group": strategy1groupPropsModel.getAttributes(),
+        "strategies.strategy2group": strategy2groupPropsModel.getAttributes(),
+        "strategies.strategy3group": strategy3groupPropsModel.getAttributes(),
+        "reports.balancereport": balanceReportPropsModel.getAttributes(),
+        "reports.balancereportperformance": reportAddonPerformancePropsModel.getAttributes(),
+        "reports.balancereportmismatch":  reportMismatchPropsModel.getAttributes(),
+        "reports.plreport": pnlReportPropsModel.getAttributes(),
+        'reports.plreportperformance': reportAddonPerformancePnlPropsModel.getAttributes(),
+        'reports.plreportmismatch': reportMismatchPnlPropsModel.getAttributes(),
+        "reports.transactionreport": transactionReportPropsModel.getAttributes(),
+        "reports.cashflowreport": cashFlowProjectionReportPropsModel.getAttributes(),
+        "reports.performancereport": performanceReportPropsModel.getAttributes()
 
-        if (models[contentType]) {
-            return models[contentType]
-        }
-
-        return [];
     };
 
-    var getModelsWithAttributes = function () {
-
-        var models = {
-            "portfolios.portfolio": require('../models/portfolioPropsModel').getAttributes(),
-            "audit.transactionaudit": require('../models/auditTransactionPropsModel').getAttributes(),
-            "audit.instrumentaudit": require('../models/auditInstrumentPropsModel').getAttributes(),
-            "accounts.account": require('../models/accountPropsModel').getAttributes(),
-            "accounts.accounttype": require('../models/accountTypePropsModel').getAttributes(),
-            "counterparties.counterparty": require('../models/counterpartyPropsModel').getAttributes(),
-            "counterparties.counterpartygroup": require('../models/counterpartyGroupPropsModel').getAttributes(),
-            "counterparties.responsible": require('../models/responsiblePropsModel').getAttributes(),
-            "counterparties.responsiblegroup": require('../models/responsibleGroupPropsModel').getAttributes(),
-            "instruments.pricingpolicy": require('../models/pricingPolicyPropsModel').getAttributes(),
-            "instruments.instrumenttype": require('../models/instrumentTypePropsModel').getAttributes(),
-            "instruments.instrument": require('../models/instrumentPropsModel').getAttributes(),
-            "instruments.generatedevent": require('../models/generatedEventPropsModel').getAttributes(),
-            "instruments.country": require('../models/countryPropsModel').getAttributes(),
-            "transactions.transaction": require('../models/transactionPropsModel').getAttributes(),
-            "transactions.transactionclass": require('../models/transactionClassPropsModel').getAttributes(),
-            "transactions.transactiontypegroup": require('../models/transactionTypeGroupPropsModel').getAttributes(),
-            "transactions.transactiontype": require('../models/transactionTypePropsModel').getAttributes(),
-            "transactions.complextransaction": require('../models/complexTransactionPropsModel').getAttributes(),
-            "currencies.currency": require('../models/currencyPropsModel').getAttributes(),
-            "currencies.currencyhistory": require('../models/currencyHistoryPropsModel').getAttributes(),
-            "instruments.pricehistory": require('../models/priceHistoryPropsModel').getAttributes(),
-            "strategies.strategy1": require('../models/strategy1PropsModel').getAttributes(),
-            "strategies.strategy2": require('../models/strategy2PropsModel').getAttributes(),
-            "strategies.strategy3": require('../models/strategy3PropsModel').getAttributes(),
-            "strategies.strategy1subgroup": require('../models/strategy1subgroupPropsModel').getAttributes(),
-            "strategies.strategy2subgroup": require('../models/strategy2subgroupPropsModel').getAttributes(),
-            "strategies.strategy3subgroup": require('../models/strategy3subgroupPropsModel').getAttributes(),
-            "strategies.strategy1group": require('../models/strategy1groupPropsModel').getAttributes(),
-            "strategies.strategy2group": require('../models/strategy2groupPropsModel').getAttributes(),
-            "strategies.strategy3group": require('../models/strategy3groupPropsModel').getAttributes(),
-            "reports.balancereport": require('../models/balanceReportPropsModel').getAttributes(),
-            "reports.balancereportperformance": require('../models/reportAddonPerformancePropsModel').getAttributes(),
-            "reports.balancereportmismatch":  require('../models/reportMismatchPropsModel').getAttributes(),
-            "reports.plreport": require('../models/pnlReportPropsModel').getAttributes(),
-            'reports.plreportperformance': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
-            'reports.plreportmismatch': require('../models/reportMismatchPnlPropsModel').getAttributes(),
-            "reports.transactionreport": require('../models/transactionReportPropsModel').getAttributes(),
-            "reports.cashflowreport": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
-            "reports.performancereport": require('../models/performanceReportPropsModel').getAttributes()
-
-        };
-        return models
-    };
-
-    module.exports = {
-        getAttributesByEntityType: getAttributesByEntityType,
-        getModelsWithAttributes:getModelsWithAttributes,
-        getAttributesByContentType: getAttributesByContentType
+    if (models[contentType]) {
+        return models[contentType]
     }
 
+    return [];
+};
 
-}());
+var getModelsWithAttributes = function () {
+
+    var models = {
+        "portfolios.portfolio": portfolioPropsModel.getAttributes(),
+        "audit.transactionaudit": auditTransactionPropsModel.getAttributes(),
+        "audit.instrumentaudit": auditInstrumentPropsModel.getAttributes(),
+        "accounts.account": accountPropsModel.getAttributes(),
+        "accounts.accounttype": accountTypePropsModel.getAttributes(),
+        "counterparties.counterparty": counterpartyPropsModel.getAttributes(),
+        "counterparties.counterpartygroup": counterpartyGroupPropsModel.getAttributes(),
+        "counterparties.responsible": responsiblePropsModel.getAttributes(),
+        "counterparties.responsiblegroup": responsibleGroupPropsModel.getAttributes(),
+        "instruments.pricingpolicy": pricingPolicyPropsModel.getAttributes(),
+        "instruments.instrumenttype": instrumentTypePropsModel.getAttributes(),
+        "instruments.instrument": instrumentPropsModel.getAttributes(),
+        "instruments.generatedevent": generatedEventPropsModel.getAttributes(),
+        "instruments.country": countryPropsModel.getAttributes(),
+        "transactions.transaction": transactionPropsModel.getAttributes(),
+        "transactions.transactionclass": transactionClassPropsModel.getAttributes(),
+        "transactions.transactiontypegroup": transactionTypeGroupPropsModel.getAttributes(),
+        "transactions.transactiontype": transactionTypePropsModel.getAttributes(),
+        "transactions.complextransaction": complexTransactionPropsModel.getAttributes(),
+        "currencies.currency": currencyPropsModel.getAttributes(),
+        "currencies.currencyhistory": currencyHistoryPropsModel.getAttributes(),
+        "instruments.pricehistory": priceHistoryPropsModel.getAttributes(),
+        "strategies.strategy1": strategy1PropsModel.getAttributes(),
+        "strategies.strategy2": strategy2PropsModel.getAttributes(),
+        "strategies.strategy3": strategy3PropsModel.getAttributes(),
+        "strategies.strategy1subgroup": strategy1subgroupPropsModel.getAttributes(),
+        "strategies.strategy2subgroup": strategy2subgroupPropsModel.getAttributes(),
+        "strategies.strategy3subgroup": strategy3subgroupPropsModel.getAttributes(),
+        "strategies.strategy1group": strategy1groupPropsModel.getAttributes(),
+        "strategies.strategy2group": strategy2groupPropsModel.getAttributes(),
+        "strategies.strategy3group": strategy3groupPropsModel.getAttributes(),
+        "reports.balancereport": balanceReportPropsModel.getAttributes(),
+        "reports.balancereportperformance": reportAddonPerformancePropsModel.getAttributes(),
+        "reports.balancereportmismatch":  reportMismatchPropsModel.getAttributes(),
+        "reports.plreport": pnlReportPropsModel.getAttributes(),
+        'reports.plreportperformance': reportAddonPerformancePnlPropsModel.getAttributes(),
+        'reports.plreportmismatch': reportMismatchPnlPropsModel.getAttributes(),
+        "reports.transactionreport": transactionReportPropsModel.getAttributes(),
+        "reports.cashflowreport": cashFlowProjectionReportPropsModel.getAttributes(),
+        "reports.performancereport": performanceReportPropsModel.getAttributes()
+
+    };
+    return models
+};
+
+export default {
+    getAttributesByEntityType: getAttributesByEntityType,
+    getModelsWithAttributes:getModelsWithAttributes,
+    getAttributesByContentType: getAttributesByContentType
+};

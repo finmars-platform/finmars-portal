@@ -1,10 +1,10 @@
 import QueuePromisesService from "../queuePromisesService";
 
-var evEvents = require('../entityViewerEvents').default;
-var evDataHelper = require('../../helpers/ev-data.helper').default;
-var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
-var rvDataHelper = require('../../helpers/rv-data.helper').default;
-var queryParamsHelper = require('../../helpers/queryParamsHelper').default;
+import evEvents from '../entityViewerEvents';
+import evDataHelper from '../../helpers/ev-data.helper';
+import evRvCommonHelper from '../../helpers/ev-rv-common.helper';
+import rvDataHelper from '../../helpers/rv-data.helper';
+import queryParamsHelper from '../../helpers/queryParamsHelper';
 
 export default function (entityResolverService, pricesCheckerService, reportHelper, groupsService, objectsService) {
 

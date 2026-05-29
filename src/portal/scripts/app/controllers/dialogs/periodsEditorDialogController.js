@@ -1,18 +1,14 @@
-(function () {
+'use strict';
 
-    'use strict';
-
-    module.exports = function ($scope, $mdDialog, options) {
+export default function ($scope, $mdDialog, options) {
 
 
-        var vm = this;
+    var vm = this;
 
-        vm.periods = options.periods;
+    vm.periods = options.periods;
 
-        vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
-        };
+    vm.agree = function () {
+        $mdDialog.hide({status: 'agree'});
+    };
 
-    }
-
-}());
+};

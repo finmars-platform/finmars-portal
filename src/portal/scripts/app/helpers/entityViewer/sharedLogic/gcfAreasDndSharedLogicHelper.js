@@ -1,438 +1,434 @@
-(function () {
+'use strict';
 
-	'use strict';
+import evEvents from '../../../services/entityViewerEvents';
+import evHelperService from '../../../services/entityViewerHelperService';
 
-	const evEvents = require('../../../services/entityViewerEvents');
-	const evHelperService = require('../../../services/entityViewerHelperService');
+export default function (scope, $mdDialog, isReport) {
 
-	module.exports = function (scope, $mdDialog, isReport) {
+    const defaultHiddenDnDAreas = ['filtersHolder', 'deletionAreaHolder', 'leftSideGroupsHolder', 'rightSideColumnsHolder'];
 
-		const defaultHiddenDnDAreas = ['filtersHolder', 'deletionAreaHolder', 'leftSideGroupsHolder', 'rightSideColumnsHolder'];
+    let draggableAttrKey;
 
-		let draggableAttrKey;
+    const onDragstart = function (ev, itemOrigin) {
 
-		const onDragstart = function (ev, itemOrigin) {
+        /* let draggableItemIndex;
+        const draggableAttrKey = ev.target.dataset.attrKey;
+        const draggableItem = columns.find((col, index) => {
 
-			/* let draggableItemIndex;
-			const draggableAttrKey = ev.target.dataset.attrKey;
-			const draggableItem = columns.find((col, index) => {
+            if (col.key === draggableAttrKey) {
+                draggableItemIndex = index;
+                return true;
+            }
 
-				if (col.key === draggableAttrKey) {
-					draggableItemIndex = index;
-					return true;
-				}
+            return false;
 
-				return false;
+        }); */
+        draggableAttrKey = ev.target.dataset.attrKey;
+        const gcItems = itemOrigin === 'groups' ? scope.groups : scope.columns;
 
-			}); */
-			draggableAttrKey = ev.target.dataset.attrKey;
-			const gcItems = itemOrigin === 'groups' ? scope.groups : scope.columns;
+        scope.draggableItem = gcItems.find((col, index) => {
 
-			scope.draggableItem = gcItems.find((col, index) => {
+            if (col.key === draggableAttrKey) {
+                scope.draggableItemIndex = index;
+                return true;
+            }
 
-				if (col.key === draggableAttrKey) {
-					scope.draggableItemIndex = index;
-					return true;
-				}
+            return false;
 
-				return false;
+        });
 
-			});
+        let dragData = {
+            attrKey: draggableAttrKey,
+            itemOrigin: itemOrigin
+        };
 
-			let dragData = {
-				attrKey: draggableAttrKey,
-				itemOrigin: itemOrigin
-			};
+        dragData = JSON.stringify(dragData);
 
-			dragData = JSON.stringify(dragData);
+        ev.dataTransfer.setData("attributeData", dragData);
+        ev.dataTransfer.setData(draggableAttrKey, "");
+        ev.dataTransfer.setData(itemOrigin, "");
 
-			ev.dataTransfer.setData("attributeData", dragData);
-			ev.dataTransfer.setData(draggableAttrKey, "");
-			ev.dataTransfer.setData(itemOrigin, "");
+        ev.dataTransfer.dropEffect = 'none';
 
-			ev.dataTransfer.dropEffect = 'none';
+        if (scope.draggableItem.error_data) {
+            scope.dndAreas.deletionAreaHolder.classList.remove("display-none");
 
-			if (scope.draggableItem.error_data) {
-				scope.dndAreas.deletionAreaHolder.classList.remove("display-none");
+        } else {
 
-			} else {
+            scope.hiddenDnDAreas.forEach(areaProp => {
+                scope.dndAreas[areaProp].classList.remove("display-none");
+            });
 
-				scope.hiddenDnDAreas.forEach(areaProp => {
-					scope.dndAreas[areaProp].classList.remove("display-none");
-				});
+        }
 
-			}
+        scope.contentWrapElement.classList.add("g-groups-columns-dnd");
 
-			scope.contentWrapElement.classList.add("g-groups-columns-dnd");
+        // return {draggableAttrKey, draggableItemIndex, draggableItem};
 
-			// return {draggableAttrKey, draggableItemIndex, draggableItem};
+    };
 
-		};
+    const initErroredItemListeners = function () {
 
-		const initErroredItemListeners = function () {
+        scope.dndAreas.deletionAreaHolder.addEventListener('drop', onDropToDeletionArea);
 
-			scope.dndAreas.deletionAreaHolder.addEventListener('drop', onDropToDeletionArea);
+        scope.dndAreas.deletionAreaHolder.addEventListener('dragenter', onDropAreaDragenter);
+        scope.dndAreas.deletionAreaHolder.addEventListener('dragleave', onDropAreaDragleave);
 
-			scope.dndAreas.deletionAreaHolder.addEventListener('dragenter', onDropAreaDragenter);
-			scope.dndAreas.deletionAreaHolder.addEventListener('dragleave', onDropAreaDragleave);
+    };
 
-		};
+    let initListenersOnColumnDragStart;
 
-		let initListenersOnColumnDragStart;
+    const setInitListenersOnColumnDragStart = function (initListenersFn) {
+        initListenersOnColumnDragStart = initListenersFn;
+    };
 
-		const setInitListenersOnColumnDragStart = function (initListenersFn) {
-			initListenersOnColumnDragStart = initListenersFn;
-		};
+    const onColumnDragstart = function (ev) {
 
-		const onColumnDragstart = function (ev) {
+        onDragstart(ev, "columns");
+        initListenersOnColumnDragStart();
 
-			onDragstart(ev, "columns");
-			initListenersOnColumnDragStart();
+    };
 
-		};
+    let initListenersOnGroupDragStart;
 
-		let initListenersOnGroupDragStart;
+    const setInitListenersOnGroupDragStart = function (initListenersFn) {
+        initListenersOnGroupDragStart = initListenersFn;
+    };
+    //endregion
 
-		const setInitListenersOnGroupDragStart = function (initListenersFn) {
-			initListenersOnGroupDragStart = initListenersFn;
-		};
-		//endregion
+    /**
+     *
+     * @param contentWrapElem {HTMLElement}
+     * @returns {Object<HTMLElement>}
+     * @memberof module:gcfAreasDndSharedLogicHelper
+     */
+    const getDndAreas = function  () {
 
-		/**
-		 *
-		 * @param contentWrapElem {HTMLElement}
-		 * @returns {Object<HTMLElement>}
-		 * @memberof module:gcfAreasDndSharedLogicHelper
-		 */
-		const getDndAreas = function  () {
+        scope.dndAreas.columns = scope.contentWrapElement.querySelector(".gColumnsHolder");
+        if (isReport) scope.dndAreas.groups = scope.contentWrapElement.querySelector(".gGroupsHolder");
 
-			scope.dndAreas.columns = scope.contentWrapElement.querySelector(".gColumnsHolder");
-			if (isReport) scope.dndAreas.groups = scope.contentWrapElement.querySelector(".gGroupsHolder");
+        scope.dndAreas.filtersHolder = scope.contentWrapElement.querySelector('.gFiltersDropArea');
+        scope.dndAreas.deletionAreaHolder = scope.contentWrapElement.querySelector('.gDeletionDropArea');
+        scope.dndAreas.leftSideGroupsHolder = scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder');
+        scope.dndAreas.rightSideColumnsHolder = scope.contentWrapElement.querySelector('.gRightSideColumnsHolder');
 
-			scope.dndAreas.filtersHolder = scope.contentWrapElement.querySelector('.gFiltersDropArea');
-			scope.dndAreas.deletionAreaHolder = scope.contentWrapElement.querySelector('.gDeletionDropArea');
-			scope.dndAreas.leftSideGroupsHolder = scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder');
-			scope.dndAreas.rightSideColumnsHolder = scope.contentWrapElement.querySelector('.gRightSideColumnsHolder');
+        return scope.dndAreas;
 
-			return scope.dndAreas;
+    };
+    /**
+     * Changes order of columns or groups inside entityViewerDataService.
+     *
+     * @param orderOf {String} - can be 'columns', 'groups'
+     * @param nextSibling {HTMLElement|null}
+     * @memberof module:gcfAreasDndSharedLogicHelper
+     */
+    const changeOrder = function (orderOf, nextSibling) {
 
-		};
-		/**
-		 * Changes order of columns or groups inside entityViewerDataService.
-		 *
-		 * @param orderOf {String} - can be 'columns', 'groups'
-		 * @param nextSibling {HTMLElement|null}
-		 * @memberof module:gcfAreasDndSharedLogicHelper
-		 */
-		const changeOrder = function (orderOf, nextSibling) {
+        const nextSiblingKey = nextSibling ? nextSibling.dataset.attrKey : null;
 
-			const nextSiblingKey = nextSibling ? nextSibling.dataset.attrKey : null;
+        if (draggableAttrKey !== nextSiblingKey) {
 
-			if (draggableAttrKey !== nextSiblingKey) {
+            let GCitems = [];
+            let updateGCFMethod = null;
 
-				let GCitems = [];
-				let updateGCFMethod = null;
+            switch (orderOf) {
 
-				switch (orderOf) {
+                case 'groups':
 
-					case 'groups':
+                    GCitems = scope.evDataService.getGroups();
 
-						GCitems = scope.evDataService.getGroups();
+                    updateGCFMethod = function () {
+                        scope.evDataService.setGroups(GCitems);
+                        scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                    };
 
-						updateGCFMethod = function () {
-							scope.evDataService.setGroups(GCitems);
-							scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-						};
+                    break;
 
-						break;
+                case 'columns':
 
-					case 'columns':
+                    GCitems = scope.evDataService.getColumns();
 
-						GCitems = scope.evDataService.getColumns();
+                    updateGCFMethod = function () {
+                        scope.evDataService.setColumns(GCitems);
+                        scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    };
 
-						updateGCFMethod = function () {
-							scope.evDataService.setColumns(GCitems);
-							scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-						};
+                    break;
 
-						break;
+            }
 
-				}
+            scope.draggableItem = GCitems.find((item, index) => {
 
-				scope.draggableItem = GCitems.find((item, index) => {
+                if (item.key === draggableAttrKey) {
+                    GCitems.splice(index, 1);
+                    return true;
+                }
 
-					if (item.key === draggableAttrKey) {
-						GCitems.splice(index, 1);
-						return true;
-					}
+                return false;
 
-					return false;
+            });
 
-				});
+            if (nextSiblingKey) {
 
-				if (nextSiblingKey) {
+                const nextSiblingIndex = GCitems.findIndex(item => item.key === nextSiblingKey);
+                GCitems.splice(nextSiblingIndex, 0, scope.draggableItem);
 
-					const nextSiblingIndex = GCitems.findIndex(item => item.key === nextSiblingKey);
-					GCitems.splice(nextSiblingIndex, 0, scope.draggableItem);
+            } else { // moved to the end
+                GCitems.push(scope.draggableItem);
+            }
 
-				} else { // moved to the end
-					GCitems.push(scope.draggableItem);
-				}
+            updateGCFMethod();
 
-				updateGCFMethod();
+            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            scope.$apply();
 
-				scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-				scope.$apply();
+        }
 
-			}
+    };
 
-		};
+    const removeDraggedOverClasses = function (ev) {
 
-		const removeDraggedOverClasses = function (ev) {
+        const removeClasses = function (draggedElem) {
+            draggedElem.classList.remove("drop-left", "drop-right", "container-shadowed", "draggedOver");
+        };
 
-			const removeClasses = function (draggedElem) {
-				draggedElem.classList.remove("drop-left", "drop-right", "container-shadowed", "draggedOver");
-			};
+        if (ev) {
 
-			if (ev) {
+            let leftElem = ev.target.closest(".draggedOver");
 
-				let leftElem = ev.target.closest(".draggedOver");
+            if (leftElem) {
+                removeClasses(leftElem);
+            }
 
-				if (leftElem) {
-					removeClasses(leftElem);
-				}
+        } else {
 
-			} else {
+            let leftElems = scope.contentWrapElement.querySelectorAll(".draggedOver");
+            leftElems.forEach(removeClasses);
 
-				let leftElems = scope.contentWrapElement.querySelectorAll(".draggedOver");
-				leftElems.forEach(removeClasses);
+        }
 
-			}
+    };
 
-		};
+    //region Dragend
+    let removeListenersOnDragend;
 
-		//region Dragend
-		let removeListenersOnDragend;
+    const setRemoveListenersOnDragend = function (removeListenersOnDragendFn) {
+        removeListenersOnDragend = removeListenersOnDragendFn;
+    };
 
-		const setRemoveListenersOnDragend = function (removeListenersOnDragendFn) {
-			removeListenersOnDragend = removeListenersOnDragendFn;
-		};
+    const onDragend = function () {
 
-		const onDragend = function () {
+        scope.contentWrapElement.classList.remove("g-groups-columns-dnd");
 
-			scope.contentWrapElement.classList.remove("g-groups-columns-dnd");
+        draggableAttrKey = null;
+        scope.draggableItemIndex = null;
+        scope.draggableItem = null;
 
-			draggableAttrKey = null;
-			scope.draggableItemIndex = null;
-			scope.draggableItem = null;
+        scope.hiddenDnDAreas.forEach(areaProp => {
+            scope.dndAreas[areaProp].classList.add("display-none");
+        });
 
-			scope.hiddenDnDAreas.forEach(areaProp => {
-				scope.dndAreas[areaProp].classList.add("display-none");
-			});
+        removeDraggedOverClasses();
 
-			removeDraggedOverClasses();
+        removeListenersOnDragend();
+    };
+    //endregion Dragend
 
-			removeListenersOnDragend();
-		};
-		//endregion Dragend
+    const initDnDFromColumns = function () {
 
-		const initDnDFromColumns = function () {
+        scope.colsElems = scope.dndAreas.columns.querySelectorAll(".gDraggableHead");
 
-			scope.colsElems = scope.dndAreas.columns.querySelectorAll(".gDraggableHead");
+        scope.colsElems.forEach(colElem => {
 
-			scope.colsElems.forEach(colElem => {
+            colElem.addEventListener('dragstart', onColumnDragstart);
+            colElem.addEventListener('dragend', onDragend);
 
-				colElem.addEventListener('dragstart', onColumnDragstart);
-				colElem.addEventListener('dragend', onDragend);
+        });
 
-			});
+        return scope.colsElems;
 
-			return scope.colsElems;
+    };
+    /** When changing order of groups or columns */
+    const onSameHolderDragenter = function (ev) {
 
-		};
-		/** When changing order of groups or columns */
-		const onSameHolderDragenter = function (ev) {
+        ev.stopPropagation();
 
-			ev.stopPropagation();
+        const holderClass = ev.dataTransfer.types.includes('columns') ? 'gColumnsHolder' : 'gGroupsHolder';
+        // const draggedOverElem = ev.toElement.closest(".gcAreaDnD");
+        const draggedOverElem = ev.target.closest(".gcAreaDnD");
 
-			const holderClass = ev.dataTransfer.types.includes('columns') ? 'gColumnsHolder' : 'gGroupsHolder';
-			// const draggedOverElem = ev.toElement.closest(".gcAreaDnD");
-			const draggedOverElem = ev.target.closest(".gcAreaDnD");
+        if (draggedOverElem.classList.contains(holderClass)) {
 
-			if (draggedOverElem.classList.contains(holderClass)) {
+            draggedOverElem.classList.add("drop-right", "draggedOver");
+            ev.dataTransfer.dropEffect = 'move';
 
-				draggedOverElem.classList.add("drop-right", "draggedOver");
-				ev.dataTransfer.dropEffect = 'move';
+        } else {
 
-			} else {
+            const types = ev.dataTransfer.types;
+            const nextSiblingKey = draggedOverElem.dataset.attrKey;
 
-				const types = ev.dataTransfer.types;
-				const nextSiblingKey = draggedOverElem.dataset.attrKey;
+            const nextColumn = scope.columns[scope.draggableItemIndex + 1];
+            const beforeNextCol = nextColumn && nextColumn.key === nextSiblingKey;
 
-				const nextColumn = scope.columns[scope.draggableItemIndex + 1];
-				const beforeNextCol = nextColumn && nextColumn.key === nextSiblingKey;
+            if (types.includes(nextSiblingKey) || beforeNextCol) { // dragged over element itself or next element
+                ev.dataTransfer.dropEffect = 'none';
 
-				if (types.includes(nextSiblingKey) || beforeNextCol) { // dragged over element itself or next element
-					ev.dataTransfer.dropEffect = 'none';
+            } else {
 
-				} else {
+                draggedOverElem.classList.add("drop-left", "draggedOver");
+                ev.dataTransfer.dropEffect = 'move';
 
-					draggedOverElem.classList.add("drop-left", "draggedOver");
-					ev.dataTransfer.dropEffect = 'move';
+            }
 
-				}
+        }
 
-			}
+    };
 
-		};
+    const onDropAreaDragenter = function (ev) {
+        ev.stopPropagation();
+        ev.target.classList.add("dragged-over");
+    };
 
-		const onDropAreaDragenter = function (ev) {
-			ev.stopPropagation();
-			ev.target.classList.add("dragged-over");
-		};
+    const onDropAreaDragleave = function (ev) {
+        ev.stopPropagation();
+        ev.target.classList.remove("dragged-over");
+    };
 
-		const onDropAreaDragleave = function (ev) {
-			ev.stopPropagation();
-			ev.target.classList.remove("dragged-over");
-		};
+    let onDropToColumns;
 
-		let onDropToColumns;
+    /**
+     *
+     * @param handler {Function} - called on drop
+     */
+    const setOnDropToColumns = function (handler) {
+        onDropToColumns = handler;
+    };
 
-		/**
-		 *
-		 * @param handler {Function} - called on drop
-		 */
-		const setOnDropToColumns = function (handler) {
-			onDropToColumns = handler;
-		};
+    const onDropToFilters = function (ev) {
 
-		const onDropToFilters = function (ev) {
+        ev.stopPropagation();
 
-			ev.stopPropagation();
+        let filters;
+        let filtersData; // only for entity viewer
 
-			let filters;
-			let filtersData; // only for entity viewer
+        if (isReport) {
+            filters = scope.evDataService.getFilters();
 
-			if (isReport) {
-				filters = scope.evDataService.getFilters();
+        } else {
+            filtersData = scope.evDataService.getFilters();
+            filters = filtersData[scope.shownFiltersType]; // scope.shownFiltersType assigned inside evGcfAreasDndDirective
+        }
 
-			} else {
-				filtersData = scope.evDataService.getFilters();
-				filters = filtersData[scope.shownFiltersType]; // scope.shownFiltersType assigned inside evGcfAreasDndDirective
-			}
+        const filterAlreadyExist = filters.find(filter => filter.key === draggableAttrKey);
 
-			const filterAlreadyExist = filters.find(filter => filter.key === draggableAttrKey);
+        if (filterAlreadyExist) {
 
-			if (filterAlreadyExist) {
+            const filterName = filterAlreadyExist.layout_name ? filterAlreadyExist.layout_name : filterAlreadyExist.name;
 
-				const filterName = filterAlreadyExist.layout_name ? filterAlreadyExist.layout_name : filterAlreadyExist.name;
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
+                clickOutsideToClose: false,
+                multiple: true,
+                locals: {
+                    warning: {
+                        title: 'Error',
+                        description: "Filter " + filterName + " already exist",
+                        actionsButtons: [{
+                            name: "OK",
+                            response: false
+                        }]
+                    }
+                }
+            });
 
-				$mdDialog.show({
-					controller: 'WarningDialogController as vm',
-					templateUrl: 'views/dialogs/warning-dialog-view.html',
-					parent: document.querySelector('.dialog-containers-wrap'),
-					clickOutsideToClose: false,
-					multiple: true,
-					locals: {
-						warning: {
-							title: 'Error',
-							description: "Filter " + filterName + " already exist",
-							actionsButtons: [{
-								name: "OK",
-								response: false
-							}]
-						}
-					}
-				});
+        }
+        else {
 
-			}
-			else {
+            const filterToAdd = evHelperService.getTableAttrInFormOf('filter', scope.draggableItem);
 
-				const filterToAdd = evHelperService.getTableAttrInFormOf('filter', scope.draggableItem);
+            filters.push(filterToAdd);
 
-				filters.push(filterToAdd);
+            if (isReport) {
+                scope.evDataService.setFilters(filters);
 
-				if (isReport) {
-					scope.evDataService.setFilters(filters);
+            } else {
+                scope.evDataService.setFilters(filtersData);
+            }
 
-				} else {
-					scope.evDataService.setFilters(filtersData);
-				}
+            scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-				scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+        }
 
-			}
+    };
 
-		};
+    const onDropToDeletionArea = function (ev) {
 
-		const onDropToDeletionArea = function (ev) {
+        let droppedItemData = ev.dataTransfer.getData("attributeData");
+        droppedItemData = JSON.parse(droppedItemData);
 
-			let droppedItemData = ev.dataTransfer.getData("attributeData");
-			droppedItemData = JSON.parse(droppedItemData);
+        let GCitems;
+        let updateGCFMethod;
 
-			let GCitems;
-			let updateGCFMethod;
+        switch (droppedItemData.itemOrigin) {
 
-			switch (droppedItemData.itemOrigin) {
+            case 'groups':
 
-				case 'groups':
+                GCitems = scope.evDataService.getGroups();
 
-					GCitems = scope.evDataService.getGroups();
+                updateGCFMethod = function () {
+                    scope.evDataService.setGroups(GCitems);
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                };
 
-					updateGCFMethod = function () {
-						scope.evDataService.setGroups(GCitems);
-						scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-					};
+                break;
 
-					break;
+            case 'columns':
 
-				case 'columns':
+                GCitems = scope.evDataService.getColumns();
 
-					GCitems = scope.evDataService.getColumns();
+                updateGCFMethod = function () {
+                    scope.evDataService.setColumns(GCitems);
+                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                };
+                break;
+        }
 
-					updateGCFMethod = function () {
-						scope.evDataService.setColumns(GCitems);
-						scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-					};
-					break;
-			}
+        const deletedItemIndex = GCitems.findIndex(item => item.key === droppedItemData.attrKey);
+        GCitems.splice(deletedItemIndex, 1);
 
-			const deletedItemIndex = GCitems.findIndex(item => item.key === droppedItemData.attrKey);
-			GCitems.splice(deletedItemIndex, 1);
+        updateGCFMethod();
+        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-			updateGCFMethod();
-			scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+    };
 
-		};
 
+    /** @module gcfAreasDndSharedLogicHelper **/
+    return {
+        defaultHiddenDnDAreas: defaultHiddenDnDAreas,
+        getDndAreas: getDndAreas,
 
-		/** @module gcfAreasDndSharedLogicHelper **/
-		return {
-			defaultHiddenDnDAreas: defaultHiddenDnDAreas,
-			getDndAreas: getDndAreas,
+        initErroredItemListeners: initErroredItemListeners,
+        setInitListenersOnColumnDragStart: setInitListenersOnColumnDragStart,
+        setInitListenersOnGroupDragStart: setInitListenersOnGroupDragStart,
 
-			initErroredItemListeners: initErroredItemListeners,
-			setInitListenersOnColumnDragStart: setInitListenersOnColumnDragStart,
-			setInitListenersOnGroupDragStart: setInitListenersOnGroupDragStart,
+        changeOrder: changeOrder,
+        removeDraggedOverClasses: removeDraggedOverClasses,
 
-			changeOrder: changeOrder,
-			removeDraggedOverClasses: removeDraggedOverClasses,
+        onDragstart: onDragstart,
+        initDnDFromColumns: initDnDFromColumns,
 
-			onDragstart: onDragstart,
-			initDnDFromColumns: initDnDFromColumns,
+        setRemoveListenersOnDragend: setRemoveListenersOnDragend,
+        onDragend: onDragend,
 
-			setRemoveListenersOnDragend: setRemoveListenersOnDragend,
-			onDragend: onDragend,
+        onSameHolderDragenter: onSameHolderDragenter,
+        onDropAreaDragenter: onDropAreaDragenter,
+        onDropAreaDragleave: onDropAreaDragleave,
 
-			onSameHolderDragenter: onSameHolderDragenter,
-			onDropAreaDragenter: onDropAreaDragenter,
-			onDropAreaDragleave: onDropAreaDragleave,
+        setOnDropToColumns: setOnDropToColumns,
+        onDropToFilters: onDropToFilters,
+        onDropToDeletionArea: onDropToDeletionArea
+    }
 
-			setOnDropToColumns: setOnDropToColumns,
-			onDropToFilters: onDropToFilters,
-			onDropToDeletionArea: onDropToDeletionArea
-		}
-
-	}
-
-})();
+};

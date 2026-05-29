@@ -1,187 +1,177 @@
-/**
- * Created by szhitenev on 25.08.2016.
- */
+'use strict';
 
-// DEPRECATED SINCE 29.04.2020
+import logService from '../../../../../../core/services/logService';
+import pricingPolicyService from '../../../services/pricingPolicyService';
 
-(function () {
+export default function ($scope, fieldResolverService) {
 
-    'use strict';
+    logService.controller('ManualPricingFormulasTabController', 'initialized');
 
-    var logService = require('../../../../../../core/services/logService');
-    var pricingPolicyService = require('../../../services/pricingPolicyService').default;;
+    var vm = this;
 
-    module.exports = function ($scope, fieldResolverService) {
+    vm.readyStatus = {content: false};
 
-        logService.controller('ManualPricingFormulasTabController', 'initialized');
+    vm.entity = $scope.$parent.vm.entity;
 
-        var vm = this;
+    vm.currencyFields = [];
+    vm.dailyPricingModelFields = [];
+    vm.priceDownloadSchemeFields = [];
 
-        vm.readyStatus = {content: false};
+    vm.newItem = {pricing_policy: '', expr: '', notes: ''};
 
-        vm.entity = $scope.$parent.vm.entity;
+    pricingPolicyService.getList().then(function (data) {
+        vm.policies = data.results;
+        vm.readyStatus.content = true;
+        $scope.$apply();
+    });
 
-        vm.currencyFields = [];
-        vm.dailyPricingModelFields = [];
-        vm.priceDownloadSchemeFields = [];
+    vm.bindPricingPolicy = function (policy) {
+        var name;
+        vm.policies.forEach(function (item) {
+            if (policy.pricing_policy == item.id) {
+                policy.policy_name = item.name;
+                name = item.name
+            }
+        });
+        return name;
+    };
 
-        vm.newItem = {pricing_policy: '', expr: '', notes: ''};
+    vm.toggleQuery = function () {
+        vm.queryStatus = !vm.queryStatus;
+        vm.query = {};
+    };
 
-        pricingPolicyService.getList().then(function (data) {
-            vm.policies = data.results;
-            vm.readyStatus.content = true;
-            $scope.$apply();
+    vm.setSort = function (propertyName) {
+        vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
+        vm.sort = propertyName;
+    };
+
+    vm.editItem = function (item) {
+        item.editStatus = true;
+    };
+
+    vm.saveItem = function (item) {
+        item.editStatus = false;
+    };
+
+    vm.deleteItem = function (item, index) {
+        vm.entity.manual_pricing_formulas.splice(index, 1);
+    };
+
+    vm.addRow = function () {
+
+        vm.entity.manual_pricing_formulas.push({
+            pricing_policy: vm.newItem.pricing_policy,
+            expr: vm.newItem.expr,
+            notes: vm.newItem.notes
         });
 
-        vm.bindPricingPolicy = function (policy) {
-            var name;
-            vm.policies.forEach(function (item) {
-                if (policy.pricing_policy == item.id) {
-                    policy.policy_name = item.name;
-                    name = item.name
-                }
-            });
-            return name;
-        };
+        vm.newItem.pricing_policy = null;
+        vm.newItem.expr = null;
+        vm.newItem.notes = null;
 
-        vm.toggleQuery = function () {
-            vm.queryStatus = !vm.queryStatus;
-            vm.query = {};
-        };
+    };
 
-        vm.setSort = function (propertyName) {
-            vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
-            vm.sort = propertyName;
-        };
+    vm.getCurrencyFields = function () {
 
-        vm.editItem = function (item) {
-            item.editStatus = true;
-        };
+        fieldResolverService.getFields('pricing_currency', {
+            entityType: 'instrument',
+            key: 'pricing_currency'
+        }).then(function (res) {
 
-        vm.saveItem = function (item) {
-            item.editStatus = false;
-        };
+            vm.currencyFields = res.data;
 
-        vm.deleteItem = function (item, index) {
-            vm.entity.manual_pricing_formulas.splice(index, 1);
-        };
+            $scope.$apply();
 
-        vm.addRow = function () {
+        });
 
-            vm.entity.manual_pricing_formulas.push({
-                pricing_policy: vm.newItem.pricing_policy,
-                expr: vm.newItem.expr,
-                notes: vm.newItem.notes
-            });
+    };
 
-            vm.newItem.pricing_policy = null;
-            vm.newItem.expr = null;
-            vm.newItem.notes = null;
+    vm.getDailyPricingModelFields = function () {
 
-        };
+        fieldResolverService.getFields('daily_pricing_model', {
+            entityType: 'instrument',
+            key: 'daily_pricing_model'
+        }).then(function (res) {
 
-        vm.getCurrencyFields = function () {
+            vm.dailyPricingModelFields = res.data;
 
-            fieldResolverService.getFields('pricing_currency', {
-                entityType: 'instrument',
-                key: 'pricing_currency'
-            }).then(function (res) {
+            $scope.$apply();
 
-                vm.currencyFields = res.data;
+        });
 
-                $scope.$apply();
+    };
 
-            });
+    vm.getPriceDownloadSchemeFields = function () {
 
-        };
+        fieldResolverService.getFields('price_download_scheme', {
+            entityType: 'instrument',
+            key: 'price_download_scheme'
+        }).then(function (res) {
 
-        vm.getDailyPricingModelFields = function () {
+            console.log('res', res);
 
-            fieldResolverService.getFields('daily_pricing_model', {
-                entityType: 'instrument',
-                key: 'daily_pricing_model'
-            }).then(function (res) {
+            vm.priceDownloadSchemeFields = res.data;
 
-                vm.dailyPricingModelFields = res.data;
+            $scope.$apply();
 
-                $scope.$apply();
+        });
 
-            });
+    };
 
-        };
+    vm.setDefaultCurrencyFields = function () {
 
-        vm.getPriceDownloadSchemeFields = function () {
+        var item_object = vm.entity.pricing_currency_object;
 
-            fieldResolverService.getFields('price_download_scheme', {
-                entityType: 'instrument',
-                key: 'price_download_scheme'
-            }).then(function (res) {
+        if (item_object) {
 
-                console.log('res', res);
-
-                vm.priceDownloadSchemeFields = res.data;
-
-                $scope.$apply();
-
-            });
-
-        };
-
-        vm.setDefaultCurrencyFields = function () {
-
-            var item_object = vm.entity.pricing_currency_object;
-
-            if (item_object) {
-
-                if (Array.isArray(item_object)) {
-                    vm.currencyFields = item_object;
-                } else {
-                    vm.currencyFields.push(item_object);
-                }
+            if (Array.isArray(item_object)) {
+                vm.currencyFields = item_object;
+            } else {
+                vm.currencyFields.push(item_object);
             }
+        }
 
-        };
+    };
 
-        vm.setDefaultDailyPricingModelFields = function () {
+    vm.setDefaultDailyPricingModelFields = function () {
 
-            var item_object = vm.entity.daily_pricing_model_object;
+        var item_object = vm.entity.daily_pricing_model_object;
 
-            if (item_object) {
+        if (item_object) {
 
-                if (Array.isArray(item_object)) {
-                    vm.dailyPricingModelFields = item_object;
-                } else {
-                    vm.dailyPricingModelFields.push(item_object);
-                }
+            if (Array.isArray(item_object)) {
+                vm.dailyPricingModelFields = item_object;
+            } else {
+                vm.dailyPricingModelFields.push(item_object);
             }
+        }
 
-        };
+    };
 
-        vm.setDefaultPriceDownloadSchemeFields = function () {
+    vm.setDefaultPriceDownloadSchemeFields = function () {
 
-            var item_object = vm.entity.price_download_scheme_object;
+        var item_object = vm.entity.price_download_scheme_object;
 
-            if (item_object) {
+        if (item_object) {
 
-                if (Array.isArray(item_object)) {
-                    vm.priceDownloadSchemeFields = item_object;
-                } else {
-                    vm.priceDownloadSchemeFields.push(item_object);
-                }
+            if (Array.isArray(item_object)) {
+                vm.priceDownloadSchemeFields = item_object;
+            } else {
+                vm.priceDownloadSchemeFields.push(item_object);
             }
+        }
 
-        };
+    };
 
-        vm.init = function () {
+    vm.init = function () {
 
-            vm.setDefaultCurrencyFields();
-            vm.setDefaultDailyPricingModelFields();
-            vm.setDefaultPriceDownloadSchemeFields();
+        vm.setDefaultCurrencyFields();
+        vm.setDefaultDailyPricingModelFields();
+        vm.setDefaultPriceDownloadSchemeFields();
 
-        };
+    };
 
-        vm.init();
+    vm.init();
 
-    }
-
-}());
+};

@@ -1,432 +1,425 @@
-/**
- * Created by szhitenev on 30.01.2020.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import pricingProcedureService from '../../../services/procedures/pricingProcedureService';
 
-    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService').default;
+/*var portfolioService = require('../../../services/portfolioService').default;
+var instrumentTypeService = require('../../../services/instrumentTypeService').default;
+var pricingPolicyService = require('../../../services/pricingPolicyService').default;;
 
-    /*var portfolioService = require('../../../services/portfolioService').default;
-    var instrumentTypeService = require('../../../services/instrumentTypeService').default;
-    var pricingPolicyService = require('../../../services/pricingPolicyService').default;;
+var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
+var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');*/
 
-    var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
-    var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');*/
+var getAndOverwriteKeysPairs = {
+    'price_get_principal_prices': 'price_overwrite_principal_prices',
+    'price_get_accrued_prices': 'price_overwrite_accrued_prices',
+    'price_get_fx_rates': 'price_overwrite_fx_rates'
+};
 
-    var getAndOverwriteKeysPairs = {
-        'price_get_principal_prices': 'price_overwrite_principal_prices',
-        'price_get_accrued_prices': 'price_overwrite_accrued_prices',
-        'price_get_fx_rates': 'price_overwrite_fx_rates'
+export default function ($scope, $mdDialog, data) {
+
+    var vm = this;
+
+    vm.itemId = data.item.id;
+
+    vm.readyStatus = {procedure: false, other: false};
+    vm.processing = false;
+
+    vm.entityType = 'pricing-procedure';
+
+    vm.portfolios = [];
+    vm.pricingPolicies = [];
+    vm.instrumentTypes = [];
+    vm.instrumentPricingSchemes = [];
+    vm.currencyPricingSchemes = [];
+
+
+    vm.portfolio_filters = [];
+    vm.pricing_policy_filters = [];
+    vm.instrument_type_filters = [];
+    vm.instrument_pricing_scheme_filters = [];
+    vm.currency_pricing_scheme_filters = [];
+
+
+    vm.toggleStatus = {
+        'price_date_from': 'datepicker',
+        'price_date_to': 'datepicker'
     };
 
-    module.exports = function ($scope, $mdDialog, data) {
+    vm.toggle = function (key) {
 
-        var vm = this;
+        if (vm.toggleStatus[key] === 'datepicker') {
+            vm.toggleStatus[key] = 'expr'
+        } else {
+            vm.toggleStatus[key] = 'datepicker'
+        }
 
-        vm.itemId = data.item.id;
+        vm.item[key] = null;
+        vm.item[key + '_expr'] = null;
 
-        vm.readyStatus = {procedure: false, other: false};
-        vm.processing = false;
+    };
 
-        vm.entityType = 'pricing-procedure';
+    vm.item = {};
 
-        vm.portfolios = [];
-        vm.pricingPolicies = [];
-        vm.instrumentTypes = [];
-        vm.instrumentPricingSchemes = [];
-        vm.currencyPricingSchemes = [];
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
+    vm.agree = function () {
 
-        vm.portfolio_filters = [];
-        vm.pricing_policy_filters = [];
-        vm.instrument_type_filters = [];
-        vm.instrument_pricing_scheme_filters = [];
-        vm.currency_pricing_scheme_filters = [];
+        vm.processing = true;
+        var pprocedureData = JSON.parse(angular.toJson(vm.item));
 
+        if (pprocedureData.price_date_from_expr) {
+            pprocedureData.price_date_from = null
+        }
 
-        vm.toggleStatus = {
-            'price_date_from': 'datepicker',
-            'price_date_to': 'datepicker'
-        };
+        if (pprocedureData.price_date_to_expr) {
+            pprocedureData.price_date_to = null
+        }
 
-        vm.toggle = function (key) {
+        if (pprocedureData.portfolio_filters) {
+            pprocedureData.portfolio_filters = pprocedureData.portfolio_filters.join(',');
+        }
 
-            if (vm.toggleStatus[key] === 'datepicker') {
-                vm.toggleStatus[key] = 'expr'
-            } else {
-                vm.toggleStatus[key] = 'datepicker'
-            }
+        if (pprocedureData.pricing_policy_filters) {
+            pprocedureData.pricing_policy_filters = pprocedureData.pricing_policy_filters.join(',');
+        }
 
-            vm.item[key] = null;
-            vm.item[key + '_expr'] = null;
+        if (pprocedureData.instrument_type_filters) {
+            pprocedureData.instrument_type_filters = pprocedureData.instrument_type_filters.join(',');
+        }
 
-        };
+        if (pprocedureData.instrument_pricing_scheme_filters) {
+            pprocedureData.instrument_pricing_scheme_filters = pprocedureData.instrument_pricing_scheme_filters.join(',');
+        }
 
-        vm.item = {};
+        if (pprocedureData.instrument_pricing_condition_filters) {
+            pprocedureData.instrument_pricing_condition_filters = pprocedureData.instrument_pricing_condition_filters.join(',');
+        }
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+        if (pprocedureData.currency_pricing_scheme_filters) {
+            pprocedureData.currency_pricing_scheme_filters = pprocedureData.currency_pricing_scheme_filters.join(',');
+        }
 
-        vm.agree = function () {
+        if (pprocedureData.currency_pricing_condition_filters) {
+            pprocedureData.currency_pricing_condition_filters = pprocedureData.currency_pricing_condition_filters.join(',');
+        }
 
-            vm.processing = true;
-            var pprocedureData = JSON.parse(angular.toJson(vm.item));
+        pricingProcedureService.update(pprocedureData.id, pprocedureData).then(function (data) {
 
-            if (pprocedureData.price_date_from_expr) {
-                pprocedureData.price_date_from = null
-            }
+            $mdDialog.hide({status: 'agree', data: {item: data}});
 
-            if (pprocedureData.price_date_to_expr) {
-                pprocedureData.price_date_to = null
-            }
+        }, function () {
+            vm.processing = false;
+        })
 
-            if (pprocedureData.portfolio_filters) {
-                pprocedureData.portfolio_filters = pprocedureData.portfolio_filters.join(',');
-            }
+    };
 
-            if (pprocedureData.pricing_policy_filters) {
-                pprocedureData.pricing_policy_filters = pprocedureData.pricing_policy_filters.join(',');
-            }
+    /*vm.getPortfolios = function () {
 
-            if (pprocedureData.instrument_type_filters) {
-                pprocedureData.instrument_type_filters = pprocedureData.instrument_type_filters.join(',');
-            }
+        return new Promise(function (resolve, reject) {
 
-            if (pprocedureData.instrument_pricing_scheme_filters) {
-                pprocedureData.instrument_pricing_scheme_filters = pprocedureData.instrument_pricing_scheme_filters.join(',');
-            }
+            portfolioService.getList({
+                pageSize: 1000
+            }).then(function (data) {
 
-            if (pprocedureData.instrument_pricing_condition_filters) {
-                pprocedureData.instrument_pricing_condition_filters = pprocedureData.instrument_pricing_condition_filters.join(',');
-            }
+                vm.portfolios = data.results.map(function (item) {
 
-            if (pprocedureData.currency_pricing_scheme_filters) {
-                pprocedureData.currency_pricing_scheme_filters = pprocedureData.currency_pricing_scheme_filters.join(',');
-            }
+                    return {
+                        id: item.user_code,
+                        name: item.user_code
+                    }
 
-            if (pprocedureData.currency_pricing_condition_filters) {
-                pprocedureData.currency_pricing_condition_filters = pprocedureData.currency_pricing_condition_filters.join(',');
-            }
+                });
 
-            pricingProcedureService.update(pprocedureData.id, pprocedureData).then(function (data) {
+                resolve();
 
-                $mdDialog.hide({status: 'agree', data: {item: data}});
+            }).catch(function (e) { reject(e); });
 
-            }, function () {
-                vm.processing = false;
+        });
+
+    };
+
+    vm.getInstrumentPricingSchemes = function () {
+
+        return new Promise(function (resolve, reject) {
+
+            instrumentPricingSchemeService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+
+                vm.instrumentPricingSchemes = data.results.map(function (item) {
+
+                    return {
+                        id: item.user_code,
+                        name: item.user_code
+                    }
+
+                });
+
+                resolve();
+
+            }).catch(function (e) { reject(e) });
+
+        });
+
+    };
+
+    vm.getCurrencyPricingSchemes = function () {
+
+        return new Promise(function (resolve, reject) {
+
+            currencyPricingSchemeService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+
+                vm.currencyPricingSchemes = data.results.map(function (item) {
+
+                    return {
+                        id: item.user_code,
+                        name: item.user_code
+                    }
+
+                });
+
+                resolve();
+
+            }).catch(function (e) { reject(e) });
+
+        });
+
+    };
+
+    vm.getInstrumentTypes = function () {
+
+        return new Promise(function (resolve, reject) {
+
+            instrumentTypeService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+
+                vm.instrumentTypes = data.results.map(function (item) {
+
+                    return {
+                        id: item.user_code,
+                        name: item.user_code
+                    }
+
+                });
+
+                console.log('vm.instrumentTypes', vm.instrumentTypes);
+                resolve();
+
+            }).catch(function (e) { reject(e); });
+
+        });
+
+    };
+
+    vm.getPricingPolicies = function () {
+
+        return new Promise(function (resolve, reject) {
+
+            pricingPolicyService.getList({
+                pageSize: 1000
+            }).then(function (data) {
+
+                vm.pricingPolicies = data.results.map(function (item) {
+
+                    return {
+                        id: item.user_code,
+                        name: item.user_code
+                    }
+
+                });
+
+                resolve();
+
+            }).catch(function (e) { reject(e) });
+
+        });
+
+    };*/
+
+    vm.getItem = function () {
+
+        vm.readyStatus.procedure = false;
+
+        return new Promise(function (resolve, reject) {
+
+            pricingProcedureService.getByKey(vm.itemId)
+                .then(function (data) {
+
+                    vm.originalItem = JSON.parse(JSON.stringify(data));
+
+                    vm.item = data;
+
+                    Object.keys(getAndOverwriteKeysPairs).forEach(vm.checkOverwriteValue);
+
+                    if (vm.item.portfolio_filters) {
+
+                        vm.item.portfolio_filters = vm.item.portfolio_filters.split(',');
+
+                    }
+
+                    if (vm.item.pricing_policy_filters) {
+
+                        vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.split(',');
+
+                    }
+
+                    if (vm.item.instrument_type_filters) {
+
+                        vm.item.instrument_type_filters = vm.item.instrument_type_filters.split(',');
+
+                    }
+
+                    if (vm.item.instrument_pricing_scheme_filters) {
+
+                        vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.split(',');
+
+                    }
+
+                    if (vm.item.instrument_pricing_condition_filters) {
+
+                        vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.split(',');
+
+                    }
+
+                    if (vm.item.currency_pricing_scheme_filters) {
+
+                        vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.split(',');
+
+                    }
+
+                    if (vm.item.currency_pricing_condition_filters) {
+
+                        vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.split(',');
+
+                    }
+
+                    if (vm.item.price_date_from_expr) {
+
+                        vm.toggleStatus.price_date_from = 'expr';
+
+                    }
+
+                    if (vm.item.price_date_to_expr) {
+
+                        vm.toggleStatus.price_date_to = 'expr';
+
+                    }
+
+                    vm.readyStatus.procedure = true;
+
+                    resolve();
+
+                }).catch(function (e) {
+                reject(e)
             })
 
-        };
+        });
 
-        /*vm.getPortfolios = function () {
+    };
 
-            return new Promise(function (resolve, reject) {
+    vm.checkOverwriteValue = function (getKey) {
 
-                portfolioService.getList({
-                    pageSize: 1000
-                }).then(function (data) {
+        if (!vm.item[getKey]) {
 
-                    vm.portfolios = data.results.map(function (item) {
+            var overwriteKey = getAndOverwriteKeysPairs[getKey];
 
-                        return {
-                            id: item.user_code,
-                            name: item.user_code
-                        }
+            vm.item[overwriteKey] = false;
+        }
 
-                    });
+    };
 
-                    resolve();
+    vm.editAsJson = function (ev) {
 
-                }).catch(function (e) { reject(e); });
-
-            });
-
-        };
-
-        vm.getInstrumentPricingSchemes = function () {
-
-            return new Promise(function (resolve, reject) {
-
-                instrumentPricingSchemeService.getList({
-                    pageSize: 1000
-                }).then(function (data) {
-
-                    vm.instrumentPricingSchemes = data.results.map(function (item) {
-
-                        return {
-                            id: item.user_code,
-                            name: item.user_code
-                        }
-
-                    });
-
-                    resolve();
-
-                }).catch(function (e) { reject(e) });
-
-            });
-
-        };
-
-        vm.getCurrencyPricingSchemes = function () {
-
-            return new Promise(function (resolve, reject) {
-
-                currencyPricingSchemeService.getList({
-                    pageSize: 1000
-                }).then(function (data) {
-
-                    vm.currencyPricingSchemes = data.results.map(function (item) {
-
-                        return {
-                            id: item.user_code,
-                            name: item.user_code
-                        }
-
-                    });
-
-                    resolve();
-
-                }).catch(function (e) { reject(e) });
-
-            });
-
-        };
-
-        vm.getInstrumentTypes = function () {
-
-            return new Promise(function (resolve, reject) {
-
-                instrumentTypeService.getList({
-                    pageSize: 1000
-                }).then(function (data) {
-
-                    vm.instrumentTypes = data.results.map(function (item) {
-
-                        return {
-                            id: item.user_code,
-                            name: item.user_code
-                        }
-
-                    });
-
-                    console.log('vm.instrumentTypes', vm.instrumentTypes);
-                    resolve();
-
-                }).catch(function (e) { reject(e); });
-
-            });
-
-        };
-
-        vm.getPricingPolicies = function () {
-
-            return new Promise(function (resolve, reject) {
-
-                pricingPolicyService.getList({
-                    pageSize: 1000
-                }).then(function (data) {
-
-                    vm.pricingPolicies = data.results.map(function (item) {
-
-                        return {
-                            id: item.user_code,
-                            name: item.user_code
-                        }
-
-                    });
-
-                    resolve();
-
-                }).catch(function (e) { reject(e) });
-
-            });
-
-        };*/
-
-        vm.getItem = function () {
-
-            vm.readyStatus.procedure = false;
-
-            return new Promise(function (resolve, reject) {
-
-                pricingProcedureService.getByKey(vm.itemId)
-                    .then(function (data) {
-
-                        vm.originalItem = JSON.parse(JSON.stringify(data));
-
-                        vm.item = data;
-
-                        Object.keys(getAndOverwriteKeysPairs).forEach(vm.checkOverwriteValue);
-
-                        if (vm.item.portfolio_filters) {
-
-                            vm.item.portfolio_filters = vm.item.portfolio_filters.split(',');
-
-                        }
-
-                        if (vm.item.pricing_policy_filters) {
-
-                            vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.split(',');
-
-                        }
-
-                        if (vm.item.instrument_type_filters) {
-
-                            vm.item.instrument_type_filters = vm.item.instrument_type_filters.split(',');
-
-                        }
-
-                        if (vm.item.instrument_pricing_scheme_filters) {
-
-                            vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.split(',');
-
-                        }
-
-                        if (vm.item.instrument_pricing_condition_filters) {
-
-                            vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.split(',');
-
-                        }
-
-                        if (vm.item.currency_pricing_scheme_filters) {
-
-                            vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.split(',');
-
-                        }
-
-                        if (vm.item.currency_pricing_condition_filters) {
-
-                            vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.split(',');
-
-                        }
-
-                        if (vm.item.price_date_from_expr) {
-
-                            vm.toggleStatus.price_date_from = 'expr';
-
-                        }
-
-                        if (vm.item.price_date_to_expr) {
-
-                            vm.toggleStatus.price_date_to = 'expr';
-
-                        }
-
-                        vm.readyStatus.procedure = true;
-
-                        resolve();
-
-                    }).catch(function (e) {
-                    reject(e)
-                })
-
-            });
-
-        };
-
-        vm.checkOverwriteValue = function (getKey) {
-
-            if (!vm.item[getKey]) {
-
-                var overwriteKey = getAndOverwriteKeysPairs[getKey];
-
-                vm.item[overwriteKey] = false;
+        $mdDialog.show({
+            controller: 'EntityAsJsonEditorDialogController as vm',
+            templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+            targetEvent: ev,
+            multiple: true,
+            locals: {
+                data: {
+                    item: vm.originalItem,
+                    entityType: vm.entityType,
+                }
             }
+        }).then(function (res) {
 
-        };
+            if (res.status === "agree") {
 
-        vm.editAsJson = function (ev) {
+                vm.getItem().then(function () {
+                    $scope.$apply();
+                });
 
-            $mdDialog.show({
-                controller: 'EntityAsJsonEditorDialogController as vm',
-                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
-                targetEvent: ev,
-                multiple: true,
-                locals: {
-                    data: {
-                        item: vm.originalItem,
-                        entityType: vm.entityType,
-                    }
+            }
+        })
+
+    };
+
+    vm.makeCopy = function ($event) {
+
+        var item = JSON.parse(JSON.stringify(vm.item));
+
+        delete item.id;
+        item["user_code"] = item["user_code"] + '_copy';
+
+        $mdDialog.show({
+            controller: 'PricingProcedureAddDialogController as vm',
+            templateUrl: 'views/dialogs/procedures/pricing-procedure-add-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            locals: {
+                data: {
+                    item: item
                 }
-            }).then(function (res) {
+            }
+        });
 
-                if (res.status === "agree") {
+        $mdDialog.hide({status: 'disagree'});
 
-                    vm.getItem().then(function () {
-                        $scope.$apply();
-                    });
+    };
 
-                }
-            })
+    vm.init = function () {
 
-        };
+        /*var promisesList = [
+            vm.getItem(),
 
-        vm.makeCopy = function ($event) {
+            vm.getInstrumentTypes(),
+            vm.getPricingPolicies(),
+            vm.getPortfolios(),
 
-            var item = JSON.parse(JSON.stringify(vm.item));
+            vm.getInstrumentPricingSchemes(),
+            vm.getCurrencyPricingSchemes(),
+        ];
 
-            delete item.id;
-            item["user_code"] = item["user_code"] + '_copy';
+        Promise.all(promisesList).then(function () {
 
-            $mdDialog.show({
-                controller: 'PricingProcedureAddDialogController as vm',
-                templateUrl: 'views/dialogs/procedures/pricing-procedure-add-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                locals: {
-                    data: {
-                        item: item
-                    }
-                }
-            });
+            vm.readyStatus.other = true;
+            $scope.$apply();
 
-            $mdDialog.hide({status: 'disagree'});
+        });*/
 
-        };
+        Promise.all([vm.getItem(), pricingProcedureService.loadRelatedData()]).then(function (data) {
 
-        vm.init = function () {
+            var relatedData = data[1];
 
-            /*var promisesList = [
-                vm.getItem(),
+            vm.instrumentTypes = relatedData.instrumentTypes;
+            vm.pricingPolicies = relatedData.pricingPolicies;
+            vm.portfolios = relatedData.portfolios;
 
-                vm.getInstrumentTypes(),
-                vm.getPricingPolicies(),
-                vm.getPortfolios(),
+            vm.instrumentPricingSchemes = relatedData.instrumentPricingSchemes;
+            vm.currencyPricingSchemes = relatedData.currencyPricingSchemes;
 
-                vm.getInstrumentPricingSchemes(),
-                vm.getCurrencyPricingSchemes(),
-            ];
+            vm.readyStatus.other = true;
+            $scope.$apply();
 
-            Promise.all(promisesList).then(function () {
+        });
 
-                vm.readyStatus.other = true;
-                $scope.$apply();
+    };
 
-            });*/
+    vm.init();
 
-            Promise.all([vm.getItem(), pricingProcedureService.loadRelatedData()]).then(function (data) {
-
-                var relatedData = data[1];
-
-                vm.instrumentTypes = relatedData.instrumentTypes;
-                vm.pricingPolicies = relatedData.pricingPolicies;
-                vm.portfolios = relatedData.portfolios;
-
-                vm.instrumentPricingSchemes = relatedData.instrumentPricingSchemes;
-                vm.currencyPricingSchemes = relatedData.currencyPricingSchemes;
-
-                vm.readyStatus.other = true;
-                $scope.$apply();
-
-            });
-
-        };
-
-        vm.init();
-
-    }
-
-}());
+};

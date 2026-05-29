@@ -1,211 +1,204 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import uiService from '../../../services/uiService';
 
-    var uiService = require('../../../services/uiService').default;
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.isReport = data.isReport;
+    vm.layout = JSON.parse(JSON.stringify(data.layout));
 
-        vm.isReport = data.isReport;
-        vm.layout = JSON.parse(JSON.stringify(data.layout));
+    delete vm.layout.id;
+    delete vm.layout.is_default;
+    delete vm.layout.is_active;
 
-        delete vm.layout.id;
-        delete vm.layout.is_default;
-        delete vm.layout.is_active;
+    vm.filename = vm.layout.name;
 
-        vm.filename = vm.layout.name;
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.getAllReportLayouts = function () {
 
-        vm.getAllReportLayouts = function () {
-
-            return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
 
 
-                var promises = [];
+            var promises = [];
 
-                /* promises.push(uiService.getListLayoutDefault(
-                    {
-                        filters: {
-                            content_type: 'reports.balancereport'
-                        }
+            /* promises.push(uiService.getListLayoutDefault(
+                {
+                    filters: {
+                        content_type: 'reports.balancereport'
                     }
-                )); */
-                promises.push(uiService.getListLayout(
-                    null,
-                    {
-                        filters: {
-                            content_type: 'reports.balancereport'
-                        }
+                }
+            )); */
+            promises.push(uiService.getListLayout(
+                null,
+                {
+                    filters: {
+                        content_type: 'reports.balancereport'
                     }
-                ));
+                }
+            ));
 
-                /* promises.push(uiService.getListLayoutDefault(
-                    {
-                        filters: {
-                            content_type: 'reports.plreport'
-                        }
+            /* promises.push(uiService.getListLayoutDefault(
+                {
+                    filters: {
+                        content_type: 'reports.plreport'
                     }
-                )); */
-                promises.push(uiService.getListLayout(
-                    null,
-                    {
-                        filters: {
-                            content_type: 'reports.plreport'
-                        }
+                }
+            )); */
+            promises.push(uiService.getListLayout(
+                null,
+                {
+                    filters: {
+                        content_type: 'reports.plreport'
                     }
-                ));
+                }
+            ));
 
-                /* promises.push(uiService.getListLayoutDefault(
-                    {
-                        filters: {
-                            content_type: 'reports.transactionreport'
-                        }
+            /* promises.push(uiService.getListLayoutDefault(
+                {
+                    filters: {
+                        content_type: 'reports.transactionreport'
                     }
-                )); */
-                promises.push(uiService.getListLayout(
-                    null,
-                    {
-                        filters: {
-                            content_type: 'reports.transactionreport'
-                        }
+                }
+            )); */
+            promises.push(uiService.getListLayout(
+                null,
+                {
+                    filters: {
+                        content_type: 'reports.transactionreport'
                     }
-                ));
+                }
+            ));
 
-                Promise.all(promises).then(function (data) {
+            Promise.all(promises).then(function (data) {
 
-                    console.log('data', data);
+                console.log('data', data);
 
-                    var result = [];
+                var result = [];
 
-                    data.forEach(function (dataItem) {
-                        dataItem.results.forEach(function (layout) {
-                            result.push(layout)
-                        })
-                    });
+                data.forEach(function (dataItem) {
+                    dataItem.results.forEach(function (layout) {
+                        result.push(layout)
+                    })
+                });
 
-                    console.log('result', result);
+                console.log('result', result);
 
-                    resolve(result)
-
-                })
+                resolve(result)
 
             })
 
-        };
+        })
 
-        vm.getReportLayoutsFromDashboardLayout = function (dashboardLayout) {
+    };
 
-            return new Promise(function (resolve, reject) {
+    vm.getReportLayoutsFromDashboardLayout = function (dashboardLayout) {
 
-                vm.getAllReportLayouts().then(function (data) {
+        return new Promise(function (resolve, reject) {
 
-                    var layouts = data;
+            vm.getAllReportLayouts().then(function (data) {
 
-                    var result = [];
-                    var addedLayouts = {};
+                var layouts = data;
 
-
-                    dashboardLayout.data.components_types.forEach(function (component) {
-
-
-                        if (['report_viewer', 'report_viewer_matrix',
-                            'report_viewer_split_panel', 'report_viewer_bars_chart'].indexOf(component.type) !== -1) {
+                var result = [];
+                var addedLayouts = {};
 
 
-                            layouts.forEach(function (layout) {
+                dashboardLayout.data.components_types.forEach(function (component) {
 
 
-                                if (component.settings.layout_name === layout.name && component.settings.content_type === layout.content_type) {
+                    if (['report_viewer', 'report_viewer_matrix',
+                        'report_viewer_split_panel', 'report_viewer_bars_chart'].indexOf(component.type) !== -1) {
 
-                                    delete layout.id;
-                                    delete layout.is_default;
-                                    delete layout.is_active;
 
-                                    if (!addedLayouts.hasOwnProperty(layout.content_type)) {
-                                        addedLayouts[layout.content_type] = [];
-                                    }
+                        layouts.forEach(function (layout) {
 
-                                    if (addedLayouts[layout.content_type].indexOf(layout.name) === -1) {
 
-                                        addedLayouts[layout.content_type].push(layout.name);
+                            if (component.settings.layout_name === layout.name && component.settings.content_type === layout.content_type) {
 
-                                        result.push(layout);
+                                delete layout.id;
+                                delete layout.is_default;
+                                delete layout.is_active;
 
-                                    }
+                                if (!addedLayouts.hasOwnProperty(layout.content_type)) {
+                                    addedLayouts[layout.content_type] = [];
                                 }
 
+                                if (addedLayouts[layout.content_type].indexOf(layout.name) === -1) {
 
-                            })
-                        }
+                                    addedLayouts[layout.content_type].push(layout.name);
+
+                                    result.push(layout);
+
+                                }
+                            }
 
 
-                    });
+                        })
+                    }
 
-
-                    resolve(result);
 
                 });
 
-            })
 
-        };
+                resolve(result);
 
-        vm.setDownloadLink = function () {
+            });
 
-            var link = document.querySelector('.export-classifier-link');
+        })
 
-            var date = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
+    };
 
-            var text = JSON.stringify(vm.layout);
+    vm.setDownloadLink = function () {
 
-            var file = new Blob([text], {type: 'text/plain'});
+        var link = document.querySelector('.export-classifier-link');
 
-            link.href = URL.createObjectURL(file);
+        var date = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
 
-            link.addEventListener('click', function () {
+        var text = JSON.stringify(vm.layout);
 
-                if (vm.filename) {
-                    link.download = vm.filename + '.json';
-                } else {
-                    link.download = 'layout.json';
-                }
+        var file = new Blob([text], {type: 'text/plain'});
 
-                $mdDialog.hide();
-            })
+        link.href = URL.createObjectURL(file);
 
-            // vm.getReportLayoutsFromDashboardLayout(vm.layout).then(function (data) {
-            //
-            //     var reportLayouts = data;
-            //
-            //     console.log('reportLayouts', reportLayouts);
-            //
-            //
-            //
-            // })
+        link.addEventListener('click', function () {
+
+            if (vm.filename) {
+                link.download = vm.filename + '.json';
+            } else {
+                link.download = 'layout.json';
+            }
+
+            $mdDialog.hide();
+        })
+
+        // vm.getReportLayoutsFromDashboardLayout(vm.layout).then(function (data) {
+        //
+        //     var reportLayouts = data;
+        //
+        //     console.log('reportLayouts', reportLayouts);
+        //
+        //
+        //
+        // })
 
 
-        };
+    };
 
-        vm.init = function () {
+    vm.init = function () {
 
-            setTimeout(function () {
-                vm.setDownloadLink();
+        setTimeout(function () {
+            vm.setDownloadLink();
 
-            }, 0);
+        }, 0);
 
-        };
+    };
 
-        vm.init();
-    }
-
-}());
+    vm.init();
+};

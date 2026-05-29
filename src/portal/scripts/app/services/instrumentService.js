@@ -2,9 +2,10 @@
  * Created by szhitenev on 04.05.2016.
  */
 
-const evEditorEvents = require('./ev-editor/entityViewerEditorEvents');
-const importInstrumentCbondsService = require('./import/importInstrumentCbondsService').default;
-const taskService = require('./tasksService');
+import evEditorEvents from './ev-editor/entityViewerEditorEvents';
+
+import importInstrumentCbondsService from './import/importInstrumentCbondsService';
+import taskService from './tasksService';
 
 import InstrumentRepository from "../repositories/instrumentRepository";
 

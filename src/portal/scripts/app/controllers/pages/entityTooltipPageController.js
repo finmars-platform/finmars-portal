@@ -1,16 +1,90 @@
-/**
- * Created by szhitenev on 22.06.2020.
- */
-(function () {
+export default function entityTooltipPage($scope, toastNotificationService, attributeTypeService, metaContentTypesService, uiService) {
 
-    module.exports = function entityTooltipPage($scope, toastNotificationService, attributeTypeService, metaContentTypesService, uiService) {
+    var vm = this;
 
-        var vm = this;
+    vm.readyStatus = {
+        content: false,
+        attributeTypes: false
+    };
 
-        vm.readyStatus = {
-            content: false,
-            attributeTypes: false
-        };
+    vm.tabs = [
+        {
+            name: "Instrument",
+            content_type: 'instruments.instrument',
+            items: []
+        },
+        {
+            name: "Portfolio",
+            content_type: 'portfolios.portfolio',
+            items: []
+        },
+        {
+            name: "Account",
+            content_type: 'accounts.account',
+            items: []
+        },
+        {
+            name: "Responsible",
+            content_type: 'counterparties.responsible',
+            items: []
+        },
+        {
+            name: "Counterparty",
+            content_type: 'counterparties.counterparty',
+            items: []
+        },
+        {
+            name: "Currency",
+            content_type: 'currencies.currency',
+            items: []
+        },
+        {
+            name: "Strategy 1",
+            content_type: 'strategies.strategy1',
+            items: []
+        },
+        {
+            name: "Strategy 2",
+            content_type: 'strategies.strategy2',
+            items: []
+        },
+        {
+            name: "Strategy 3",
+            content_type: 'strategies.strategy3',
+            items: []
+        },
+        {
+            name: "Account Type",
+            content_type: 'accounts.accounttype',
+            items: []
+        },
+        {
+            name: "Instrument Type",
+            content_type: 'instruments.instrumenttype',
+            items: []
+        },
+        // {
+        //     name: "Transaction Type",
+        //     content_type: 'transactions.transactiontype',
+        //     items: []
+        // },
+        {
+            name: "Price",
+            content_type: 'instruments.pricehistory',
+            items: []
+        },
+        {
+            name: "FX Rate",
+            content_type: 'currencies.currencyhistory',
+            items: []
+        }
+    ];
+
+    vm.attributeTypes = {
+
+    };
+
+    vm.getData = function () {
 
         vm.tabs = [
             {
@@ -85,231 +159,150 @@
             }
         ];
 
-        vm.attributeTypes = {
+        vm.readyStatus.content = false;
 
-        };
+        uiService.getEntityTooltipList({pageSize: 1000}).then(function (data) {
 
-        vm.getData = function () {
+            vm.readyStatus.content = true;
 
-            vm.tabs = [
-                {
-                    name: "Instrument",
-                    content_type: 'instruments.instrument',
-                    items: []
-                },
-                {
-                    name: "Portfolio",
-                    content_type: 'portfolios.portfolio',
-                    items: []
-                },
-                {
-                    name: "Account",
-                    content_type: 'accounts.account',
-                    items: []
-                },
-                {
-                    name: "Responsible",
-                    content_type: 'counterparties.responsible',
-                    items: []
-                },
-                {
-                    name: "Counterparty",
-                    content_type: 'counterparties.counterparty',
-                    items: []
-                },
-                {
-                    name: "Currency",
-                    content_type: 'currencies.currency',
-                    items: []
-                },
-                {
-                    name: "Strategy 1",
-                    content_type: 'strategies.strategy1',
-                    items: []
-                },
-                {
-                    name: "Strategy 2",
-                    content_type: 'strategies.strategy2',
-                    items: []
-                },
-                {
-                    name: "Strategy 3",
-                    content_type: 'strategies.strategy3',
-                    items: []
-                },
-                {
-                    name: "Account Type",
-                    content_type: 'accounts.accounttype',
-                    items: []
-                },
-                {
-                    name: "Instrument Type",
-                    content_type: 'instruments.instrumenttype',
-                    items: []
-                },
-                // {
-                //     name: "Transaction Type",
-                //     content_type: 'transactions.transactiontype',
-                //     items: []
-                // },
-                {
-                    name: "Price",
-                    content_type: 'instruments.pricehistory',
-                    items: []
-                },
-                {
-                    name: "FX Rate",
-                    content_type: 'currencies.currencyhistory',
-                    items: []
-                }
-            ];
+            data.results.forEach(function (item) {
 
-            vm.readyStatus.content = false;
+                vm.tabs.forEach(function (tab) {
 
-            uiService.getEntityTooltipList({pageSize: 1000}).then(function (data) {
+                    if (tab.content_type === item.content_type) {
 
-                vm.readyStatus.content = true;
+                        tab.items.push(item);
 
-                data.results.forEach(function (item) {
+                    }
 
-                    vm.tabs.forEach(function (tab) {
+                })
 
-                        if (tab.content_type === item.content_type) {
+            });
 
-                            tab.items.push(item);
+            console.log('vm.tabs', vm.tabs);
 
-                        }
+            $scope.$apply();
+
+        });
+
+    };
+
+    vm.getAttributeTypes = function(){
+
+        var promises = [];
+
+        vm.tabs.forEach(function (tab) {
+
+            var entity = metaContentTypesService.findEntityByContentType(tab.content_type);
+
+            promises.push(new Promise(function (resolve, reject) {
+
+                console.log("Requesting " + tab.content_type + ' attribute types');
+
+                try {
+
+                    attributeTypeService.getList(entity, {pageSize: 1000}).then(function (data) {
+
+                        vm.attributeTypes[tab.content_type] = data.results;
+
+                        resolve();
 
                     })
 
-                });
+                } catch(error) {
 
-                console.log('vm.tabs', vm.tabs);
+                    console.log('error', error);
 
-                $scope.$apply();
+                    resolve()
+                }
 
-            });
+            }))
+        });
 
-        };
+        Promise.all(promises).then(function (value) {
 
-        vm.getAttributeTypes = function(){
+            vm.readyStatus.attributeTypes = true;
 
-            var promises = [];
+            $scope.$apply();
 
-            vm.tabs.forEach(function (tab) {
+        })
 
-                var entity = metaContentTypesService.findEntityByContentType(tab.content_type);
 
-                promises.push(new Promise(function (resolve, reject) {
+    };
 
-                    console.log("Requesting " + tab.content_type + ' attribute types');
+    vm.saveTooltips = function () {
 
-                    try {
+        var promises = [];
+        
+        console.log("Save tooltip", vm.tabs);
 
-                        attributeTypeService.getList(entity, {pageSize: 1000}).then(function (data) {
+        vm.tabs.forEach(function (tab) {
 
-                            vm.attributeTypes[tab.content_type] = data.results;
+            tab.items.forEach(function (item) {
 
-                            resolve();
+                if (item.changed) {
 
+                    promises.push(new Promise(function (resolve, reject) {
+
+                        uiService.updateEntityTooltip(item.id, item).then(function (data) {
+                            resolve(data)
                         })
 
-                    } catch(error) {
+                    }))
 
-                        console.log('error', error);
+                }
 
-                        resolve()
-                    }
-
-                }))
             });
 
-            Promise.all(promises).then(function (value) {
 
-                vm.readyStatus.attributeTypes = true;
+            if (vm.attributeTypes[tab.content_type]) {
 
-                $scope.$apply();
+                vm.attributeTypes[tab.content_type].forEach(function (attributeType) {
 
-            })
+                    if (attributeType.changed) {
 
-
-        };
-
-        vm.saveTooltips = function () {
-
-            var promises = [];
-            
-            console.log("Save tooltip", vm.tabs);
-
-            vm.tabs.forEach(function (tab) {
-
-                tab.items.forEach(function (item) {
-
-                    if (item.changed) {
+                        var entity = metaContentTypesService.findEntityByContentType(tab.content_type);
 
                         promises.push(new Promise(function (resolve, reject) {
 
-                            uiService.updateEntityTooltip(item.id, item).then(function (data) {
-                                resolve(data)
+                            attributeTypeService.update(entity, attributeType.id, attributeType).then(function (value) {
+
+                                resolve();
+
                             })
 
                         }))
 
                     }
 
-                });
+                })
+
+            }
 
 
-                if (vm.attributeTypes[tab.content_type]) {
+        });
 
-                    vm.attributeTypes[tab.content_type].forEach(function (attributeType) {
-
-                        if (attributeType.changed) {
-
-                            var entity = metaContentTypesService.findEntityByContentType(tab.content_type);
-
-                            promises.push(new Promise(function (resolve, reject) {
-
-                                attributeTypeService.update(entity, attributeType.id, attributeType).then(function (value) {
-
-                                    resolve();
-
-                                })
-
-                            }))
-
-                        }
-
-                    })
-
-                }
-
-
-            });
-
-            Promise.all(promises).then(function (data) {
-
-                vm.getData();
-
-                toastNotificationService.success('Success. Changes have been saved');
-
-
-            }).catch(function (error) {
-
-                toastNotificationService.error('Error. Error occurred while trying to save tooltips');
-
-            });
-
-        };
-
-        vm.init = function () {
+        Promise.all(promises).then(function (data) {
 
             vm.getData();
-            vm.getAttributeTypes();
 
-        };
+            toastNotificationService.success('Success. Changes have been saved');
 
-        vm.init();
-    }
 
-}());
+        }).catch(function (error) {
+
+            toastNotificationService.error('Error. Error occurred while trying to save tooltips');
+
+        });
+
+    };
+
+    vm.init = function () {
+
+        vm.getData();
+        vm.getAttributeTypes();
+
+    };
+
+    vm.init();
+};

@@ -1,41 +1,33 @@
-/**
- * Created by szhitenev on 15.10.2022.
- */
-// import baseUrlService from "../services/baseUrlService";
-(function () {
+'use strict';
 
-    'use strict';
+import baseUrlService from "../services/baseUrlService";
+import cookieService from '../../../../core/services/cookieService';
+import xhrService from '../../../../core/services/xhrService';
+import configureRepositoryUrlService from '../services/configureRepositoryUrlService';
+// var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrlService = require("../services/baseUrlService").default;
-    var cookieService = require('../../../../core/services/cookieService').default;
-    var xhrService = require('../../../../core/services/xhrService').default;
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService').default;
-    // var baseUrlService = require('../services/baseUrlService');
-
-    var baseUrl = baseUrlService.resolve();
+var baseUrl = baseUrlService.resolve();
 
 
-    var getStats = function (period) {
+var getStats = function (period) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/utils/stats/?period=' + period,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/utils/stats/?period=' + period,
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-    module.exports = {
-        getStats: getStats,
+export default {
+    getStats: getStats,
 
-    }
-
-}());
+};

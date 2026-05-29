@@ -1,16 +1,13 @@
-(function() {
+'use strict';
 
-	'use strict';
+import logService from '../../../../../core/services/logService';
 
-	var logService = require('../../../../../core/services/logService');
+export default function ($scope, $mdDialog) {
+    var vm = this;
 
-	module.exports = function ($scope, $mdDialog) {
-		var vm = this;
+    logService.controller('EventScheduleConfigDialogController', 'initialized');
 
-		logService.controller('EventScheduleConfigDialogController', 'initialized');
-
-		vm.cancel = function () {
-			$mdDialog.hide();
-		}
-	}
-}());
+    vm.cancel = function () {
+        $mdDialog.hide();
+    }
+};

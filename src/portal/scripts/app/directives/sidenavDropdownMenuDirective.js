@@ -1,39 +1,31 @@
-/**
- * Created by mevstratov on 09.04.2019.
- */
-(function(){
+'use strict';
 
-    'use strict';
+export default function() {
+    return {
+        restriction: 'A',
+        scope: {
+            menuType: '@'
+        },
+        link: function(scope, elem, attrs){
 
-    module.exports = function() {
-        return {
-            restriction: 'A',
-            scope: {
-                menuType: '@'
-            },
-            link: function(scope, elem, attrs){
+            // console.log('elem', $(elem));
 
-                // console.log('elem', $(elem));
+            var dropdownMenuClass = '.' + scope.menuType + '-dropdown-menu-element';
+            var menuBtnClass = '.' + scope.menuType + '-sidenav-menu-btn';
+            var dropdownMenu = $(elem).find(dropdownMenuClass);
+            var menuBtn = $(elem).find(menuBtnClass);
+            $(elem).mouseenter(function (event) {
 
-                var dropdownMenuClass = '.' + scope.menuType + '-dropdown-menu-element';
-                var menuBtnClass = '.' + scope.menuType + '-sidenav-menu-btn';
-                var dropdownMenu = $(elem).find(dropdownMenuClass);
-                var menuBtn = $(elem).find(menuBtnClass);
-                $(elem).mouseenter(function (event) {
+                // console.log("mouseenter here", event)
 
-                    // console.log("mouseenter here", event)
+                $(menuBtn).addClass('active-menu-btn');
+                $(dropdownMenu).removeClass('ng-hide');
+            });
 
-                    $(menuBtn).addClass('active-menu-btn');
-                    $(dropdownMenu).removeClass('ng-hide');
-                });
-
-                $(elem).mouseleave(function () {
-                    $(menuBtn).removeClass('active-menu-btn');
-                    $(dropdownMenu).addClass('ng-hide');
-                });
-            }
+            $(elem).mouseleave(function () {
+                $(menuBtn).removeClass('active-menu-btn');
+                $(dropdownMenu).addClass('ng-hide');
+            });
         }
     }
-
-
-}());
+};

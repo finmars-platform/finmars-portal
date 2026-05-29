@@ -1,31 +1,26 @@
-(function () {
+import stringHelper from './stringHelper';
+import utilsHelper from './utils.helper';
+import metaService from '../services/metaService';
 
-    var stringHelper = require('./stringHelper');
-    var utilsHelper = require('./utils.helper');
-    var metaService = require('../services/metaService').default;
+var isDataLoading = function (evDataService) {
 
-    var isDataLoading = function (evDataService) {
+    var result = false;
 
-        var result = false;
+    var requestParameters = evDataService.getRequestParametersAsList();
 
-        var requestParameters = evDataService.getRequestParametersAsList();
+    requestParameters.forEach(function (item) {
 
-        requestParameters.forEach(function (item) {
+        if (item.status === 'loading') {
+            result = true;
+        }
 
-            if (item.status === 'loading') {
-                result = true;
-            }
+    });
 
-        });
+    return result;
 
-        return result;
+};
 
-    };
+export default {
 
-    module.exports = {
-
-        isDataLoading: isDataLoading
-    }
-
-
-}());
+    isDataLoading: isDataLoading
+};

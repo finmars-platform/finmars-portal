@@ -1,60 +1,52 @@
-/**
- * Created by szhitenev on 20.09.2022.
- */
-(function () {
+'use strict';
 
-    'use strict';
+export function getAttributes() {
+    return [
+        {
+            "key": "id",
+            "name": "ID",
+            "value_type": 20
+        },
+        {
+            "key": "name",
+            "name": "Name",
+            "value_type": 10
+        },
+        {
+            "key": "user_code",
+            "name": "User code",
+            "value_type": 10
+        },
+        {
+            "key": "country_code",
+            "name": "Country Code",
+            "value_type": 10
+        },
+        {
+            "key": "region",
+            "name": "Region",
+            "value_type": 10
+        },
+        {
+            "key": "region_code",
+            "name": "Region Code",
+            "value_type": 10
+        },
+        {
+            "key": "sub_region",
+            "name": "Sub Region",
+            "value_type": 10
+        },
+        {
+            "key": "sub_region_code",
+            "name": "Sub Region Code",
+            "value_type": 10
+        },
+    ]
+};
 
-    var getAttributes = function () {
-        return [
-            {
-                "key": "id",
-                "name": "ID",
-                "value_type": 20
-            },
-            {
-                "key": "name",
-                "name": "Name",
-                "value_type": 10
-            },
-            {
-                "key": "user_code",
-                "name": "User code",
-                "value_type": 10
-            },
-            {
-                "key": "country_code",
-                "name": "Country Code",
-                "value_type": 10
-            },
-            {
-                "key": "region",
-                "name": "Region",
-                "value_type": 10
-            },
-            {
-                "key": "region_code",
-                "name": "Region Code",
-                "value_type": 10
-            },
-            {
-                "key": "sub_region",
-                "name": "Sub Region",
-                "value_type": 10
-            },
-            {
-                "key": "sub_region_code",
-                "name": "Sub Region Code",
-                "value_type": 10
-            },
-        ]
-    };
+export default {
 
-    module.exports = {
+    getAttributes: getAttributes
 
-        getAttributes: getAttributes
-
-    }
-
-
-}())
+};

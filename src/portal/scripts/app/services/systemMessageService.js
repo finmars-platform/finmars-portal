@@ -2,7 +2,7 @@
  * Created by szhitenev on 30.10.2020.
  */
 'use strict';
-const systemMessageRepository = require('../repositories/systemMessageRepository').default;
+import systemMessageRepository from '../repositories/systemMessageRepository';
 export default function systemMessageService() {
 
     const getList = function (options) {
@@ -67,4 +67,4 @@ export default function systemMessageService() {
     }
 
 
-};
+}

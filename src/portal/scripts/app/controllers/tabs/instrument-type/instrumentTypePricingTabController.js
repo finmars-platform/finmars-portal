@@ -4,16 +4,14 @@
 
 'use strict';
 
-const pricingPolicyService = require('../../../services/pricingPolicyService').default;
-const instrumentTypeService = require('../../../services/instrumentTypeService').default;
-const instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
-const attributeTypeService = require('../../../services/attributeTypeService');
-
-const GridTableDataService = require('../../../services/gridTableDataService');
-const GridTableEventService = require('../../../services/gridTableEventService');
-const gridTableEvents = require('../../../services/gridTableEvents');
-
-const metaHelper = require('../../../helpers/meta.helper').default;
+import pricingPolicyService from '../../../services/pricingPolicyService';
+import instrumentTypeService from '../../../services/instrumentTypeService';
+import instrumentPricingSchemeService from '../../../services/pricing/instrumentPricingSchemeService';
+import attributeTypeService from '../../../services/attributeTypeService';
+import GridTableDataService from '../../../services/gridTableDataService';
+import GridTableEventService from '../../../services/gridTableEventService';
+import gridTableEvents from '../../../services/gridTableEvents';
+import metaHelper from '../../../helpers/meta.helper';
 
 export default function InstrmentTypePricingTabController($scope, $mdDialog, configurationService, toastNotificationService) {
 
@@ -616,4 +614,4 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog, con
 
 	vm.init();
 
-};
+}

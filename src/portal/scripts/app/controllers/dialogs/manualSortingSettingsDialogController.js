@@ -1,338 +1,334 @@
-(function () {
+'use strict';
 
-    'use strict';
+import uiService from '../../services/uiService';
+import rvDataHelper from '../../helpers/rv-data.helper';
 
-    var uiService = require('../../services/uiService').default;
+export default function ($scope, $mdDialog, data, entityViewerDataService) {
 
-    var rvDataHelper = require('../../helpers/rv-data.helper').default;
+    var vm = this;
 
-    module.exports = function ($scope, $mdDialog, data, entityViewerDataService) {
+    vm.column = null;
+    vm.layout = null;
 
-        var vm = this;
+    vm.selectAll = false;
 
-        vm.column = null;
-        vm.layout = null;
+    vm.readyStatus = {content: false};
 
-        vm.selectAll = false;
+    vm.newValues = [];
 
-        vm.readyStatus = {content: false};
+    vm.agree = function ($event) {
 
-        vm.newValues = [];
+        let response = {
+            status: 'agree',
+        }
 
-        vm.agree = function ($event) {
+        if (vm.layout.id) {
 
-            let response = {
-                status: 'agree',
-            }
-
-            if (vm.layout.id) {
-
-                uiService.updateColumnSortData(vm.layout.id, vm.layout).then(function (data) {
-                    response.data = data;
-                    $mdDialog.hide(response);
-                })
+            uiService.updateColumnSortData(vm.layout.id, vm.layout).then(function (data) {
+                response.data = data;
+                $mdDialog.hide(response);
+            })
 
 
-            } else {
-                uiService.createColumnSortData(vm.layout).then(function (data) {
-                    response.data = data;
-                    $mdDialog.hide(response);
-                })
-
-            }
-
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.toggleSelectAll = function () {
-
-            vm.selectAll = !vm.selectAll;
-
-            vm.newValues = vm.newValues.map(function (item) {
-
-                item.selected = vm.selectAll;
-
-                return item
+        } else {
+            uiService.createColumnSortData(vm.layout).then(function (data) {
+                response.data = data;
+                $mdDialog.hide(response);
             })
 
         }
 
-        vm.addSelectedValues = function () {
+    };
 
-            vm.newValues.forEach((item, index) => {
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-                if (item.selected) {
+    vm.toggleSelectAll = function () {
 
-                    vm.layout.data.items.push({
-                        order: vm.layout.data.items.length,
-                        value: item.value
-                    })
+        vm.selectAll = !vm.selectAll;
 
-                }
+        vm.newValues = vm.newValues.map(function (item) {
 
-            })
+            item.selected = vm.selectAll;
 
-            vm.newValues = vm.newValues.filter(function (item) {
-                return !item.selected;
-            })
+            return item
+        })
 
-        }
+    }
 
-        vm.syncDataStructure = function () {
+    vm.addSelectedValues = function () {
 
-            if (!vm.layout.data.items) {
-                vm.layout.data.items = []
+        vm.newValues.forEach((item, index) => {
+
+            if (item.selected) {
+
+                vm.layout.data.items.push({
+                    order: vm.layout.data.items.length,
+                    value: item.value
+                })
+
             }
 
-            var flatListItems = rvDataHelper.getPureFlatStructure(entityViewerDataService);
+        })
 
-            var uniqueColumnValues = []
-            var value;
+        vm.newValues = vm.newValues.filter(function (item) {
+            return !item.selected;
+        })
 
-            flatListItems.forEach(function (flatListItem) {
+    }
 
-                if (flatListItem.___type === 'object') {
+    vm.syncDataStructure = function () {
 
-                    value = flatListItem[vm.column.key]
+        if (!vm.layout.data.items) {
+            vm.layout.data.items = []
+        }
 
-                    if (uniqueColumnValues.indexOf(value) === -1) {
-                        uniqueColumnValues.push(value)
-                    }
+        var flatListItems = rvDataHelper.getPureFlatStructure(entityViewerDataService);
 
+        var uniqueColumnValues = []
+        var value;
+
+        flatListItems.forEach(function (flatListItem) {
+
+            if (flatListItem.___type === 'object') {
+
+                value = flatListItem[vm.column.key]
+
+                if (uniqueColumnValues.indexOf(value) === -1) {
+                    uniqueColumnValues.push(value)
                 }
 
+            }
 
-            })
 
-            if (vm.layout.data.items.length) {
-                // if existing layout opened, group values into selected and not
+        })
 
-                // var exist = false;
+        if (vm.layout.data.items.length) {
+            // if existing layout opened, group values into selected and not
 
-                uniqueColumnValues.forEach(function (value, index) {
+            // var exist = false;
 
-                    /*exist = false;
+            uniqueColumnValues.forEach(function (value, index) {
 
-                    vm.layout.data.items.forEach(function (item) {
+                /*exist = false;
 
-                        if (item.value === value) {
-                            exist = true;
-                        }
+                vm.layout.data.items.forEach(function (item) {
 
-                    })
-
-                    if (exist === false) {
-
-                        vm.newValues.push({
-                            order: vm.newValues.length,
-                            value: value
-                        })
-
-                    } */
-
-                    let valueNotSelected = !vm.layout.data.items.find(item => {
-                        return item.value === value;
-                    });
-
-                    if (valueNotSelected) {
-
-                        vm.newValues.push({
-                            order: vm.newValues.length,
-                            value: value
-                        })
-
+                    if (item.value === value) {
+                        exist = true;
                     }
 
                 })
 
+                if (exist === false) {
 
-            }
-            else {
-
-                uniqueColumnValues.forEach(function (value, index) {
-
-                    vm.layout.data.items.push({
-                        order: index,
+                    vm.newValues.push({
+                        order: vm.newValues.length,
                         value: value
                     })
 
+                } */
+
+                let valueNotSelected = !vm.layout.data.items.find(item => {
+                    return item.value === value;
+                });
+
+                if (valueNotSelected) {
+
+                    vm.newValues.push({
+                        order: vm.newValues.length,
+                        value: value
+                    })
+
+                }
+
+            })
+
+
+        }
+        else {
+
+            uniqueColumnValues.forEach(function (value, index) {
+
+                vm.layout.data.items.push({
+                    order: index,
+                    value: value
                 })
 
-            }
-
-            console.log('vm.syncDataStructure.newValues', vm.newValues);
+            })
 
         }
 
-        vm.moveUp = function (item) {
-
-            /* var currentOrder = item.order
-            var order;
-
-            vm.layout.data.items = vm.layout.data.items.map(function (item, index) {
-
-                order = index + 1;
-
-                if (currentOrder === order) { // decrease order of current value
-                    item.order = item.order - 1;
-                }
-
-                if (currentOrder - 1 === order) { // increase order of next value
-                    item.order = item.order + 1;
-                }
-
-                return item
-
-
-            })
-
-            vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
-                return a.order - b.order
-            })*/
-            const itemIndex = item.order;
-            const prevItemIndex = itemIndex - 1;
-
-            if (prevItemIndex >= 0) {
-
-                const itemToMove = JSON.parse(angular.toJson( vm.layout.data.items[itemIndex] ));
-                itemToMove.order -= 1;
-
-                vm.layout.data.items[itemIndex] = vm.layout.data.items[prevItemIndex];
-                vm.layout.data.items[itemIndex].order += 1;
-
-                vm.layout.data.items[prevItemIndex] = itemToMove;
-
-            }
-
-        }
-
-        vm.moveDown = function (item) {
-
-            /* var currentOrder = item.order
-            var order;
-
-            vm.layout.data.items = vm.layout.data.items.map(function (item, index) {
-
-                order = index + 1;
-
-                if (currentOrder === order) { // increase order of current value
-                    item.order = item.order + 1;
-                }
-
-                if (currentOrder + 1 === order) { // decrease order of next value
-                    item.order = item.order - 1;
-                }
-
-                return item
-
-
-            })
-
-            vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
-                return a.order - b.order
-            }) */
-            const itemIndex = item.order;
-            const nextItemIndex = itemIndex + 1;
-
-            if (vm.layout.data.items[nextItemIndex]) {
-
-                const itemToMove = JSON.parse(angular.toJson( vm.layout.data.items[itemIndex] ));
-                itemToMove.order += 1;
-
-                vm.layout.data.items[itemIndex] = vm.layout.data.items[nextItemIndex];
-                vm.layout.data.items[itemIndex].order -= 1;
-
-                vm.layout.data.items[nextItemIndex] = itemToMove;
-
-            }
-
-        }
-
-        vm.delete = function (item) {
-
-            /*var currentOrder = item.order
-            var order;
-
-            vm.layout.data.items = vm.layout.data.items.filter(function (item, index) {
-
-                order = index + 1;
-
-                return item.order !== currentOrder;
-
-            })
-
-            vm.layout.data.items = vm.layout.data.items.map(function (item, index) {
-
-                order = index + 1;
-
-                if (order > currentOrder) { // increase order of current value
-                    item.order = item.order - 1;
-                }
-
-                return item
-
-
-            })
-
-            vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
-                return a.order - b.order
-            })*/
-
-            vm.newValues.push({
-                order: vm.newValues.length,
-                value: item.value,
-            });
-
-            vm.layout.data.items.splice(item.order, 1);
-
-            vm.layout.data.items = vm.layout.data.items.map( (layout, index) => {
-                layout.order = index;
-                return layout;
-            });
-
-        }
-
-        vm.addNewValue = function () {
-
-            vm.layout.data.items.push({
-                order: vm.layout.data.items.length,
-                value: vm.newValue
-            })
-
-            vm.newValue = null;
-
-        }
-
-        vm.init = function () {
-
-            console.log('data', data);
-
-            vm.column = JSON.parse(angular.toJson( data.column ));
-
-            if (data.item) {
-                vm.layout = data.item;
-            } else {
-                vm.layout = {
-                    name: '',
-                    user_code: '',
-                    column_key: vm.column.key,
-                    data: {}
-                }
-            }
-
-            vm.readyStatus.content = true;
-
-            if (entityViewerDataService) {
-                vm.syncDataStructure();
-            }
-
-
-        };
-
-        vm.init();
+        console.log('vm.syncDataStructure.newValues', vm.newValues);
 
     }
-}());
+
+    vm.moveUp = function (item) {
+
+        /* var currentOrder = item.order
+        var order;
+
+        vm.layout.data.items = vm.layout.data.items.map(function (item, index) {
+
+            order = index + 1;
+
+            if (currentOrder === order) { // decrease order of current value
+                item.order = item.order - 1;
+            }
+
+            if (currentOrder - 1 === order) { // increase order of next value
+                item.order = item.order + 1;
+            }
+
+            return item
+
+
+        })
+
+        vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
+            return a.order - b.order
+        })*/
+        const itemIndex = item.order;
+        const prevItemIndex = itemIndex - 1;
+
+        if (prevItemIndex >= 0) {
+
+            const itemToMove = JSON.parse(angular.toJson( vm.layout.data.items[itemIndex] ));
+            itemToMove.order -= 1;
+
+            vm.layout.data.items[itemIndex] = vm.layout.data.items[prevItemIndex];
+            vm.layout.data.items[itemIndex].order += 1;
+
+            vm.layout.data.items[prevItemIndex] = itemToMove;
+
+        }
+
+    }
+
+    vm.moveDown = function (item) {
+
+        /* var currentOrder = item.order
+        var order;
+
+        vm.layout.data.items = vm.layout.data.items.map(function (item, index) {
+
+            order = index + 1;
+
+            if (currentOrder === order) { // increase order of current value
+                item.order = item.order + 1;
+            }
+
+            if (currentOrder + 1 === order) { // decrease order of next value
+                item.order = item.order - 1;
+            }
+
+            return item
+
+
+        })
+
+        vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
+            return a.order - b.order
+        }) */
+        const itemIndex = item.order;
+        const nextItemIndex = itemIndex + 1;
+
+        if (vm.layout.data.items[nextItemIndex]) {
+
+            const itemToMove = JSON.parse(angular.toJson( vm.layout.data.items[itemIndex] ));
+            itemToMove.order += 1;
+
+            vm.layout.data.items[itemIndex] = vm.layout.data.items[nextItemIndex];
+            vm.layout.data.items[itemIndex].order -= 1;
+
+            vm.layout.data.items[nextItemIndex] = itemToMove;
+
+        }
+
+    }
+
+    vm.delete = function (item) {
+
+        /*var currentOrder = item.order
+        var order;
+
+        vm.layout.data.items = vm.layout.data.items.filter(function (item, index) {
+
+            order = index + 1;
+
+            return item.order !== currentOrder;
+
+        })
+
+        vm.layout.data.items = vm.layout.data.items.map(function (item, index) {
+
+            order = index + 1;
+
+            if (order > currentOrder) { // increase order of current value
+                item.order = item.order - 1;
+            }
+
+            return item
+
+
+        })
+
+        vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
+            return a.order - b.order
+        })*/
+
+        vm.newValues.push({
+            order: vm.newValues.length,
+            value: item.value,
+        });
+
+        vm.layout.data.items.splice(item.order, 1);
+
+        vm.layout.data.items = vm.layout.data.items.map( (layout, index) => {
+            layout.order = index;
+            return layout;
+        });
+
+    }
+
+    vm.addNewValue = function () {
+
+        vm.layout.data.items.push({
+            order: vm.layout.data.items.length,
+            value: vm.newValue
+        })
+
+        vm.newValue = null;
+
+    }
+
+    vm.init = function () {
+
+        console.log('data', data);
+
+        vm.column = JSON.parse(angular.toJson( data.column ));
+
+        if (data.item) {
+            vm.layout = data.item;
+        } else {
+            vm.layout = {
+                name: '',
+                user_code: '',
+                column_key: vm.column.key,
+                data: {}
+            }
+        }
+
+        vm.readyStatus.content = true;
+
+        if (entityViewerDataService) {
+            vm.syncDataStructure();
+        }
+
+
+    };
+
+    vm.init();
+
+};

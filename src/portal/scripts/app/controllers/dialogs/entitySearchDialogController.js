@@ -1,589 +1,584 @@
-/**
- * Created by szhitenev on 28.06.2016.
- */
-(function () {
-    "use strict";
+"use strict";
 
-    var entityResolverService = require("../../services/entityResolverService");
+import entityResolverService from "../../services/entityResolverService";
 
-    module.exports = function ($scope, $mdDialog, data) {
+export default function ($scope, $mdDialog, data) {
 
-        var vm = this;
+    var vm = this;
 
-        vm.entityType = data.entityType;
-        vm.itemsCount = null;
+    vm.entityType = data.entityType;
+    vm.itemsCount = null;
 
-        vm.readyStatus = {data: false};
-        vm.processing = false;
+    vm.readyStatus = {data: false};
+    vm.processing = false;
 
-        var selectedRow = data.selectedItem;
+    var selectedRow = data.selectedItem;
 
-        var page = 1;
-        var pageSize = 40;
-		var getEntitiesProm;
-        // var lastPageReached = false;
-        var dialogParent = document.querySelector('.dialog-containers-wrap');
+    var page = 1;
+    var pageSize = 40;
+    var getEntitiesProm;
+    // var lastPageReached = false;
+    var dialogParent = document.querySelector('.dialog-containers-wrap');
 
-        vm.search = {
-            instrument: {
-                user_code: "",
-                name: "",
-                short_name: "",
-                user_text_1: "",
-                user_text_2: "",
-                user_text_3: "",
+    vm.search = {
+        instrument: {
+            user_code: "",
+            name: "",
+            short_name: "",
+            user_text_1: "",
+            user_text_2: "",
+            user_text_3: "",
+        },
+        account: {
+            user_code: "",
+            name: "",
+            short_name: "",
+        },
+        portfolio: {
+            user_code: "",
+            name: "",
+            short_name: "",
+        },
+        responsible: {
+            user_code: "",
+            name: "",
+            short_name: "",
+        },
+        counterparty: {
+            user_code: "",
+            name: "",
+            short_name: "",
+        },
+        currency: {
+            user_code: "",
+            name: "",
+            short_name: "",
+        },
+        "strategy-1": {
+            user_code: "",
+            name: "",
+            short_name: "",
+        },
+        "strategy-2": {
+            user_code: "",
+            name: "",
+            short_name: "",
+        },
+        "strategy-3": {
+            user_code: "",
+            name: "",
+            short_name: "",
+        },
+    };
+
+    vm.columns = {
+        instrument: [
+            {
+                key: "user_code",
+                name: "User code",
             },
-            account: {
-                user_code: "",
-                name: "",
-                short_name: "",
+            {
+                key: "name",
+                name: "Name",
             },
-            portfolio: {
-                user_code: "",
-                name: "",
-                short_name: "",
+            {
+                key: "short_name",
+                name: "Short name",
             },
-            responsible: {
-                user_code: "",
-                name: "",
-                short_name: "",
+            {
+                key: "user_text_1",
+                name: "User text 1",
             },
-            counterparty: {
-                user_code: "",
-                name: "",
-                short_name: "",
+            {
+                key: "user_text_2",
+                name: "User text 2",
             },
-            currency: {
-                user_code: "",
-                name: "",
-                short_name: "",
+            {
+                key: "user_text_3",
+                name: "User text 3",
             },
-            "strategy-1": {
-                user_code: "",
-                name: "",
-                short_name: "",
+            {
+                key: "instrument_type_object.name",
+                name: "Instrument type",
             },
-            "strategy-2": {
-                user_code: "",
-                name: "",
-                short_name: "",
+        ],
+        account: [
+            {
+                key: "user_code",
+                name: "User code",
             },
-            "strategy-3": {
-                user_code: "",
-                name: "",
-                short_name: "",
+            {
+                key: "name",
+                name: "Name",
             },
-        };
+            {
+                key: "short_name",
+                name: "Short name",
+            },
+        ],
+        portfolio: [
+            {
+                key: "user_code",
+                name: "User code",
+            },
+            {
+                key: "name",
+                name: "Name",
+            },
+            {
+                key: "short_name",
+                name: "Short name",
+            },
+        ],
+        responsible: [
+            {
+                key: "user_code",
+                name: "User code",
+            },
+            {
+                key: "name",
+                name: "Name",
+            },
+            {
+                key: "short_name",
+                name: "Short name",
+            },
+        ],
+        counterparty: [
+            {
+                key: "user_code",
+                name: "User code",
+            },
+            {
+                key: "name",
+                name: "Name",
+            },
+            {
+                key: "short_name",
+                name: "Short name",
+            },
+        ],
+        currency: [
+            {
+                key: "user_code",
+                name: "User code",
+            },
+            {
+                key: "name",
+                name: "Name",
+            },
+            {
+                key: "short_name",
+                name: "Short name",
+            },
+        ],
+        "strategy-1": [
+            {
+                key: "user_code",
+                name: "User code",
+            },
+            {
+                key: "name",
+                name: "Name",
+            },
+            {
+                key: "short_name",
+                name: "Short name",
+            },
+        ],
+        "strategy-2": [
+            {
+                key: "user_code",
+                name: "User code",
+            },
+            {
+                key: "name",
+                name: "Name",
+            },
+            {
+                key: "short_name",
+                name: "Short name",
+            },
+        ],
+        "strategy-3": [
+            {
+                key: "user_code",
+                name: "User code",
+            },
+            {
+                key: "name",
+                name: "Name",
+            },
+            {
+                key: "short_name",
+                name: "Short name",
+            },
+        ],
+    };
 
-        vm.columns = {
-            instrument: [
-                {
-                    key: "user_code",
-                    name: "User code",
-                },
-                {
-                    key: "name",
-                    name: "Name",
-                },
-                {
-                    key: "short_name",
-                    name: "Short name",
-                },
-                {
-                    key: "user_text_1",
-                    name: "User text 1",
-                },
-                {
-                    key: "user_text_2",
-                    name: "User text 2",
-                },
-                {
-                    key: "user_text_3",
-                    name: "User text 3",
-                },
-                {
-                    key: "instrument_type_object.name",
-                    name: "Instrument type",
-                },
-            ],
-            account: [
-                {
-                    key: "user_code",
-                    name: "User code",
-                },
-                {
-                    key: "name",
-                    name: "Name",
-                },
-                {
-                    key: "short_name",
-                    name: "Short name",
-                },
-            ],
-            portfolio: [
-                {
-                    key: "user_code",
-                    name: "User code",
-                },
-                {
-                    key: "name",
-                    name: "Name",
-                },
-                {
-                    key: "short_name",
-                    name: "Short name",
-                },
-            ],
-            responsible: [
-                {
-                    key: "user_code",
-                    name: "User code",
-                },
-                {
-                    key: "name",
-                    name: "Name",
-                },
-                {
-                    key: "short_name",
-                    name: "Short name",
-                },
-            ],
-            counterparty: [
-                {
-                    key: "user_code",
-                    name: "User code",
-                },
-                {
-                    key: "name",
-                    name: "Name",
-                },
-                {
-                    key: "short_name",
-                    name: "Short name",
-                },
-            ],
-            currency: [
-                {
-                    key: "user_code",
-                    name: "User code",
-                },
-                {
-                    key: "name",
-                    name: "Name",
-                },
-                {
-                    key: "short_name",
-                    name: "Short name",
-                },
-            ],
-            "strategy-1": [
-                {
-                    key: "user_code",
-                    name: "User code",
-                },
-                {
-                    key: "name",
-                    name: "Name",
-                },
-                {
-                    key: "short_name",
-                    name: "Short name",
-                },
-            ],
-            "strategy-2": [
-                {
-                    key: "user_code",
-                    name: "User code",
-                },
-                {
-                    key: "name",
-                    name: "Name",
-                },
-                {
-                    key: "short_name",
-                    name: "Short name",
-                },
-            ],
-            "strategy-3": [
-                {
-                    key: "user_code",
-                    name: "User code",
-                },
-                {
-                    key: "name",
-                    name: "Name",
-                },
-                {
-                    key: "short_name",
-                    name: "Short name",
-                },
-            ],
-        };
+    vm.items = [];
+    vm.recentlyCreatedItems = []
+    vm.selectedItem = {};
 
-        vm.items = [];
-        vm.recentlyCreatedItems = []
-        vm.selectedItem = {};
+    vm.actionsPopupDataList = [];
 
-        vm.actionsPopupDataList = [];
+    var createActionsPopupsData = function (itemsList) {
 
-        var createActionsPopupsData = function (itemsList) {
+        var result = {}
 
-            var result = {}
+        itemsList.forEach(function (item) {
 
-            itemsList.forEach(function (item) {
+            result[item.user_code] = {
+                options: [
+                    {
+                        name: 'Edit',
+                        icon: 'edit',
+                        onClick: (option, _$popup) => {
+                            _$popup.cancel();
 
-                result[item.user_code] = {
-                    options: [
-                        {
-                            name: 'Edit',
-                            icon: 'edit',
-                            onClick: (option, _$popup) => {
-                                _$popup.cancel();
+                            vm.editItem(item.id);
+                        }
+                    },
+                    {
+                        name: 'Delete',
+                        icon: 'delete',
+                        onClick: (option, _$popup) => {
+                            _$popup.cancel();
 
-                                vm.editItem(item.id);
-                            }
-                        },
-                        {
-                            name: 'Delete',
-                            icon: 'delete',
-                            onClick: (option, _$popup) => {
-                                _$popup.cancel();
+                            // searchin index again, because it changes after deletion of a preceding item
+                            var index = vm.items.findIndex(function (eItem) {
+                               return eItem.user_code === item.user_code;
+                            });
 
-                                // searchin index again, because it changes after deletion of a preceding item
-                                var index = vm.items.findIndex(function (eItem) {
-                                   return eItem.user_code === item.user_code;
-                                });
+                            vm.deleteItem(item, index);
 
-                                vm.deleteItem(item, index);
-
-                            }
-                        },
-                    ],
-                };
-
-            })
-
-            return result;
-
-        }
-
-        vm.agree = function () {
-            if (itemsToDelete.length > 0) {
-                itemsToDelete.forEach(function (itemId) {
-                    entityResolverService.deleteByKey(vm.entityType, itemId);
-                });
-            }
-
-            $mdDialog.hide({
-                status: "agree",
-                data: {item: vm.selectedItem, items: vm.items},
-            });
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide("disagree");
-        };
-
-        vm.getTdValue = function (item, columnKey) {
-            // check if value positioned on a deeper level of an object
-            if (columnKey.indexOf(".") !== -1) {
-                var objectPathToValue = columnKey.split("."); // an array of properties leading to a needed value inside of the object
-                var currentPath = item; // current nesting level in the object
-
-                var i;
-                for (i = 0; i < objectPathToValue.length; i++) {
-                    if (!currentPath[objectPathToValue[i]]) {
-                        break;
-                    } else {
-                        currentPath = currentPath[objectPathToValue[i]];
-                    }
-                }
-
-                return currentPath;
-            } else {
-                return item[columnKey];
-            }
-        };
-
-        vm.selectRow = function (item) {
-
-            vm.items.forEach(function (item) {
-                item.active = false;
-            });
-
-            if (item) {
-                vm.selectedItem = item;
-                item.active = true;
-                vm.recentlyCreatedSelectRow(null);
-            }
-
-        };
-
-        vm.recentlyCreatedSelectRow = function (item) {
-
-            vm.recentlyCreatedItems.forEach(function (item) {
-                item.active = false;
-            });
-
-            if (item) {
-                vm.selectedItem = item;
-                item.active = true;
-                vm.selectRow(null);
-            }
-
-        }
-
-        vm.selectAndSave = function (item) {
-            $mdDialog.hide({
-                status: "agree",
-                data: {item: item, items: vm.items},
-            });
-        };
-
-        vm.sort;
-        vm.sortDescending = true;
-        vm.sortingOptions = undefined;
-
-        vm.sortBy = function (sortParameter) {
-            var sortOrder = "DSC";
-            if (vm.sort === sortParameter) {
-                vm.sortDescending = !vm.sortDescending;
-
-                if (vm.sortDescending) {
-                    sortOrder = "DSC";
-                } else {
-                    sortOrder = "ASC";
-                }
-            } else {
-                vm.sort = sortParameter;
-                vm.sortDescending = true;
-            }
-
-            vm.sortingOptions = {
-                key: sortParameter,
-                direction: sortOrder,
+                        }
+                    },
+                ],
             };
 
-            vm.getEntityItems("reloadTable");
-        };
+        })
 
-        vm.editItem = function (itemId) {
+        return result;
 
-            $mdDialog
-                .show({
-                    controller: "EntityViewerEditDialogController as vm",
-                    templateUrl:
-                        "views/entity-viewer/entity-viewer-edit-dialog-view.html",
-                    parent: dialogParent,
-                    multiple: true,
-                    locals: {
-                        entityType: vm.entityType,
-                        entityId: itemId,
-                        data: {},
-                    },
-                })
-                .then(function (data) {
-                    if (data.res === "agree") {
-                        vm.getEntityItems("reloadTable");
-                    }
-                });
-        };
+    }
 
-        var itemsToDelete = [];
-
-        vm.deleteItem = function (item, index) {
-
-            vm.itemsCount = vm.itemsCount - 1;
-
-            vm.items.splice(index, 1);
-
-            delete vm.actionsPopupsData[item.user_code];
-
-            itemsToDelete.push(item.id);
-
-        };
-
-        vm.loadOnScroll = function () {
-            var scrollAtTheEnd = false;
-            var scrollElem = document.querySelector(
-                ".entity-search-scroll-container"
-            );
-            var elemScrollHeight = scrollElem.scrollHeight;
-            var scrollPositionToLoadItems = scrollElem.clientHeight * 1.5; // start item loading when scroll almost at the end
-
-            scrollElem.addEventListener("scroll", function () {
-                // Call function when scroll reaches specified position
-                if (
-                    elemScrollHeight - scrollElem.scrollTop < scrollPositionToLoadItems &&
-                    !scrollAtTheEnd
-                ) {
-                    scrollAtTheEnd = true;
-
-                    if (vm.itemsCount && vm.itemsCount > vm.items.length) {
-                        page = page + 1;
-
-                        vm.getEntityItems().then(function (data) {
-                            // refreshing of scroll height after loading new page of items
-                            elemScrollHeight = scrollElem.scrollHeight;
-                            scrollPositionToLoadItems = elemScrollHeight / 3;
-                            scrollAtTheEnd = false;
-                        });
-                    }
-                }
+    vm.agree = function () {
+        if (itemsToDelete.length > 0) {
+            itemsToDelete.forEach(function (itemId) {
+                entityResolverService.deleteByKey(vm.entityType, itemId);
             });
-        };
+        }
 
-        var getTableOptions = function () {
-            var options = {};
+        $mdDialog.hide({
+            status: "agree",
+            data: {item: vm.selectedItem, items: vm.items},
+        });
+    };
 
-            options.page = page;
-            options.pageSize = pageSize;
+    vm.cancel = function () {
+        $mdDialog.hide("disagree");
+    };
 
-            if (vm.sortingOptions) {
-                //options.sort = new Object();
-                options.sort = vm.sortingOptions;
+    vm.getTdValue = function (item, columnKey) {
+        // check if value positioned on a deeper level of an object
+        if (columnKey.indexOf(".") !== -1) {
+            var objectPathToValue = columnKey.split("."); // an array of properties leading to a needed value inside of the object
+            var currentPath = item; // current nesting level in the object
+
+            var i;
+            for (i = 0; i < objectPathToValue.length; i++) {
+                if (!currentPath[objectPathToValue[i]]) {
+                    break;
+                } else {
+                    currentPath = currentPath[objectPathToValue[i]];
+                }
             }
 
-            options.filters = vm.search[vm.entityType];
+            return currentPath;
+        } else {
+            return item[columnKey];
+        }
+    };
 
-            return options;
+    vm.selectRow = function (item) {
+
+        vm.items.forEach(function (item) {
+            item.active = false;
+        });
+
+        if (item) {
+            vm.selectedItem = item;
+            item.active = true;
+            vm.recentlyCreatedSelectRow(null);
+        }
+
+    };
+
+    vm.recentlyCreatedSelectRow = function (item) {
+
+        vm.recentlyCreatedItems.forEach(function (item) {
+            item.active = false;
+        });
+
+        if (item) {
+            vm.selectedItem = item;
+            item.active = true;
+            vm.selectRow(null);
+        }
+
+    }
+
+    vm.selectAndSave = function (item) {
+        $mdDialog.hide({
+            status: "agree",
+            data: {item: item, items: vm.items},
+        });
+    };
+
+    vm.sort;
+    vm.sortDescending = true;
+    vm.sortingOptions = undefined;
+
+    vm.sortBy = function (sortParameter) {
+        var sortOrder = "DSC";
+        if (vm.sort === sortParameter) {
+            vm.sortDescending = !vm.sortDescending;
+
+            if (vm.sortDescending) {
+                sortOrder = "DSC";
+            } else {
+                sortOrder = "ASC";
+            }
+        } else {
+            vm.sort = sortParameter;
+            vm.sortDescending = true;
+        }
+
+        vm.sortingOptions = {
+            key: sortParameter,
+            direction: sortOrder,
         };
 
-        vm.getEntityItems = function (reloadTable) {
-            vm.processing = true;
-            //$scope.$apply();
+        vm.getEntityItems("reloadTable");
+    };
 
-            return new Promise(function (resolve, reject) {
-                // if reloadTable parameter exist, reset options and vm.items
-                if (reloadTable) {
-                    page = 1;
-                    vm.itemsCount = null;
-                    $(".entity-search-scroll-container").scrollTop(0);
+    vm.editItem = function (itemId) {
+
+        $mdDialog
+            .show({
+                controller: "EntityViewerEditDialogController as vm",
+                templateUrl:
+                    "views/entity-viewer/entity-viewer-edit-dialog-view.html",
+                parent: dialogParent,
+                multiple: true,
+                locals: {
+                    entityType: vm.entityType,
+                    entityId: itemId,
+                    data: {},
+                },
+            })
+            .then(function (data) {
+                if (data.res === "agree") {
+                    vm.getEntityItems("reloadTable");
                 }
-
-                if (vm.entityType === 'instrument') { // instruments in light list lack instrument_type property
-					getEntitiesProm = entityResolverService.getList(vm.entityType, getTableOptions());
-
-                } else {
-					getEntitiesProm = entityResolverService.getListLight(vm.entityType, getTableOptions());
-				}
-
-				getEntitiesProm
-                    .then(function (data) {
-                        if (data.hasOwnProperty("count")) {
-                            vm.itemsCount = data.count;
-                        }
-
-                        if (reloadTable) {
-                            vm.items = data.results;
-                        } else {
-                            vm.items = vm.items.concat(data.results);
-                        }
-
-                        vm.actionsPopupsData = createActionsPopupsData(vm.items);
-
-                        setTimeout(function () {
-                            vm.processing = false;
-
-                            $scope.$apply();
-                            resolve({status: "loaded"});
-                        }, 2000);
-                    });
             });
-        };
+    };
 
-        vm.init = function () {
-            setTimeout(function () {
-                vm.dialogElemToResize = document.querySelector(
-                    ".entityEditorElemToResize"
-                );
-            }, 100);
+    var itemsToDelete = [];
 
-			if (vm.entityType === 'instrument') { // instruments in light list lack instrument_type property
-				getEntitiesProm = entityResolverService.getList(vm.entityType, getTableOptions());
+    vm.deleteItem = function (item, index) {
 
-			} else {
-				getEntitiesProm = entityResolverService.getListLight(vm.entityType, getTableOptions());
-			}
+        vm.itemsCount = vm.itemsCount - 1;
 
-			getEntitiesProm
+        vm.items.splice(index, 1);
+
+        delete vm.actionsPopupsData[item.user_code];
+
+        itemsToDelete.push(item.id);
+
+    };
+
+    vm.loadOnScroll = function () {
+        var scrollAtTheEnd = false;
+        var scrollElem = document.querySelector(
+            ".entity-search-scroll-container"
+        );
+        var elemScrollHeight = scrollElem.scrollHeight;
+        var scrollPositionToLoadItems = scrollElem.clientHeight * 1.5; // start item loading when scroll almost at the end
+
+        scrollElem.addEventListener("scroll", function () {
+            // Call function when scroll reaches specified position
+            if (
+                elemScrollHeight - scrollElem.scrollTop < scrollPositionToLoadItems &&
+                !scrollAtTheEnd
+            ) {
+                scrollAtTheEnd = true;
+
+                if (vm.itemsCount && vm.itemsCount > vm.items.length) {
+                    page = page + 1;
+
+                    vm.getEntityItems().then(function (data) {
+                        // refreshing of scroll height after loading new page of items
+                        elemScrollHeight = scrollElem.scrollHeight;
+                        scrollPositionToLoadItems = elemScrollHeight / 3;
+                        scrollAtTheEnd = false;
+                    });
+                }
+            }
+        });
+    };
+
+    var getTableOptions = function () {
+        var options = {};
+
+        options.page = page;
+        options.pageSize = pageSize;
+
+        if (vm.sortingOptions) {
+            //options.sort = new Object();
+            options.sort = vm.sortingOptions;
+        }
+
+        options.filters = vm.search[vm.entityType];
+
+        return options;
+    };
+
+    vm.getEntityItems = function (reloadTable) {
+        vm.processing = true;
+        //$scope.$apply();
+
+        return new Promise(function (resolve, reject) {
+            // if reloadTable parameter exist, reset options and vm.items
+            if (reloadTable) {
+                page = 1;
+                vm.itemsCount = null;
+                $(".entity-search-scroll-container").scrollTop(0);
+            }
+
+            if (vm.entityType === 'instrument') { // instruments in light list lack instrument_type property
+                getEntitiesProm = entityResolverService.getList(vm.entityType, getTableOptions());
+
+            } else {
+                getEntitiesProm = entityResolverService.getListLight(vm.entityType, getTableOptions());
+            }
+
+            getEntitiesProm
                 .then(function (data) {
-                    vm.readyStatus.data = true;
-
                     if (data.hasOwnProperty("count")) {
                         vm.itemsCount = data.count;
                     }
 
-                    vm.items = data.results;
-
-                    if (selectedRow) {
-                        vm.items = vm.items.map(function (item) {
-                            if (item.id === selectedRow) {
-                                item.active = true;
-                            }
-
-                            return item;
-                        });
+                    if (reloadTable) {
+                        vm.items = data.results;
+                    } else {
+                        vm.items = vm.items.concat(data.results);
                     }
 
                     vm.actionsPopupsData = createActionsPopupsData(vm.items);
 
-                    $scope.$apply();
-                    vm.loadOnScroll();
+                    setTimeout(function () {
+                        vm.processing = false;
+
+                        $scope.$apply();
+                        resolve({status: "loaded"});
+                    }, 2000);
                 });
-        };
+        });
+    };
 
-        // Victor 09.10.2020
-        vm.createEntity = function ($event) {
+    vm.init = function () {
+        setTimeout(function () {
+            vm.dialogElemToResize = document.querySelector(
+                ".entityEditorElemToResize"
+            );
+        }, 100);
 
-            $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
+        if (vm.entityType === 'instrument') { // instruments in light list lack instrument_type property
+            getEntitiesProm = entityResolverService.getList(vm.entityType, getTableOptions());
 
-            $mdDialog
-                .show({
-                    controller: "EntityViewerAddDialogController as vm",
-                    templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
-                    parent: dialogParent,
-                    targetEvent: $event,
-                    multiple: true,
-                    locals: {
-                        entityType: vm.entityType,
-                        entity: {
-                            accrual_calculation_schedules: []
-                        },
-                        data: {},
-                    },
-                })
-                .then(function (res) {
-                    if (res.status === "agree") {
-                        vm.getEntityItems("reloadTable");
-                        var item = res.data;
-                        vm.recentlyCreatedItems.push(item);
-                        vm.recentlyCreatedSelectRow(item);
-                    }
-                });
+        } else {
+            getEntitiesProm = entityResolverService.getListLight(vm.entityType, getTableOptions());
+        }
 
-        };
+        getEntitiesProm
+            .then(function (data) {
+                vm.readyStatus.data = true;
 
-        // Victor 09.10.2020
-        vm.downloadEntity = function ($event) {
+                if (data.hasOwnProperty("count")) {
+                    vm.itemsCount = data.count;
+                }
 
-            $mdDialog.show({
-                controller: 'InstrumentDownloadDialogController as vm',
-                templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                vm.items = data.results;
+
+                if (selectedRow) {
+                    vm.items = vm.items.map(function (item) {
+                        if (item.id === selectedRow) {
+                            item.active = true;
+                        }
+
+                        return item;
+                    });
+                }
+
+                vm.actionsPopupsData = createActionsPopupsData(vm.items);
+
+                $scope.$apply();
+                vm.loadOnScroll();
+            });
+    };
+
+    // Victor 09.10.2020
+    vm.createEntity = function ($event) {
+
+        $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
+
+        $mdDialog
+            .show({
+                controller: "EntityViewerAddDialogController as vm",
+                templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
                 parent: dialogParent,
                 targetEvent: $event,
                 multiple: true,
                 locals: {
-                    data: {}
-                }
-            }).then(function (res) {
-                vm.getEntityItems("reloadTable");
-                var item = res.data;
-                vm.recentlyCreatedItems.push(item)
-                vm.recentlyCreatedSelectRow(item);
+                    entityType: vm.entityType,
+                    entity: {
+                        accrual_calculation_schedules: []
+                    },
+                    data: {},
+                },
             })
-        };
+            .then(function (res) {
+                if (res.status === "agree") {
+                    vm.getEntityItems("reloadTable");
+                    var item = res.data;
+                    vm.recentlyCreatedItems.push(item);
+                    vm.recentlyCreatedSelectRow(item);
+                }
+            });
 
-        vm.init();
     };
-})();
+
+    // Victor 09.10.2020
+    vm.downloadEntity = function ($event) {
+
+        $mdDialog.show({
+            controller: 'InstrumentDownloadDialogController as vm',
+            templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+            parent: dialogParent,
+            targetEvent: $event,
+            multiple: true,
+            locals: {
+                data: {}
+            }
+        }).then(function (res) {
+            vm.getEntityItems("reloadTable");
+            var item = res.data;
+            vm.recentlyCreatedItems.push(item)
+            vm.recentlyCreatedSelectRow(item);
+        })
+    };
+
+    vm.init();
+};

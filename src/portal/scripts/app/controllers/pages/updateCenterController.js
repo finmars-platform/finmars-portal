@@ -1,95 +1,87 @@
-/**
- * Created by szhitenev on 18.08.2022.
- *  DEPRECATED PAGE
- */
-// import baseUrlService from "../../services/baseUrlService";
-(function () {
+'use strict';
 
-    'use strict';
+import baseUrlService from "../../services/baseUrlService";
 
-    var baseUrlService = require("../../services/baseUrlService").default;
-    // var baseUrlService = require('../../services/baseUrlService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
+// var baseUrlService = require('../../services/baseUrlService');
+import toastNotificationService from '../../../../../core/services/toastNotificationService';
 
-    var baseUrl = baseUrlService.resolve();
+var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function updateCenterController($scope, authorizerService, globalDataService) {
+export default function updateCenterController($scope, authorizerService, globalDataService) {
 
-        var vm = this;
+    var vm = this;
 
-        vm.items = [];
-        vm.readyStatus = {data: false};
+    vm.items = [];
+    vm.readyStatus = {data: false};
 
-        vm.latestVersion = null;
+    vm.latestVersion = null;
 
-        vm.getVersions = function (){
+    vm.getVersions = function (){
 
-            authorizerService.getVersions().then(function (data){
+        authorizerService.getVersions().then(function (data){
 
-                vm.versions = data.results;
+            vm.versions = data.results;
 
-                vm.readyStatus.data = true;
+            vm.readyStatus.data = true;
 
-                if (vm.versions.length) {
+            if (vm.versions.length) {
 
-                    vm.latestVersion = vm.versions[0];
+                vm.latestVersion = vm.versions[0];
 
-                    vm.versions.forEach(function (version){
+                vm.versions.forEach(function (version){
 
-                        if (version.is_latest){
-                            vm.latestVersion = version;
-                        }
+                    if (version.is_latest){
+                        vm.latestVersion = version;
+                    }
 
-                    })
+                })
 
-                }
+            }
 
-                $scope.$apply();
+            $scope.$apply();
 
-            })
+        })
 
-        }
+    }
 
-        vm.toggleAutoUpdate = function (){
+    vm.toggleAutoUpdate = function (){
 
-            vm.currentMasterUser.auto_update = !vm.currentMasterUser.auto_update;
+        vm.currentMasterUser.auto_update = !vm.currentMasterUser.auto_update;
 
-            authorizerService.updateMasterUser(vm.currentMasterUser.id, vm.currentMasterUser).then(function (){
+        authorizerService.updateMasterUser(vm.currentMasterUser.id, vm.currentMasterUser).then(function (){
 
-                toastNotificationService.info("Saved");
+            toastNotificationService.info("Saved");
 
-            })
+        })
 
-        }
+    }
 
-        vm.updateFinmars = function (){
+    vm.updateFinmars = function (){
 
-            vm.processing = true;
+        vm.processing = true;
 
-            authorizerService.updateFinmars(vm.currentMasterUser.base_api_url, vm.latestVersion.name).then(function (data){
+        authorizerService.updateFinmars(vm.currentMasterUser.base_api_url, vm.latestVersion.name).then(function (data){
 
-                vm.processing = false;
+            vm.processing = false;
 
-                toastNotificationService.info("Update Initialized");
+            toastNotificationService.info("Update Initialized");
 
-                $scope.$apply();
+            $scope.$apply();
 
-            })
+        })
 
-        }
+    }
 
-        vm.init = function () {
+    vm.init = function () {
 
-            vm.getVersions();
+        vm.getVersions();
 
-            vm.currentMasterUser = globalDataService.getMasterUser();
+        vm.currentMasterUser = globalDataService.getMasterUser();
 
-
-        };
-
-        vm.init();
 
     };
 
-}());
+    vm.init();
+
+};

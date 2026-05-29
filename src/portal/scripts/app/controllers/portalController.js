@@ -7,10 +7,9 @@
 import baseUrlService from "../services/baseUrlService";
 import {NavigationRoutes} from '@finmars/ui';
 
-const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
-
-var explorerService = require('../services/explorerService');
-var portalService = require('../services/portalService').default;
+import localStorageService from '../../../../shell/scripts/app/services/localStorageService'; // TODO inject localStorageService into angular dependencies
+import explorerService from '../services/explorerService';
+import portalService from '../services/portalService';
 
 export default function ($scope, $state, $transitions, $urlService, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService, configurationService) {
 
@@ -320,4 +319,4 @@ export default function ($scope, $state, $transitions, $urlService, authorizerSe
         removeNavigationPortalListener()
     });
 
-};
+}

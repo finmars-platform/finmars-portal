@@ -1,966 +1,955 @@
-/**
- * Contains functions that work with `data` from entityViewerDataService
- * for report viewer
- *
- * @module rvDataHelper
- */
-(function () {
+import localStorageService from '../../../../shell/scripts/app/services/localStorageService';
+import utilsHelper from './utils.helper';
+import evRvCommonHelper from './ev-rv-common.helper';
+import rvSubtotalHelper from './rv-subtotal.service';
+import evDataHelper from './ev-data.helper';
+// var metaHelper = require('./meta.helper');
 
-    var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+var getGroupsByParent = function (parentId, evDataService) {
 
-    var utilsHelper = require('./utils.helper');
-    var evRvCommonHelper = require('./ev-rv-common.helper').default;
-    var rvSubtotalHelper = require('./rv-subtotal.service');
-    var evDataHelper = require('./ev-data.helper').default;
-    // var metaHelper = require('./meta.helper');
+    var items = evDataService.getDataAsList();
 
-    var getGroupsByParent = function (parentId, evDataService) {
+    return items.filter(function (item) {
+        return item.___parentId === parentId;
+    })
 
-        var items = evDataService.getDataAsList();
+};
 
-        return items.filter(function (item) {
-            return item.___parentId === parentId;
+var calculateItemSubtotal = function (item, evDataService) {
+
+    var columns = evDataService.getColumns();
+    var groups = evDataService.getGroups();
+    var level = groups.length;
+
+    // console.log('calculateItemSubtotal.item', item)
+
+    // Reset subtotals if previously calculated
+
+    item.subtotal = {};
+
+    // console.log('calculateItemSubtotal.item', item)
+
+    if (item.___level === level) {
+
+        var dataList = evDataService.getDataAsList();
+
+        var items = []
+
+        dataList.forEach(function (item) {
+            if (item.___parentId == item.___id) {
+                items.push(item)
+            }
         })
 
-    };
+        item.subtotal = rvSubtotalHelper.calculate(items, columns);
 
-    var calculateItemSubtotal = function (item, evDataService) {
+        evDataService.setData(item);
 
-        var columns = evDataService.getColumns();
-        var groups = evDataService.getGroups();
-        var level = groups.length;
+    } else {
 
-        // console.log('calculateItemSubtotal.item', item)
+        var items = [];
 
-        // Reset subtotals if previously calculated
+        var childGroups = getGroupsByParent(item.___id, evDataService);
 
-        item.subtotal = {};
+        childGroups.forEach(function (item) {
 
-        // console.log('calculateItemSubtotal.item', item)
+            items.push(item.subtotal)
 
-        if (item.___level === level) {
+        });
 
-            var dataList = evDataService.getDataAsList();
+        item.subtotal = rvSubtotalHelper.calculate(items, columns);
 
-            var items = []
+        evDataService.setData(item);
 
-            dataList.forEach(function (item) {
-                if (item.___parentId == item.___id) {
-                    items.push(item)
-                }
-            })
+    }
 
-            item.subtotal = rvSubtotalHelper.calculate(items, columns);
+};
 
-            evDataService.setData(item);
+var calculateSubtotals = function (evDataService) {
 
-        } else {
+    var dataList = evDataService.getDataAsList();
 
-            var items = [];
+    var groups = evDataService.getGroups();
+    var level = groups.length;
 
-            var childGroups = getGroupsByParent(item.___id, evDataService);
+    // console.log('calculateSubtotals.level', level);
 
-            childGroups.forEach(function (item) {
+    for (var i = level; i >= 0; i = i - 1) {
 
-                items.push(item.subtotal)
-
-            });
-
-            item.subtotal = rvSubtotalHelper.calculate(items, columns);
-
-            evDataService.setData(item);
-
-        }
-
-    };
-
-    var calculateSubtotals = function (evDataService) {
-
-        var dataList = evDataService.getDataAsList();
-
-        var groups = evDataService.getGroups();
-        var level = groups.length;
-
-        // console.log('calculateSubtotals.level', level);
-
-        for (var i = level; i >= 0; i = i - 1) {
-
-            // console.log('calculateSubtotals.current_level', i);
-
-            dataList.forEach(function (item) {
-
-
-                if (item.___level === i) {
-                    calculateItemSubtotal(item, evDataService);
-                }
-
-            });
-
-        }
-
-    };
-
-    var calculateGrandTotal = function (evDataService) {
-
-        var dataList = evDataService.getDataAsList();
-
-        var groups = evDataService.getGroups();
-        var level = groups.length;
-
-        // console.log('calculateSubtotals.level', level);
+        // console.log('calculateSubtotals.current_level', i);
 
         dataList.forEach(function (item) {
 
-            if (item.___level === 0) {
+
+            if (item.___level === i) {
                 calculateItemSubtotal(item, evDataService);
             }
 
         });
 
-    };
+    }
 
-    var insertSubtotalFns = {
-        'line': function (subtotalObj, item) {
+};
 
-            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-            subtotalObj.___subtotal_type = 'line';
+var calculateGrandTotal = function (evDataService) {
 
-            item.results.unshift(subtotalObj);
+    var dataList = evDataService.getDataAsList();
 
-        },
-        'area': function (subtotalObj, item) {
+    var groups = evDataService.getGroups();
+    var level = groups.length;
 
-            subtotalObj.___subtotal_type = 'proxyline';
-            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+    // console.log('calculateSubtotals.level', level);
 
-            item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+    dataList.forEach(function (item) {
 
-            subtotalObj.___subtotal_type = 'area';
-            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+        if (item.___level === 0) {
+            calculateItemSubtotal(item, evDataService);
+        }
 
-            item.results.push(subtotalObj);
+    });
 
-        },
-        'arealine': function (subtotalObj, item) {
+};
 
-            subtotalObj.___subtotal_type = 'arealine';
+var insertSubtotalFns = {
+    'line': function (subtotalObj, item) {
 
-            subtotalObj.___subtotal_subtype = 'line';
-            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+        subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+        subtotalObj.___subtotal_type = 'line';
 
-            item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+        item.results.unshift(subtotalObj);
+
+    },
+    'area': function (subtotalObj, item) {
+
+        subtotalObj.___subtotal_type = 'proxyline';
+        subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+        item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+
+        subtotalObj.___subtotal_type = 'area';
+        subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+        item.results.push(subtotalObj);
+
+    },
+    'arealine': function (subtotalObj, item) {
+
+        subtotalObj.___subtotal_type = 'arealine';
+
+        subtotalObj.___subtotal_subtype = 'line';
+        subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+        item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
 
 
-            subtotalObj.___subtotal_subtype = 'area';
-            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+        subtotalObj.___subtotal_subtype = 'area';
+        subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
-            item.results.push(subtotalObj);
+        item.results.push(subtotalObj);
 
+    }
+}
+
+/**
+ * Returns control if more items can be loaded form backend
+ *
+ * @param {Object} evDataService
+ * @param {Object} item - parent group for which more items can be loaded
+ * @return {Object|null} - data of control for button "LOADER MORE", "LOAD ALL"
+ */
+var getLoadControl = function (evDataService, item) {
+
+    var requestParameters = evDataService.getRequestParameters(item.___id);
+
+    if (requestParameters) {
+        if (requestParameters.pagination.count > requestParameters.pagination.page_size) {
+
+            return {
+                ___id: item.___id + '_control',
+                ___group_identifier: item.___group_identifier,
+                ___group_name: item.___group_name,
+                ___type: 'control',
+                ___parentId: item.___id,
+                ___level: item.___level + 1
+            };
         }
     }
 
-    /**
-     * Returns control if more items can be loaded form backend
-     *
-     * @param {Object} evDataService
-     * @param {Object} item - parent group for which more items can be loaded
-     * @return {Object|null} - data of control for button "LOADER MORE", "LOAD ALL"
-     */
-    var getLoadControl = function (evDataService, item) {
+    return null;
 
-        var requestParameters = evDataService.getRequestParameters(item.___id);
+}
 
-        if (requestParameters) {
-            if (requestParameters.pagination.count > requestParameters.pagination.page_size) {
+/**
+ * Also setups property 'results' for items-groups inside data
+ *
+ * @param {Object} data
+ * @param {Object} evDataService
+ * @return {Object} - data with subtotals and controls
+ */
+var insertSubtotalsAndControlsToResults = function (data, evDataService) {
 
-                return {
-                    ___id: item.___id + '_control',
-                    ___group_identifier: item.___group_identifier,
-                    ___group_name: item.___group_name,
-                    ___type: 'control',
-                    ___parentId: item.___id,
-                    ___level: item.___level + 1
-                };
-            }
-        }
+    var dataList = [];
+    var groups = evDataService.getGroups();
 
-        return null;
+    Object.keys(data).forEach(function (key) {
+        dataList.push(data[key])
+    });
 
-    }
+    var subtotalObj;
 
-    /**
-     * Also setups property 'results' for items-groups inside data
-     *
-     * @param {Object} data
-     * @param {Object} evDataService
-     * @return {Object} - data with subtotals and controls
-     */
-    var insertSubtotalsAndControlsToResults = function (data, evDataService) {
+    // insert Grand total
+    if (dataList[0].results) {
 
-        var dataList = [];
-        var groups = evDataService.getGroups();
-
-        Object.keys(data).forEach(function (key) {
-            dataList.push(data[key])
+        subtotalObj = Object.assign({}, dataList[0].subtotal, {
+            ___group_identifier: dataList[0].___group_identifier,
+            ___group_name: dataList[0].___group_name,
+            ___type: 'subtotal',
+            ___parentId: dataList[0].___id,
+            ___level: 0
         });
 
-        var subtotalObj;
+        subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+        subtotalObj.___subtotal_type = 'line';
 
-        // insert Grand total
-        if (dataList[0].results) {
+        dataList[0].results.unshift(subtotalObj);
 
-            subtotalObj = Object.assign({}, dataList[0].subtotal, {
-                ___group_identifier: dataList[0].___group_identifier,
-                ___group_name: dataList[0].___group_name,
-                ___type: 'subtotal',
-                ___parentId: dataList[0].___id,
-                ___level: 0
-            });
+    }
 
-            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-            subtotalObj.___subtotal_type = 'line';
+    dataList.forEach(function (item) {
 
-            dataList[0].results.unshift(subtotalObj);
-
+        if (!item.results) {
+            item.results = [];
         }
 
-        dataList.forEach(function (item) {
+    })
 
-            if (!item.results) {
-                item.results = [];
+    if (!groups.length) { // subtotal or subtotals are active but there are no groups
+
+        var rootId = Object.keys(data).find(
+            id => data[id].___level === 0
+        );
+
+        var control = getLoadControl( evDataService, data[rootId] );
+
+        if (control) data[rootId].results.push(control);
+
+        return data;
+    }
+
+    dataList.forEach(function (item) {
+
+        groups.forEach(function (group, index) {
+
+            if (item.___level === index + 1 && item.___level <= groups.length &&
+                group.report_settings.subtotal_type) {
+
+                subtotalObj = Object.assign({}, item.subtotal, {
+                    ___group_identifier: item.___group_identifier,
+                    ___group_name: item.___group_name,
+                    ___type: 'subtotal',
+                    ___parentId: item.___id,
+                    ___level: item.___level + 1
+                });
+
+                var insertSubtotal = insertSubtotalFns[group.report_settings.subtotal_type];
+                insertSubtotal(subtotalObj, item);
+
             }
 
-        })
+            /*var requestParameters = evDataService.getRequestParameters(item.___id);
 
-        if (!groups.length) { // subtotal or subtotals are active but there are no groups
+            if (requestParameters) {
+                if (requestParameters.pagination.count > requestParameters.pagination.page_size) {
 
-            var rootId = Object.keys(data).find(
-                id => data[id].___level === 0
-            );
+                    item.results.push({
+                        ___id: item.___id + '_control',
+                        ___group_identifier: item.___group_identifier,
+                        ___group_name: item.___group_name,
+                        ___type: 'control',
+                        ___parentId: item.___id,
+                        ___level: item.___level + 1
+                    });
+                }
+            }*/
+            // item = insertLoadControl(evDataService, item);
+            var control = getLoadControl(evDataService, item);
 
-            var control = getLoadControl( evDataService, data[rootId] );
+            if (control) item.results.push(control);
 
-            if (control) data[rootId].results.push(control);
 
-            return data;
-        }
+        });
 
-        dataList.forEach(function (item) {
+    })
+
+    return data;
+
+};
+
+/**
+ * Have to be called after insertSubtotalsAndControlsToResults set
+ * properties 'results' inside data
+ *
+ * @param data
+ * @param evDataService
+ * @return {*}
+ */
+var insertBlankLinesToResults = function (data, evDataService) {
+
+    var dataList = [];
+    var groups = evDataService.getGroups();
+
+    Object.keys(data).forEach(function (key) {
+        dataList.push(data[key])
+    });
+
+    var subtotalObj;
+
+    dataList.forEach(function (item) {
+
+        if (item.results.length) {
 
             groups.forEach(function (group, index) {
 
-                if (item.___level === index + 1 && item.___level <= groups.length &&
-                    group.report_settings.subtotal_type) {
+                if (item.___level === index + 1 && item.___level <= groups.length) {
 
-                    subtotalObj = Object.assign({}, item.subtotal, {
+                    subtotalObj = Object.assign({}, {
                         ___group_identifier: item.___group_identifier,
                         ___group_name: item.___group_name,
-                        ___type: 'subtotal',
+                        ___type: 'blankline',
                         ___parentId: item.___id,
                         ___level: item.___level + 1
                     });
 
-                    var insertSubtotal = insertSubtotalFns[group.report_settings.subtotal_type];
-                    insertSubtotal(subtotalObj, item);
 
-                }
+                    if (group.report_settings.blankline_type === 'area') {
 
-                /*var requestParameters = evDataService.getRequestParameters(item.___id);
+                        subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
-                if (requestParameters) {
-                    if (requestParameters.pagination.count > requestParameters.pagination.page_size) {
+                        subtotalObj.___blankline_type = 'area';
 
-                        item.results.push({
-                            ___id: item.___id + '_control',
-                            ___group_identifier: item.___group_identifier,
-                            ___group_name: item.___group_name,
-                            ___type: 'control',
-                            ___parentId: item.___id,
-                            ___level: item.___level + 1
-                        });
-                    }
-                }*/
-                // item = insertLoadControl(evDataService, item);
-                var control = getLoadControl(evDataService, item);
-
-                if (control) item.results.push(control);
-
-
-            });
-
-        })
-
-        return data;
-
-    };
-
-    /**
-     * Have to be called after insertSubtotalsAndControlsToResults set
-     * properties 'results' inside data
-     *
-     * @param data
-     * @param evDataService
-     * @return {*}
-     */
-    var insertBlankLinesToResults = function (data, evDataService) {
-
-        var dataList = [];
-        var groups = evDataService.getGroups();
-
-        Object.keys(data).forEach(function (key) {
-            dataList.push(data[key])
-        });
-
-        var subtotalObj;
-
-        dataList.forEach(function (item) {
-
-            if (item.results.length) {
-
-                groups.forEach(function (group, index) {
-
-                    if (item.___level === index + 1 && item.___level <= groups.length) {
-
-                        subtotalObj = Object.assign({}, {
-                            ___group_identifier: item.___group_identifier,
-                            ___group_name: item.___group_name,
-                            ___type: 'blankline',
-                            ___parentId: item.___id,
-                            ___level: item.___level + 1
-                        });
-
-
-                        if (group.report_settings.blankline_type === 'area') {
-
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-                            subtotalObj.___blankline_type = 'area';
-
-                            item.results.push(subtotalObj);
-
-                        }
+                        item.results.push(subtotalObj);
 
                     }
 
-                })
-
-            }
-
-        });
-
-        return data;
-
-    };
-
-    var getGroupsIdsToFold = function (list, evDataService) {
-
-        var result = [];
-
-        list.forEach(function (item) {
-
-            if (item.___type === 'group' && item.___parentId !== null) {
-
-                if (item.___is_open === false) {
-                    result.push(item.___id)
-                }
-            }
-
-        });
-
-        return result;
-
-    };
-
-    var isItemInGroupsToFold = function (groupsIdsToFold, item) {
-
-        return groupsIdsToFold.indexOf(item.___parentId) !== -1
-
-    };
-
-    var lookupProxyline = function (evDataService, list, i) {
-
-        var result = false;
-
-        var groupsToCheck = [];
-
-        for (; i > 0; i = i - 1) {
-
-            if (list[i].___type === 'subtotal' && list[i].___subtotal_type === 'proxyline') {
-                groupsToCheck.push(list[i].___parentId);
-            } else {
-                if (list[i].___type !== 'group') {
-                    break;
-                }
-            }
-
-
-        }
-
-        groupsToCheck.forEach(function (groupIp) {
-
-            var item = evDataService.getData(groupIp);
-
-            var parent = evDataService.getData(item.___parentId);
-
-            if (parent.___is_open) {
-                result = true;
-            }
-
-        });
-
-
-        return result;
-
-    };
-
-    var getItemIndexFromList = function (item, list) {
-
-        var itemIndex;
-
-        for (var i = 0; i < list.length; i = i + 1) {
-
-            if (list[i].___id === item.___id) {
-                itemIndex = i;
-                break;
-            }
-
-        }
-
-        return itemIndex;
-
-    };
-
-    var handleFoldForObject = function (evDataService, item, list) {
-
-        var result = true;
-
-        var currentGroup = evDataService.getData(item.___parentId);
-
-        var itemIndex = getItemIndexFromList(item, list);
-
-        var itemParent;
-
-        for (var x = itemIndex - 1; x > 0; x = x - 1) {
-
-            itemParent = evDataService.getData(list[x].___parentId);
-
-            if (list[x].___type === 'subtotal' && list[x].___subtotal_type === 'proxyline') {
-
-                if (lookupProxyline(evDataService, list, x)) {
-                    result = true;
-                    break;
                 }
 
-            }
+            })
 
-            if (list[x].___type === 'object') {
-                result = false;
+        }
+
+    });
+
+    return data;
+
+};
+
+var getGroupsIdsToFold = function (list, evDataService) {
+
+    var result = [];
+
+    list.forEach(function (item) {
+
+        if (item.___type === 'group' && item.___parentId !== null) {
+
+            if (item.___is_open === false) {
+                result.push(item.___id)
+            }
+        }
+
+    });
+
+    return result;
+
+};
+
+var isItemInGroupsToFold = function (groupsIdsToFold, item) {
+
+    return groupsIdsToFold.indexOf(item.___parentId) !== -1
+
+};
+
+var lookupProxyline = function (evDataService, list, i) {
+
+    var result = false;
+
+    var groupsToCheck = [];
+
+    for (; i > 0; i = i - 1) {
+
+        if (list[i].___type === 'subtotal' && list[i].___subtotal_type === 'proxyline') {
+            groupsToCheck.push(list[i].___parentId);
+        } else {
+            if (list[i].___type !== 'group') {
                 break;
             }
-
-            if (list[x].___type === 'subtotal' && list[x].___subtotal_type === 'line') {
-                result = false;
-                break;
-            }
-
-            if (itemParent.___is_open === false && list[x].___type === 'subtotal' && list[x].___subtotal_type === 'arealine' && list[x].___subtotal_subtype === 'line') {
-                result = false;
-                break;
-            }
-
         }
 
 
-        return result;
-    };
+    }
 
-    var handleFoldForSubtotal = function (evDataService, item, list) {
+    groupsToCheck.forEach(function (groupIp) {
 
-        var result = false;
+        var item = evDataService.getData(groupIp);
 
-        var currentGroup = evDataService.getData(item.___parentId);
-        var parentGroup = evDataService.getData(currentGroup.___parentId);
+        var parent = evDataService.getData(item.___parentId);
 
-        var itemIndex = getItemIndexFromList(item, list);
-
-        if (item.___subtotal_type === 'line') {
-
-            if (parentGroup.___is_open) {
-                result = true;
-            }
-
-            if (lookupProxyline(evDataService, list, itemIndex - 1)) {
-                result = true;
-
-            }
-
-        }
-
-        if (item.___subtotal_type === 'arealine' && item.___subtotal_subtype === 'line') {
-
-            if (parentGroup.___is_open) {
-                result = true;
-            }
-
-            if (lookupProxyline(evDataService, list, itemIndex - 1)) {
-                result = true;
-
-            }
-        }
-
-        if (item.___subtotal_type === 'area') {
-            result = false;
-        }
-
-        if (item.___subtotal_type === 'arealine' && item.___subtotal_subtype === 'area') {
-            result = false;
-        }
-
-        if (item.___subtotal_type === 'proxyline') {
+        if (parent.___is_open) {
             result = true;
         }
 
-        return result;
+    });
 
-    };
 
-    var removeItemsFromFoldedGroups = function (list, evDataService) {
+    return result;
 
-        var result = list.concat();
+};
 
-        var groupsIdsToFold = getGroupsIdsToFold(list, evDataService);
+var getItemIndexFromList = function (item, list) {
 
-        // console.log('groupsIdsToFold', groupsIdsToFold);
+    var itemIndex;
 
-        result = result.filter(function (item) {
+    for (var i = 0; i < list.length; i = i + 1) {
 
-            if (isItemInGroupsToFold(groupsIdsToFold, item)) {
-
-                if (item.___type === 'subtotal') {
-
-                    return handleFoldForSubtotal(evDataService, item, list);
-
-                }
-
-                if (item.___type === 'object') {
-
-                    return handleFoldForObject(evDataService, item, list);
-
-                }
-
-                return false;
-
-            }
-
-            return true;
-
-        });
-
-        return result;
-
-    };
-
-    var isPrimitive = function (value) {
-
-        var propertyType = typeof value;
-
-        if (isNaN(value) && propertyType !== 'object' && !Array.isArray(value)) {
-            return true
+        if (list[i].___id === item.___id) {
+            itemIndex = i;
+            break;
         }
 
-        if (value === null) {
-            return true
+    }
+
+    return itemIndex;
+
+};
+
+var handleFoldForObject = function (evDataService, item, list) {
+
+    var result = true;
+
+    var currentGroup = evDataService.getData(item.___parentId);
+
+    var itemIndex = getItemIndexFromList(item, list);
+
+    var itemParent;
+
+    for (var x = itemIndex - 1; x > 0; x = x - 1) {
+
+        itemParent = evDataService.getData(list[x].___parentId);
+
+        if (list[x].___type === 'subtotal' && list[x].___subtotal_type === 'proxyline') {
+
+            if (lookupProxyline(evDataService, list, x)) {
+                result = true;
+                break;
+            }
+
         }
 
-        if (['string', 'number', 'boolean', 'undefined'].indexOf(propertyType) !== -1) {
-            return true
+        if (list[x].___type === 'object') {
+            result = false;
+            break;
         }
 
-
-        return false;
-
-
-    };
-
-    var simpleObjectCopy = function (obj) {
-
-        var result = {};
-        var propertyType = {};
-
-        Object.keys(obj).forEach(function (key) {
-
-            propertyType = typeof obj[key];
-
-            if (isPrimitive(obj[key])) {
-
-                result[key] = obj[key]
-
-            } else if (Array.isArray(obj[key])) {
-
-                result[key] = [];
-
-                obj[key].forEach(function (item) {
-                    result[key].push(Object.assign({}, item))
-                })
-
-            } else if (!Array.isArray(obj[key]) && propertyType === 'object') { // if object
-
-                result[key] = Object.assign({}, obj[key]) // WARNING, Nested objects is not supported
-
-            } else {
-                result[key] = obj[key]
-            }
-
-
-        });
-
-        return result
-
-    };
-
-    /**
-     * Returns deep copy of `data` from entityViewerDataService
-     *
-     * @param evDataService {Object}
-     * @return {{}}
-     */
-    var getNewDataInstance = function (evDataService) {
-
-        var sourceData = evDataService.getData();
-        var result = {};
-
-        // console.log('sourceData', evDataService.getData());
-        // console.log('getNewDataInstance Object.keys(sourceData)', Object.keys(sourceData));
-
-        Object.keys(sourceData).forEach(function (key) {
-
-            result[key] = simpleObjectCopy(sourceData[key]); // performance issue
-            delete result[key].___fromData;
-            // result[key] = Object.assign({}, sourceData[key])
-
-
-        });
-
-        return result;
-
-    };
-
-    const getMarkedRowsAndSubtotals = function (color, evDataService, globalDataService) {
-
-        const entityType = evDataService.getEntityType();
-        // const markedReportRows = localStorageService.getMarkedRows(true, entityType);
-        const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
-        const markedReportRows = rvSettings.marked_rows;
-
-        const markedSubtotals = evDataService.getMarkedSubtotals();
-
-        const markedRowsAndSubtotals = Object.keys(markedReportRows)
-            .filter(key => markedReportRows[key].color === color)
-            .concat(
-                Object.keys(markedSubtotals).filter(key => markedSubtotals[key] === color)
-            );
-
-        return markedRowsAndSubtotals;
-
-    };
-
-    const filterByRowColor = function (list, evDataService, globalDataService) {
-
-        const rowTypeFilters = evDataService.getRowTypeFilters();
-        const color = rowTypeFilters.markedRowFilters;
-
-        if (color === 'none') { //  color filter disabled
-            return list;
+        if (list[x].___type === 'subtotal' && list[x].___subtotal_type === 'line') {
+            result = false;
+            break;
         }
 
-        const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService, globalDataService);
-        const notDeletedKeys = [];
+        if (itemParent.___is_open === false && list[x].___type === 'subtotal' && list[x].___subtotal_type === 'arealine' && list[x].___subtotal_subtype === 'line') {
+            result = false;
+            break;
+        }
 
-        list.forEach(item => {
+    }
 
-            if (item.___group_name === 'root') { // root subtotal is present always
 
-                notDeletedKeys.push(item.___id)
+    return result;
+};
+
+var handleFoldForSubtotal = function (evDataService, item, list) {
+
+    var result = false;
+
+    var currentGroup = evDataService.getData(item.___parentId);
+    var parentGroup = evDataService.getData(currentGroup.___parentId);
+
+    var itemIndex = getItemIndexFromList(item, list);
+
+    if (item.___subtotal_type === 'line') {
+
+        if (parentGroup.___is_open) {
+            result = true;
+        }
+
+        if (lookupProxyline(evDataService, list, itemIndex - 1)) {
+            result = true;
+
+        }
+
+    }
+
+    if (item.___subtotal_type === 'arealine' && item.___subtotal_subtype === 'line') {
+
+        if (parentGroup.___is_open) {
+            result = true;
+        }
+
+        if (lookupProxyline(evDataService, list, itemIndex - 1)) {
+            result = true;
+
+        }
+    }
+
+    if (item.___subtotal_type === 'area') {
+        result = false;
+    }
+
+    if (item.___subtotal_type === 'arealine' && item.___subtotal_subtype === 'area') {
+        result = false;
+    }
+
+    if (item.___subtotal_type === 'proxyline') {
+        result = true;
+    }
+
+    return result;
+
+};
+
+var removeItemsFromFoldedGroups = function (list, evDataService) {
+
+    var result = list.concat();
+
+    var groupsIdsToFold = getGroupsIdsToFold(list, evDataService);
+
+    // console.log('groupsIdsToFold', groupsIdsToFold);
+
+    result = result.filter(function (item) {
+
+        if (isItemInGroupsToFold(groupsIdsToFold, item)) {
+
+            if (item.___type === 'subtotal') {
+
+                return handleFoldForSubtotal(evDataService, item, list);
 
             }
 
-            const rowColored = markedRowsAndSubtotals.includes(item.id || item.___id);
+            if (item.___type === 'object') {
 
-            if (rowColored) {
-
-                const parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
-                notDeletedKeys.push(item.___id);
-                notDeletedKeys.push(...parents.map(parent => parent.___id));
+                return handleFoldForObject(evDataService, item, list);
 
             }
 
-        })
+            return false;
 
-        return list.filter(item => {
+        }
 
-            const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && notDeletedKeys.includes(item.___parentId);
-            const isRowColored = notDeletedKeys.includes(item.___id);
+        return true;
 
-            if (isSubtotalContainsMarkedRows) {
+    });
 
-                item.results = item.results.filter(row => notDeletedKeys.includes(row.id));
+    return result;
 
-            }
+};
 
-            return isRowColored || isSubtotalContainsMarkedRows;
+var isPrimitive = function (value) {
 
-        });
+    var propertyType = typeof value;
 
-    };
+    if (isNaN(value) && propertyType !== 'object' && !Array.isArray(value)) {
+        return true
+    }
 
-    var getFlatStructure = function (evDataService, globalDataService) {
+    if (value === null) {
+        return true
+    }
 
-        var rootGroupOptions = evDataService.getRootGroupOptions();
-
-        var groups = evDataService.getGroups();
-
-        console.log('getFlatStructure.rootGroupOptions', rootGroupOptions);
-        console.log('getFlatStructure.groups', groups);
-
-        var data;
-
-        if (groups.length || rootGroupOptions.subtotal_type) {
-
-            // console.time("Calculating subtotals");
-            //
-            // calculateSubtotals(evDataService);
-            //
-            // console.timeEnd("Calculating subtotals");
-
-            calculateGrandTotal(evDataService);
-
-            console.time("Copying data");
-
-            data = getNewDataInstance(evDataService);
-
-            console.log('getFlatStructure.data', data);
-            console.log('getFlatStructure.data length', Object.keys(data).length);
-
-            console.timeEnd("Copying data");
+    if (['string', 'number', 'boolean', 'undefined'].indexOf(propertyType) !== -1) {
+        return true
+    }
 
 
-            console.time("Inserting subtotals");
-
-            data = insertSubtotalsAndControlsToResults(data, evDataService);
-            console.timeEnd("Inserting subtotals");
+    return false;
 
 
-            console.time("Calculating blankline");
+};
 
-            data = insertBlankLinesToResults(data, evDataService);
+var simpleObjectCopy = function (obj) {
 
-            localStorage.setItem('flags', [
-                '2,2,1,1,1,1', '2,2,1,1,1,1'
-            ])
+    var result = {};
+    var propertyType = {};
 
-            console.timeEnd("Calculating blankline");
+    Object.keys(obj).forEach(function (key) {
 
-            // console.log('data', data);
+        propertyType = typeof obj[key];
+
+        if (isPrimitive(obj[key])) {
+
+            result[key] = obj[key]
+
+        } else if (Array.isArray(obj[key])) {
+
+            result[key] = [];
+
+            obj[key].forEach(function (item) {
+                result[key].push(Object.assign({}, item))
+            })
+
+        } else if (!Array.isArray(obj[key]) && propertyType === 'object') { // if object
+
+            result[key] = Object.assign({}, obj[key]) // WARNING, Nested objects is not supported
 
         } else {
-
-            data = getNewDataInstance(evDataService)
-
-            var rootId = Object.keys(data).find(
-                id => data[id].___level === 0
-            );
-
-            var control = getLoadControl( evDataService, data[rootId] );
-
-            if (control) data[rootId].results.push(control);
-            // data = insertLoadControl(data)
+            result[key] = obj[key]
         }
 
 
-        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); # poor performance
-        var rootGroup = Object.assign({}, evDataService.getRootGroupData());
+    });
 
-        console.time("Converting to tree");
-        console.log("Converting to tree data", data);
+    return result
 
-        var optimize = false;
+};
 
-        if (evDataService.getEntityType().indexOf('report') !== -1) {
-            optimize = true
+/**
+ * Returns deep copy of `data` from entityViewerDataService
+ *
+ * @param evDataService {Object}
+ * @return {{}}
+ */
+var getNewDataInstance = function (evDataService) {
+
+    var sourceData = evDataService.getData();
+    var result = {};
+
+    // console.log('sourceData', evDataService.getData());
+    // console.log('getNewDataInstance Object.keys(sourceData)', Object.keys(sourceData));
+
+    Object.keys(sourceData).forEach(function (key) {
+
+        result[key] = simpleObjectCopy(sourceData[key]); // performance issue
+        delete result[key].___fromData;
+        // result[key] = Object.assign({}, sourceData[key])
+
+
+    });
+
+    return result;
+
+};
+
+const getMarkedRowsAndSubtotals = function (color, evDataService, globalDataService) {
+
+    const entityType = evDataService.getEntityType();
+    // const markedReportRows = localStorageService.getMarkedRows(true, entityType);
+    const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
+    const markedReportRows = rvSettings.marked_rows;
+
+    const markedSubtotals = evDataService.getMarkedSubtotals();
+
+    const markedRowsAndSubtotals = Object.keys(markedReportRows)
+        .filter(key => markedReportRows[key].color === color)
+        .concat(
+            Object.keys(markedSubtotals).filter(key => markedSubtotals[key] === color)
+        );
+
+    return markedRowsAndSubtotals;
+
+};
+
+const filterByRowColor = function (list, evDataService, globalDataService) {
+
+    const rowTypeFilters = evDataService.getRowTypeFilters();
+    const color = rowTypeFilters.markedRowFilters;
+
+    if (color === 'none') { //  color filter disabled
+        return list;
+    }
+
+    const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService, globalDataService);
+    const notDeletedKeys = [];
+
+    list.forEach(item => {
+
+        if (item.___group_name === 'root') { // root subtotal is present always
+
+            notDeletedKeys.push(item.___id)
+
         }
 
-        /*
-        Must be called after all items inserted
-        (insertSubtotalsAndControlsToResults, getLoadControl etc.)
-        */
-        var tree = utilsHelper.convertToTree(data, rootGroup, optimize);
-        console.log("getFlatStructure.tree", tree)
+        const rowColored = markedRowsAndSubtotals.includes(item.id || item.___id);
 
-        console.timeEnd("Converting to tree");
+        if (rowColored) {
 
-        // console.log('getFlatStructure.tree', tree);
+            const parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
+            notDeletedKeys.push(item.___id);
+            notDeletedKeys.push(...parents.map(parent => parent.___id));
 
-        console.time("Converting tree to list");
-
-        var list = utilsHelper.convertTreeToList(tree);
-
-        console.timeEnd("Converting tree to list");
-
-        console.time("Filling list with data");
-        var filledList = utilsHelper.fillListWithData(list, data);
-        console.timeEnd("Filling list with data");
-
-        console.log('Converted list length', filledList.length);
-
-        // console.log('getFlatStructure.list', list);
-
-        filledList = removeItemsFromFoldedGroups(filledList, evDataService);
-
-        filledList = filterByRowColor(filledList, evDataService, globalDataService);
-
-        return filledList;
-
-    };
-
-    // items do not removed if folded
-    var getPureFlatStructure = function (evDataService, globalDataService) {
-
-        var rootGroupOptions = evDataService.getRootGroupOptions();
-
-        var groups = evDataService.getGroups();
-
-        console.log('getFlatStructure.rootGroupOptions', rootGroupOptions);
-        console.log('getFlatStructure.groups', groups);
-
-        var data;
-
-        if (groups.length || rootGroupOptions.subtotal_type) {
-
-            // console.time("Calculating subtotals");
-
-            // calculateSubtotals(evDataService);
-
-            // console.timeEnd("Calculating subtotals");
-
-            console.time("Copying data");
-
-            data = getNewDataInstance(evDataService);
-
-            console.log('data', data);
-
-            console.timeEnd("Copying data");
-
-
-            console.time("Inserting subtotals");
-
-            data = insertSubtotalsAndControlsToResults(data, evDataService);
-
-            console.timeEnd("Inserting subtotals");
-
-
-            console.time("Calculating blankline");
-
-            data = insertBlankLinesToResults(data, evDataService);
-
-            localStorage.setItem('flags', [
-                '2,2,1,1,1,1', '2,2,1,1,1,1'
-            ])
-
-            console.timeEnd("Calculating blankline");
-
-            // console.log('data', data);
-
-        } else {
-            data = getNewDataInstance(evDataService)
         }
 
+    })
 
-        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); # poor prformance
-        var rootGroup = Object.assign({}, evDataService.getRootGroupData());
+    return list.filter(item => {
 
-        console.time("Converting to tree");
-        console.log("Converting to tree data", data);
+        const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && notDeletedKeys.includes(item.___parentId);
+        const isRowColored = notDeletedKeys.includes(item.___id);
 
-        var tree = utilsHelper.convertToTree(data, rootGroup);
+        if (isSubtotalContainsMarkedRows) {
 
-        console.log("getFlatStructure.tree", tree)
+            item.results = item.results.filter(row => notDeletedKeys.includes(row.id));
 
-        console.timeEnd("Converting to tree");
+        }
 
-        // console.log('getFlatStructure.tree', tree);
+        return isRowColored || isSubtotalContainsMarkedRows;
 
-        console.time("Converting tree to list");
+    });
 
-        var list = utilsHelper.convertTreeToList(tree);
+};
 
-        console.timeEnd("Converting tree to list");
+var getFlatStructure = function (evDataService, globalDataService) {
 
-        console.time("Filling list with data");
-        var filledList = utilsHelper.fillListWithData(list, data);
-        console.timeEnd("Filling list with data");
+    var rootGroupOptions = evDataService.getRootGroupOptions();
 
-        console.log('Converted list length', filledList.length);
+    var groups = evDataService.getGroups();
 
-        // console.log('getFlatStructure.list', list);
+    console.log('getFlatStructure.rootGroupOptions', rootGroupOptions);
+    console.log('getFlatStructure.groups', groups);
 
-        filledList = filterByRowColor(filledList, evDataService, globalDataService);
+    var data;
 
-        return filledList;
+    if (groups.length || rootGroupOptions.subtotal_type) {
 
-    };
+        // console.time("Calculating subtotals");
+        //
+        // calculateSubtotals(evDataService);
+        //
+        // console.timeEnd("Calculating subtotals");
 
-    var syncLevelFold = function (evDataService) {
+        calculateGrandTotal(evDataService);
 
-        // console.time('syncLevelFold');
+        console.time("Copying data");
 
-        var groups = evDataService.getGroups();
+        data = getNewDataInstance(evDataService);
 
-        // console.log('syncLevelFold.groups', groups);
+        console.log('getFlatStructure.data', data);
+        console.log('getFlatStructure.data length', Object.keys(data).length);
 
-        if (groups.length) {
-
-            for (var i = 0; i < groups.length; i = i + 1) {
-
-                if (groups[i].report_settings) {
-
-                    if (groups[i].report_settings.is_level_folded === true) {
-
-                        var groupsContent = evDataHelper.getGroupsByLevel(i + 1, evDataService);
-
-                        // console.log('syncLevelFold.groupsContent', groupsContent);
-
-                        groupsContent.forEach(function (groupItem) {
-                            groupItem.___is_open = false;
-
-                            var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, evDataService);
-
-                            // console.log('childrens', childrens);
-
-                            childrens.forEach(function (children) {
-
-                                if (children.___type === 'group') {
-
-                                    var item = evDataService.getData(children.___id);
-
-                                    if (item) {
-                                        item.___is_open = false;
-                                        evDataService.setData(item);
-                                    } else {
-                                        children.___is_open = false;
-                                        evDataService.setData(children);
-                                    }
+        console.timeEnd("Copying data");
 
 
+        console.time("Inserting subtotals");
+
+        data = insertSubtotalsAndControlsToResults(data, evDataService);
+        console.timeEnd("Inserting subtotals");
+
+
+        console.time("Calculating blankline");
+
+        data = insertBlankLinesToResults(data, evDataService);
+
+        localStorage.setItem('flags', [
+            '2,2,1,1,1,1', '2,2,1,1,1,1'
+        ])
+
+        console.timeEnd("Calculating blankline");
+
+        // console.log('data', data);
+
+    } else {
+
+        data = getNewDataInstance(evDataService)
+
+        var rootId = Object.keys(data).find(
+            id => data[id].___level === 0
+        );
+
+        var control = getLoadControl( evDataService, data[rootId] );
+
+        if (control) data[rootId].results.push(control);
+        // data = insertLoadControl(data)
+    }
+
+
+    // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); # poor performance
+    var rootGroup = Object.assign({}, evDataService.getRootGroupData());
+
+    console.time("Converting to tree");
+    console.log("Converting to tree data", data);
+
+    var optimize = false;
+
+    if (evDataService.getEntityType().indexOf('report') !== -1) {
+        optimize = true
+    }
+
+    /*
+    Must be called after all items inserted
+    (insertSubtotalsAndControlsToResults, getLoadControl etc.)
+    */
+    var tree = utilsHelper.convertToTree(data, rootGroup, optimize);
+    console.log("getFlatStructure.tree", tree)
+
+    console.timeEnd("Converting to tree");
+
+    // console.log('getFlatStructure.tree', tree);
+
+    console.time("Converting tree to list");
+
+    var list = utilsHelper.convertTreeToList(tree);
+
+    console.timeEnd("Converting tree to list");
+
+    console.time("Filling list with data");
+    var filledList = utilsHelper.fillListWithData(list, data);
+    console.timeEnd("Filling list with data");
+
+    console.log('Converted list length', filledList.length);
+
+    // console.log('getFlatStructure.list', list);
+
+    filledList = removeItemsFromFoldedGroups(filledList, evDataService);
+
+    filledList = filterByRowColor(filledList, evDataService, globalDataService);
+
+    return filledList;
+
+};
+
+// items do not removed if folded
+var getPureFlatStructure = function (evDataService, globalDataService) {
+
+    var rootGroupOptions = evDataService.getRootGroupOptions();
+
+    var groups = evDataService.getGroups();
+
+    console.log('getFlatStructure.rootGroupOptions', rootGroupOptions);
+    console.log('getFlatStructure.groups', groups);
+
+    var data;
+
+    if (groups.length || rootGroupOptions.subtotal_type) {
+
+        // console.time("Calculating subtotals");
+
+        // calculateSubtotals(evDataService);
+
+        // console.timeEnd("Calculating subtotals");
+
+        console.time("Copying data");
+
+        data = getNewDataInstance(evDataService);
+
+        console.log('data', data);
+
+        console.timeEnd("Copying data");
+
+
+        console.time("Inserting subtotals");
+
+        data = insertSubtotalsAndControlsToResults(data, evDataService);
+
+        console.timeEnd("Inserting subtotals");
+
+
+        console.time("Calculating blankline");
+
+        data = insertBlankLinesToResults(data, evDataService);
+
+        localStorage.setItem('flags', [
+            '2,2,1,1,1,1', '2,2,1,1,1,1'
+        ])
+
+        console.timeEnd("Calculating blankline");
+
+        // console.log('data', data);
+
+    } else {
+        data = getNewDataInstance(evDataService)
+    }
+
+
+    // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); # poor prformance
+    var rootGroup = Object.assign({}, evDataService.getRootGroupData());
+
+    console.time("Converting to tree");
+    console.log("Converting to tree data", data);
+
+    var tree = utilsHelper.convertToTree(data, rootGroup);
+
+    console.log("getFlatStructure.tree", tree)
+
+    console.timeEnd("Converting to tree");
+
+    // console.log('getFlatStructure.tree', tree);
+
+    console.time("Converting tree to list");
+
+    var list = utilsHelper.convertTreeToList(tree);
+
+    console.timeEnd("Converting tree to list");
+
+    console.time("Filling list with data");
+    var filledList = utilsHelper.fillListWithData(list, data);
+    console.timeEnd("Filling list with data");
+
+    console.log('Converted list length', filledList.length);
+
+    // console.log('getFlatStructure.list', list);
+
+    filledList = filterByRowColor(filledList, evDataService, globalDataService);
+
+    return filledList;
+
+};
+
+var syncLevelFold = function (evDataService) {
+
+    // console.time('syncLevelFold');
+
+    var groups = evDataService.getGroups();
+
+    // console.log('syncLevelFold.groups', groups);
+
+    if (groups.length) {
+
+        for (var i = 0; i < groups.length; i = i + 1) {
+
+            if (groups[i].report_settings) {
+
+                if (groups[i].report_settings.is_level_folded === true) {
+
+                    var groupsContent = evDataHelper.getGroupsByLevel(i + 1, evDataService);
+
+                    // console.log('syncLevelFold.groupsContent', groupsContent);
+
+                    groupsContent.forEach(function (groupItem) {
+                        groupItem.___is_open = false;
+
+                        var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, evDataService);
+
+                        // console.log('childrens', childrens);
+
+                        childrens.forEach(function (children) {
+
+                            if (children.___type === 'group') {
+
+                                var item = evDataService.getData(children.___id);
+
+                                if (item) {
+                                    item.___is_open = false;
+                                    evDataService.setData(item);
+                                } else {
+                                    children.___is_open = false;
+                                    evDataService.setData(children);
                                 }
 
-                            })
+
+                            }
+
+                        })
 
 
-                        });
+                    });
 
-                        break;
-
-                    }
+                    break;
 
                 }
 
@@ -968,269 +957,268 @@
 
         }
 
-        console.timeEnd('syncLevelFold');
+    }
 
-    };
+    console.timeEnd('syncLevelFold');
 
-    var getFlatListFieldUniqueValues = function (flatList, key) {
+};
 
-        var result = [];
+var getFlatListFieldUniqueValues = function (flatList, key) {
 
-        flatList.forEach(function (item) {
+    var result = [];
 
-            if (flatList.hasOwnProperty(key)) {
+    flatList.forEach(function (item) {
 
-                if (result.indexOf(item[key]) === -1) {
-                    if (item[key]) {
-                        result.push(item[key])
-                    }
+        if (flatList.hasOwnProperty(key)) {
+
+            if (result.indexOf(item[key]) === -1) {
+                if (item[key]) {
+                    result.push(item[key])
                 }
-
             }
 
-        });
-
-        return result;
-    };
-
-    var calculateProjection = function (flatList, evDataService) {
-
-        // console.time('Creating projection');
-
-        var rowHeight = evDataService.getRowHeight();
-        var offsetPx = evDataService.getVirtualScrollOffsetPx();
-        var from = Math.ceil(offsetPx / rowHeight);
-        var step = evDataService.getVirtualScrollStep();
-
-        evDataService.setProjectionLastFrom(from);
-
-        var to = from + step * 3 / 2;
-
-        // console.timeEnd('Creating projection');
-
-        from = from - (step / 2) // two rows, before viewport
-        if (from < 0) {
-            from = 0;
         }
 
-        return flatList.slice(from, to);
+    });
 
-    };
+    return result;
+};
+
+var calculateProjection = function (flatList, evDataService) {
+
+    // console.time('Creating projection');
+
+    var rowHeight = evDataService.getRowHeight();
+    var offsetPx = evDataService.getVirtualScrollOffsetPx();
+    var from = Math.ceil(offsetPx / rowHeight);
+    var step = evDataService.getVirtualScrollStep();
+
+    evDataService.setProjectionLastFrom(from);
+
+    var to = from + step * 3 / 2;
+
+    // console.timeEnd('Creating projection');
+
+    from = from - (step / 2) // two rows, before viewport
+    if (from < 0) {
+        from = 0;
+    }
+
+    return flatList.slice(from, to);
+
+};
 
 
-    var getOrCreateGroupSettings = function (evDataService, group) {
+var getOrCreateGroupSettings = function (evDataService, group) {
 
-        var layout = evDataService.getListLayout();
-        var contentType = evDataService.getContentType();
+    var layout = evDataService.getListLayout();
+    var contentType = evDataService.getContentType();
 
-        var parents = evRvCommonHelper.getParents(group.___parentId, evDataService);
+    var parents = evRvCommonHelper.getParents(group.___parentId, evDataService);
 
-        parents.pop() // skip root group
+    parents.pop() // skip root group
 
-        var reportData = localStorageService.getReportData();
+    var reportData = localStorageService.getReportData();
 
-        if (!reportData[contentType]) reportData[contentType] = {};
+    if (!reportData[contentType]) reportData[contentType] = {};
 
-        if (!reportData[contentType][layout.user_code]) {
-            reportData[contentType][layout.user_code] = {
-                groups: {}
-            }
+    if (!reportData[contentType][layout.user_code]) {
+        reportData[contentType][layout.user_code] = {
+            groups: {}
+        }
+    }
+
+    var full_path = parents.map(function (item) {
+        return item.___group_name
+    })
+
+    full_path.push(group.___group_name);
+
+    var full_path_prop = full_path.join('___'); // TODO check if safe enough
+
+    console.log('full_path', full_path);
+    console.log('full_path_prop', full_path_prop);
+
+    var groupSettings;
+
+    if (reportData[contentType][layout.user_code]['groups'][full_path_prop]) {
+        groupSettings = reportData[contentType][layout.user_code]['groups'][full_path_prop];
+    }
+
+    if (!groupSettings) {
+
+        groupSettings = {
+            full_path: full_path,
+            is_open: false // why open by default? should be closed
         }
 
-        var full_path = parents.map(function (item) {
-            return item.___group_name
-        })
+        reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;
 
-        full_path.push(group.___group_name);
-
-        var full_path_prop = full_path.join('___'); // TODO check if safe enough
-
-        console.log('full_path', full_path);
-        console.log('full_path_prop', full_path_prop);
-
-        var groupSettings;
-
-        if (reportData[contentType][layout.user_code]['groups'][full_path_prop]) {
-            groupSettings = reportData[contentType][layout.user_code]['groups'][full_path_prop];
-        }
-
-        if (!groupSettings) {
-
-            groupSettings = {
-                full_path: full_path,
-                is_open: false // why open by default? should be closed
-            }
-
-            reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;
-
-            localStorageService.cacheReportData(reportData);
-
-        }
-
-        return groupSettings;
+        localStorageService.cacheReportData(reportData);
 
     }
 
-    var setGroupSettings = function (evDataService, group, groupSettings) {
+    return groupSettings;
 
-        var layout = evDataService.getListLayout();
-        var contentType = evDataService.getContentType();
-        var groups = evDataService.getGroups();
+}
 
-        var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
+var setGroupSettings = function (evDataService, group, groupSettings) {
 
-        if (!reportData['groups']) {
-            reportData['groups'] = {}
-        }
+    var layout = evDataService.getListLayout();
+    var contentType = evDataService.getContentType();
+    var groups = evDataService.getGroups();
 
-        var full_path_prop = groupSettings.full_path;
+    var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
 
-        if (Array.isArray(full_path_prop)) {
-            full_path_prop = full_path_prop.join('___')
-        }
+    if (!reportData['groups']) {
+        reportData['groups'] = {}
+    }
 
-        reportData['groups'][full_path_prop] = groupSettings;
+    var full_path_prop = groupSettings.full_path;
 
-        reportData.groupsList = [];
+    if (Array.isArray(full_path_prop)) {
+        full_path_prop = full_path_prop.join('___')
+    }
 
-        groups.forEach(group => {
+    reportData['groups'][full_path_prop] = groupSettings;
 
-            var groupObj = {
-                key: group.key,
-                report_settings: {
-                    is_level_folded: false
-                }
-            };
+    reportData.groupsList = [];
 
-            if (group.report_settings) {
-                groupObj.report_settings.is_level_folded = !!group.report_settings.is_level_folded;
+    groups.forEach(group => {
+
+        var groupObj = {
+            key: group.key,
+            report_settings: {
+                is_level_folded: false
             }
+        };
 
-            /* if (group.report_settings && group.report_settings.is_level_folded) {
-                reportData.fullyFoldedGroups.push(group.key);
-            } */
-            reportData.groupsList.push(groupObj);
+        if (group.report_settings) {
+            groupObj.report_settings.is_level_folded = !!group.report_settings.is_level_folded;
+        }
 
-        });
+        /* if (group.report_settings && group.report_settings.is_level_folded) {
+            reportData.fullyFoldedGroups.push(group.key);
+        } */
+        reportData.groupsList.push(groupObj);
 
-        localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
+    });
+
+    localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
+
+}
+
+var markHiddenColumnsBasedOnFoldedGroups = function (evDataService) {
+
+    var groups = evDataService.getGroups();
+    var columns = evDataService.getColumns();
+    var foldedGroup = false;
+    var firstColWithoutGroupIndex = 0;
+
+    if (groups.length) {
+
+        foldedGroup = groups.find(group => group.report_settings && group.report_settings.is_level_folded);
+        firstColWithoutGroupIndex = groups.length; // index of first column without group
 
     }
 
-    var markHiddenColumnsBasedOnFoldedGroups = function (evDataService) {
+    if (foldedGroup) { // if there is fully folded group, hide columns without visible content
 
-        var groups = evDataService.getGroups();
-        var columns = evDataService.getColumns();
-        var foldedGroup = false;
-        var firstColWithoutGroupIndex = 0;
+        for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
 
-        if (groups.length) {
-
-            foldedGroup = groups.find(group => group.report_settings && group.report_settings.is_level_folded);
-            firstColWithoutGroupIndex = groups.length; // index of first column without group
+            var columnWithoutSubtotal = !columns[i].report_settings || !columns[i].report_settings.subtotal_formula_id;
+            if (columnWithoutSubtotal && !columns[i].error_data) columns[i].isHidden = true;
 
         }
 
-        if (foldedGroup) { // if there is fully folded group, hide columns without visible content
+        /* columns.forEach((column, index) => {
 
-            for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
+            var colLevel = index + 1;
+            var columnWithoutSubtotal = !column.report_settings || !column.report_settings.subtotal_formula_id;
+            var columnWithoutGroup = groups.length < colLevel;
 
-                var columnWithoutSubtotal = !columns[i].report_settings || !columns[i].report_settings.subtotal_formula_id;
-                if (columnWithoutSubtotal && !columns[i].error_data) columns[i].isHidden = true;
+            var colIsHidden = !!(columnWithoutGroup && columnWithoutSubtotal && !column.error);
+
+            if (column.isHidden !== colIsHidden) columnsChanged = true;
+
+            column.isHidden = colIsHidden;
+
+        }); */
+
+    } else {
+
+        for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
+            columns[i].isHidden = false;
+        }
+
+        /*columns.forEach((column, index) => {
+
+            var colLevel = index + 1;
+            var columnWithoutGroup = groups.length < colLevel;
+
+            if (columnWithoutGroup) {
+
+                // if (column.isHidden) columnsChanged = true;
+                column.isHidden = false;
 
             }
 
-            /* columns.forEach((column, index) => {
+        });*/
 
-                var colLevel = index + 1;
-                var columnWithoutSubtotal = !column.report_settings || !column.report_settings.subtotal_formula_id;
-                var columnWithoutGroup = groups.length < colLevel;
-
-                var colIsHidden = !!(columnWithoutGroup && columnWithoutSubtotal && !column.error);
-
-                if (column.isHidden !== colIsHidden) columnsChanged = true;
-
-                column.isHidden = colIsHidden;
-
-            }); */
-
-        } else {
-
-            for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
-                columns[i].isHidden = false;
-            }
-
-            /*columns.forEach((column, index) => {
-
-                var colLevel = index + 1;
-                var columnWithoutGroup = groups.length < colLevel;
-
-                if (columnWithoutGroup) {
-
-                    // if (column.isHidden) columnsChanged = true;
-                    column.isHidden = false;
-
-                }
-
-            });*/
-
-        }
-
-        evDataService.setColumns(columns);
-
-    };
-
-    /**
-     * Creates nested groups by object properties.
-     * `properties` array nest from highest(index = 0) to lowest level.
-     *
-     * @param {String[]} properties
-     * @returns {Object}
-     */
-    function nestGroupsBy(arr, properties) {
-        properties = Array.from(properties);
-        if (properties.length === 1) {
-            return groupBy(arr, properties[0]);
-        }
-        const property = properties.shift();
-        var grouped = groupBy(arr, property);
-        for (let key in grouped) {
-            grouped[key] = nestGroupsBy(grouped[key], Array.from(properties));
-        }
-        return grouped;
     }
 
-    /**
-     * Group objects by property.
-     * `nestGroupsBy` helper method.
-     *
-     * @param {String} property
-     * @param {Object[]} conversions
-     * @returns {Object}
-     */
-    function groupBy(conversions, property) {
-        return conversions.reduce((acc, obj) => {
-            let key = obj[property];
-            if (!acc[key]) {
-                acc[key] = [];
-            }
-            acc[key].push(obj);
-            return acc;
-        }, {});
+    evDataService.setColumns(columns);
+
+};
+
+/**
+ * Creates nested groups by object properties.
+ * `properties` array nest from highest(index = 0) to lowest level.
+ *
+ * @param {String[]} properties
+ * @returns {Object}
+ */
+function nestGroupsBy(arr, properties) {
+    properties = Array.from(properties);
+    if (properties.length === 1) {
+        return groupBy(arr, properties[0]);
     }
-
-    module.exports = {
-        getOrCreateGroupSettings: getOrCreateGroupSettings,
-        setGroupSettings: setGroupSettings,
-        syncLevelFold: syncLevelFold,
-        getFlatStructure: getFlatStructure,
-        getFlatListFieldUniqueValues: getFlatListFieldUniqueValues,
-        getPureFlatStructure: getPureFlatStructure,
-        calculateProjection: calculateProjection,
-
-        markHiddenColumnsBasedOnFoldedGroups: markHiddenColumnsBasedOnFoldedGroups,
-        nestGroupsBy: nestGroupsBy
+    const property = properties.shift();
+    var grouped = groupBy(arr, property);
+    for (let key in grouped) {
+        grouped[key] = nestGroupsBy(grouped[key], Array.from(properties));
     }
+    return grouped;
+}
 
+/**
+ * Group objects by property.
+ * `nestGroupsBy` helper method.
+ *
+ * @param {String} property
+ * @param {Object[]} conversions
+ * @returns {Object}
+ */
+function groupBy(conversions, property) {
+    return conversions.reduce((acc, obj) => {
+        let key = obj[property];
+        if (!acc[key]) {
+            acc[key] = [];
+        }
+        acc[key].push(obj);
+        return acc;
+    }, {});
+}
 
-}());
+export default {
+    getOrCreateGroupSettings: getOrCreateGroupSettings,
+    setGroupSettings: setGroupSettings,
+    syncLevelFold: syncLevelFold,
+    getFlatStructure: getFlatStructure,
+    getFlatListFieldUniqueValues: getFlatListFieldUniqueValues,
+    getPureFlatStructure: getPureFlatStructure,
+    calculateProjection: calculateProjection,
+
+    markHiddenColumnsBasedOnFoldedGroups: markHiddenColumnsBasedOnFoldedGroups,
+    nestGroupsBy: nestGroupsBy
+};

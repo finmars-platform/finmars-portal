@@ -1,56 +1,53 @@
 /**
  * Created by szhitenev on 07.12.2016.
  */
-var shellBaseUrlService = require('../../../../shell/scripts/app/services/baseUrlService.js').default;
+import shellBaseUrlService from '../../../../shell/scripts/app/services/baseUrlService.js';
 
-(function () {
+console.log("am i executed rn?", shellBaseUrlService);
 
-    console.log("am i executed rn?", shellBaseUrlService);
+'use strict';
 
-    'use strict';
 
-    /*window.base_api_url = '';
+/*window.base_api_url = '';
+const PROJECT_ENV = window.PROJECT_ENV; // Set by /public/config.js
+var resolve = function () {
 
-    var resolve = function () {
+    if (PROJECT_ENV) {
 
-        if ('__PROJECT_ENV__') {
+        var host = '__API_HOST__';
 
-            var host = '__API_HOST__';
-
-            return host;
-
-        }
-
-        return ''
-
-    };
-
-    var getAuthorizerUrl = function () {
-
-        return '__AUTHORIZER_URL__'
+        return host;
 
     }
 
-    var setMasterUserPrefix = function (_prefix) {
-        window.base_api_url = _prefix;
-    }
+    return ''
 
-    var getMasterUserPrefix = function () {
-        return window.base_api_url
-    }
+};
 
-    var getApiVersion = function () {
-        return 'api/v1'
-    }
+var getAuthorizerUrl = function () {
 
-    module.exports = {
-        resolve: resolve,
-        getAuthorizerUrl: getAuthorizerUrl,
-        setMasterUserPrefix: setMasterUserPrefix,
-        getMasterUserPrefix: getMasterUserPrefix,
+    return '__AUTHORIZER_URL__'
 
-        getApiVersion: getApiVersion
-    } */
-	module.exports = shellBaseUrlService;
+}
 
-}());
+var setMasterUserPrefix = function (_prefix) {
+    window.base_api_url = _prefix;
+}
+
+var getMasterUserPrefix = function () {
+    return window.base_api_url
+}
+
+var getApiVersion = function () {
+    return 'api/v1'
+}
+
+module.exports = {
+    resolve: resolve,
+    getAuthorizerUrl: getAuthorizerUrl,
+    setMasterUserPrefix: setMasterUserPrefix,
+    getMasterUserPrefix: getMasterUserPrefix,
+
+    getApiVersion: getApiVersion
+} */
+export default shellBaseUrlService;

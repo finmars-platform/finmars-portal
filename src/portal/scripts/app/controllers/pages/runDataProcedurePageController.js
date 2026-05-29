@@ -1,86 +1,77 @@
-/**
- * Created by szhitenev on 25.09.2020.
- */
-(function () {
+import dataProcedureService from '../../services/procedures/dataProcedureService';
+import toastNotificationService from '../../../../../core/services/toastNotificationService';
 
-    var dataProcedureService = require('../../services/procedures/dataProcedureService').default;
+export default function ($scope, $mdDialog) {
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
+    var vm = this;
 
+    vm.procedures = [];
 
-    module.exports = function ($scope, $mdDialog) {
+    vm.readyStatus = {data: false};
 
-        var vm = this;
+    vm.getList = function () {
 
-        vm.procedures = [];
+        dataProcedureService.getList().then(function (data) {
 
-        vm.readyStatus = {data: false};
+            vm.procedures = data.results;
 
-        vm.getList = function () {
+            console.log('vm.procedures', vm.procedures);
 
-            dataProcedureService.getList().then(function (data) {
+            vm.readyStatus.data = true;
 
-                vm.procedures = data.results;
+            $scope.$apply();
 
-                console.log('vm.procedures', vm.procedures);
+        })
+    };
 
-                vm.readyStatus.data = true;
+    vm.executeProcedure = function ($event, item) {
 
-                $scope.$apply();
+        console.log("Execute Procedure", item);
 
-            })
-        };
+        dataProcedureService.runProcedure(item.id, item).then(function (data) {
 
-        vm.executeProcedure = function ($event, item) {
-
-            console.log("Execute Procedure", item);
-
-            dataProcedureService.runProcedure(item.id, item).then(function (data) {
-
-                toastNotificationService.success('Success. Procedure is being processed');
+            toastNotificationService.success('Success. Procedure is being processed');
 
 
-            })
-
-        };
-
-        vm.editProcedure = function ($event, item) {
-
-            $mdDialog.show({
-                controller: 'DataProcedureEditDialogController as vm',
-                templateUrl: 'views/dialogs/procedures/data-procedure-edit-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                clickOutsideToClose: false,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                locals: {
-                    data: {
-                        item: item
-                    }
-
-                }
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-                    vm.getList();
-                }
-
-            })
-
-        };
-
-
-        vm.init = function () {
-
-            vm.getList();
-
-        };
-
-        vm.init();
+        })
 
     };
 
-}());
+    vm.editProcedure = function ($event, item) {
+
+        $mdDialog.show({
+            controller: 'DataProcedureEditDialogController as vm',
+            templateUrl: 'views/dialogs/procedures/data-procedure-edit-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            clickOutsideToClose: false,
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            multiple: true,
+            locals: {
+                data: {
+                    item: item
+                }
+
+            }
+        }).then(function (res) {
+
+            if (res.status === 'agree') {
+                vm.getList();
+            }
+
+        })
+
+    };
+
+
+    vm.init = function () {
+
+        vm.getList();
+
+    };
+
+    vm.init();
+
+};

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     'FIELD_CHANGED': 'FIELD_CHANGED',
     'MARK_FIELDS_WITH_ERRORS': 'MARK_FIELDS_WITH_ERRORS',
 

@@ -1,41 +1,86 @@
-/**
- * Created by szhitenev on 17.08.2016.
- */
-(function () {
+import logService from '../../../../../../core/services/logService';
+import dataProvidersService from '../../../services/import/dataProvidersService';
 
-    var logService = require('../../../../../../core/services/logService');
+export default function ($scope, $stateParams, $mdDialog, $state) {
 
-    var dataProvidersService = require('../../../services/import/dataProvidersService');
+    logService.controller('SettingsGeneralDataProvidersConfigController', 'initialized');
 
-    module.exports = function ($scope, $stateParams, $mdDialog, $state) {
+    var vm = this;
 
-        logService.controller('SettingsGeneralDataProvidersConfigController', 'initialized');
+    vm.providerId = $stateParams.dataProviderId;
 
-        var vm = this;
+    vm.provider = {};
 
-        vm.providerId = $stateParams.dataProviderId;
+    vm.readyStatus = {provider: false};
 
-        vm.provider = {};
+    dataProvidersService.getConfig(vm.providerId).then(function (data) {
+        vm.provider = data.results[0];
 
-        vm.readyStatus = {provider: false};
+        vm.readyStatus.provider = true;
+        $scope.$apply();
+    });
 
-        dataProvidersService.getConfig(vm.providerId).then(function (data) {
-            vm.provider = data.results[0];
+    vm.checkExtension = function ($event) {
 
-            vm.readyStatus.provider = true;
-            $scope.$apply();
-        });
+        vm.wronExtensions = true;
 
-        vm.checkExtension = function ($event) {
+        if (vm.provider && vm.provider.p12cert) {
 
-            vm.wronExtensions = true;
+            var extension = vm.provider.p12cert.name.split('.').at(-1);
+            var allowedExtensions = ['pem', 'p12'];
 
-            if (vm.provider && vm.provider.p12cert) {
+            if (allowedExtensions.indexOf(extension) === -1) {
 
-                var extension = vm.provider.p12cert.name.split('.').at(-1);
-                var allowedExtensions = ['pem', 'p12'];
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        success: {
+                            title: "Warning!",
+                            description: 'You are trying to load incorrect file'
+                        }
+                    },
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                }).then(function (res) {
+                    if (res.status === 'agree') {
+                        vm.provider.p12cert = null;
+                    }
+                });
 
-                if (allowedExtensions.indexOf(extension) === -1) {
+            } else {
+                vm.wronExtensions = false;
+            }
+
+        }
+
+    };
+
+    vm.saveConfig = function ($event) {
+
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        var formData = new FormData();
+
+        if (!vm.provider.provider) {
+
+            vm.provider.provider = 1;
+        }
+
+        formData.append('p12cert', vm.provider.p12cert);
+        formData.append('password', vm.provider.password);
+        formData.append('provider', vm.provider.provider);
+
+        if (!vm.wronExtensions) {
+            if (vm.provider.id) {
+
+                dataProvidersService.setConfig(vm.provider.id, formData).then(function (data) {
+
+                    console.log('test!', data);
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -43,103 +88,50 @@
                         targetEvent: $event,
                         locals: {
                             success: {
-                                title: "Warning!",
-                                description: 'You are trying to load incorrect file'
+                                title: "",
+                                description: "You have you have successfully add sertificate"
                             }
                         },
                         multiple: true,
                         preserveScope: true,
                         autoWrap: true,
                         skipHide: true
-                    }).then(function (res) {
-                        if (res.status === 'agree') {
-                            vm.provider.p12cert = null;
-                        }
+                    }).then(function () {
+                        $state.go('app.portal.settings.general.data-providers');
                     });
 
-                } else {
-                    vm.wronExtensions = false;
-                }
 
-            }
+                });
 
-        };
+            } else {
 
-        vm.saveConfig = function ($event) {
+                dataProvidersService.createConfig(formData).then(function (data) {
 
-            $event.preventDefault();
-            $event.stopPropagation();
-
-            var formData = new FormData();
-
-            if (!vm.provider.provider) {
-
-                vm.provider.provider = 1;
-            }
-
-            formData.append('p12cert', vm.provider.p12cert);
-            formData.append('password', vm.provider.password);
-            formData.append('provider', vm.provider.provider);
-
-            if (!vm.wronExtensions) {
-                if (vm.provider.id) {
-
-                    dataProvidersService.setConfig(vm.provider.id, formData).then(function (data) {
-
-                        console.log('test!', data);
-
-                        $mdDialog.show({
-                            controller: 'SuccessDialogController as vm',
-                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                success: {
-                                    title: "",
-                                    description: "You have you have successfully add sertificate"
-                                }
-                            },
-                            multiple: true,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        }).then(function () {
-                            $state.go('app.portal.settings.general.data-providers');
-                        });
-
-
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            success: {
+                                title: "",
+                                description: "You have you have successfully add sertificate"
+                            }
+                        },
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function () {
+                        $state.go('app.portal.settings.general.data-providers');
                     });
 
-                } else {
 
-                    dataProvidersService.createConfig(formData).then(function (data) {
+                });
 
-                        $mdDialog.show({
-                            controller: 'SuccessDialogController as vm',
-                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                success: {
-                                    title: "",
-                                    description: "You have you have successfully add sertificate"
-                                }
-                            },
-                            multiple: true,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        }).then(function () {
-                            $state.go('app.portal.settings.general.data-providers');
-                        });
-
-
-                    });
-
-                }
             }
-
         }
-
 
     }
 
-}());
+
+};

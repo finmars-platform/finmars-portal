@@ -1,40 +1,33 @@
-/**
- * Created by szhitenev on 19.10.2022.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import pricingProcedureInstanceRepository from '../../repositories/procedures/pricingProcedureInstanceRepository';
 
-    var pricingProcedureInstanceRepository = require('../../repositories/procedures/pricingProcedureInstanceRepository');
+var getList = function (options) {
+    return pricingProcedureInstanceRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return pricingProcedureInstanceRepository.getList(options);
-    };
+var getByKey = function (id) {
+    return pricingProcedureInstanceRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return pricingProcedureInstanceRepository.getByKey(id);
-    };
+var create = function (account) {
+    return pricingProcedureInstanceRepository.create(account);
+};
 
-    var create = function (account) {
-        return pricingProcedureInstanceRepository.create(account);
-    };
+var update = function (id, account) {
+    return pricingProcedureInstanceRepository.update(id, account);
+};
 
-    var update = function (id, account) {
-        return pricingProcedureInstanceRepository.update(id, account);
-    };
-
-    var deleteByKey = function (id) {
-        return pricingProcedureInstanceRepository.deleteByKey(id);
-    };
+var deleteByKey = function (id) {
+    return pricingProcedureInstanceRepository.deleteByKey(id);
+};
 
 
-    module.exports = {
+export default {
 
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey
-    }
-
-}());
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey
+};

@@ -1,30 +1,24 @@
-/**
- * Created by mevstratov on 21.02.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import instrumentDailyPricingModelService from '../../services/instrument/instrumentDailyPricingModelService';
 
-    var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
+export default function ($scope, $mdDialog) {
 
-    module.exports = function ($scope, $mdDialog) {
+    var vm = this;
 
-        var vm = this;
-
-        instrumentDailyPricingModelService.getList().then(function (data) {
-            vm.dailyPricingModels = data;
-            $scope.$apply(function () {
-                setTimeout(function () {
-                    $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                        ev.stopPropagation();
-                    });
-                }, 100);
-            });
+    instrumentDailyPricingModelService.getList().then(function (data) {
+        vm.dailyPricingModels = data;
+        $scope.$apply(function () {
+            setTimeout(function () {
+                $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                    ev.stopPropagation();
+                });
+            }, 100);
         });
+    });
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
     };
-}());
+
+};

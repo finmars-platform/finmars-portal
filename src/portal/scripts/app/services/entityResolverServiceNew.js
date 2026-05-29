@@ -2,68 +2,60 @@
  * Created by szhitenev on 16.06.2016.
  */
 
-var portfolioService = require('./portfolioService').default;
-var portfolioTypeService = require('./portfolioTypeService').default;
-var portfolioReconcileGroupService = require('./portfolioReconcileGroupService').default;
-var portfolioReconcileHistoryService = require('./portfolioReconcileHistoryService').default;
-var portfolioClassService = require('./portfolioClassService').default;
-var portfolioHistoryService = require('./portfolioHistoryService').default;
-var portfolioRegisterService = require('./portfolioRegisterService').default;
-var portfolioRegisterRecordService = require('./portfolioRegisterRecordService').default;
-var accountService = require('./accountService').default;
-var accountTypeService = require('./accountTypeService').default;
-var responsibleService = require('./responsibleService').default;
-var configurationService = require('./configurationService').default;
-var responsibleGroupService = require('./responsibleGroupService').default;
-var counterpartyService = require('./counterpartyService').default;
-var counterpartyGroupService = require('./counterpartyGroupService').default;
-var currencyService = require('./currencyService').default;
+import portfolioService from './portfolioService';
 
-var transactionService = require('./transactionService').default;
+import portfolioTypeService from './portfolioTypeService';
+import portfolioReconcileGroupService from './portfolioReconcileGroupService';
+import portfolioReconcileHistoryService from './portfolioReconcileHistoryService';
+import portfolioClassService from './portfolioClassService';
+import portfolioHistoryService from './portfolioHistoryService';
+import portfolioRegisterService from './portfolioRegisterService';
+import portfolioRegisterRecordService from './portfolioRegisterRecordService';
+import accountService from './accountService';
+import accountTypeService from './accountTypeService';
+import responsibleService from './responsibleService';
+import configurationService from './configurationService';
+import responsibleGroupService from './responsibleGroupService';
+import counterpartyService from './counterpartyService';
+import counterpartyGroupService from './counterpartyGroupService';
+import currencyService from './currencyService';
+import transactionService from './transactionService';
+
 // var transactionTypeService = require('./transactionTypeService').default;
-var transactionClassService = require('./transaction/transactionClassService').default;
-var transactionTypeGroupService = require('./transaction/transactionTypeGroupService').default;
+import transactionClassService from './transaction/transactionClassService';
 
-var complexTransactionService = require('./transaction/complexTransactionService').default;
-
-var metaEventClassService = require('./metaEventClassService').default;
-var metaNotificationClassService = require('./metaNotificationClassService').default;
-var pricingPolicyService = require('./pricingPolicyService').default;
-;
-var instrumentTypeService = require('./instrumentTypeService').default;
-var accrualCalculationModelService = require('./accrualCalculationModelService').default;
-var instrumentPeriodicityService = require('./instrumentPeriodicityService').default;
-
-var strategyService = require('./strategyService').default;
-var strategyGroupService = require('./strategyGroupService').default;
-var strategySubgroupService = require('./strategySubgroupService').default;
-
-var instrumentDailyPricingModelService = require('./instrument/instrumentDailyPricingModelService').default;
-var instrumentPricingConditionService = require('./instrument/instrumentPricingConditionService').default;
-var instrumentCountryService = require('./instrument/instrumentCountryService').default;
-var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService').default;
-var instrumentClassService = require('./instrument/instrumentClassService').default;
-var priceDownloadSchemeService = require('./import/priceDownloadSchemeService').default;
-var csvImportSchemeService = require('./import/csvImportSchemeService').default;
-var complexImportSchemeService = require('./import/complexImportSchemeService').default;
-
-var costMethodService = require('./instrument/instrumentCostMethodService').default;
-
-var currencyHistoryErrorService = require('./pricing/currencyHistoryErrorService').default;
-
-var expressionProcedureService = require('./procedures/expressionProcedureService').default;
-var dataProcedureService = require('./procedures/dataProcedureService').default;
-var pricingProcedureService = require('./procedures/pricingProcedureService').default;
-
-const scheduleService = require('./scheduleService').default;
-const auditService = require('./auditService').default;
-const uiService = require('./uiService').default;
-const tasksService = require('./tasksService').default;
-
-var cookieService = require('../../../../core/services/cookieService').default;
-var xhrService = require('../../../../core/services/xhrService').default;
-var configureRepositoryUrlService = require('./configureRepositoryUrlService').default;
-var baseUrlService = require('./baseUrlService').default;
+import transactionTypeGroupService from './transaction/transactionTypeGroupService';
+import complexTransactionService from './transaction/complexTransactionService';
+import metaEventClassService from './metaEventClassService';
+import metaNotificationClassService from './metaNotificationClassService';
+import pricingPolicyService from './pricingPolicyService';
+import instrumentTypeService from './instrumentTypeService';
+import accrualCalculationModelService from './accrualCalculationModelService';
+import instrumentPeriodicityService from './instrumentPeriodicityService';
+import strategyService from './strategyService';
+import strategyGroupService from './strategyGroupService';
+import strategySubgroupService from './strategySubgroupService';
+import instrumentDailyPricingModelService from './instrument/instrumentDailyPricingModelService';
+import instrumentPricingConditionService from './instrument/instrumentPricingConditionService';
+import instrumentCountryService from './instrument/instrumentCountryService';
+import instrumentPaymentSizeDetailService from './instrument/instrumentPaymentSizeDetailService';
+import instrumentClassService from './instrument/instrumentClassService';
+import priceDownloadSchemeService from './import/priceDownloadSchemeService';
+import csvImportSchemeService from './import/csvImportSchemeService';
+import complexImportSchemeService from './import/complexImportSchemeService';
+import costMethodService from './instrument/instrumentCostMethodService';
+import currencyHistoryErrorService from './pricing/currencyHistoryErrorService';
+import expressionProcedureService from './procedures/expressionProcedureService';
+import dataProcedureService from './procedures/dataProcedureService';
+import pricingProcedureService from './procedures/pricingProcedureService';
+import scheduleService from './scheduleService';
+import auditService from './auditService';
+import uiService from './uiService';
+import tasksService from './tasksService';
+import cookieService from '../../../../core/services/cookieService';
+import xhrService from '../../../../core/services/xhrService';
+import configureRepositoryUrlService from './configureRepositoryUrlService';
+import baseUrlService from './baseUrlService';
 
 export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService, transactionImportSchemeService, priceHistoryErrorService) {
 
@@ -1235,4 +1227,4 @@ export default function (instrumentService, transactionTypeService, priceHistory
     request: request
   }
 
-};
+}

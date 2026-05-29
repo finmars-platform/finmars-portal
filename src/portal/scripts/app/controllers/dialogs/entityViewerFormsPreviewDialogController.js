@@ -1,332 +1,321 @@
-/**
- * Created by mevstratov on 18.01.2020.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import layoutService from '../../services/entity-data-constructor/layoutService';
+import metaService from '../../services/metaService';
+import gridHelperService from '../../services/gridHelperService';
+import entityViewerHelperService from '../../services/entityViewerHelperService';
+import tooltipsService from '../../services/tooltipsService';
+import colorPalettesService from '../../services/colorPalettesService';
+import EntityViewerEditorDataService from '../../services/ev-editor/entityViewerEditorDataService';
+import EntityViewerEditorEventService from '../../services/eventService';
+import EntityViewerEditorSharedLogicHelper from '../../helpers/entityViewer/sharedLogic/entityViewerEditorSharedLogicHelper';
 
-    var layoutService = require('../../services/entity-data-constructor/layoutService');
-    var metaService = require('../../services/metaService').default;
+export default function ($scope, $mdDialog, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, inputFormTabs, data) {
 
-    var gridHelperService = require('../../services/gridHelperService');
-    var entityViewerHelperService = require('../../services/entityViewerHelperService');
+    var vm = this;
 
-	var tooltipsService = require('../../services/tooltipsService');
-	var colorPalettesService = require('../../services/colorPalettesService');
+    vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, null, null, instrumentService, entityResolverService, fieldResolverService, uiService, attributeTypeService);
 
-	var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
-	var EntityViewerEditorEventService = require('../../services/eventService');
+    vm.entityType = data.entityType;
 
-	var EntityViewerEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/entityViewerEditorSharedLogicHelper');
+    vm.entity = {$_isValid: true};
 
-	module.exports = function ($scope, $mdDialog, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, inputFormTabs, data) {
+    vm.tabs = inputFormTabs;
 
-        var vm = this;
-
-		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, null, null, instrumentService, entityResolverService, fieldResolverService, uiService, attributeTypeService);
-
-        vm.entityType = data.entityType;
-
-        vm.entity = {$_isValid: true};
-
-        vm.tabs = inputFormTabs;
-
-        vm.readyStatus = false;
+    vm.readyStatus = false;
 
 
-        vm.attrs = [];
-        vm.layoutAttrs = layoutService.getLayoutAttrs();
-        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+    vm.attrs = [];
+    vm.layoutAttrs = layoutService.getLayoutAttrs();
+    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
-        vm.range = gridHelperService.range;
+    vm.range = gridHelperService.range;
+
+    vm.attributesLayout = [];
+    // needed for vm.sharedLogic methods to work
+    vm.openedIn = 'dialog';
+
+    var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
+
+    /* vm.generateAttributesFromLayoutFields = function () {
 
         vm.attributesLayout = [];
-		// needed for vm.sharedLogic methods to work
-        vm.openedIn = 'dialog';
 
-		var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
+        var tabResult;
+        var fieldResult;
+        var i, l, e;
 
-        /* vm.generateAttributesFromLayoutFields = function () {
+        vm.tabs.forEach(function (tab) {
 
-            vm.attributesLayout = [];
+            tabResult = [];
 
-            var tabResult;
-            var fieldResult;
-            var i, l, e;
+            tab.layout.fields.forEach(function (field) {
 
-            vm.tabs.forEach(function (tab) {
+                fieldResult = {};
 
-                tabResult = [];
+                if (field && field.type !== 'empty') {
 
-                tab.layout.fields.forEach(function (field) {
+                    if (field.attribute_class === 'attr') {
 
-                    fieldResult = {};
+                        for (i = 0; i < vm.attrs.length; i = i + 1) {
 
-                    if (field && field.type !== 'empty') {
+                            if (field.key) {
 
-                        if (field.attribute_class === 'attr') {
+                                if (field.key === vm.attrs[i].user_code) {
+                                    vm.attrs[i].options = field.options;
+                                    fieldResult = vm.attrs[i];
+                                }
 
-                            for (i = 0; i < vm.attrs.length; i = i + 1) {
+                            } else {
 
-                                if (field.key) {
+                                if (field.attribute.user_code) {
 
-                                    if (field.key === vm.attrs[i].user_code) {
+                                    if (field.attribute.user_code === vm.attrs[i].user_code) {
                                         vm.attrs[i].options = field.options;
                                         fieldResult = vm.attrs[i];
                                     }
 
-                                } else {
-
-                                    if (field.attribute.user_code) {
-
-                                        if (field.attribute.user_code === vm.attrs[i].user_code) {
-                                            vm.attrs[i].options = field.options;
-                                            fieldResult = vm.attrs[i];
-                                        }
-
-                                    }
-
                                 }
-
 
                             }
 
-                        } else {
 
-                            var attrFound = false;
+                        }
 
-                            for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                                if (field.name === vm.layoutAttrs[l].name) {
-                                    vm.layoutAttrs[l].options = field.options;
-                                    fieldResult = vm.layoutAttrs[l];
+                    } else {
 
-                                    attrFound = true;
+                        var attrFound = false;
+
+                        for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                            if (field.name === vm.layoutAttrs[l].name) {
+                                vm.layoutAttrs[l].options = field.options;
+                                fieldResult = vm.layoutAttrs[l];
+
+                                attrFound = true;
+                                break;
+                            }
+                        }
+
+                        if (!attrFound) {
+                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                                if (field.name === vm.entityAttrs[e].name) {
+                                    vm.entityAttrs[e].options = field.options;
+                                    fieldResult = vm.entityAttrs[e];
                                     break;
                                 }
                             }
-
-                            if (!attrFound) {
-                                for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                                    if (field.name === vm.entityAttrs[e].name) {
-                                        vm.entityAttrs[e].options = field.options;
-                                        fieldResult = vm.entityAttrs[e];
-                                        break;
-                                    }
-                                }
-                            }
-
-                        }
-
-                        if (field.backgroundColor) {
-                            fieldResult.backgroundColor = field.backgroundColor;
                         }
 
                     }
 
-                    tabResult.push(fieldResult)
-
-
-                });
-
-                vm.attributesLayout.push(tabResult);
-
-            });
-
-        }; */
-
-        /*vm.loadPermissions = function () {
-
-            var promises = [];
-
-            promises.push(vm.getCurrentMember());
-            promises.push(vm.getGroupList());
-
-            Promise.all(promises).then(function (data) {
-
-                vm.entity.object_permissions.forEach(function (perm) {
-
-                    if (perm.permission === "change_" + vm.entityType.split('-').join('')) {
-
-                        if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
-                            vm.hasEditPermission = true;
-                        }
-
+                    if (field.backgroundColor) {
+                        fieldResult.backgroundColor = field.backgroundColor;
                     }
 
-                });
-
-                if (vm.currentMember && vm.currentMember.is_admin) {
-                    vm.hasEditPermission = true;
-                    vm.canManagePermissions = true;
                 }
 
-                vm.readyStatus.permissions = true;
-                $scope.$apply();
-            });
+                tabResult.push(fieldResult)
 
-        };
-
-        vm.getCurrentMember = function () {
-
-            return usersService.getMyCurrentMember().then(function (data) {
-
-                vm.currentMember = data;
-
-                $scope.$apply();
 
             });
-        };
 
-        vm.checkPermissions = function () {
+            vm.attributesLayout.push(tabResult);
 
-            if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
-                return false;
-            }
+        });
+
+    }; */
+
+    /*vm.loadPermissions = function () {
+
+        var promises = [];
+
+        promises.push(vm.getCurrentMember());
+        promises.push(vm.getGroupList());
+
+        Promise.all(promises).then(function (data) {
+
+            vm.entity.object_permissions.forEach(function (perm) {
+
+                if (perm.permission === "change_" + vm.entityType.split('-').join('')) {
+
+                    if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
+                        vm.hasEditPermission = true;
+                    }
+
+                }
+
+            });
 
             if (vm.currentMember && vm.currentMember.is_admin) {
-                return true
+                vm.hasEditPermission = true;
+                vm.canManagePermissions = true;
             }
 
-            var permission_code = "manage_" + vm.entityType.split('-').join('').toLowerCase();
+            vm.readyStatus.permissions = true;
+            $scope.$apply();
+        });
 
-            var haveAccess = false;
+    };
 
-            vm.entity.object_permissions.forEach(function (item) {
+    vm.getCurrentMember = function () {
 
-                if (item.permission === permission_code && vm.currentMember.groups.indexOf(item.group) !== -1) {
-                    haveAccess = true;
-                }
+        return usersService.getMyCurrentMember().then(function (data) {
 
-            });
+            vm.currentMember = data;
 
-            return haveAccess;
-        };*/
+            $scope.$apply();
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+        });
+    };
 
-        /* vm.getFormLayoutFields = function () {
+    vm.checkPermissions = function () {
 
-            vm.tabs = vm.tabs.map(function (item, index) {
+        if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
+            return false;
+        }
 
-                item.index = index;
+        if (vm.currentMember && vm.currentMember.is_admin) {
+            return true
+        }
 
-                return item
+        var permission_code = "manage_" + vm.entityType.split('-').join('').toLowerCase();
 
-            });
+        var haveAccess = false;
 
-            vm.getAttributeTypes().then(function () {
+        vm.entity.object_permissions.forEach(function (item) {
 
-                entityViewerHelperService.transformItem(vm.entity, vm.attrs);
+            if (item.permission === permission_code && vm.currentMember.groups.indexOf(item.group) !== -1) {
+                haveAccess = true;
+            }
 
-                vm.generateAttributesFromLayoutFields();
+        });
 
-                vm.readyStatus.attrs = true;
+        return haveAccess;
+    };*/
 
-                if (vm.entityType === 'instrument') {
-                    vm.getInstrumentUserFields();
-                } else {
-                    vm.readyStatus.userFields = true;
-                }
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-                $scope.$apply();
+    /* vm.getFormLayoutFields = function () {
 
-            });
+        vm.tabs = vm.tabs.map(function (item, index) {
 
-        }; */
+            item.index = index;
 
-        /* vm.getAttributeTypes = function () {
-            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
-                vm.attrs = data.results;
-            });
-        }; */
-		vm.checkReadyStatus = function () {
-			return vm.readyStatus;
-		};
+            return item
 
-        vm.bindFlex = vm.sharedLogic.bindFlex;
-        vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
+        });
 
-        /* vm.getInstrumentUserFields = function () {
+        vm.getAttributeTypes().then(function () {
 
-            uiService.getInstrumentFieldList().then(function (data) {
+            entityViewerHelperService.transformItem(vm.entity, vm.attrs);
 
-                data.results.forEach(function (userField) {
+            vm.generateAttributesFromLayoutFields();
 
-                    vm.tabs.forEach(function (tab) {
+            vm.readyStatus.attrs = true;
 
-                        tab.layout.fields.forEach(function (field) {
+            if (vm.entityType === 'instrument') {
+                vm.getInstrumentUserFields();
+            } else {
+                vm.readyStatus.userFields = true;
+            }
 
-                            if (field.attribute && field.attribute.key) {
+            $scope.$apply();
 
-                                if (field.attribute.key === userField.key) {
+        });
 
-                                    if (!field.options) {
-                                        field.options = {};
-                                    }
+    }; */
 
-                                    field.options.fieldName = userField.name;
+    /* vm.getAttributeTypes = function () {
+        return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
+            vm.attrs = data.results;
+        });
+    }; */
+    vm.checkReadyStatus = function () {
+        return vm.readyStatus;
+    };
+
+    vm.bindFlex = vm.sharedLogic.bindFlex;
+    vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
+
+    /* vm.getInstrumentUserFields = function () {
+
+        uiService.getInstrumentFieldList().then(function (data) {
+
+            data.results.forEach(function (userField) {
+
+                vm.tabs.forEach(function (tab) {
+
+                    tab.layout.fields.forEach(function (field) {
+
+                        if (field.attribute && field.attribute.key) {
+
+                            if (field.attribute.key === userField.key) {
+
+                                if (!field.options) {
+                                    field.options = {};
                                 }
 
+                                field.options.fieldName = userField.name;
                             }
 
-                        })
+                        }
 
                     })
 
-                });
+                })
 
-                vm.readyStatus.userFields = true;
+            });
 
-                $scope.$apply();
+            vm.readyStatus.userFields = true;
 
-            })
+            $scope.$apply();
 
-        }; */
+        })
+
+    }; */
 
 
-        var init = function () {
-            // vm.getAttributeTypes();
-			vm.evEditorDataService = new EntityViewerEditorDataService();
-			vm.evEditorEventService = new EntityViewerEditorEventService();
+    var init = function () {
+        // vm.getAttributeTypes();
+        vm.evEditorDataService = new EntityViewerEditorDataService();
+        vm.evEditorEventService = new EntityViewerEditorEventService();
 
-			var tooltipsOptions = {
-				pageSize: 1000,
-				filters: {
-					'content_type': contentType
-				}
-			}
+        var tooltipsOptions = {
+            pageSize: 1000,
+            filters: {
+                'content_type': contentType
+            }
+        }
 
-			tooltipsService.getTooltipsList(tooltipsOptions).then(function (data) {
-				var tooltipsList = data.results;
-				vm.evEditorDataService.setTooltipsData(tooltipsList);
-			});
+        tooltipsService.getTooltipsList(tooltipsOptions).then(function (data) {
+            var tooltipsList = data.results;
+            vm.evEditorDataService.setTooltipsData(tooltipsList);
+        });
 
-			colorPalettesService.getList({pageSize: 1000}).then(function (data) {
-				var palettesList = data.results;
-				vm.evEditorDataService.setColorPalettesList(palettesList);
-			});
+        colorPalettesService.getList({pageSize: 1000}).then(function (data) {
+            var palettesList = data.results;
+            vm.evEditorDataService.setColorPalettesList(palettesList);
+        });
 
-            // vm.getFormLayoutFields();
-			vm.sharedLogic.getFormLayout().then(formLayoutData => {
+        // vm.getFormLayoutFields();
+        vm.sharedLogic.getFormLayout().then(formLayoutData => {
 
-				vm.attrs = formLayoutData.attributeTypes;
-				vm.tabs = formLayoutData.tabs;
-				vm.attributesLayout = formLayoutData.attributesLayout;
+            vm.attrs = formLayoutData.attributeTypes;
+            vm.tabs = formLayoutData.tabs;
+            vm.attributesLayout = formLayoutData.attributesLayout;
 
-				vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+            vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
-				vm.readyStatus = true;
+            vm.readyStatus = true;
 
-				$scope.$apply();
+            $scope.$apply();
 
-			});
+        });
 
-        };
+    };
 
-        init();
+    init();
 
-    }
-
-}());
+};

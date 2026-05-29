@@ -35,22 +35,22 @@ import Keycloak from 'keycloak-js'
 
 
 
-import pickmeup from './src/core/datepicker/pickmeup.js'
+import pickmeup from 'pickmeup'
+import 'pickmeup/css/pickmeup.css'
 window.pickmeup = pickmeup;
 
 
 import ApexCharts from 'apexcharts';
 window.ApexCharts = ApexCharts;
 
-import 'pickmeup/css/pickmeup.css'
 
-import toastr from 'toastr/build/toastr.min.js';
+import toastr from 'toastr';
 import 'toastr/build/toastr.css';
 window.toastr = toastr;
 
-import jsondiffpatch from 'jsondiffpatch/dist/jsondiffpatch.umd.js'
-import 'jsondiffpatch/dist/formatters-styles/annotated.css';
-import 'jsondiffpatch/dist/formatters-styles/html.css';
+import * as jsondiffpatch from 'jsondiffpatch'
+import 'jsondiffpatch/formatters/styles/annotated.css'
+import 'jsondiffpatch/formatters/styles/html.css'
 window.jsondiffpatch = jsondiffpatch;
 
 import './src/core/ace/ace.js';

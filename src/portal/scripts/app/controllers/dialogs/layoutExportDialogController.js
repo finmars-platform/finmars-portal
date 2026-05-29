@@ -1,91 +1,84 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.isReport = data.isReport;
+    vm.layout = JSON.parse(JSON.stringify(data.layout));
 
-        vm.isReport = data.isReport;
-        vm.layout = JSON.parse(JSON.stringify(data.layout));
+    delete vm.layout.id;
+    delete vm.layout.is_default;
+    delete vm.layout.is_active;
 
-        delete vm.layout.id;
-        delete vm.layout.is_default;
-        delete vm.layout.is_active;
+    vm.filename = vm.layout.name;
 
-        vm.filename = vm.layout.name;
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+    vm.setDownloadLink = function () {
+
+        var link = document.querySelector('.export-classifier-link');
+
+        var contentType = "ui.listlayout";
+
+        if (vm.isReport){
+            contentType = 'ui.reportlayout';
+        }
+
+        var date = new Date().toISOString().slice(0,10); // yyyy-mm-dd
+
+        var configuration = {
+            "head":{
+                "date": date
+            },
+            "body":[
+                {
+                    "section_name":"configuration",
+                    "items":[
+                        {
+                            "entity": contentType,
+                            "content":[
+                                vm.layout
+                            ],
+                            "count": 1
+                        }
+                    ]
+                }
+            ]
         };
 
-        vm.setDownloadLink = function () {
 
-            var link = document.querySelector('.export-classifier-link');
+        var text = JSON.stringify(configuration);
 
-            var contentType = "ui.listlayout";
+        var file = new Blob([text], {type: 'text/plain'});
 
-            if (vm.isReport){
-                contentType = 'ui.reportlayout';
+        link.href = URL.createObjectURL(file);
+
+        link.addEventListener('click', function () {
+
+            if (vm.filename) {
+                link.download = vm.filename + '.fcfg';
+            } else {
+                link.download = 'layout.fcfg';
             }
 
-            var date = new Date().toISOString().slice(0,10); // yyyy-mm-dd
+            $mdDialog.hide();
+        })
 
-            var configuration = {
-                "head":{
-                    "date": date
-                },
-                "body":[
-                    {
-                        "section_name":"configuration",
-                        "items":[
-                            {
-                                "entity": contentType,
-                                "content":[
-                                    vm.layout
-                                ],
-                                "count": 1
-                            }
-                        ]
-                    }
-                ]
-            };
+    };
 
+    vm.init = function () {
 
-            var text = JSON.stringify(configuration);
+        setTimeout(function () {
+            vm.setDownloadLink();
 
-            var file = new Blob([text], {type: 'text/plain'});
+        }, 0);
 
-            link.href = URL.createObjectURL(file);
+    };
 
-            link.addEventListener('click', function () {
-
-                if (vm.filename) {
-                    link.download = vm.filename + '.fcfg';
-                } else {
-                    link.download = 'layout.fcfg';
-                }
-
-                $mdDialog.hide();
-            })
-
-        };
-
-        vm.init = function () {
-
-            setTimeout(function () {
-                vm.setDownloadLink();
-
-            }, 0);
-
-        };
-
-        vm.init();
-    }
-
-}());
+    vm.init();
+};

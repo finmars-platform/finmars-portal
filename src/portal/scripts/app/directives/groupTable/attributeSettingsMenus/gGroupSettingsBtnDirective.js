@@ -1,116 +1,109 @@
-/**
- * Created by mevstratov on 22.10.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import evEvents from '../../../services/entityViewerEvents';
+import metaService from '../../../services/metaService';
 
-    var evEvents = require('../../../services/entityViewerEvents');
-    var metaService = require('../../../services/metaService').default;
+export default function ($mdDialog) {
+    return {
+        restrict: 'E',
+        scope: {
+            groupKey: '=',
+            evDataService: '=',
+            evEventService: '='
+        },
+        templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-group-settings-btn-view.html',
+        link: function (scope, elem, attrs) {
 
-    module.exports = function ($mdDialog) {
-        return {
-            restrict: 'E',
-            scope: {
-                groupKey: '=',
-                evDataService: '=',
-                evEventService: '='
-            },
-            templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-group-settings-btn-view.html',
-            link: function (scope, elem, attrs) {
+            scope.entityType = scope.evDataService.getEntityType();
+            scope.isReport = metaService.isReport(scope.entityType);
 
-                scope.entityType = scope.evDataService.getEntityType();
-                scope.isReport = metaService.isReport(scope.entityType);
+            var groups = scope.evDataService.getGroups();
 
-                var groups = scope.evDataService.getGroups();
+            groups.forEach(function (group) {
+                if (group.key === scope.groupKey) {
+                    scope.group = group;
+                }
+            });
 
-                groups.forEach(function (group) {
-                    if (group.key === scope.groupKey) {
-                        scope.group = group;
+            var updateGroup = function () {
+
+                for (var i = 0; i < groups.length; i++) {
+                    if (groups[i].key === scope.groupKey) {
+                        groups[i] = JSON.parse(JSON.stringify(scope.group));
+                        break;
                     }
-                });
+                }
 
-                var updateGroup = function () {
+                scope.evDataService.setGroups(groups);
 
-                    for (var i = 0; i < groups.length; i++) {
-                        if (groups[i].key === scope.groupKey) {
-                            groups[i] = JSON.parse(JSON.stringify(scope.group));
-                            break;
-                        }
+            };
+
+            scope.openGroupSettings = function ($mdMenu, ev) {
+                $mdMenu.open(ev);
+            };
+
+            scope.reportSetSubtotalType = function (type) {
+
+                if (!scope.group.hasOwnProperty('report_settings') || scope.group.report_settings === undefined) {
+                    scope.group.report_settings = {};
+                }
+
+                if (scope.group.report_settings.subtotal_type === type) {
+                    scope.group.report_settings.subtotal_type = false;
+                } else {
+                    scope.group.report_settings.subtotal_type = type;
+                }
+
+                updateGroup();
+
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+            };
+
+            scope.reportSetBlankLineType = function (type) {
+
+                if (!scope.group.hasOwnProperty('report_settings') || scope.group.report_settings === undefined) {
+                    scope.group.report_settings = {};
+                }
+
+                if (scope.group.report_settings.blankline_type === type) {
+                    scope.group.report_settings.blankline_type = false;
+                } else {
+                    scope.group.report_settings.blankline_type = type;
+                }
+
+                updateGroup();
+
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+            };
+
+            scope.renameGroup = function ($mdMenu, $event) {
+
+                $mdDialog.show({
+                    controller: 'RenameFieldDialogController as vm',
+                    templateUrl: 'views/dialogs/rename-field-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        data: scope.group
                     }
 
-                    scope.evDataService.setGroups(groups);
+                }).then(function (res) {
 
-                };
-
-                scope.openGroupSettings = function ($mdMenu, ev) {
-                    $mdMenu.open(ev);
-                };
-
-                scope.reportSetSubtotalType = function (type) {
-
-                    if (!scope.group.hasOwnProperty('report_settings') || scope.group.report_settings === undefined) {
-                        scope.group.report_settings = {};
+                    if (res.status === 'agree') {
+                        updateGroup();
                     }
 
-                    if (scope.group.report_settings.subtotal_type === type) {
-                        scope.group.report_settings.subtotal_type = false;
-                    } else {
-                        scope.group.report_settings.subtotal_type = type;
-                    }
+                })
 
-                    updateGroup();
+            };
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
-                };
+            scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+                groups = scope.evDataService.getGroups();
+            });
 
-                scope.reportSetBlankLineType = function (type) {
-
-                    if (!scope.group.hasOwnProperty('report_settings') || scope.group.report_settings === undefined) {
-                        scope.group.report_settings = {};
-                    }
-
-                    if (scope.group.report_settings.blankline_type === type) {
-                        scope.group.report_settings.blankline_type = false;
-                    } else {
-                        scope.group.report_settings.blankline_type = type;
-                    }
-
-                    updateGroup();
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                };
-
-                scope.renameGroup = function ($mdMenu, $event) {
-
-                    $mdDialog.show({
-                        controller: 'RenameFieldDialogController as vm',
-                        templateUrl: 'views/dialogs/rename-field-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
-                        multiple: true,
-                        locals: {
-                            data: scope.group
-                        }
-
-                    }).then(function (res) {
-
-                        if (res.status === 'agree') {
-                            updateGroup();
-                        }
-
-                    })
-
-                };
-
-                scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
-                    groups = scope.evDataService.getGroups();
-                });
-
-            }
         }
     }
-
-}());
+};

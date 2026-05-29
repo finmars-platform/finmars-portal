@@ -1,29 +1,21 @@
-/**
- * Created by szhitenev on 04.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import logService from '../../../../../core/services/logService';
+import importInstrumentService from '../../services/importInstrumentService';
 
-    var logService = require('../../../../../core/services/logService');
+export default function ($scope) {
 
-    var importInstrumentService = require('../../services/importInstrumentService');
+    logService.controller('SettingsBloomberImportInstrumentController', 'initialized');
 
-    module.exports = function ($scope) {
+    var vm = this;
 
-        logService.controller('SettingsBloomberImportInstrumentController', 'initialized');
+    vm.readyStatus = {content: false};
 
-        var vm = this;
-
-        vm.readyStatus = {content: false};
-
-        importInstrumentService.getInstrumentMappingList().then(function (data) {
-            vm.mapping = data.results;
-            vm.readyStatus.content = true;
-            $scope.$apply()
-        });
+    importInstrumentService.getInstrumentMappingList().then(function (data) {
+        vm.mapping = data.results;
+        vm.readyStatus.content = true;
+        $scope.$apply()
+    });
 
 
-    };
-
-}());
+};

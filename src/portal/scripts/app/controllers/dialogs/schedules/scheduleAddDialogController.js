@@ -1,227 +1,219 @@
-/**
- * Created by szhitenev on 30.01.2020.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import scheduleService from '../../../services/scheduleService';
+import pricingProcedureService from '../../../services/procedures/pricingProcedureService';
+import dataProcedureService from '../../../services/procedures/dataProcedureService';
+import expressionProcedureService from '../../../services/procedures/expressionProcedureService';
+import schedulesHelper from '../../../helpers/schedules.helper';
 
-    var scheduleService = require('../../../services/scheduleService').default;
-    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService').default;
-    var dataProcedureService = require('../../../services/procedures/dataProcedureService').default;
-    var expressionProcedureService = require('../../../services/procedures/expressionProcedureService').default;
+export default function scheduleAddDialogController($scope, $mdDialog, data) {
 
-    const schedulesHelper = require('../../../helpers/schedules.helper');
+    var vm = this;
 
-    module.exports = function scheduleAddDialogController($scope, $mdDialog, data) {
+    vm.readyStatus = {pricingProcedures: false};
 
-        var vm = this;
+    vm.days = [];
+    vm.schedule = {
+        procedures: []
+    };
 
-        vm.readyStatus = {pricingProcedures: false};
+    vm.cron = {
+        periodicity: 1
+    };
+    vm.cron.time = new Date();
 
-        vm.days = [];
-        vm.schedule = {
-            procedures: []
-        };
+    vm.pricingProcedures = [];
+    vm.dataProcedures = [];
+    vm.expressionProcedures = [];
 
-        vm.cron = {
-            periodicity: 1
-        };
-        vm.cron.time = new Date();
-
-        vm.pricingProcedures = [];
-        vm.dataProcedures = [];
-        vm.expressionProcedures = [];
-
-        vm.setDay = function (day) {
-            if (!vm.cron.day) {
-                vm.cron.day = [];
-            }
-
-            if (vm.cron.day.indexOf(day) === -1) {
-                vm.cron.day.push(day);
-            } else {
-                vm.cron.day = vm.cron.day.filter(function (day_number){
-                    return day_number !== day
-                })
-            }
-
-
-        };
-
-        vm.resetCronExpr = function () {
+    vm.setDay = function (day) {
+        if (!vm.cron.day) {
             vm.cron.day = [];
-            vm.cron.month = [];
-        };
+        }
 
-        vm.getRange = function (num) {
-            var res = [];
-            var i;
-            for (i = 0; i < num; i = i + 1) {
-                res.push(i);
-            }
-            return res;
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.agree = function ($event) {
-
-            var minutes = moment(new Date(vm.cron.time)).format('mm');
-            var hours = moment(new Date(vm.cron.time)).format('HH');
-
-            vm.schedule.is_enabled = true;
-
-            console.log('cron.time', vm.cron.time);
-            console.log('minutes', minutes);
-            console.log('hours', hours);
-
-            vm.cron.periodicity = parseInt(vm.cron.periodicity, 10);
-
-            if (vm.cron.periodicity === 1) {
-                console.log(parseInt(minutes) + ' ' + parseInt(hours) + ' * * *');
-                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' * * *';
-            }
-            if (vm.cron.periodicity === 2) {
-                //console.log(minutes + ' ' + parseInt(hours) + ' * * ' + vm.cron.day);
-                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' * * ' + vm.cron.day.join(',');
-            }
-            if (vm.cron.periodicity === 3) {
-                //console.log(minutes + ' ' + parseInt(hours) + ' * ' + vm.cron.month + ' ' + vm.cron.day);
-                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day.join(',') + ' ' + vm.cron.month.join(',') + ' *'
-            }
-            scheduleService.create(vm.schedule).then(function (data) {
-
-                $mdDialog.hide({status: 'agree', data: 'success'});
-                $scope.$apply();
-
-            }).catch(function (reason) {
-
-                $mdDialog.show({
-                    controller: 'ValidationDialogController as vm',
-                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                    targetEvent: $event,
-                    locals: {
-                        validationData: reason
-                    },
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true
-                })
-
+        if (vm.cron.day.indexOf(day) === -1) {
+            vm.cron.day.push(day);
+        } else {
+            vm.cron.day = vm.cron.day.filter(function (day_number){
+                return day_number !== day
             })
-        };
+        }
 
-        vm.getPricingProcedures = function () {
 
-            pricingProcedureService.getList().then(function (data) {
+    };
 
-                vm.pricingProcedures = data.results;
+    vm.resetCronExpr = function () {
+        vm.cron.day = [];
+        vm.cron.month = [];
+    };
 
-                vm.readyStatus.pricingProcedures = true;
+    vm.getRange = function (num) {
+        var res = [];
+        var i;
+        for (i = 0; i < num; i = i + 1) {
+            res.push(i);
+        }
+        return res;
+    };
 
-                $scope.$apply();
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-            })
+    vm.agree = function ($event) {
 
-        };
+        var minutes = moment(new Date(vm.cron.time)).format('mm');
+        var hours = moment(new Date(vm.cron.time)).format('HH');
 
-        vm.getDataProcedures = function () {
+        vm.schedule.is_enabled = true;
 
-            dataProcedureService.getList().then(function (data) {
+        console.log('cron.time', vm.cron.time);
+        console.log('minutes', minutes);
+        console.log('hours', hours);
 
-                vm.dataProcedures = data.results;
+        vm.cron.periodicity = parseInt(vm.cron.periodicity, 10);
 
-                vm.readyStatus.dataProcedures = true;
+        if (vm.cron.periodicity === 1) {
+            console.log(parseInt(minutes) + ' ' + parseInt(hours) + ' * * *');
+            vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' * * *';
+        }
+        if (vm.cron.periodicity === 2) {
+            //console.log(minutes + ' ' + parseInt(hours) + ' * * ' + vm.cron.day);
+            vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' * * ' + vm.cron.day.join(',');
+        }
+        if (vm.cron.periodicity === 3) {
+            //console.log(minutes + ' ' + parseInt(hours) + ' * ' + vm.cron.month + ' ' + vm.cron.day);
+            vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day.join(',') + ' ' + vm.cron.month.join(',') + ' *'
+        }
+        scheduleService.create(vm.schedule).then(function (data) {
 
-                vm.orderProcedures();
+            $mdDialog.hide({status: 'agree', data: 'success'});
+            $scope.$apply();
 
-                $scope.$apply();
+        }).catch(function (reason) {
 
+            $mdDialog.show({
+                controller: 'ValidationDialogController as vm',
+                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    validationData: reason
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
             })
 
-        };
+        })
+    };
 
-        vm.getExpressionProcedures = function () {
+    vm.getPricingProcedures = function () {
 
-            expressionProcedureService.getList().then(function (data) {
+        pricingProcedureService.getList().then(function (data) {
 
-                vm.expressionProcedures = data.results;
+            vm.pricingProcedures = data.results;
 
-                vm.readyStatus.expressionProcedures = true;
+            vm.readyStatus.pricingProcedures = true;
 
-                $scope.$apply();
+            $scope.$apply();
 
-            })
+        })
 
-        };
+    };
 
+    vm.getDataProcedures = function () {
 
-        vm.getServerTime = function() {
+        dataProcedureService.getList().then(function (data) {
 
-            return new Date().toISOString().split('T')[1].split('.')[0]
+            vm.dataProcedures = data.results;
 
-        };
-
-        vm.deleteProcedure = function($event, item, $index)  {
-
-            vm.schedule.procedures.splice($index, 1);
+            vm.readyStatus.dataProcedures = true;
 
             vm.orderProcedures();
 
-        };
+            $scope.$apply();
 
-        vm.addProcedure = function ($event) {
+        })
 
-            if (!vm.schedule.procedures) {
-                vm.schedule.procedures = [];
-            }
+    };
 
-            vm.schedule.procedures.push({})
+    vm.getExpressionProcedures = function () {
 
-            vm.orderProcedures();
+        expressionProcedureService.getList().then(function (data) {
 
-        };
+            vm.expressionProcedures = data.results;
 
-        vm.orderProcedures = function () {
+            vm.readyStatus.expressionProcedures = true;
 
-            vm.schedule.procedures = vm.schedule.procedures.map(function (item, index) {
+            $scope.$apply();
 
-                item.order = index;
+        })
 
-                return item
-            })
+    };
 
-        };
 
+    vm.getServerTime = function() {
+
+        return new Date().toISOString().split('T')[1].split('.')[0]
+
+    };
+
+    vm.deleteProcedure = function($event, item, $index)  {
+
+        vm.schedule.procedures.splice($index, 1);
+
+        vm.orderProcedures();
+
+    };
+
+    vm.addProcedure = function ($event) {
+
+        if (!vm.schedule.procedures) {
+            vm.schedule.procedures = [];
+        }
+
+        vm.schedule.procedures.push({})
+
+        vm.orderProcedures();
+
+    };
+
+    vm.orderProcedures = function () {
+
+        vm.schedule.procedures = vm.schedule.procedures.map(function (item, index) {
+
+            item.order = index;
+
+            return item
+        })
+
+    };
+
+    vm.dragIconGrabbed = false;
+    vm.dragAndDropInited = false;
+
+    const turnOffDragging = function () {
         vm.dragIconGrabbed = false;
-        vm.dragAndDropInited = false;
+    };
 
-        const turnOffDragging = function () {
-            vm.dragIconGrabbed = false;
-        };
+    vm.turnOnDragging = function () {
+        vm.dragIconGrabbed = true;
+        document.body.addEventListener('mouseup', turnOffDragging, {once: true});
+    };
 
-        vm.turnOnDragging = function () {
-            vm.dragIconGrabbed = true;
-            document.body.addEventListener('mouseup', turnOffDragging, {once: true});
-        };
+    vm.dragAndDrop = schedulesHelper.createDragAndDropObject($scope, vm);
 
-        vm.dragAndDrop = schedulesHelper.createDragAndDropObject($scope, vm);
+    vm.init = function () {
 
-        vm.init = function () {
+        if (data.schedule) {
+            vm.schedule = data.schedule;
+        }
 
-            if (data.schedule) {
-                vm.schedule = data.schedule;
-            }
+        vm.getPricingProcedures();
+        vm.getDataProcedures();
+        vm.getExpressionProcedures();
+    };
 
-            vm.getPricingProcedures();
-            vm.getDataProcedures();
-            vm.getExpressionProcedures();
-        };
+    vm.init();
 
-        vm.init();
-
-    }
-
-}());
+};

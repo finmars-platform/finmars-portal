@@ -1,505 +1,496 @@
-/**
- * Created by szhitenev on 15.04.2022.
- */
-(function () {
-
-    'use strict';
+'use strict';
 
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
-    var entityResolverService = require('../../services/entityResolverService');
+import toastNotificationService from '../../../../../core/services/toastNotificationService';
+import entityResolverService from '../../services/entityResolverService';
+import importCurrencyCbondsService from '../../services/import/importCurrencyCbondsService';
+import currencyDatabaseSearchService from '../../services/currency/currencyDatabaseSearchService';
 
-    var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');
-    var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
+export default function ($scope, $mdDialog, finmarsDatabaseService, data) {
 
+    var vm = this;
 
-    module.exports = function ($scope, $mdDialog, finmarsDatabaseService, data) {
+    vm.title = data.title || 'Select entity';
 
-        var vm = this;
+    vm.localItemsTotal = 0;
+    vm.databaseItemsTotal = 0;
+    vm.hoverItem = null;
 
-        vm.title = data.title || 'Select entity';
+    vm.databaseItems = [];
+    vm.localItems = [];
 
-        vm.localItemsTotal = 0;
-        vm.databaseItemsTotal = 0;
-        vm.hoverItem = null;
+    // vm.inputText = data.inputText;
+    vm.inputText = '';
 
-        vm.databaseItems = [];
-        vm.localItems = [];
+    vm.globalPage = 1;
+    vm.totalPages = 1;
+    vm.actionType = 'default';
 
-        // vm.inputText = data.inputText;
-        vm.inputText = '';
+    vm.entityType = data.entityType;
 
-        vm.globalPage = 1;
-        vm.totalPages = 1;
-        vm.actionType = 'default';
+    vm.clearHoverItem = function () {
 
-        vm.entityType = data.entityType;
+        setTimeout(function () {
 
-        vm.clearHoverItem = function () {
-
-            setTimeout(function () {
-
-                vm.hoverItem = null
-                console.log('vm.hoverItem', vm.hoverItem)
-
-                $scope.$apply();
-            }, 0)
-
-        }
-
-        vm.setHoverItem = function ($event, option) {
-
-            setTimeout(function () {
-
-                vm.hoverItem = option
-                console.log('scope.hoverItem', vm.hoverItem)
-
-                $scope.$apply();
-            }, 0)
-        }
-
-        var onSdiError = function (error) {
-
-            vm.selectedItem = null;
-            vm.isDisabled = false;
-
-            toastNotificationService.error(error);
+            vm.hoverItem = null
+            console.log('vm.hoverItem', vm.hoverItem)
 
             $scope.$apply();
+        }, 0)
 
-        }
+    }
 
-        var selectDatabaseItem = function (selItem) {
+    vm.setHoverItem = function ($event, option) {
 
-            var promise;
+        setTimeout(function () {
 
-            if (vm.entityType === 'currency') {
+            vm.hoverItem = option
+            console.log('scope.hoverItem', vm.hoverItem)
 
-                promise = importCurrencyCbondsService.download(
-                    {
-                        user_code: selItem.user_code,
-                        mode: 1,
-                    }
-                )
+            $scope.$apply();
+        }, 0)
+    }
 
-            }
-            else if (vm.entityType === 'counterparty') {
+    var onSdiError = function (error) {
 
-                promise = finmarsDatabaseService.downloadCounterparty(
-                    {
-                        company_id: selItem.id,
-                    }
-                )
+        vm.selectedItem = null;
+        vm.isDisabled = false;
 
-            }
+        toastNotificationService.error(error);
 
-            promise.then(function (data) {
+        $scope.$apply();
 
-                vm.isDisabled = false;
+    }
 
-                if (data.errors) {
+    var selectDatabaseItem = function (selItem) {
 
-                    onSdiError( data.error );
+        var promise;
 
-                } else {
+        if (vm.entityType === 'currency') {
 
-                    $mdDialog.hide({
-                        status: 'agree',
-                        data: {
-                            task: data.task,
-                            item: selItem,
-                        }
-                    });
-
+            promise = importCurrencyCbondsService.download(
+                {
+                    user_code: selItem.user_code,
+                    mode: 1,
                 }
+            )
 
-            }).catch(function (e){
+        }
+        else if (vm.entityType === 'counterparty') {
 
-                onSdiError(e);
-
-            })
-
-        };
-
-        vm.agree = function () {
-
-            //# region Local item selected
-            var localItemSelected = vm.localItems.find(function (item) { return item.selected });
-
-            if (localItemSelected) {
-
-                vm.selectedItem = localItemSelected;
-
-                return $mdDialog.hide( { status: 'agree', data: {item: vm.selectedItem} } );
-
-            }
-            //# endregion
-
-            //# region Database item selected
-            var selectedDatabaseItem = vm.databaseItems.find(function (item) { return item.selected });
-
-            if (selectedDatabaseItem) {
-                selectDatabaseItem(selectedDatabaseItem);
-            }
-            //# endregion
-
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.onInputTextChange = function () {
-
-            vm.getList();
+            promise = finmarsDatabaseService.downloadCounterparty(
+                {
+                    company_id: selItem.id,
+                }
+            )
 
         }
 
-        vm.selectLocalItem = function (item) {
+        promise.then(function (data) {
 
-            vm.databaseItems = vm.databaseItems.map(function (item) {
+            vm.isDisabled = false;
 
-                item.selected = false;
-                return item
-            })
+            if (data.errors) {
 
-            vm.localItems = vm.localItems.map(function (item) {
+                onSdiError( data.error );
 
-                item.selected = false;
-                return item
-            })
+            } else {
 
-            item.selected = true;
-
-        }
-
-        vm.getHighlighted = function (value) {
-
-            var inputTextPieces = vm.inputText.split(' ')
-
-            var resultValue;
-
-            // Regular expression for multiple highlighting case insensitive results
-            var reg = new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
-
-            resultValue = value.replace(reg, '<span class="highlight">$1</span>');
-
-            return resultValue
-
-        }
-
-        vm.selectDatabaseItem = function (item) {
-
-            vm.databaseItems = vm.databaseItems.map(function (item) {
-
-                item.selected = false;
-                return item
-            })
-
-            vm.localItems = vm.localItems.map(function (item) {
-
-                item.selected = false;
-                return item
-            })
-
-            item.selected = true;
-
-        }
-
-        vm.addEntity = function ($event) {
-
-            var dialogParent = document.querySelector('.dialog-containers-wrap');
-
-            $mdDialog
-                .show({
-                    controller: "EntityViewerAddDialogController as vm",
-                    templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
-                    parent: dialogParent,
-                    targetEvent: $event,
-                    multiple: true,
-                    locals: {
-                        entityType: vm.entityType,
-                        entity: {},
-                        data: {},
-                    },
-                })
-                .then(function (res) {
-
-                    if (res.status === 'agree') {
-                        vm.getList();
+                $mdDialog.hide({
+                    status: 'agree',
+                    data: {
+                        task: data.task,
+                        item: selItem,
                     }
-
                 });
 
-        }
-
-
-        vm.loadMoreGlobalItems = function () {
-
-            vm.globalProcessing = true;
-
-            vm.globalPage = vm.globalPage + 1
-
-            try {
-
-                if (vm.entityType === 'currency') {
-                    // TODO replace with finmarsDatabaseService
-                    currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
-
-                        vm.globalProcessing = false;
-
-                        /*vm.databaseItemsTotal = data.resultCount;
-
-                        vm.databaseItems = data.foundItems
-
-                        vm.totalPages = Math.round(data.resultCount / 40)*/
-                        vm.databaseItemsTotal = data.count;
-
-                        vm.databaseItems = data.results;
-
-                        vm.totalPages = Math.round(data.count / 40);
-
-                        $scope.$apply();
-
-                    })
-                    .catch(function (error) {
-
-                        vm.globalProcessing = false;
-
-                        vm.databaseItems = []
-
-                        console.log("Database error occurred", error)
-
-                        $scope.$apply();
-
-                    })
-                }
-                else {
-
-                    finmarsDatabaseService.getCounterpartiesList({
-                        filters: {
-                            query: vm.inputText
-                        }
-                    })
-                    .then(function (data) {
-
-                        vm.globalProcessing = false;
-
-                        vm.databaseItemsTotal = data.count;
-
-                        vm.databaseItems = data.results;
-
-                        vm.totalPages = Math.round(data.count / 40)
-
-                        $scope.$apply();
-
-                    })
-                    .catch(function (error) {
-
-                        vm.globalProcessing = false;
-
-                        vm.databaseItems = []
-
-                        console.log("Database error occurred", error)
-
-                        $scope.$apply();
-
-                    })
-                }
-
-
-            } catch (e) {
-
-                vm.globalProcessing = false;
-
-                vm.databaseItems = []
             }
 
-        }
+        }).catch(function (e){
 
-        var getDatabaseItems = function (resolve) {
+            onSdiError(e);
 
-            var mapItems = function (item) {
-
-                item.frontOptions = {
-                    type: 'database',
-                }
-
-                return item;
-
-            }
-
-            if (vm.entityType === 'currency') {
-
-                currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1)
-                    .then(function (data) {
-
-                        /*vm.databaseItemsTotal = data.resultCount;
-
-                        vm.databaseItems = data.foundItems
-
-                        vm.totalPages = Math.round(data.resultCount / 40)*/
-                        vm.databaseItemsTotal = data.count;
-
-                        vm.databaseItems = data.results.map(mapItems);
-
-                        vm.totalPages = Math.round(data.count / 40);
-
-                        resolve();
-
-                    })
-                    .catch(function (error) {
-
-                        console.log("Database error occurred", error)
-                        vm.databaseItems = []
-
-                        resolve()
-
-                    });
-
-            }
-            else if (vm.entityType === 'counterparty') {
-
-                finmarsDatabaseService.getCounterpartiesList({
-                    filters: {
-                        query: vm.inputText,
-                        page: 1,
-                    }
-                })
-                    .then(function (data) {
-
-                        vm.databaseItemsTotal = data.count;
-
-                        vm.databaseItems = data.results.map(mapItems);
-
-                        vm.totalPages = Math.round(data.count / 40);
-
-                        resolve();
-
-                    })
-                    .catch(function (error) {
-
-                        console.log("Database error occurred", error)
-                        vm.databaseItems = []
-
-                        resolve();
-
-                    });
-
-            }
-
-        };
-
-        vm.getList = function () {
-
-            vm.processing = true;
-
-            var promises = []
-
-            promises.push( new Promise( getDatabaseItems ) );
-
-            promises.push(new Promise(function (resolve, reject) {
-
-                entityResolverService.getListLight(vm.entityType, {
-                    pageSize: 500,
-                    filters: {
-                        query: vm.inputText
-                    }
-                }).then(function (data) {
-
-                    vm.localItemsTotal = data.count;
-
-                    vm.localItems = data.results;
-
-                    vm.localItems = vm.localItems.map(function (item) {
-
-                        item.pretty_date = moment(item.modified_at).format("DD.MM.YYYY");
-
-                        item.frontOptions = {
-                            type: 'local',
-                        }
-
-                        return item;
-
-                    })
-
-                    resolve()
-
-
-                })
-
-            }))
-
-            Promise.allSettled(promises).then(function (data) {
-
-                vm.processing = false;
-
-                vm.databaseItems = vm.databaseItems.filter(function (databaseItem) {
-
-                    /* var exist = false;
-
-                    if (vm.entityType === 'currency') {
-
-                        vm.localItems.forEach(function (localItem) {
-
-                            if (localItem.user_code === databaseItem.code) {
-                                exist = true
-                            }
-
-                        })
-
-                    }
-                    else {
-
-                        vm.localItems.forEach(function (localItem) {
-
-                            if (localItem.user_code === databaseItem.user_code) {
-                                exist = true
-                            }
-
-                        })
-
-                    }
-
-                    return !exist; */
-
-                    // database item does not exist locally
-                    return !!vm.localItems.find(function (localItem) {
-                        return localItem.user_code !== databaseItem.user_code;
-                    });
-
-                });
-
-                $scope.$apply();
-
-                setTimeout(function () {
-
-                    $('.instrument-select-options-group-title').on('click', function () {
-
-                        $(this).next()[0].scrollIntoView({block: 'start', behavior: 'smooth'});
-                    });
-
-                }, 100)
-
-            })
-
-
-        }
-
-        vm.init = function () {
-
-            vm.getList();
-
-            if (data.context && data.context.action) {
-
-                vm.actionType = data.context.action;
-
-            }
-
-        }
-
-        vm.init();
+        })
 
     };
 
-}());
+    vm.agree = function () {
+
+        //# region Local item selected
+        var localItemSelected = vm.localItems.find(function (item) { return item.selected });
+
+        if (localItemSelected) {
+
+            vm.selectedItem = localItemSelected;
+
+            return $mdDialog.hide( { status: 'agree', data: {item: vm.selectedItem} } );
+
+        }
+        //# endregion
+
+        //# region Database item selected
+        var selectedDatabaseItem = vm.databaseItems.find(function (item) { return item.selected });
+
+        if (selectedDatabaseItem) {
+            selectDatabaseItem(selectedDatabaseItem);
+        }
+        //# endregion
+
+    };
+
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+    vm.onInputTextChange = function () {
+
+        vm.getList();
+
+    }
+
+    vm.selectLocalItem = function (item) {
+
+        vm.databaseItems = vm.databaseItems.map(function (item) {
+
+            item.selected = false;
+            return item
+        })
+
+        vm.localItems = vm.localItems.map(function (item) {
+
+            item.selected = false;
+            return item
+        })
+
+        item.selected = true;
+
+    }
+
+    vm.getHighlighted = function (value) {
+
+        var inputTextPieces = vm.inputText.split(' ')
+
+        var resultValue;
+
+        // Regular expression for multiple highlighting case insensitive results
+        var reg = new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
+
+        resultValue = value.replace(reg, '<span class="highlight">$1</span>');
+
+        return resultValue
+
+    }
+
+    vm.selectDatabaseItem = function (item) {
+
+        vm.databaseItems = vm.databaseItems.map(function (item) {
+
+            item.selected = false;
+            return item
+        })
+
+        vm.localItems = vm.localItems.map(function (item) {
+
+            item.selected = false;
+            return item
+        })
+
+        item.selected = true;
+
+    }
+
+    vm.addEntity = function ($event) {
+
+        var dialogParent = document.querySelector('.dialog-containers-wrap');
+
+        $mdDialog
+            .show({
+                controller: "EntityViewerAddDialogController as vm",
+                templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
+                parent: dialogParent,
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    entityType: vm.entityType,
+                    entity: {},
+                    data: {},
+                },
+            })
+            .then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.getList();
+                }
+
+            });
+
+    }
+
+
+    vm.loadMoreGlobalItems = function () {
+
+        vm.globalProcessing = true;
+
+        vm.globalPage = vm.globalPage + 1
+
+        try {
+
+            if (vm.entityType === 'currency') {
+                // TODO replace with finmarsDatabaseService
+                currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
+
+                    vm.globalProcessing = false;
+
+                    /*vm.databaseItemsTotal = data.resultCount;
+
+                    vm.databaseItems = data.foundItems
+
+                    vm.totalPages = Math.round(data.resultCount / 40)*/
+                    vm.databaseItemsTotal = data.count;
+
+                    vm.databaseItems = data.results;
+
+                    vm.totalPages = Math.round(data.count / 40);
+
+                    $scope.$apply();
+
+                })
+                .catch(function (error) {
+
+                    vm.globalProcessing = false;
+
+                    vm.databaseItems = []
+
+                    console.log("Database error occurred", error)
+
+                    $scope.$apply();
+
+                })
+            }
+            else {
+
+                finmarsDatabaseService.getCounterpartiesList({
+                    filters: {
+                        query: vm.inputText
+                    }
+                })
+                .then(function (data) {
+
+                    vm.globalProcessing = false;
+
+                    vm.databaseItemsTotal = data.count;
+
+                    vm.databaseItems = data.results;
+
+                    vm.totalPages = Math.round(data.count / 40)
+
+                    $scope.$apply();
+
+                })
+                .catch(function (error) {
+
+                    vm.globalProcessing = false;
+
+                    vm.databaseItems = []
+
+                    console.log("Database error occurred", error)
+
+                    $scope.$apply();
+
+                })
+            }
+
+
+        } catch (e) {
+
+            vm.globalProcessing = false;
+
+            vm.databaseItems = []
+        }
+
+    }
+
+    var getDatabaseItems = function (resolve) {
+
+        var mapItems = function (item) {
+
+            item.frontOptions = {
+                type: 'database',
+            }
+
+            return item;
+
+        }
+
+        if (vm.entityType === 'currency') {
+
+            currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1)
+                .then(function (data) {
+
+                    /*vm.databaseItemsTotal = data.resultCount;
+
+                    vm.databaseItems = data.foundItems
+
+                    vm.totalPages = Math.round(data.resultCount / 40)*/
+                    vm.databaseItemsTotal = data.count;
+
+                    vm.databaseItems = data.results.map(mapItems);
+
+                    vm.totalPages = Math.round(data.count / 40);
+
+                    resolve();
+
+                })
+                .catch(function (error) {
+
+                    console.log("Database error occurred", error)
+                    vm.databaseItems = []
+
+                    resolve()
+
+                });
+
+        }
+        else if (vm.entityType === 'counterparty') {
+
+            finmarsDatabaseService.getCounterpartiesList({
+                filters: {
+                    query: vm.inputText,
+                    page: 1,
+                }
+            })
+                .then(function (data) {
+
+                    vm.databaseItemsTotal = data.count;
+
+                    vm.databaseItems = data.results.map(mapItems);
+
+                    vm.totalPages = Math.round(data.count / 40);
+
+                    resolve();
+
+                })
+                .catch(function (error) {
+
+                    console.log("Database error occurred", error)
+                    vm.databaseItems = []
+
+                    resolve();
+
+                });
+
+        }
+
+    };
+
+    vm.getList = function () {
+
+        vm.processing = true;
+
+        var promises = []
+
+        promises.push( new Promise( getDatabaseItems ) );
+
+        promises.push(new Promise(function (resolve, reject) {
+
+            entityResolverService.getListLight(vm.entityType, {
+                pageSize: 500,
+                filters: {
+                    query: vm.inputText
+                }
+            }).then(function (data) {
+
+                vm.localItemsTotal = data.count;
+
+                vm.localItems = data.results;
+
+                vm.localItems = vm.localItems.map(function (item) {
+
+                    item.pretty_date = moment(item.modified_at).format("DD.MM.YYYY");
+
+                    item.frontOptions = {
+                        type: 'local',
+                    }
+
+                    return item;
+
+                })
+
+                resolve()
+
+
+            })
+
+        }))
+
+        Promise.allSettled(promises).then(function (data) {
+
+            vm.processing = false;
+
+            vm.databaseItems = vm.databaseItems.filter(function (databaseItem) {
+
+                /* var exist = false;
+
+                if (vm.entityType === 'currency') {
+
+                    vm.localItems.forEach(function (localItem) {
+
+                        if (localItem.user_code === databaseItem.code) {
+                            exist = true
+                        }
+
+                    })
+
+                }
+                else {
+
+                    vm.localItems.forEach(function (localItem) {
+
+                        if (localItem.user_code === databaseItem.user_code) {
+                            exist = true
+                        }
+
+                    })
+
+                }
+
+                return !exist; */
+
+                // database item does not exist locally
+                return !!vm.localItems.find(function (localItem) {
+                    return localItem.user_code !== databaseItem.user_code;
+                });
+
+            });
+
+            $scope.$apply();
+
+            setTimeout(function () {
+
+                $('.instrument-select-options-group-title').on('click', function () {
+
+                    $(this).next()[0].scrollIntoView({block: 'start', behavior: 'smooth'});
+                });
+
+            }, 100)
+
+        })
+
+
+    }
+
+    vm.init = function () {
+
+        vm.getList();
+
+        if (data.context && data.context.action) {
+
+            vm.actionType = data.context.action;
+
+        }
+
+    }
+
+    vm.init();
+
+};

@@ -1,35 +1,28 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function () {
-
-    'use strict';
+'use strict';
 
 
 
-    module.exports = function ($scope, $mdDialog, data) {
+export default function ($scope, $mdDialog, data) {
 
-        var vm = this;
+    var vm = this;
 
-        vm.data = data;
+    vm.data = data;
 
-        vm.getName = function (item) {
+    vm.getName = function (item) {
 
-            if (item.user_code) {
-                return item.user_code
-            }
+        if (item.user_code) {
+            return item.user_code
+        }
 
-            return item.name;
+        return item.name;
 
-        };
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
-        };
-    }
-
-}());
+    vm.agree = function () {
+        $mdDialog.hide({status: 'agree'});
+    };
+};

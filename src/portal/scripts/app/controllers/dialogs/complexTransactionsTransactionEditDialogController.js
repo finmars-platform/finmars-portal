@@ -1,91 +1,81 @@
-/**
- * Created by szhitenev on 05.05.2016.
- */
-(function () {
+'use strict';
+import logService from '../../../../../core/services/logService';
+import entityResolverService from '../../services/entityResolverService';
+import layoutService from '../../services/entity-data-constructor/layoutService';
+import metaPermissionsService from '../../services/metaPermissionsService';
 
-    'use strict';
-    var logService = require('../../../../../core/services/logService');
+export default function ($scope, $mdDialog, entityId, $state) {
 
-    var entityResolverService = require('../../services/entityResolverService');
+    var vm = this;
 
-    var layoutService = require('../../services/entity-data-constructor/layoutService');
+    //vm.readyStatus = {content: false, permissions: false, entity: false, me: false};
+    vm.entityType = "transaction";
+    console.log('entity edit dialog', parentScope);
+    vm.evAction = 'update';
+    vm.entityId = entityId;
+    vm.saveCallback = ''; // save callback handler in inner controller;
+    vm.copyCallback = ''; // copy callback handler in inner controller;
 
-    var metaPermissionsService = require('../../services/metaPermissionsService');
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-    module.exports = function ($scope, $mdDialog, entityId, $state) {
+    vm.checkVisibility = function () {
+        return true;
+    };
 
-        var vm = this;
+    vm.save = function ($event) {
+        if (vm.evAction == 'create') {
+            vm.saveCallback().then(function (options) {
 
-        //vm.readyStatus = {content: false, permissions: false, entity: false, me: false};
-        vm.entityType = "transaction";
-        console.log('entity edit dialog', parentScope);
-        vm.evAction = 'update';
-        vm.entityId = entityId;
-        vm.saveCallback = ''; // save callback handler in inner controller;
-        vm.copyCallback = ''; // copy callback handler in inner controller;
+                entityResolverService.create(options.entityType, options.entity).then(function (data) {
+                    $mdDialog.hide({res: 'agree'});
+                }).catch(function (reason) {
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.checkVisibility = function () {
-            return true;
-        };
-
-        vm.save = function ($event) {
-            if (vm.evAction == 'create') {
-                vm.saveCallback().then(function (options) {
-
-                    entityResolverService.create(options.entityType, options.entity).then(function (data) {
-                        $mdDialog.hide({res: 'agree'});
-                    }).catch(function (reason) {
-
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            parent: document.querySelector(".dialog-containers-wrap"),
-                            targetEvent: $event,
-                            locals: {
-                                validationData: reason
-                            },
-                            multiple: true,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
-
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
+                        targetEvent: $event,
+                        locals: {
+                            validationData: reason
+                        },
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
                     })
 
                 })
-            } else {
-                vm.saveCallback().then(function (options) {
 
-                    entityResolverService.update(options.entityType, options.entityId, options.entity).then(function (data) {
+            })
+        } else {
+            vm.saveCallback().then(function (options) {
 
-                        $mdDialog.hide({res: 'agree'});
+                entityResolverService.update(options.entityType, options.entityId, options.entity).then(function (data) {
 
-                    }).catch(function (reason) {
+                    $mdDialog.hide({res: 'agree'});
 
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            parent: document.querySelector(".dialog-containers-wrap"),
-                            targetEvent: $event,
-                            locals: {
-                                validationData: reason
-                            },
-                            multiple: true,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
+                }).catch(function (reason) {
 
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
+                        targetEvent: $event,
+                        locals: {
+                            validationData: reason
+                        },
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
                     })
+
                 })
+            })
 
-            }
-        };
+        }
+    };
 
-    }
-
-}());
+};

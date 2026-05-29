@@ -1,719 +1,712 @@
-/**
- * Created by szhitenev on 09.09.2021.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import importInstrumentCbondsService from '../../services/import/importInstrumentCbondsService';
+import instrumentDatabaseSearchService from '../../services/instrument/instrumentDatabaseSearchService';
+import tasksService from '../../services/tasksService';
+import utilsHelper from '../../helpers/utils.helper';
 
-    const importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService').default;
-    const instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService').default;
-    const tasksService = require('../../services/tasksService').default;
-    const utilsHelper = require('../../helpers/utils.helper').default;
+export default function ($scope, $mdDialog, toastNotificationService, instrumentService, data) {
 
-    module.exports = function ($scope, $mdDialog, toastNotificationService, instrumentService, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.isDisabled = false;
+    /** For updating local instrument from database */
+    vm.updatingEntities = false;
 
-        vm.isDisabled = false;
-        /** For updating local instrument from database */
-        vm.updatingEntities = false;
+    vm.title = data.title || 'Select instrument';
+    vm.localInstrumentsTotal = 0;
+    vm.databaseInstrumentsTotal = 0;
+    vm.hoverInstrument = null;
 
-        vm.title = data.title || 'Select instrument';
-        vm.localInstrumentsTotal = 0;
-        vm.databaseInstrumentsTotal = 0;
-        vm.hoverInstrument = null;
+    vm.databaseInstruments = [];
+    vm.localInstruments = [];
 
-        vm.databaseInstruments = [];
-        vm.localInstruments = [];
+    vm.inputText = '';
+    // vm.inputText = data.inputText;
+    vm.instrument_type = '';
 
-        vm.inputText = '';
-        // vm.inputText = data.inputText;
-        vm.instrument_type = '';
+    vm.globalPage = 1;
+    vm.totalPages = 1;
+    vm.actionType = 'default';
 
-        vm.globalPage = 1;
-        vm.totalPages = 1;
-        vm.actionType = 'default';
+    vm.instrumentTypeOptions = [
+        {id: 'bond', name: 'Bonds'},
+        {id: 'stock', name: 'Stocks'}
+    ]
 
-        vm.instrumentTypeOptions = [
-            {id: 'bond', name: 'Bonds'},
-            {id: 'stock', name: 'Stocks'}
-        ]
+    var dialogParent = document.querySelector('.dialog-containers-wrap');
 
-        var dialogParent = document.querySelector('.dialog-containers-wrap');
+    var reqPageSize = 40;
 
-        var reqPageSize = 40;
+    vm.clearHoverInstrument = function () {
 
-        vm.clearHoverInstrument = function () {
+        setTimeout(function () {
 
-            setTimeout(function () {
+            vm.hoverInstrument = null
+            console.log('vm.hoverInstrument', vm.hoverInstrument);
+            $scope.$apply();
 
-                vm.hoverInstrument = null
-                console.log('vm.hoverInstrument', vm.hoverInstrument);
-                $scope.$apply();
+        }, 0)
 
-            }, 0)
+    }
 
-        }
+    vm.setHoverInstrument = function ($event, option) {
 
-        vm.setHoverInstrument = function ($event, option) {
+        setTimeout(function () {
 
-            setTimeout(function () {
+            vm.hoverInstrument = option;
+            vm.hoverInstrument.available_for_update = false;
 
-                vm.hoverInstrument = option;
-                vm.hoverInstrument.available_for_update = false;
+            var bondOrStock = vm.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
+                vm.hoverInstrument.instrument_type_object.user_code.endsWith('stock');
 
-                var bondOrStock = vm.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
-                    vm.hoverInstrument.instrument_type_object.user_code.endsWith('stock');
+            if (vm.hoverInstrument.frontOptions.type === 'local' && bondOrStock) {
 
-                if (vm.hoverInstrument.frontOptions.type === 'local' && bondOrStock) {
+                vm.hoverInstrument.available_for_update = true;
 
-                    vm.hoverInstrument.available_for_update = true;
+                // check whether user_code is a valid isin
+                const regexp = /^([A-Z]{2})([-]{0,1}[A-Z0-9]{9}[-]{0,1})([0-9]{1})$/g;
+                const invalidIsin = !vm.hoverInstrument.user_code.match(regexp);
 
-                    // check whether user_code is a valid isin
-                    const regexp = /^([A-Z]{2})([-]{0,1}[A-Z0-9]{9}[-]{0,1})([0-9]{1})$/g;
-                    const invalidIsin = !vm.hoverInstrument.user_code.match(regexp);
-
-                    if (invalidIsin) {
-                        // can not load 'bond', 'stock' with invalid isin as user code
-                        vm.hoverInstrument.available_for_update = false;
-                    }
-
+                if (invalidIsin) {
+                    // can not load 'bond', 'stock' with invalid isin as user code
+                    vm.hoverInstrument.available_for_update = false;
                 }
 
-                $scope.$apply();
-
-            }, 100)
-        }
-
-        var onSdiError = function (error) {
-
-            vm.selectedItem = null;
-            vm.isDisabled = false;
-            vm.updatingEntities = false;
-
-            toastNotificationService.error(error);
+            }
 
             $scope.$apply();
 
-        }
+        }, 100)
+    }
 
-        var selectDatabaseItem = function (selItem) {
+    var onSdiError = function (error) {
 
-            var config = {
-                user_code: selItem.reference,
-                name: selItem.name,
-                instrument_type_user_code: selItem.instrument_type,
-                mode: 1
-            };
+        vm.selectedItem = null;
+        vm.isDisabled = false;
+        vm.updatingEntities = false;
 
-            vm.isDisabled = true;
+        toastNotificationService.error(error);
 
-            importInstrumentCbondsService.download(config).then(function (data) {
+        $scope.$apply();
 
-                vm.isDisabled = false;
+    }
 
-                if (data.errors) {
+    var selectDatabaseItem = function (selItem) {
 
-                    onSdiError( data.error );
-
-                } else {
-
-                    $mdDialog.hide({
-                        status: 'agree',
-                        data: {
-                            task: data.task,
-                            item: selItem,
-                        }
-                    });
-
-                }
-
-            }).catch(function (e){
-
-                onSdiError(e);
-
-            })
-
+        var config = {
+            user_code: selItem.reference,
+            name: selItem.name,
+            instrument_type_user_code: selItem.instrument_type,
+            mode: 1
         };
 
-        vm.agree = function () {
+        vm.isDisabled = true;
+
+        importInstrumentCbondsService.download(config).then(function (data) {
+
+            vm.isDisabled = false;
+
+            if (data.errors) {
+
+                onSdiError( data.error );
+
+            } else {
+
+                $mdDialog.hide({
+                    status: 'agree',
+                    data: {
+                        task: data.task,
+                        item: selItem,
+                    }
+                });
+
+            }
+
+        }).catch(function (e){
+
+            onSdiError(e);
+
+        })
+
+    };
+
+    vm.agree = function () {
+
+        //# region Local item selected
+        var localItemSelected = vm.localInstruments.find(function (item) { return item.selected });
+
+        if (localItemSelected) {
+
+            vm.selectedItem = localItemSelected;
+
+            return $mdDialog.hide( { status: 'agree', data: {item: vm.selectedItem} } );
+
+        }
+        //# endregion
+
+        //# region Database item selected
+        var selectedDatabaseInstrument = vm.databaseInstruments.find(function (item) { return item.selected });
+
+        if (selectedDatabaseInstrument) {
+            selectDatabaseItem(selectedDatabaseInstrument);
+        }
+        //# endregion
+
+        /*new Promise(function (resolve, reject) {
 
             //# region Local item selected
             var localItemSelected = vm.localInstruments.find(function (item) { return item.selected });
 
             if (localItemSelected) {
-
                 vm.selectedItem = localItemSelected;
-
-                return $mdDialog.hide( { status: 'agree', data: {item: vm.selectedItem} } );
-
+                return resolve();
             }
             //# endregion
 
-            //# region Database item selected
+            /!*var selectedDatabaseInstrument;
+
+            vm.databaseInstruments.forEach(function (item) {
+
+                if (item.selected) {
+                    selectedDatabaseInstrument = item
+                }
+
+            })*!/
             var selectedDatabaseInstrument = vm.databaseInstruments.find(function (item) { return item.selected });
 
             if (selectedDatabaseInstrument) {
                 selectDatabaseItem(selectedDatabaseInstrument);
             }
-            //# endregion
 
-            /*new Promise(function (resolve, reject) {
 
-                //# region Local item selected
-                var localItemSelected = vm.localInstruments.find(function (item) { return item.selected });
+        })
+            .then(function (data) {
 
-                if (localItemSelected) {
-                    vm.selectedItem = localItemSelected;
-                    return resolve();
-                }
-                //# endregion
+                if (vm.selectedItem) {
 
-                /!*var selectedDatabaseInstrument;
-
-                vm.databaseInstruments.forEach(function (item) {
-
-                    if (item.selected) {
-                        selectedDatabaseInstrument = item
+                    if (vm.actionType === 'add_instrument_dialog') {
+                        toastNotificationService.success("Instrument has been downloaded")
                     }
 
-                })*!/
-                var selectedDatabaseInstrument = vm.databaseInstruments.find(function (item) { return item.selected });
-
-                if (selectedDatabaseInstrument) {
-                    selectDatabaseItem(selectedDatabaseInstrument);
-                }
-
-
-            })
-                .then(function (data) {
-
-                    if (vm.selectedItem) {
-
-                        if (vm.actionType === 'add_instrument_dialog') {
-                            toastNotificationService.success("Instrument has been downloaded")
-                        }
-
-                        $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
-                    }
-
-                })*/
-
-
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        let abortController = new AbortController();
-
-        // TODO: use utilsHelper.debounce
-        vm.onInputTextChange = function(changedValue) {
-
-            vm.inputText = changedValue;
-
-            vm.getList();
-
-        }
-
-        vm.instrTypeSelBtns = [
-            {
-                iconObj: {
-                    icon: 'close'
-                },
-                tooltip: "Clear selected value",
-                action: {
-                    callback: function () {
-                        vm.onInstrTypeFilterChange("");
-                    },
-                }
-
-            }
-        ]
-
-        vm.onInstrTypeFilterChange = function (changedValue) {
-
-            vm.instrument_type = changedValue.id;
-
-            vm.getList();
-
-        }
-
-        vm.selectLocalInstrument = function (item) {
-
-            vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
-
-                item.selected = false;
-                return item
-            })
-
-            vm.localInstruments = vm.localInstruments.map(function (item) {
-
-                item.selected = false;
-                return item
-            })
-
-            item.selected = true;
-
-        }
-
-        vm.getHighlighted = function (value) {
-
-            var inputTextPieces = vm.inputText.split(' ')
-
-            var resultValue;
-
-            // Regular expression for multiple highlighting case insensitive results
-            var reg = new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
-
-            resultValue = value.replace(reg, '<span class="highlight">$1</span>');
-
-            return resultValue
-
-        }
-
-        vm.selectDatabaseInstrument = function (item) {
-
-            vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
-
-                item.selected = false;
-                return item
-            })
-
-            vm.localInstruments = vm.localInstruments.map(function (item) {
-
-                item.selected = false;
-                return item
-            })
-
-            item.selected = true;
-
-        }
-
-        var taskIntervalId;
-        var intervalTime = 3000;
-
-        var awaitInstrumentImport = function (taskId) {
-
-            return setInterval(function () {
-
-                tasksService.getByKey(taskId)
-                    .then(function (taskData) {
-
-                        var errorMsg = "Import aborted";
-
-                        switch (taskData.status) {
-                            case 'D':
-
-                                vm.isDisabled = false;
-                                vm.processing = false;
-                                vm.updatingEntities = false;
-
-                                toastNotificationService.success("Instrument has been loaded");
-
-                                $scope.$apply();
-
-                                clearInterval(taskIntervalId);
-
-                                break;
-
-                            case 'C':
-                            case 'T':
-                                errorMsg = "Import timed out"
-
-                                onSdiError(errorMsg);
-                                break;
-
-                            case 'E':
-
-                                toastNotificationService.error(taskData.error);
-                                onSdiError(taskData.error);
-
-                                break;
-                        }
-
-
-                    })
-                    .catch(function (error) {
-
-                        clearInterval(taskIntervalId);
-                        toastNotificationService.error(error);
-
-                        vm.processing = false;
-                        vm.isDisabled = false;
-                        vm.updatingEntities = false;
-
-                        throw error;
-
-                    });
-
-            }, intervalTime);
-
-        };
-
-        vm.updateLocalInstrument = function (item) {
-
-            /*var config = {
-                instrument_code: item.user_code,
-                mode: 1
-            };*/
-            /*var config = {
-                user_code: item.user_code,
-                name: item.name,
-                instrument_type_user_code: item.instrument_type_object.user_code,
-                mode: 1
-            };
-
-            vm.isUpdatingInstrument = true;
-
-            importInstrumentCbondsService.download(config).then(function (data) {
-
-                vm.isUpdatingInstrument = false;
-
-                $scope.$apply();
-
-
-                if (data.errors.length) {
-
-                    toastNotificationService.error(data.errors[0])
-
-
-                } else {
-
-                    toastNotificationService.success('Instrument ' + item.user_code + ' was updated')
-
+                    $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
                 }
 
             })*/
 
-            /* var iTypeUc = null;
 
-            if (item.instrument_type_object) {
-                iTypeUc = item.instrument_type_object.user_code;
+    };
 
-            } else if (item.instrument_type && typeof item.instrument_type === 'string') { // property instrument_type contains user_code
-                // some instruments still have id as value for property instrument_type
-                iTypeUc = item.instrument_type;
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-            } else {
-                console.log( "ERROR: instrument data", structuredClone(item) );
-                throw new Error("Lacking user_code of instrument type");
-            } */
+    let abortController = new AbortController();
 
-            var config = {
-                user_code: item.user_code,
-                name: item.name,
-                instrument_type_user_code: item.instrument_type,
-                mode: 1
-            };
+    // TODO: use utilsHelper.debounce
+    vm.onInputTextChange = function(changedValue) {
 
-            vm.updatingEntities = true;
+        vm.inputText = changedValue;
 
-            importInstrumentCbondsService.download(config).then(function (data) {
+        vm.getList();
 
-                vm.isDisabled = false;
+    }
 
-                if (data.errors) {
-
-                    onSdiError( data.error );
-
-                } else {
-                    taskIntervalId = awaitInstrumentImport(data.task);
-                }
-
-            }).catch(function (e){
-
-                onSdiError(e);
-
-            })
-
-        }
-
-        vm.addInstrument = function ($event) {
-
-            $mdDialog.show({
-                controller: 'EntityViewerAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                parent: dialogParent,
-                targetEvent: $event,
-                multiple: true,
-                locals: {
-                    entityType: 'instrument',
-                    entity: {},
-                    data: {}
-                }
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-                    vm.getList();
-                }
-
-            })
-
-        }
-
-        vm.importBloomberg = function ($event) {
-
-            $mdDialog.show({
-                controller: 'InstrumentDownloadDialogController as vm',
-                templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
-                parent: dialogParent,
-                targetEvent: $event,
-                multiple: true,
-                locals: {
-                    data: {}
-                }
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-                    vm.getList();
-                }
-
-            })
-
-        }
-
-        vm.loadMoreGlobalInstruments = function () {
-
-            vm.globalProcessing = true;
-
-            vm.globalPage = vm.globalPage + 1
-
-            var opts = {
-                pageSize: reqPageSize,
-                filters: {
-                    page: vm.globalPage,
-                    instrument_type: vm.instrument_type,
-                }
-            }
-
-            instrumentDatabaseSearchService.getList(vm.inputText, opts).then(function (data) {
-
-                vm.globalProcessing = false;
-
-                vm.databaseInstrumentsTotal = data.count;
-
-                data.results.forEach(function (item) {
-
-                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
-
-                    item.frontOptions = {
-                        type: 'database',
-                    };
-
-                    vm.databaseInstruments.push(item)
-
-                })
-
-                vm.totalPages = Math.round(data.count / reqPageSize);
-
-                $scope.$apply();
-
-            }).catch(function (error) {
-
-                vm.globalProcessing = false;
-
-                console.log("Instrument Database error occurred", error)
-
-                $scope.$apply();
-
-            })
-
-        }
-
-        /**
-         * Helper function for the function vm.getList()
-         *
-         * @param abortSignal {AbortSignal}
-         * @return {Promise<void>}
-         */
-        const getDatabaseInstrsList = async function (abortSignal) {
-
-            var opts = {
-                pageSize: reqPageSize,
-                filters: {
-                    page: 1,
-                    instrument_type: vm.instrument_type,
+    vm.instrTypeSelBtns = [
+        {
+            iconObj: {
+                icon: 'close'
+            },
+            tooltip: "Clear selected value",
+            action: {
+                callback: function () {
+                    vm.onInstrTypeFilterChange("");
                 },
-                abortSignal
-            };
-
-            try {
-
-                const data = await instrumentDatabaseSearchService.getList(vm.inputText, opts);
-
-                vm.databaseInstrumentsTotal = data.count;
-
-                vm.databaseInstruments = data.results;
-
-                vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
-
-                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
-
-                    item.frontOptions = {
-                        type: 'database',
-                    };
-
-                    return item;
-
-                })
-
-                vm.totalPages = Math.round(data.count / reqPageSize);
-
-                $scope.$apply();
-
-
-            } catch (e) {
-
-                if (abortSignal.aborted) {
-                    throw abortSignal.reason;
-                }
-
-                console.error("[instrumentSelectDatabaseDialogController getList] Instrument Database error occurred", e)
-
-                vm.databaseInstrumentsTotal = null;
-                vm.databaseInstruments = [];
-
-                $scope.$apply();
-
             }
-
 
         }
+    ]
 
-        vm.getList = function () {
+    vm.onInstrTypeFilterChange = function (changedValue) {
 
-            abortController.abort({key: "ABORTED_BY_CLIENT"});
+        vm.instrument_type = changedValue.id;
 
-            abortController = new AbortController();
-            const abortSignal = abortController.signal;
+        vm.getList();
 
-            vm.processing = true;
+    }
 
-            var promises = []
+    vm.selectLocalInstrument = function (item) {
 
-            vm.databaseInstrumentsTotal = null;
-            vm.databaseInstruments = [];
+        vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
 
-            if (vm.inputText.length > 2) {
-                promises.push( getDatabaseInstrsList(abortSignal) );
-            }
+            item.selected = false;
+            return item
+        })
 
-            promises.push(new Promise(function (resolve, reject) {
+        vm.localInstruments = vm.localInstruments.map(function (item) {
 
-                instrumentService.getListForSelect({
-                    pageSize: 1000,
-                    filters: {
-                        query: vm.inputText,
-                        instrument_type: vm.instrument_type
-                    },
-                    abortSignal
-                })
-                    .then(function (data) {
+            item.selected = false;
+            return item
+        })
 
-                        vm.localInstrumentsTotal = data.count;
+        item.selected = true;
 
-                        vm.localInstruments = data.results;
+    }
 
-                        vm.localInstruments = vm.localInstruments.map(function (item) {
+    vm.getHighlighted = function (value) {
 
-                            item.pretty_date = moment(item.modified_at).format("DD.MM.YYYY");
+        var inputTextPieces = vm.inputText.split(' ')
 
-                            item.frontOptions = {
-                                type: 'local',
-                            };
+        var resultValue;
 
-                            return item;
+        // Regular expression for multiple highlighting case insensitive results
+        var reg = new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
 
-                        })
+        resultValue = value.replace(reg, '<span class="highlight">$1</span>');
 
-                        resolve()
+        return resultValue
 
-                    })
-                    .catch(function (error) {
+    }
 
-                        if (abortSignal.aborted) {
-                            return reject(abortSignal.reason);
-                        }
+    vm.selectDatabaseInstrument = function (item) {
 
-                        console.error("[instrumentSelectDatabaseDialogController getList] Error occurred while getting local instruments", error)
-                        vm.localInstruments = [];
-                        vm.localInstrumentsTotal = null;
+        vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
 
-                        $scope.$apply();
-                        resolve();
+            item.selected = false;
+            return item
+        })
 
-                    })
+        vm.localInstruments = vm.localInstruments.map(function (item) {
 
-            }))
+            item.selected = false;
+            return item
+        })
 
-            Promise.all(promises)
-                .then(function (data) {
+        item.selected = true;
 
-                    vm.databaseInstruments = vm.databaseInstruments.filter(function (databaseInstrument) {
+    }
 
-                        var exist = false;
+    var taskIntervalId;
+    var intervalTime = 3000;
 
-                        vm.localInstruments.forEach(function (localInstrument) {
+    var awaitInstrumentImport = function (taskId) {
 
-                            if (localInstrument.user_code === databaseInstrument.reference) {
-                                exist = true;
-                            }
+        return setInterval(function () {
 
-                            if (localInstrument.reference_for_pricing === databaseInstrument.reference) {
-                                exist = true;
-                            }
+            tasksService.getByKey(taskId)
+                .then(function (taskData) {
 
-                        })
+                    var errorMsg = "Import aborted";
 
-                        return !exist;
+                    switch (taskData.status) {
+                        case 'D':
 
-                    })
+                            vm.isDisabled = false;
+                            vm.processing = false;
+                            vm.updatingEntities = false;
 
-                    vm.processing = false;
+                            toastNotificationService.success("Instrument has been loaded");
 
-                    $scope.$apply();
+                            $scope.$apply();
 
-                    setTimeout(function () {
+                            clearInterval(taskIntervalId);
 
-                        $('.instrument-select-options-group-title').on('click', function () {
+                            break;
 
-                            $(this).next()[0].scrollIntoView({block: 'start', behavior: 'smooth'});
-                        });
+                        case 'C':
+                        case 'T':
+                            errorMsg = "Import timed out"
 
-                    }, 100)
+                            onSdiError(errorMsg);
+                            break;
+
+                        case 'E':
+
+                            toastNotificationService.error(taskData.error);
+                            onSdiError(taskData.error);
+
+                            break;
+                    }
+
 
                 })
                 .catch(function (error) {
 
-                    if (!abortSignal.aborted) {
-                        throw error;
-                    }
+                    clearInterval(taskIntervalId);
+                    toastNotificationService.error(error);
+
+                    vm.processing = false;
+                    vm.isDisabled = false;
+                    vm.updatingEntities = false;
+
+                    throw error;
 
                 });
 
+        }, intervalTime);
+
+    };
+
+    vm.updateLocalInstrument = function (item) {
+
+        /*var config = {
+            instrument_code: item.user_code,
+            mode: 1
+        };*/
+        /*var config = {
+            user_code: item.user_code,
+            name: item.name,
+            instrument_type_user_code: item.instrument_type_object.user_code,
+            mode: 1
+        };
+
+        vm.isUpdatingInstrument = true;
+
+        importInstrumentCbondsService.download(config).then(function (data) {
+
+            vm.isUpdatingInstrument = false;
+
+            $scope.$apply();
+
+
+            if (data.errors.length) {
+
+                toastNotificationService.error(data.errors[0])
+
+
+            } else {
+
+                toastNotificationService.success('Instrument ' + item.user_code + ' was updated')
+
+            }
+
+        })*/
+
+        /* var iTypeUc = null;
+
+        if (item.instrument_type_object) {
+            iTypeUc = item.instrument_type_object.user_code;
+
+        } else if (item.instrument_type && typeof item.instrument_type === 'string') { // property instrument_type contains user_code
+            // some instruments still have id as value for property instrument_type
+            iTypeUc = item.instrument_type;
+
+        } else {
+            console.log( "ERROR: instrument data", structuredClone(item) );
+            throw new Error("Lacking user_code of instrument type");
+        } */
+
+        var config = {
+            user_code: item.user_code,
+            name: item.name,
+            instrument_type_user_code: item.instrument_type,
+            mode: 1
+        };
+
+        vm.updatingEntities = true;
+
+        importInstrumentCbondsService.download(config).then(function (data) {
+
+            vm.isDisabled = false;
+
+            if (data.errors) {
+
+                onSdiError( data.error );
+
+            } else {
+                taskIntervalId = awaitInstrumentImport(data.task);
+            }
+
+        }).catch(function (e){
+
+            onSdiError(e);
+
+        })
+
+    }
+
+    vm.addInstrument = function ($event) {
+
+        $mdDialog.show({
+            controller: 'EntityViewerAddDialogController as vm',
+            templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+            parent: dialogParent,
+            targetEvent: $event,
+            multiple: true,
+            locals: {
+                entityType: 'instrument',
+                entity: {},
+                data: {}
+            }
+        }).then(function (res) {
+
+            if (res.status === 'agree') {
+                vm.getList();
+            }
+
+        })
+
+    }
+
+    vm.importBloomberg = function ($event) {
+
+        $mdDialog.show({
+            controller: 'InstrumentDownloadDialogController as vm',
+            templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+            parent: dialogParent,
+            targetEvent: $event,
+            multiple: true,
+            locals: {
+                data: {}
+            }
+        }).then(function (res) {
+
+            if (res.status === 'agree') {
+                vm.getList();
+            }
+
+        })
+
+    }
+
+    vm.loadMoreGlobalInstruments = function () {
+
+        vm.globalProcessing = true;
+
+        vm.globalPage = vm.globalPage + 1
+
+        var opts = {
+            pageSize: reqPageSize,
+            filters: {
+                page: vm.globalPage,
+                instrument_type: vm.instrument_type,
+            }
         }
 
-        vm.init = function () {
+        instrumentDatabaseSearchService.getList(vm.inputText, opts).then(function (data) {
 
-            vm.getList();
+            vm.globalProcessing = false;
 
-            if (data.context) {
+            vm.databaseInstrumentsTotal = data.count;
 
-                if (data.context.action) {
+            data.results.forEach(function (item) {
 
-                    vm.actionType = data.context.action;
+                item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
 
+                item.frontOptions = {
+                    type: 'database',
+                };
+
+                vm.databaseInstruments.push(item)
+
+            })
+
+            vm.totalPages = Math.round(data.count / reqPageSize);
+
+            $scope.$apply();
+
+        }).catch(function (error) {
+
+            vm.globalProcessing = false;
+
+            console.log("Instrument Database error occurred", error)
+
+            $scope.$apply();
+
+        })
+
+    }
+
+    /**
+     * Helper function for the function vm.getList()
+     *
+     * @param abortSignal {AbortSignal}
+     * @return {Promise<void>}
+     */
+    const getDatabaseInstrsList = async function (abortSignal) {
+
+        var opts = {
+            pageSize: reqPageSize,
+            filters: {
+                page: 1,
+                instrument_type: vm.instrument_type,
+            },
+            abortSignal
+        };
+
+        try {
+
+            const data = await instrumentDatabaseSearchService.getList(vm.inputText, opts);
+
+            vm.databaseInstrumentsTotal = data.count;
+
+            vm.databaseInstruments = data.results;
+
+            vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
+
+                item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
+
+                item.frontOptions = {
+                    type: 'database',
+                };
+
+                return item;
+
+            })
+
+            vm.totalPages = Math.round(data.count / reqPageSize);
+
+            $scope.$apply();
+
+
+        } catch (e) {
+
+            if (abortSignal.aborted) {
+                throw abortSignal.reason;
+            }
+
+            console.error("[instrumentSelectDatabaseDialogController getList] Instrument Database error occurred", e)
+
+            vm.databaseInstrumentsTotal = null;
+            vm.databaseInstruments = [];
+
+            $scope.$apply();
+
+        }
+
+
+    }
+
+    vm.getList = function () {
+
+        abortController.abort({key: "ABORTED_BY_CLIENT"});
+
+        abortController = new AbortController();
+        const abortSignal = abortController.signal;
+
+        vm.processing = true;
+
+        var promises = []
+
+        vm.databaseInstrumentsTotal = null;
+        vm.databaseInstruments = [];
+
+        if (vm.inputText.length > 2) {
+            promises.push( getDatabaseInstrsList(abortSignal) );
+        }
+
+        promises.push(new Promise(function (resolve, reject) {
+
+            instrumentService.getListForSelect({
+                pageSize: 1000,
+                filters: {
+                    query: vm.inputText,
+                    instrument_type: vm.instrument_type
+                },
+                abortSignal
+            })
+                .then(function (data) {
+
+                    vm.localInstrumentsTotal = data.count;
+
+                    vm.localInstruments = data.results;
+
+                    vm.localInstruments = vm.localInstruments.map(function (item) {
+
+                        item.pretty_date = moment(item.modified_at).format("DD.MM.YYYY");
+
+                        item.frontOptions = {
+                            type: 'local',
+                        };
+
+                        return item;
+
+                    })
+
+                    resolve()
+
+                })
+                .catch(function (error) {
+
+                    if (abortSignal.aborted) {
+                        return reject(abortSignal.reason);
+                    }
+
+                    console.error("[instrumentSelectDatabaseDialogController getList] Error occurred while getting local instruments", error)
+                    vm.localInstruments = [];
+                    vm.localInstrumentsTotal = null;
+
+                    $scope.$apply();
+                    resolve();
+
+                })
+
+        }))
+
+        Promise.all(promises)
+            .then(function (data) {
+
+                vm.databaseInstruments = vm.databaseInstruments.filter(function (databaseInstrument) {
+
+                    var exist = false;
+
+                    vm.localInstruments.forEach(function (localInstrument) {
+
+                        if (localInstrument.user_code === databaseInstrument.reference) {
+                            exist = true;
+                        }
+
+                        if (localInstrument.reference_for_pricing === databaseInstrument.reference) {
+                            exist = true;
+                        }
+
+                    })
+
+                    return !exist;
+
+                })
+
+                vm.processing = false;
+
+                $scope.$apply();
+
+                setTimeout(function () {
+
+                    $('.instrument-select-options-group-title').on('click', function () {
+
+                        $(this).next()[0].scrollIntoView({block: 'start', behavior: 'smooth'});
+                    });
+
+                }, 100)
+
+            })
+            .catch(function (error) {
+
+                if (!abortSignal.aborted) {
+                    throw error;
                 }
+
+            });
+
+    }
+
+    vm.init = function () {
+
+        vm.getList();
+
+        if (data.context) {
+
+            if (data.context.action) {
+
+                vm.actionType = data.context.action;
 
             }
 
         }
 
+    }
 
-        vm.init();
 
-    };
+    vm.init();
 
-}());
+};

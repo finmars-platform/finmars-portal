@@ -1,38 +1,30 @@
-/**
- * Created by szhitenev on 02.02.2024.
- */
-(function () {
+import portfolioClassRepository from '../repositories/portfolioClassRepository';
 
-    var portfolioClassRepository = require('../repositories/portfolioClassRepository');
+var getList = function (options) {
+    return portfolioClassRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return portfolioClassRepository.getList(options);
-    };
+var getByKey = function (id) {
+    return portfolioClassRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return portfolioClassRepository.getByKey(id);
-    };
+var create = function(account) {
+    return portfolioClassRepository.create(account);
+};
 
-    var create = function(account) {
-        return portfolioClassRepository.create(account);
-    };
+var update = function(id, account) {
+    return portfolioClassRepository.update(id, account);
+};
 
-    var update = function(id, account) {
-        return portfolioClassRepository.update(id, account);
-    };
-
-    var deleteByKey = function (id) {
-        return portfolioClassRepository.deleteByKey(id);
-    };
+var deleteByKey = function (id) {
+    return portfolioClassRepository.deleteByKey(id);
+};
 
 
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey
-    }
-
-
-}());
+export default {
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey
+};

@@ -1,39 +1,30 @@
-/**
- * Created by szhitenev on 04.05.2016.
- */
-// import baseUrlService from "../../services/baseUrlService";
-(function () {
+import baseUrlService from "../../services/baseUrlService";
+import cookieService from '../../../../../core/services/cookieService';
+import xhrService from '../../../../../core/services/xhrService';
+// var baseUrlService = require('../../services/baseUrlService');
 
-    var baseUrlService = require("../../services/baseUrlService").default;
-    var cookieService = require('../../../../../core/services/cookieService').default;
-    var xhrService = require('../../../../../core/services/xhrService').default;
-    // var baseUrlService = require('../../services/baseUrlService');
+var baseUrl = baseUrlService.resolve();
 
-    var baseUrl = baseUrlService.resolve();
-
-    var rebuildEvents = function (id, instrument) {
-        
+var rebuildEvents = function (id, instrument) {
+    
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/' + id + '/rebuild-events/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(instrument)
-            })
-    };
+        {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(instrument)
+        })
+};
 
-    module.exports = {
-        rebuildEvents: rebuildEvents
+export default {
+    rebuildEvents: rebuildEvents
 
-    }
-
-
-}());
+};

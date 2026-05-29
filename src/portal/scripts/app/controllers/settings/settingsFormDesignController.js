@@ -1,22 +1,15 @@
-/**
- * Created by szhitenev on 02.08.2016.
- */
-(function(){
+'use strict';
 
-    'use strict';
+import logService from '../../../../../core/services/logService';
 
-    var logService = require('../../../../../core/services/logService');
+export default function($scope, $state) {
 
-    module.exports = function($scope, $state) {
+    logService.controller('SettingsFormDesignController', 'initialized');
 
-        logService.controller('SettingsFormDesignController', 'initialized');
+    var vm = this;
 
-        var vm = this;
+    vm.goToState = function(entity){
+        $state.go('app.portal.data-constructor', {entityType: entity});
+    }
 
-        vm.goToState = function(entity){
-            $state.go('app.portal.data-constructor', {entityType: entity});
-        }
-
-    };
-
-}());
+};

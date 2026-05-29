@@ -1,44 +1,37 @@
-/**
- * Created by szhitenev on 10.11.2023.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import dashboardEvents from '../../services/dashboard/dashboardEvents';
 
-    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.dashboardDataService = data.dashboardDataService;
+    vm.dashboardEventService = data.dashboardEventService;
 
-        vm.dashboardDataService = data.dashboardDataService;
-        vm.dashboardEventService = data.dashboardEventService;
+    vm.state = JSON.stringify(vm.dashboardDataService.getLayoutState(), null, 4);
 
-        vm.state = JSON.stringify(vm.dashboardDataService.getLayoutState(), null, 4);
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.agree = function (responseData) {
 
-        vm.agree = function (responseData) {
+        let parsedState = JSON.parse(vm.state)
 
-            let parsedState = JSON.parse(vm.state)
-
-            // TODO update instead of create new
-            if (parsedState) {
-                parsedState['meta'] = {
-                    'origin': 'finmars'
-                }
+        // TODO update instead of create new
+        if (parsedState) {
+            parsedState['meta'] = {
+                'origin': 'finmars'
             }
+        }
 
-            vm.dashboardDataService.setLayoutState(parsedState)
+        vm.dashboardDataService.setLayoutState(parsedState)
 
-            vm.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_STATE_CHANGE);
-            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL);
+        vm.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_STATE_CHANGE);
+        vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL);
 
-            $mdDialog.hide({status: 'agree', data: {}});
+        $mdDialog.hide({status: 'agree', data: {}});
 
-        };
-    }
-
-}());
+    };
+};

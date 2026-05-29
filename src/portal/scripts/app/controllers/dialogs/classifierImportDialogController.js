@@ -1,217 +1,134 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import attributeTypeService from '../../services/attributeTypeService';
 
-    var attributeTypeService = require('../../services/attributeTypeService');
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.entityType = data.entityType;
+    vm.item = data.item;
 
-        vm.entityType = data.entityType;
-        vm.item = data.item;
+    console.log('vm.item', vm.item);
 
-        console.log('vm.item', vm.item);
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
+    vm.file = null;
+    vm.mode = 'skip';
 
-        vm.file = null;
-        vm.mode = 'skip';
+    vm.checkExtension = function (file, extension, $event) {
+        console.log('file', file);
 
-        vm.checkExtension = function (file, extension, $event) {
-            console.log('file', file);
+        if (file) {
 
-            if (file) {
+            var ext = file.name.split('.').at(-1);
 
-                var ext = file.name.split('.').at(-1);
+            if (ext !== extension) {
 
-                if (ext !== extension) {
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    parent: document.querySelector(".dialog-containers-wrap"),
+                    targetEvent: $event,
+                    locals: {
+                        success: {
+                            title: "Warning!",
+                            description: 'You are trying to load incorrect file'
+                        }
+                    },
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                }).then(function () {
 
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        parent: document.querySelector(".dialog-containers-wrap"),
-                        targetEvent: $event,
-                        locals: {
-                            success: {
-                                title: "Warning!",
-                                description: 'You are trying to load incorrect file'
-                            }
-                        },
-                        multiple: true,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    }).then(function () {
-
-                        vm.file = null;
-                    });
-
-                }
+                    vm.file = null;
+                });
 
             }
 
-        };
+        }
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    };
 
-        vm.agree = function ($event) {
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-            var reader = new FileReader();
+    vm.agree = function ($event) {
 
-            reader.readAsText(vm.file);
+        var reader = new FileReader();
 
-            reader.onload = function (evt) {
+        reader.readAsText(vm.file);
 
-                try {
+        reader.onload = function (evt) {
 
-                    console.log('evt.target', evt.target);
+            try {
 
-                    var file = evt.target.result;
+                console.log('evt.target', evt.target);
 
-                    console.log('file', file);
+                var file = evt.target.result;
 
-                    var lines = file.split(/\r\n|\n|\r/);
+                console.log('file', file);
 
-                    console.log('lines', lines);
+                var lines = file.split(/\r\n|\n|\r/);
 
-                    lines.splice(0, 1);
+                console.log('lines', lines);
 
-                    console.log('lines', lines);
+                lines.splice(0, 1);
+
+                console.log('lines', lines);
 
 
-                    if (vm.mode === 'skip') {
+                if (vm.mode === 'skip') {
 
-                        var itemsExists = [];
+                    var itemsExists = [];
 
-                        vm.classifier.classifiers.forEach(function (item) {
-                            itemsExists.push(item.name);
-                        });
+                    vm.classifier.classifiers.forEach(function (item) {
+                        itemsExists.push(item.name);
+                    });
 
-                        lines.forEach(function (line) {
+                    lines.forEach(function (line) {
 
-                            if (itemsExists.indexOf(line) === -1) {
+                        if (itemsExists.indexOf(line) === -1) {
 
-                                vm.classifier.classifiers.push({
-                                    name: line
-                                })
-
-                            }
-
-                        });
-
-                        attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
-
-                            $mdDialog.show({
-                                controller: 'SuccessDialogController as vm',
-                                templateUrl: 'views/dialogs/success-dialog-view.html',
-                                parent: document.querySelector(".dialog-containers-wrap"),
-                                targetEvent: $event,
-                                locals: {
-                                    success: {
-                                        title: "Success!",
-                                        description: 'You are successfully import classifiers'
-                                    }
-                                },
-                                multiple: true,
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true
-                            }).then(function (value) {
-
-                                $mdDialog.hide({status: 'agree'});
-
+                            vm.classifier.classifiers.push({
+                                name: line
                             })
 
-                        });
+                        }
 
+                    });
 
-                    }
-
-                    if (vm.mode === 'overwrite') {
+                    attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
 
                         $mdDialog.show({
-                            controller: 'WarningDialogController as vm',
-                            templateUrl: 'views/dialogs/warning-dialog-view.html',
-                            parent: document.querySelector('.dialog-containers-wrap'),
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
-                            clickOutsideToClose: false,
                             locals: {
-                                warning: {
-                                    title: 'Warning',
-                                    description: 'The current classifications will be permanently deleted and all the assigned classification for this User Attribute will be lost.<br/> Do you want to proceed?',
-                                    actionsButtons: [
-                                        {
-                                            name: "CANCEL",
-                                            response: {}
-                                        },
-                                        {
-                                            name: "OK, PROCEED",
-                                            response: {status: 'agree'}
-                                        }
-                                    ]
+                                success: {
+                                    title: "Success!",
+                                    description: 'You are successfully import classifiers'
                                 }
                             },
+                            multiple: true,
                             preserveScope: true,
                             autoWrap: true,
-                            skipHide: true,
-                            multiple: true
-                        }).then(function (res) {
-                            console.log('res', res);
-                            if (res.status === 'agree') {
+                            skipHide: true
+                        }).then(function (value) {
+
+                            $mdDialog.hide({status: 'agree'});
+
+                        })
+
+                    });
 
 
-                                vm.classifier.classifiers = [];
-                                vm.classifier.classifiers_flat = [];
+                }
 
-                                attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
-
-                                    vm.classifier.classifiers = lines.map(function (line) {
-                                        return {
-                                            name: line
-                                        }
-                                    });
-
-                                    vm.classifier.classifiers_flat = [];
-
-                                    attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
-
-                                        $mdDialog.show({
-                                            controller: 'SuccessDialogController as vm',
-                                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                                            parent: document.querySelector(".dialog-containers-wrap"),
-                                            targetEvent: $event,
-                                            locals: {
-                                                success: {
-                                                    title: "Success!",
-                                                    description: 'You are successfully import classifiers'
-                                                }
-                                            },
-                                            multiple: true,
-                                            preserveScope: true,
-                                            autoWrap: true,
-                                            skipHide: true
-                                        }).then(function (value) {
-                                            $mdDialog.hide({status: 'agree'});
-                                        });
-
-                                    })
-
-                                })
-
-                            }
-                        });
-                    }
-
-
-                } catch (error) {
-
-                    console.log('error', error);
+                if (vm.mode === 'overwrite') {
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
@@ -221,45 +138,121 @@
                         clickOutsideToClose: false,
                         locals: {
                             warning: {
-                                title: 'Error',
-                                description: 'Unable to read it. This file is corrupted.'
+                                title: 'Warning',
+                                description: 'The current classifications will be permanently deleted and all the assigned classification for this User Attribute will be lost.<br/> Do you want to proceed?',
+                                actionsButtons: [
+                                    {
+                                        name: "CANCEL",
+                                        response: {}
+                                    },
+                                    {
+                                        name: "OK, PROCEED",
+                                        response: {status: 'agree'}
+                                    }
+                                ]
                             }
                         },
                         preserveScope: true,
                         autoWrap: true,
-                        skipHide: true
+                        skipHide: true,
+                        multiple: true
+                    }).then(function (res) {
+                        console.log('res', res);
+                        if (res.status === 'agree') {
+
+
+                            vm.classifier.classifiers = [];
+                            vm.classifier.classifiers_flat = [];
+
+                            attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
+
+                                vm.classifier.classifiers = lines.map(function (line) {
+                                    return {
+                                        name: line
+                                    }
+                                });
+
+                                vm.classifier.classifiers_flat = [];
+
+                                attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
+
+                                    $mdDialog.show({
+                                        controller: 'SuccessDialogController as vm',
+                                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                                        parent: document.querySelector(".dialog-containers-wrap"),
+                                        targetEvent: $event,
+                                        locals: {
+                                            success: {
+                                                title: "Success!",
+                                                description: 'You are successfully import classifiers'
+                                            }
+                                        },
+                                        multiple: true,
+                                        preserveScope: true,
+                                        autoWrap: true,
+                                        skipHide: true
+                                    }).then(function (value) {
+                                        $mdDialog.hide({status: 'agree'});
+                                    });
+
+                                })
+
+                            })
+
+                        }
                     });
-
-                    vm.file = null;
-
-
                 }
+
+
+            } catch (error) {
+
+                console.log('error', error);
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    locals: {
+                        warning: {
+                            title: 'Error',
+                            description: 'Unable to read it. This file is corrupted.'
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                });
+
+                vm.file = null;
+
 
             }
 
+        }
 
-        };
 
-        vm.getClassifier = function () {
+    };
 
-            vm.readyStatus.content = false;
+    vm.getClassifier = function () {
 
-            attributeTypeService.getByKey(vm.entityType, vm.item.id).then(function (data) {
+        vm.readyStatus.content = false;
 
-                vm.classifier = data;
+        attributeTypeService.getByKey(vm.entityType, vm.item.id).then(function (data) {
 
-                vm.readyStatus.content = true;
+            vm.classifier = data;
 
-                $scope.$apply();
+            vm.readyStatus.content = true;
 
-            })
-        };
+            $scope.$apply();
 
-        vm.init = function () {
-            vm.getClassifier()
-        };
+        })
+    };
 
-        vm.init();
-    }
+    vm.init = function () {
+        vm.getClassifier()
+    };
 
-}());
+    vm.init();
+};

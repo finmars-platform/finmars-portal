@@ -1,703 +1,693 @@
-/**
- * Created by szhitenev on 05.05.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import evEvents from '../../services/entityViewerEvents';
+import evDataHelper from '../../helpers/ev-data.helper';
+import evLoaderHelper from '../../helpers/ev-loader.helper';
+import evRvCommonHelper from '../../helpers/ev-rv-common.helper';
+import evDomManager from '../../services/ev-dom-manager/ev-dom.manager';
+import metaService from '../../services/metaService';
+import evHelperService from '../../services/entityViewerHelperService';
 
-    var evEvents = require('../../services/entityViewerEvents');
-    var evDataHelper = require('../../helpers/ev-data.helper').default;
-    var evLoaderHelper = require('../../helpers/ev-loader.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
+export default function ($mdDialog) {
+    return {
+        restrict: 'AE',
+        scope: {
+            evDataService: '=',
+            evEventService: '=',
+            attributeDataService: '=',
+            contentWrapElement: '='
+        },
+        templateUrl: 'views/directives/groupTable/grouping-view.html',
+        link: function (scope, elem, attrs) {
 
-    var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
+            scope.entityType = scope.evDataService.getEntityType();
+            scope.isReport = metaService.isReport(scope.entityType);
+            scope.contentType = scope.evDataService.getContentType();
 
-    var metaService = require('../../services/metaService').default;
-    var evHelperService = require('../../services/entityViewerHelperService');
+            scope.rootGroupOptions = scope.evDataService.getRootGroupOptions();
 
-    module.exports = function ($mdDialog) {
-        return {
-            restrict: 'AE',
-            scope: {
-                evDataService: '=',
-                evEventService: '=',
-                attributeDataService: '=',
-                contentWrapElement: '='
-            },
-            templateUrl: 'views/directives/groupTable/grouping-view.html',
-            link: function (scope, elem, attrs) {
+            scope.groups = scope.evDataService.getGroups();
+            setDefaultGroupType(scope.evDataService);
+            scope.components = scope.evDataService.getComponents();
 
-                scope.entityType = scope.evDataService.getEntityType();
-                scope.isReport = metaService.isReport(scope.entityType);
-                scope.contentType = scope.evDataService.getContentType();
+            scope.columns = scope.evDataService.getColumns();
 
-                scope.rootGroupOptions = scope.evDataService.getRootGroupOptions();
+            var viewContext = scope.evDataService.getViewContext();
 
-                scope.groups = scope.evDataService.getGroups();
-                setDefaultGroupType(scope.evDataService);
-                scope.components = scope.evDataService.getComponents();
+            var entityAttrs = [];
+            var dynamicAttrs = [];
 
-                scope.columns = scope.evDataService.getColumns();
+            var getAttributes = function () {
 
-                var viewContext = scope.evDataService.getViewContext();
+                var allAttrsList = [];
 
-                var entityAttrs = [];
-                var dynamicAttrs = [];
+                if (viewContext === 'reconciliation_viewer') {
 
-                var getAttributes = function () {
+                    allAttrsList = scope.attributeDataService.getReconciliationAttributes();
 
-                    var allAttrsList = [];
+                } else {
 
-                    if (viewContext === 'reconciliation_viewer') {
+                    switch (scope.entityType) {
+                        case 'balance-report':
+                            allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
+                            break;
 
-                        allAttrsList = scope.attributeDataService.getReconciliationAttributes();
+                        case 'pl-report':
+                            allAttrsList = scope.attributeDataService.getPlReportAttributes();
+                            break;
 
-                    } else {
+                        case 'transaction-report':
+                            allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
+                            break;
 
-                        switch (scope.entityType) {
-                            case 'balance-report':
-                                allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
-                                break;
+                        default:
+                            entityAttrs = [];
+                            dynamicAttrs = [];
+                            allAttrsList = [];
 
-                            case 'pl-report':
-                                allAttrsList = scope.attributeDataService.getPlReportAttributes();
-                                break;
+                            entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(scope.entityType);
 
-                            case 'transaction-report':
-                                allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
-                                break;
+                            entityAttrs.forEach(function (item) {
+                                if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                                    item.name = 'Group';
+                                }
+                                item.entity = scope.entityType;
+                            });
 
-                            default:
-                                entityAttrs = [];
-                                dynamicAttrs = [];
-                                allAttrsList = [];
+                            /* var instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
+                            var transactionUserFields = scope.attributeDataService.getTransactionUserFields();
 
-                                entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(scope.entityType);
+                            instrumentUserFields.forEach(function (field) {
 
-                                entityAttrs.forEach(function (item) {
-                                    if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
-                                        item.name = 'Group';
+                                entityAttrs.forEach(function (entityAttr) {
+
+                                    if (entityAttr.key === field.key) {
+                                        entityAttr.name = field.name;
                                     }
-                                    item.entity = scope.entityType;
-                                });
 
-                                /* var instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
-                                var transactionUserFields = scope.attributeDataService.getTransactionUserFields();
+                                })
 
-                                instrumentUserFields.forEach(function (field) {
+                            });
 
-                                    entityAttrs.forEach(function (entityAttr) {
+                            transactionUserFields.forEach(function (field) {
 
-                                        if (entityAttr.key === field.key) {
-                                            entityAttr.name = field.name;
-                                        }
+                                entityAttrs.forEach(function (entityAttr) {
 
-                                    })
+                                    if (entityAttr.key === field.key) {
+                                        entityAttr.name = field.name;
+                                    }
 
-                                });
+                                })
 
-                                transactionUserFields.forEach(function (field) {
+                            }); */
 
-                                    entityAttrs.forEach(function (entityAttr) {
-
-                                        if (entityAttr.key === field.key) {
-                                            entityAttr.name = field.name;
-                                        }
-
-                                    })
-
-                                }); */
-
-                                dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
+                            dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
 
 
-                                dynamicAttrs = dynamicAttrs.map(function (attribute) {
+                            dynamicAttrs = dynamicAttrs.map(function (attribute) {
 
-                                    var result = {};
+                                var result = {};
 
-                                    result.attribute_type = Object.assign({}, attribute);
-                                    result.value_type = attribute.value_type;
-                                    result.content_type = scope.contentType;
-                                    result.key = 'attributes.' + attribute.user_code;
-                                    result.name = attribute.name;
+                                result.attribute_type = Object.assign({}, attribute);
+                                result.value_type = attribute.value_type;
+                                result.content_type = scope.contentType;
+                                result.key = 'attributes.' + attribute.user_code;
+                                result.name = attribute.name;
 
-                                    return result
+                                return result
 
-                                });
+                            });
 
-                                allAttrsList = allAttrsList.concat(entityAttrs);
-                                allAttrsList = allAttrsList.concat(dynamicAttrs);
-                        }
-
+                            allAttrsList = allAttrsList.concat(entityAttrs);
+                            allAttrsList = allAttrsList.concat(dynamicAttrs);
                     }
-
-                    return allAttrsList;
-
-                };
-
-                function setDefaultGroupType(evDataService) {
-
-                    var groups = evDataService.getGroups();
-
-                    groups.forEach(function (group) {
-
-                        if (!group.hasOwnProperty('report_settings')) {
-                            group.report_settings = {};
-                        }
-
-                        if (!group.report_settings.subtotal_type) {
-                            group.report_settings.subtotal_type = 'line';
-                        }
-
-                        if (!scope.isReport && !group.hasOwnProperty('ev_folded')) {
-                            group.ev_group_folded = true;
-                        }
-
-                    });
-
-                    evDataService.setGroups(groups);
 
                 }
 
-                scope.updateGroupTypeIds = function () {
+                return allAttrsList;
 
-                    var groups = scope.evDataService.getGroups();
+            };
 
-                    groups.forEach(function (item) {
+            function setDefaultGroupType(evDataService) {
 
-                        item.___group_type_id = evDataHelper.getGroupTypeId(item);
+                var groups = evDataService.getGroups();
 
-                    });
+                groups.forEach(function (group) {
 
-                    scope.evDataService.setGroups(groups);
-
-                };
-
-
-                scope.sortHandler = function (group, sort) {
-
-                    createDefaultOptions();
-
-                    group.options.sort = sort;
-
-                    var groups = scope.evDataService.getGroups();
-
-                    groups.forEach(function (item) {
-
-                        if (group.key === item.key || group.id === item.id) {
-                            item = group
-                        }
-
-                    });
-
-                    scope.evDataService.setGroups(groups);
-                    scope.evDataService.setActiveGroupTypeSort(group);
-
-                    scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
-                };
-
-                scope.openGroupSettings = function ($mdMenu, ev) {
-                    $mdMenu.open(ev);
-                };
-
-
-                scope.toggleGroupFold = function () {
-                    scope.folding = !scope.folding;
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                };
-
-                scope.reportSetBlankLineType = function (group, type, $index) {
-
-                    if (!group.hasOwnProperty('report_settings') || group.report_settings === undefined) {
+                    if (!group.hasOwnProperty('report_settings')) {
                         group.report_settings = {};
                     }
 
-                    if (group.report_settings.blankline_type === type) {
-                        group.report_settings.blankline_type = false;
-                    } else {
-                        group.report_settings.blankline_type = type;
+                    if (!group.report_settings.subtotal_type) {
+                        group.report_settings.subtotal_type = 'line';
                     }
 
+                    if (!scope.isReport && !group.hasOwnProperty('ev_folded')) {
+                        group.ev_group_folded = true;
+                    }
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                });
 
-                };
+                evDataService.setGroups(groups);
 
-                scope.renameGroup = function (group, $mdMenu, $event) {
+            }
 
-                    $mdMenu.close();
+            scope.updateGroupTypeIds = function () {
 
-                    $mdDialog.show({
-                        controller: 'RenameFieldDialogController as vm',
-                        templateUrl: 'views/dialogs/rename-field-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
-                        locals: {
-                            data: group
-                        }
-                    })
+                var groups = scope.evDataService.getGroups();
 
-                };
+                groups.forEach(function (item) {
 
-                scope.checkForFilteringBySameAttr = function (groupKey) {
-                    var filters = scope.evDataService.getFilters();
+                    item.___group_type_id = evDataHelper.getGroupTypeId(item);
 
-                    for (var i = 0; i < filters.length; i++) {
-                        if (filters[i].key === groupKey) {
+                });
+
+                scope.evDataService.setGroups(groups);
+
+            };
+
+
+            scope.sortHandler = function (group, sort) {
+
+                createDefaultOptions();
+
+                group.options.sort = sort;
+
+                var groups = scope.evDataService.getGroups();
+
+                groups.forEach(function (item) {
+
+                    if (group.key === item.key || group.id === item.id) {
+                        item = group
+                    }
+
+                });
+
+                scope.evDataService.setGroups(groups);
+                scope.evDataService.setActiveGroupTypeSort(group);
+
+                scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
+            };
+
+            scope.openGroupSettings = function ($mdMenu, ev) {
+                $mdMenu.open(ev);
+            };
+
+
+            scope.toggleGroupFold = function () {
+                scope.folding = !scope.folding;
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            };
+
+            scope.reportSetBlankLineType = function (group, type, $index) {
+
+                if (!group.hasOwnProperty('report_settings') || group.report_settings === undefined) {
+                    group.report_settings = {};
+                }
+
+                if (group.report_settings.blankline_type === type) {
+                    group.report_settings.blankline_type = false;
+                } else {
+                    group.report_settings.blankline_type = type;
+                }
+
+
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+            };
+
+            scope.renameGroup = function (group, $mdMenu, $event) {
+
+                $mdMenu.close();
+
+                $mdDialog.show({
+                    controller: 'RenameFieldDialogController as vm',
+                    templateUrl: 'views/dialogs/rename-field-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    locals: {
+                        data: group
+                    }
+                })
+
+            };
+
+            scope.checkForFilteringBySameAttr = function (groupKey) {
+                var filters = scope.evDataService.getFilters();
+
+                for (var i = 0; i < filters.length; i++) {
+                    if (filters[i].key === groupKey) {
+                        return false;
+                    }
+                }
+
+                return true;
+            };
+
+            scope.addFiltersWithGroupAttr = function (group) {
+                var filters = scope.evDataService.getFilters();
+                var filterToAdd = evHelperService.getTableAttrInFormOf('filter', group);
+
+                filters.push(filterToAdd);
+
+                scope.evDataService.setFilters(filters);
+
+                scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+            };
+
+            scope.removeGroup = function (group) {
+
+                if (group.key) {
+                    scope.groups = scope.groups.filter(function (item) {
+                        if (item.key === group.key) {
                             return false;
                         }
-                    }
+                        return true
+                    })
+                }
 
-                    return true;
-                };
+                scope.evDataService.setGroups(scope.groups);
+                scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
-                scope.addFiltersWithGroupAttr = function (group) {
-                    var filters = scope.evDataService.getFilters();
-                    var filterToAdd = evHelperService.getTableAttrInFormOf('filter', group);
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                    filters.push(filterToAdd);
+            };
 
-                    scope.evDataService.setFilters(filters);
+            scope.reportSetGrandtotalType = function (type) {
 
-                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                };
+                if (scope.rootGroupOptions.subtotal_type === type) {
+                    scope.rootGroupOptions.subtotal_type = false;
+                } else {
+                    scope.rootGroupOptions.subtotal_type = type;
+                }
 
-                scope.removeGroup = function (group) {
+                scope.evDataService.setRootGroupOptions(scope.rootGroupOptions);
 
-                    if (group.key) {
-                        scope.groups = scope.groups.filter(function (item) {
-                            if (item.key === group.key) {
-                                return false;
-                            }
-                            return true
-                        })
-                    }
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+            };
 
-                    scope.evDataService.setGroups(scope.groups);
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+            scope.reportSetSubtotalType = function (group, type) {
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                if (!group.hasOwnProperty('report_settings') || group.report_settings === undefined) {
+                    group.report_settings = {};
+                }
 
-                };
+                if (group.report_settings.subtotal_type === type) {
+                    group.report_settings.subtotal_type = false;
+                } else {
+                    group.report_settings.subtotal_type = type;
+                }
 
-                scope.reportSetGrandtotalType = function (type) {
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+            };
 
-                    if (scope.rootGroupOptions.subtotal_type === type) {
-                        scope.rootGroupOptions.subtotal_type = false;
-                    } else {
-                        scope.rootGroupOptions.subtotal_type = type;
-                    }
+            scope.isReportGroupHaveExtSettings = function (group, $index) {
 
-                    scope.evDataService.setRootGroupOptions(scope.rootGroupOptions);
+                return scope.columns[$index].key = group.key
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
-                };
+            };
 
-                scope.reportSetSubtotalType = function (group, type) {
+            scope.foldLevel = function (item, $index) {
+                item.report_settings.is_level_folded = true;
 
-                    if (!group.hasOwnProperty('report_settings') || group.report_settings === undefined) {
-                        group.report_settings = {};
-                    }
+                var groups = scope.evDataService.getGroups();
+                for (; $index < groups.length; $index = $index + 1) {
 
-                    if (group.report_settings.subtotal_type === type) {
-                        group.report_settings.subtotal_type = false;
-                    } else {
-                        group.report_settings.subtotal_type = type;
-                    }
+                    groups[$index].report_settings.is_level_folded = true;
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
-                };
+                    var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
 
-                scope.isReportGroupHaveExtSettings = function (group, $index) {
+                    groupsContent.forEach(function (groupItem) {
+                        groupItem.___is_open = false;
 
-                    return scope.columns[$index].key = group.key
+                        var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, scope.evDataService);
+                        childrens.forEach(function (children) {
 
-                };
+                            if (children.___type === 'group') {
 
-                scope.foldLevel = function (item, $index) {
-                    item.report_settings.is_level_folded = true;
+                                item = scope.evDataService.getData(children.___id);
 
-                    var groups = scope.evDataService.getGroups();
-                    for (; $index < groups.length; $index = $index + 1) {
-
-                        groups[$index].report_settings.is_level_folded = true;
-
-                        var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
-
-                        groupsContent.forEach(function (groupItem) {
-                            groupItem.___is_open = false;
-
-                            var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, scope.evDataService);
-                            childrens.forEach(function (children) {
-
-                                if (children.___type === 'group') {
-
-                                    item = scope.evDataService.getData(children.___id);
-
-                                    if (item) {
-                                        item.___is_open = false;
-                                        scope.evDataService.setData(item);
-                                    } else {
-                                        children.___is_open = false;
-                                        scope.evDataService.setData(children);
-                                    }
-
-
+                                if (item) {
+                                    item.___is_open = false;
+                                    scope.evDataService.setData(item);
+                                } else {
+                                    children.___is_open = false;
+                                    scope.evDataService.setData(children);
                                 }
 
-                            })
+
+                            }
+
+                        })
 
 
-                        });
-
-                    }
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                };
-
-                scope.unfoldLevel = function (item, $index) {
-
-                    item.report_settings.is_level_folded = false;
-
-                    var groups = scope.evDataService.getGroups();
-
-                    var groupsByLevel = evDataHelper.getAllGroupsByLevel($index, scope.evDataService);
-
-                    console.log('unfoldLevel.groupsByLevel', groupsByLevel);
-                    console.log('unfoldLevel.maxLevel', $index);
-
-                    for (; $index >= 0; $index = $index - 1) {
-
-                        var groupsContent = groupsByLevel[$index + 1];
-                        groups[$index].report_settings.is_level_folded = false;
-
-                        groupsContent.forEach(function (groupItem) {
-                            groupItem.___is_open = true;
-                            scope.evDataService.setData(groupItem);
-                        });
-
-                    }
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                };
-
-                scope.isGrandTotalAvailable = function () {
-                    return true;
-                    // if (scope.groups && scope.groups.length > 0) {
-                    //     return true;
-                    // }
-                    //
-                    // return false;
-                };
-
-                function createDefaultOptions() {
-
-                    var i;
-                    for (i = 0; i < scope.groups.length; i = i + 1) {
-                        if (!scope.groups[i].options) {
-                            scope.groups[i].options = {};
-                        }
-                    }
+                    });
 
                 }
 
-                function syncColumnsWithGroups() {
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                    var columns = scope.evDataService.getColumns();
-                    var groups = scope.evDataService.getGroups();
+            };
 
-                    var newColumnList = [];
+            scope.unfoldLevel = function (item, $index) {
 
-                    groups.forEach(function (group, index) {
+                item.report_settings.is_level_folded = false;
 
-                        var column = {
-                            name: group.name,
-                            value_type: group.value_type,
-                            entity: group.entity
-                        };
+                var groups = scope.evDataService.getGroups();
 
-                        if (group.hasOwnProperty('key')) {
-                            column.key = group.key;
-                        }
+                var groupsByLevel = evDataHelper.getAllGroupsByLevel($index, scope.evDataService);
 
-                        if (group.hasOwnProperty('id')) {
-                            column.id = group.id;
-                        }
+                console.log('unfoldLevel.groupsByLevel', groupsByLevel);
+                console.log('unfoldLevel.maxLevel', $index);
 
-                        newColumnList.push(column);
+                for (; $index >= 0; $index = $index - 1) {
 
+                    var groupsContent = groupsByLevel[$index + 1];
+                    groups[$index].report_settings.is_level_folded = false;
+
+                    groupsContent.forEach(function (groupItem) {
+                        groupItem.___is_open = true;
+                        scope.evDataService.setData(groupItem);
                     });
+
+                }
+
+                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+            };
+
+            scope.isGrandTotalAvailable = function () {
+                return true;
+                // if (scope.groups && scope.groups.length > 0) {
+                //     return true;
+                // }
+                //
+                // return false;
+            };
+
+            function createDefaultOptions() {
+
+                var i;
+                for (i = 0; i < scope.groups.length; i = i + 1) {
+                    if (!scope.groups[i].options) {
+                        scope.groups[i].options = {};
+                    }
+                }
+
+            }
+
+            function syncColumnsWithGroups() {
+
+                var columns = scope.evDataService.getColumns();
+                var groups = scope.evDataService.getGroups();
+
+                var newColumnList = [];
+
+                groups.forEach(function (group, index) {
+
+                    var column = {
+                        name: group.name,
+                        value_type: group.value_type,
+                        entity: group.entity
+                    };
+
+                    if (group.hasOwnProperty('key')) {
+                        column.key = group.key;
+                    }
+
+                    if (group.hasOwnProperty('id')) {
+                        column.id = group.id;
+                    }
+
+                    newColumnList.push(column);
+
+                });
+
+                newColumnList.forEach(function (newColumn) {
+
+                    columns.forEach(function (column) {
+
+                        if (newColumn.hasOwnProperty('key') && newColumn.key === column.key) {
+                            newColumn.___column_id = column.___column_id;
+                            newColumn.style = column.style;
+
+                            if (column.hasOwnProperty('layout_name')) {
+                                newColumn.layout_name = column.layout_name;
+                            }
+                        }
+
+                        if (newColumn.hasOwnProperty('id') && newColumn.id === column.id) {
+                            newColumn.___column_id = column.___column_id;
+                            newColumn.style = column.style;
+                        }
+
+                    })
+
+                });
+
+                var oldColumns = columns.filter(function (oldColumn) {
+
+                    var exists = false;
 
                     newColumnList.forEach(function (newColumn) {
 
-                        columns.forEach(function (column) {
-
-                            if (newColumn.hasOwnProperty('key') && newColumn.key === column.key) {
-                                newColumn.___column_id = column.___column_id;
-                                newColumn.style = column.style;
-
-                                if (column.hasOwnProperty('layout_name')) {
-                                    newColumn.layout_name = column.layout_name;
-                                }
-                            }
-
-                            if (newColumn.hasOwnProperty('id') && newColumn.id === column.id) {
-                                newColumn.___column_id = column.___column_id;
-                                newColumn.style = column.style;
-                            }
-
-                        })
-
-                    });
-
-                    var oldColumns = columns.filter(function (oldColumn) {
-
-                        var exists = false;
-
-                        newColumnList.forEach(function (newColumn) {
-
-                            if (newColumn.___column_id === oldColumn.___column_id) {
-                                exists = true;
-                            }
-
-                        });
-
-                        return !exists;
-
-                    });
-
-                    var resultColumns = newColumnList.concat(oldColumns);
-
-                    scope.evDataService.setColumns(resultColumns);
-
-                    evDataHelper.updateColumnsIds(scope.evDataService);
-                    evDataHelper.setColumnsDefaultWidth(scope.evDataService);
-
-                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-
-                }
-
-                var attrsWithoutGroups = ['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'content_types'];
-
-                scope.addGroup = function ($event) {
-
-                    var allAttrsList = getAttributes();
-
-                    var availableAttrs;
-
-                    availableAttrs = allAttrsList.filter(function (attr) {
-                        for (var i = 0; i < scope.groups.length; i++) {
-                            if (scope.groups[i].key === attr.key) {
-                                return false;
-                            }
+                        if (newColumn.___column_id === oldColumn.___column_id) {
+                            exists = true;
                         }
 
-                        if (attrsWithoutGroups.indexOf(attr.key) !== -1) {
+                    });
+
+                    return !exists;
+
+                });
+
+                var resultColumns = newColumnList.concat(oldColumns);
+
+                scope.evDataService.setColumns(resultColumns);
+
+                evDataHelper.updateColumnsIds(scope.evDataService);
+                evDataHelper.setColumnsDefaultWidth(scope.evDataService);
+
+                scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+
+            }
+
+            var attrsWithoutGroups = ['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'content_types'];
+
+            scope.addGroup = function ($event) {
+
+                var allAttrsList = getAttributes();
+
+                var availableAttrs;
+
+                availableAttrs = allAttrsList.filter(function (attr) {
+                    for (var i = 0; i < scope.groups.length; i++) {
+                        if (scope.groups[i].key === attr.key) {
                             return false;
                         }
+                    }
 
-                        if (attr.value_type === "mc_field") return false;
+                    if (attrsWithoutGroups.indexOf(attr.key) !== -1) {
+                        return false;
+                    }
 
-                        return true;
-                    });
+                    if (attr.value_type === "mc_field") return false;
 
-                    $mdDialog.show({
-                        controller: "TableAttributeSelectorDialogController as vm",
-                        templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
-                        targetEvent: $event,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                availableAttrs: availableAttrs,
-                                title: 'Choose column to add',
-                                isReport: scope.isReport,
-                                multiselector: true
-                            }
+                    return true;
+                });
+
+                $mdDialog.show({
+                    controller: "TableAttributeSelectorDialogController as vm",
+                    templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            availableAttrs: availableAttrs,
+                            title: 'Choose column to add',
+                            isReport: scope.isReport,
+                            multiselector: true
                         }
-                    }).then(function (res) {
+                    }
+                }).then(function (res) {
 
-                        if (res && res.status === "agree") {
-                            res.data.groups = true;
+                    if (res && res.status === "agree") {
+                        res.data.groups = true;
 
-                            for (var i = 0; i < res.data.items.length; i = i + 1) {
-                                scope.groups.push(res.data.items[i]);
-                            }
-
-                            scope.evDataService.setGroups(scope.groups);
-                            scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        }
-
-                    });
-
-                };
-
-                var flagMissingGroups = function () {
-
-                    console.log("flagMissingColumns.columns", scope.columns);
-
-                    var attributeTypes;
-                    var attributes;
-
-                    if (scope.isReport) {
-
-                        switch (scope.entityType) {
-
-                            case 'balance-report':
-                                attributes = scope.attributeDataService.getBalanceReportAttributes();
-                                break;
-
-                            case 'pl-report':
-                                attributes = scope.attributeDataService.getPlReportAttributes();
-                                break;
-
-                            case 'transaction-report':
-                                attributes = scope.attributeDataService.getTransactionReportAttributes();
-                                break;
-
+                        for (var i = 0; i < res.data.items.length; i = i + 1) {
+                            scope.groups.push(res.data.items[i]);
                         }
 
-                        console.log("flagMissingColumns.attributes", attributes);
+                        scope.evDataService.setGroups(scope.groups);
+                        scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    }
 
-                        scope.groups = scope.groups.map(function (group) {
+                });
 
-                            group.status = 'ok';
+            };
 
-                            if (group.key.indexOf('attributes.') !== -1) {
+            var flagMissingGroups = function () {
 
-                                isMissing = true;
+                console.log("flagMissingColumns.columns", scope.columns);
 
-                                attributes.forEach(function (attribute) {
+                var attributeTypes;
+                var attributes;
 
-                                    if (group.key === attribute.key) {
-                                        isMissing = false;
-                                    }
+                if (scope.isReport) {
 
+                    switch (scope.entityType) {
 
-                                });
+                        case 'balance-report':
+                            attributes = scope.attributeDataService.getBalanceReportAttributes();
+                            break;
 
-                                if (isMissing) {
-                                    group.status = 'missing'
-                                }
+                        case 'pl-report':
+                            attributes = scope.attributeDataService.getPlReportAttributes();
+                            break;
 
-                            }
-
-                            return group
-
-                        });
-
-                        scope.evDataService.setGroups(scope.groups)
-
-
-                    } else {
-
-                        attributeTypes = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
-
-                        console.log("flagMissingColumns.attributeTypes", attributeTypes);
-
-                        var user_code;
-                        var isMissing;
-
-                        scope.groups = scope.groups.map(function (group) {
-
-                            group.status = 'ok';
-
-                            if (group.key.indexOf('attributes.') !== -1) {
-
-                                isMissing = true;
-
-                                user_code = group.key.split('attributes.')[1];
-
-                                attributeTypes.forEach(function (attributeType) {
-
-                                    if (attributeType.user_code === user_code) {
-                                        isMissing = false;
-                                    }
-
-                                });
-
-                                if (isMissing) {
-                                    group.status = 'missing'
-                                }
-
-                            }
-
-                            return group
-
-
-                        });
-
-                        scope.evDataService.setGroups(scope.groups)
-
+                        case 'transaction-report':
+                            attributes = scope.attributeDataService.getTransactionReportAttributes();
+                            break;
 
                     }
 
-                }
+                    console.log("flagMissingColumns.attributes", attributes);
 
-                var init = function () {
+                    scope.groups = scope.groups.map(function (group) {
 
-                    scope.updateGroupTypeIds();
-                    flagMissingGroups();
+                        group.status = 'ok';
 
-                    getAttributes();
+                        if (group.key.indexOf('attributes.') !== -1) {
 
-                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+                            isMissing = true;
 
-                        scope.dataLoader = evLoaderHelper.isDataLoading(scope.evDataService)
+                            attributes.forEach(function (attribute) {
 
-                    });
+                                if (group.key === attribute.key) {
+                                    isMissing = false;
+                                }
 
 
-                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                            });
 
-                        scope.dataLoader = evLoaderHelper.isDataLoading(scope.evDataService);
-
-                        scope.$apply();
-
-                    });
-
-                    scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
-
-                        scope.updateGroupTypeIds();
-
-                        scope.groups = scope.evDataService.getGroups();
-                        flagMissingGroups();
-
-                        setDefaultGroupType(scope.evDataService);
-
-                        scope.evDataService.resetData();
-                        scope.evDataService.resetRequestParameters();
-
-                        var rootGroup = scope.evDataService.getRootGroupData();
-
-                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                        if (scope.isReport) {
-
-                            syncColumnsWithGroups();
+                            if (isMissing) {
+                                group.status = 'missing'
+                            }
 
                         }
 
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        return group
 
                     });
 
-                    scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+                    scope.evDataService.setGroups(scope.groups)
 
-                        scope.columns = scope.evDataService.getColumns();
 
-                    })
+                } else {
 
-                };
+                    attributeTypes = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
 
-                init();
+                    console.log("flagMissingColumns.attributeTypes", attributeTypes);
+
+                    var user_code;
+                    var isMissing;
+
+                    scope.groups = scope.groups.map(function (group) {
+
+                        group.status = 'ok';
+
+                        if (group.key.indexOf('attributes.') !== -1) {
+
+                            isMissing = true;
+
+                            user_code = group.key.split('attributes.')[1];
+
+                            attributeTypes.forEach(function (attributeType) {
+
+                                if (attributeType.user_code === user_code) {
+                                    isMissing = false;
+                                }
+
+                            });
+
+                            if (isMissing) {
+                                group.status = 'missing'
+                            }
+
+                        }
+
+                        return group
+
+
+                    });
+
+                    scope.evDataService.setGroups(scope.groups)
+
+
+                }
+
             }
+
+            var init = function () {
+
+                scope.updateGroupTypeIds();
+                flagMissingGroups();
+
+                getAttributes();
+
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+
+                    scope.dataLoader = evLoaderHelper.isDataLoading(scope.evDataService)
+
+                });
+
+
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                    scope.dataLoader = evLoaderHelper.isDataLoading(scope.evDataService);
+
+                    scope.$apply();
+
+                });
+
+                scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+
+                    scope.updateGroupTypeIds();
+
+                    scope.groups = scope.evDataService.getGroups();
+                    flagMissingGroups();
+
+                    setDefaultGroupType(scope.evDataService);
+
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
+
+                    var rootGroup = scope.evDataService.getRootGroupData();
+
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                    if (scope.isReport) {
+
+                        syncColumnsWithGroups();
+
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                });
+
+                scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+                    scope.columns = scope.evDataService.getColumns();
+
+                })
+
+            };
+
+            init();
         }
     }
-
-
-}());
+};

@@ -2,13 +2,16 @@
 import QueuePromisesService from "./queuePromisesService";
 
 import evEvents from "./entityViewerEvents";
+
 // import objectComparisonHelper from "../helpers/objectsComparisonHelper";
-var objectComparisonHelper = require("../helpers/objectsComparisonHelper");
+import objectComparisonHelper from "../helpers/objectsComparisonHelper";
+
 // import metaHelper from "../helpers/meta.helper";
-var metaHelper = require("../helpers/meta.helper");
+import metaHelper from "../helpers/meta.helper";
+
 import utilsHelper from "../helpers/utils.helper";
 
-const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+import localStorageService from '../../../../shell/scripts/app/services/localStorageService';
 
 export default function (metaContentTypesService, uiService, reportHelper, globalDataService) {
 

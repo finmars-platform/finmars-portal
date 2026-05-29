@@ -1,39 +1,32 @@
-/**
- * Created by szhitenev on 23.06.2022.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import expressionProcedureInstanceRepository from '../../repositories/procedures/expressionProcedureInstanceRepository';
 
-    var expressionProcedureInstanceRepository = require('../../repositories/procedures/expressionProcedureInstanceRepository');
+var getList = function (options) {
+    return expressionProcedureInstanceRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return expressionProcedureInstanceRepository.getList(options);
-    };
+var getByKey = function (id) {
+    return expressionProcedureInstanceRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return expressionProcedureInstanceRepository.getByKey(id);
-    };
+var create = function (account) {
+    return expressionProcedureInstanceRepository.create(account);
+};
 
-    var create = function (account) {
-        return expressionProcedureInstanceRepository.create(account);
-    };
+var update = function (id, account) {
+    return expressionProcedureInstanceRepository.update(id, account);
+};
 
-    var update = function (id, account) {
-        return expressionProcedureInstanceRepository.update(id, account);
-    };
+var deleteByKey = function (id) {
+    return expressionProcedureInstanceRepository.deleteByKey(id);
+};
 
-    var deleteByKey = function (id) {
-        return expressionProcedureInstanceRepository.deleteByKey(id);
-    };
+export default {
 
-    module.exports = {
-
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey
-    }
-
-}());
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey
+};

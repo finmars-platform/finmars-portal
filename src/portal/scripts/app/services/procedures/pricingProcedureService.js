@@ -1,93 +1,84 @@
-/**
- * Created by szhitenev on 25.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import pricingProcedureRepository from '../../repositories/procedures/pricingProcedureRepository';
+import portfolioService from '../portfolioService';
+import instrumentTypeService from '../instrumentTypeService';
+import pricingPolicyService from '../pricingPolicyService';
+import instrumentPricingSchemeService from '../pricing/instrumentPricingSchemeService';
+import currencyPricingSchemeService from '../pricing/currencyPricingSchemeService';
 
-    var pricingProcedureRepository = require('../../repositories/procedures/pricingProcedureRepository');
+var getList = function (options) {
+    return pricingProcedureRepository.getList(options);
+};
 
-    var portfolioService = require('../portfolioService').default;
-    var instrumentTypeService = require('../instrumentTypeService').default;
-    var pricingPolicyService = require('../pricingPolicyService').default;;
+var getByKey = function (id) {
+    return pricingProcedureRepository.getByKey(id);
+};
 
-    var instrumentPricingSchemeService = require('../pricing/instrumentPricingSchemeService');
-    var currencyPricingSchemeService = require('../pricing/currencyPricingSchemeService');
+var create = function (account) {
+    return pricingProcedureRepository.create(account);
+};
 
-    var getList = function (options) {
-        return pricingProcedureRepository.getList(options);
+var update = function (id, account) {
+    return pricingProcedureRepository.update(id, account);
+};
+
+var deleteByKey = function (id) {
+    return pricingProcedureRepository.deleteByKey(id);
+};
+
+var runProcedure = function (id, data) {
+    return pricingProcedureRepository.runProcedure(id, data);
+};
+
+var loadRelatedData = function () {
+
+    var promisesList = [
+        instrumentTypeService.getList({ pageSize: 1000 }),
+        pricingPolicyService.getList({ pageSize: 1000 }),
+        portfolioService.getList({ pageSize: 1000 }),
+
+        instrumentPricingSchemeService.getList({ pageSize: 1000 }),
+        currencyPricingSchemeService.getList({ pageSize: 1000 }),
+    ];
+
+    var mapOpts = function (promiseRes) {
+        return promiseRes.results.map(function (item) {
+            return {
+                id: item.user_code,
+                name: item.user_code
+            }
+        })
     };
 
-    var getByKey = function (id) {
-        return pricingProcedureRepository.getByKey(id);
-    };
+    return new Promise(function (resolve, reject) {
 
-    var create = function (account) {
-        return pricingProcedureRepository.create(account);
-    };
+        Promise.all(promisesList).then(function (data) {
 
-    var update = function (id, account) {
-        return pricingProcedureRepository.update(id, account);
-    };
+            resolve({
+                instrumentTypes: mapOpts(data[0]),
+                pricingPolicies: mapOpts(data[1]),
+                portfolios: mapOpts(data[2]),
 
-    var deleteByKey = function (id) {
-        return pricingProcedureRepository.deleteByKey(id);
-    };
-
-    var runProcedure = function (id, data) {
-        return pricingProcedureRepository.runProcedure(id, data);
-    };
-
-    var loadRelatedData = function () {
-
-        var promisesList = [
-            instrumentTypeService.getList({ pageSize: 1000 }),
-            pricingPolicyService.getList({ pageSize: 1000 }),
-            portfolioService.getList({ pageSize: 1000 }),
-
-            instrumentPricingSchemeService.getList({ pageSize: 1000 }),
-            currencyPricingSchemeService.getList({ pageSize: 1000 }),
-        ];
-
-        var mapOpts = function (promiseRes) {
-            return promiseRes.results.map(function (item) {
-                return {
-                    id: item.user_code,
-                    name: item.user_code
-                }
+                instrumentPricingSchemes: mapOpts(data[3]),
+                currencyPricingSchemes: mapOpts(data[4]),
             })
-        };
 
-        return new Promise(function (resolve, reject) {
+        }).catch(function (e) { reject(e) });
 
-            Promise.all(promisesList).then(function (data) {
-
-                resolve({
-                    instrumentTypes: mapOpts(data[0]),
-                    pricingPolicies: mapOpts(data[1]),
-                    portfolios: mapOpts(data[2]),
-
-                    instrumentPricingSchemes: mapOpts(data[3]),
-                    currencyPricingSchemes: mapOpts(data[4]),
-                })
-
-            }).catch(function (e) { reject(e) });
-
-        });
+    });
 
 
-    }
+}
 
-    module.exports = {
+export default {
 
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey,
 
-        loadRelatedData: loadRelatedData,
-        runProcedure: runProcedure,
-    }
-
-}());
+    loadRelatedData: loadRelatedData,
+    runProcedure: runProcedure,
+};

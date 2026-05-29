@@ -2,7 +2,7 @@
  * Created by sergey on 11.05.16.
  */
 
-const evEvents = require('../../services/entityViewerEvents').default;
+import evEvents from '../../services/entityViewerEvents';
 
 export default function (evRvDomManagerService) {
     return {

@@ -1,38 +1,30 @@
-/**
- * Created by szhitenev on 05.09.2024.
- */
-(function () {
+import balanceReportInstanceRepository from '../repositories/balanceReportInstanceRepository';
 
-    var balanceReportInstanceRepository = require('../repositories/balanceReportInstanceRepository');
+var getList = function (options) {
+    return balanceReportInstanceRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return balanceReportInstanceRepository.getList(options);
-    };
+var getByKey = function (id) {
+    return balanceReportInstanceRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return balanceReportInstanceRepository.getByKey(id);
-    };
+var create = function(account) {
+    return balanceReportInstanceRepository.create(account);
+};
 
-    var create = function(account) {
-        return balanceReportInstanceRepository.create(account);
-    };
+var update = function(id, account) {
+    return balanceReportInstanceRepository.update(id, account);
+};
 
-    var update = function(id, account) {
-        return balanceReportInstanceRepository.update(id, account);
-    };
+var deleteByKey = function (id) {
+    return balanceReportInstanceRepository.deleteByKey(id);
+};
 
-    var deleteByKey = function (id) {
-        return balanceReportInstanceRepository.deleteByKey(id);
-    };
+export default {
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey,
 
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
-
-    }
-
-
-}());
+};

@@ -1,95 +1,88 @@
-/**
- * Created by szhitenev on 29.04.2020.
- */
-(function () {
-
-    'use strict';
+'use strict';
 
 
-    var instrumentEventService = require('../../services/instrumentEventService');
+import instrumentEventService from '../../services/instrumentEventService';
 
-    module.exports = function singleInstrumentGenerateEventDialogController($scope, $mdDialog, data) {
+export default function singleInstrumentGenerateEventDialogController($scope, $mdDialog, data) {
 
-        var vm = this;
+    var vm = this;
 
-        vm.instrument = data.instrument;
-        vm.contextData = data.contextData;
+    vm.instrument = data.instrument;
+    vm.contextData = data.contextData;
 
-        vm.options = {};
+    vm.options = {};
 
-        vm.pricingPolicies = [];
+    vm.pricingPolicies = [];
 
-        vm.pricingPolicyFilter = {};
+    vm.pricingPolicyFilter = {};
 
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.requestEvents = function (sortingOptions) {
+    vm.requestEvents = function (sortingOptions) {
 
-            return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
 
-                var options = {};
-                if (sortingOptions && sortingOptions.hasOwnProperty("sort")) {
-                    options.sort = {};
-                    options.sort = sortingOptions.sort;
-                }
+            var options = {};
+            if (sortingOptions && sortingOptions.hasOwnProperty("sort")) {
+                options.sort = {};
+                options.sort = sortingOptions.sort;
+            }
 
-                options.filters = {};
-                options.filters.effective_date_0 = vm.options.effective_date_0;
-                options.filters.effective_date_1 = vm.options.effective_date_1;
-                options.filters.status = 1;
+            options.filters = {};
+            options.filters.effective_date_0 = vm.options.effective_date_0;
+            options.filters.effective_date_1 = vm.options.effective_date_1;
+            options.filters.status = 1;
 
-                // options.filters = filters;
-                instrumentEventService.getList(options).then(function (data) {
+            // options.filters = filters;
+            instrumentEventService.getList(options).then(function (data) {
 
-                    vm.events = data.results;
+                vm.events = data.results;
 
-                    resolve(vm.events);
+                resolve(vm.events);
+
+            })
+
+        })
+
+    };
+
+    vm.agree = function () {
+
+        vm.options.instrument = vm.instrument.id;
+
+        instrumentEventService.generateEventsRangeForSingleInstrument(vm.options).then(function (data) {
+
+            setTimeout(function () {
+
+                vm.requestEvents().then(function (data) {
+
+                    $mdDialog.hide({
+                        status: 'agree', data: {
+                            events: vm.events
+                        }
+                    });
 
                 })
 
-            })
-
-        };
-
-        vm.agree = function () {
-
-            vm.options.instrument = vm.instrument.id;
-
-            instrumentEventService.generateEventsRangeForSingleInstrument(vm.options).then(function (data) {
-
-                setTimeout(function () {
-
-                    vm.requestEvents().then(function (data) {
-
-                        $mdDialog.hide({
-                            status: 'agree', data: {
-                                events: vm.events
-                            }
-                        });
-
-                    })
-
-                }, 2000)
+            }, 2000)
 
 
 
-            })
+        })
 
-        };
+    };
 
 
 
 
-        vm.init = function () {
+    vm.init = function () {
 
 
-        };
+    };
 
-        vm.init();
+    vm.init();
 
-    }
-
-}());
+};

@@ -25,7 +25,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     // let finmarsBroadcastChannel = new BroadcastChannel('finmars_broadcast');
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
-    vm.PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+    vm.PROJECT_ENV = window.PROJECT_ENV; // Set by /public/config.js
 
     // vm.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
 

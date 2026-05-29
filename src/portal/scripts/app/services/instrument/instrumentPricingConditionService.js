@@ -1,22 +1,14 @@
-/**
- * Created by szhitenev on 04.05.2016.
- */
-(function () {
+import instrumentPricingConditionRepository from '../../repositories/instrument/instrumentPricingConditionRepository';
 
-    var instrumentPricingConditionRepository = require('../../repositories/instrument/instrumentPricingConditionRepository');
+var getList = function (options) {
+    return instrumentPricingConditionRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return instrumentPricingConditionRepository.getList(options);
-    };
+var getByKey = function (id) {
+    return instrumentPricingConditionRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return instrumentPricingConditionRepository.getByKey(id);
-    };
-
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey
-    }
-
-
-}());
+export default {
+    getList: getList,
+    getByKey: getByKey
+};
