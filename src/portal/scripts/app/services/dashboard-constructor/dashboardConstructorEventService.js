@@ -1,64 +1,60 @@
-(function () {
+export default function () {
 
-    module.exports = function () {
+    var events = {};
 
-        var events = {};
+    function addEventListener(eventName, callback) {
 
-        function addEventListener(eventName, callback) {
-
-            if (!events.hasOwnProperty(eventName)) {
-                events[eventName] = [];
-            }
-
-            events[eventName].push(callback);
-
-            return events[eventName].length - 1
-
+        if (!events.hasOwnProperty(eventName)) {
+            events[eventName] = [];
         }
 
-        function removeEventListener(eventName, index) {
+        events[eventName].push(callback);
 
-            if (!events.hasOwnProperty(eventName)) {
-                throw "Event is not exist";
-            }
+        return events[eventName].length - 1
 
-            if (index < 0) {
-                throw "Index is 0 or lesser";
-            }
-
-            if (index > events[eventName].length) {
-                throw "Index is greater then listeners count"
-            }
-
-            delete events[eventName][index]
-
-        }
-
-        function dispatchEvent(eventName) {
-
-            console.log('Event dispatched: ' + eventName);
-
-            // console.log('events[eventName]', events[eventName]);
-
-            if (events.hasOwnProperty(eventName)) {
-
-                events[eventName].forEach(function (callback) {
-                    callback();
-                })
-
-            } else {
-
-                // console.warn('Event ' + eventName + ' is not listened');
-                // throw "Event is not listened"
-            }
-
-        }
-
-        return {
-            addEventListener: addEventListener,
-            removeEventListener: removeEventListener,
-            dispatchEvent: dispatchEvent
-        }
     }
 
-}());
+    function removeEventListener(eventName, index) {
+
+        if (!events.hasOwnProperty(eventName)) {
+            throw "Event is not exist";
+        }
+
+        if (index < 0) {
+            throw "Index is 0 or lesser";
+        }
+
+        if (index > events[eventName].length) {
+            throw "Index is greater then listeners count"
+        }
+
+        delete events[eventName][index]
+
+    }
+
+    function dispatchEvent(eventName) {
+
+        console.log('Event dispatched: ' + eventName);
+
+        // console.log('events[eventName]', events[eventName]);
+
+        if (events.hasOwnProperty(eventName)) {
+
+            events[eventName].forEach(function (callback) {
+                callback();
+            })
+
+        } else {
+
+            // console.warn('Event ' + eventName + ' is not listened');
+            // throw "Event is not listened"
+        }
+
+    }
+
+    return {
+        addEventListener: addEventListener,
+        removeEventListener: removeEventListener,
+        dispatchEvent: dispatchEvent
+    }
+};

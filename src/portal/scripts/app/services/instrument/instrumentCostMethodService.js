@@ -1,17 +1,9 @@
-/**
- * Created by szhitenev on 04.05.2016.
- */
-(function () {
+import instrumentCostMethodRepository from '../../repositories/instrument/instrumentCostMethodRepository';
 
-    var instrumentCostMethodRepository = require('../../repositories/instrument/instrumentCostMethodRepository');
+var getList = function (options) {
+    return instrumentCostMethodRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return instrumentCostMethodRepository.getList(options);
-    };
-
-    module.exports = {
-        getList: getList
-    }
-
-
-}());
+export default {
+    getList: getList
+};

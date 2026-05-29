@@ -1,145 +1,138 @@
-/**
- * Created by szhitenev on 13.03.2020.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import pricingParentProcedureService from '../../services/procedures/pricingParentProcedureService';
 
-    var pricingParentProcedureService = require('../../services/procedures/pricingParentProcedureService');
+export default function ($scope, $mdDialog) {
 
-    module.exports = function ($scope, $mdDialog) {
+    var vm = this;
 
-        var vm = this;
+    vm.procedures = [];
 
-        vm.procedures = [];
+    vm.readyStatus = {procedures: false};
 
-        vm.readyStatus = {procedures: false};
+    vm.getList = function () {
 
-        vm.getList = function () {
+        pricingParentProcedureService.getList().then(function (data) {
 
-            pricingParentProcedureService.getList().then(function (data) {
+            vm.procedures = data.results.map(function (item) {
 
-                vm.procedures = data.results.map(function (item) {
-
-                    item.processed_procedures = item.procedures.filter(function (procedure) {
-                        return procedure.status !== 'P'
-                    }).length;
-
-                    if (item.processed_procedures) {
-                        item.progress_percent = Math.floor(item.processed_procedures / item.procedures.length * 100)
-                    } else {
-                        item.progress_percent = 0;
-                    }
-
-                    return item
-                });
-
-                console.log(vm.procedures);
-
-                vm.readyStatus.procedures = true;
-
-                $scope.$apply();
-
-            })
-        };
-
-        vm.refreshItem = function ($index, item) {
-
-            pricingParentProcedureService.getByKey(item.id).then(function (data) {
-
-                data.opened = item.opened;
-
-                data.processed_procedures = data.procedures.filter(function (procedure) {
+                item.processed_procedures = item.procedures.filter(function (procedure) {
                     return procedure.status !== 'P'
                 }).length;
 
-                if (data.processed_procedures) {
-                    data.progress_percent = Math.floor(data.processed_procedures / data.procedures.length * 100)
+                if (item.processed_procedures) {
+                    item.progress_percent = Math.floor(item.processed_procedures / item.procedures.length * 100)
                 } else {
-                    data.progress_percent = 0;
+                    item.progress_percent = 0;
                 }
 
-
-                vm.procedures.splice($index, 1, data);
-
-                console.log('data', data);
-
-                $scope.$apply();
-
+                return item
             });
 
-        };
+            console.log(vm.procedures);
 
-        vm.showErrorDetails = function ($event, procedure) {
+            vm.readyStatus.procedures = true;
 
-            var description;
+            $scope.$apply();
 
-            description = "<div>";
+        })
+    };
 
-            description = description + "<p> <b>Status Code:</b> " + procedure.error_code + "</p>";
-            description = description + "<p> <b>Description:</b> <br/><br/> " + procedure.error_message + "</p>";
+    vm.refreshItem = function ($index, item) {
 
-            description = description + '</div>';
+        pricingParentProcedureService.getByKey(item.id).then(function (data) {
 
-            $mdDialog.show({
-                controller: 'InfoDialogController as vm',
-                templateUrl: 'views/info-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                clickOutsideToClose: false,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                locals: {
-                    info: {
-                        title: 'Procedure Error Details',
-                        description: description
-                    }
-                }
-            });
+            data.opened = item.opened;
 
+            data.processed_procedures = data.procedures.filter(function (procedure) {
+                return procedure.status !== 'P'
+            }).length;
 
-        };
-
-        vm.showRequestDetails = function ($event, procedure) {
-
-            var text;
-
-            if (procedure.request_data) {
-                text = JSON.stringify(procedure.request_data, null, 4)
+            if (data.processed_procedures) {
+                data.progress_percent = Math.floor(data.processed_procedures / data.procedures.length * 100)
             } else {
-                text = 'No request data found'
+                data.progress_percent = 0;
             }
 
-            $mdDialog.show({
-                controller: 'InfoDialogController as vm',
-                templateUrl: 'views/info-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                clickOutsideToClose: false,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                locals: {
-                    info: {
-                        title: 'Procedure Request',
-                        description: text
-                    }
-                }
-            });
 
-        }
+            vm.procedures.splice($index, 1, data);
 
-        vm.init = function () {
+            console.log('data', data);
 
-            vm.getList();
+            $scope.$apply();
 
-        };
-
-        vm.init();
+        });
 
     };
 
-}());
+    vm.showErrorDetails = function ($event, procedure) {
+
+        var description;
+
+        description = "<div>";
+
+        description = description + "<p> <b>Status Code:</b> " + procedure.error_code + "</p>";
+        description = description + "<p> <b>Description:</b> <br/><br/> " + procedure.error_message + "</p>";
+
+        description = description + '</div>';
+
+        $mdDialog.show({
+            controller: 'InfoDialogController as vm',
+            templateUrl: 'views/info-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            clickOutsideToClose: false,
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            multiple: true,
+            locals: {
+                info: {
+                    title: 'Procedure Error Details',
+                    description: description
+                }
+            }
+        });
+
+
+    };
+
+    vm.showRequestDetails = function ($event, procedure) {
+
+        var text;
+
+        if (procedure.request_data) {
+            text = JSON.stringify(procedure.request_data, null, 4)
+        } else {
+            text = 'No request data found'
+        }
+
+        $mdDialog.show({
+            controller: 'InfoDialogController as vm',
+            templateUrl: 'views/info-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            clickOutsideToClose: false,
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            multiple: true,
+            locals: {
+                info: {
+                    title: 'Procedure Request',
+                    description: text
+                }
+            }
+        });
+
+    }
+
+    vm.init = function () {
+
+        vm.getList();
+
+    };
+
+    vm.init();
+
+};

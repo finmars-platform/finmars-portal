@@ -4,9 +4,11 @@
 
 import UiRepository from "../repositories/uiRepository";
 import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
+
 // var localStorageService = require("../../../../shell/scripts/app/services/localStorageService");
 // import metaService from "./metaService";
-var metaService = require("./metaService").default;
+import metaService from "./metaService";
+
 import globalDataService from "../../../../shell/scripts/app/services/globalDataService";
 
 export default function (cookieService, xhrService, ecosystemDefaultService, metaContentTypesService, globalDataService) {
@@ -957,4 +959,4 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
 
     }
 
-};
+}

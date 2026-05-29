@@ -1,19 +1,12 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function(){
+'use strict';
 
-    'use strict';
+export default function($scope, $mdDialog, data){
 
-    module.exports = function($scope, $mdDialog, data){
+    var vm = this;
 
-        var vm = this;
+    vm.info = data;
 
-        vm.info = data;
-
-        vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
-        };
-    }
-
-}());
+    vm.agree = function () {
+        $mdDialog.hide({status: 'agree'});
+    };
+};

@@ -1,6 +1,6 @@
 'use strict';
 
-const utilsHelper = require('../../helpers/utils.helper');
+import utilsHelper from '../../helpers/utils.helper';
 
 export default function () {
 

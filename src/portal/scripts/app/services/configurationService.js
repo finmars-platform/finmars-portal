@@ -4,7 +4,7 @@
 
 // import baseUrlService from "./baseUrlService";
 import baseUrlService from "./baseUrlService";
-const configureRepositoryUrlService = require('./configureRepositoryUrlService').default;
+import configureRepositoryUrlService from './configureRepositoryUrlService';
 
 export default function (cookieService, xhrService) {
 

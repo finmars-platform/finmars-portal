@@ -3,10 +3,11 @@
 // const cookieService = require('../../../../core/services/cookieService').default;
 import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
 import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents.js";
+
 // import {sys} from "browserify/lib/builtins";
 // import {window} from "../../../../../libs/js/d3"; // wtf?
 
-const metaService = require('../services/metaService').default; // TODO inject into angular dependencies
+import metaService from '../services/metaService'; // TODO inject into angular dependencies
 
 export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, uiService, globalDataService, systemMessageService, redirectionService, evRvLayoutsHelper) {
 
@@ -640,4 +641,4 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
         }
     }
 
-};
+}

@@ -1,65 +1,57 @@
-/**
- * Created by szhitenev on 25.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import logService from '../../../../../../core/services/logService';
+import evEditorEvents from '../../../services/ev-editor/entityViewerEditorEvents';
 
-    var logService = require('../../../../../../core/services/logService');
+export default function ($scope) {
 
-	var evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
+    logService.controller('FactorScheduleTabController', 'initialized');
 
-    module.exports = function ($scope) {
+    var vm = this;
 
-        logService.controller('FactorScheduleTabController', 'initialized');
+    vm.entity = $scope.$parent.vm.entity;
 
-        var vm = this;
+    vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
 
-        vm.entity = $scope.$parent.vm.entity;
+    console.log('----------------------------------', vm.entity);
 
-		vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
+    vm.newItem = {};
+    vm.newItem.date = new Date();
 
-        console.log('----------------------------------', vm.entity);
+    vm.toggleQuery = function () {
+        vm.queryStatus = !vm.queryStatus;
+        vm.query = {};
+    };
 
-        vm.newItem = {};
-        vm.newItem.date = new Date();
+    vm.setSort = function(propertyName) {
+        vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
+        vm.sort = propertyName;
+    };
 
-        vm.toggleQuery = function () {
-            vm.queryStatus = !vm.queryStatus;
-            vm.query = {};
-        };
+    vm.editItem = function (item) {
+        item.editStatus = true;
+    };
 
-        vm.setSort = function(propertyName) {
-            vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
-            vm.sort = propertyName;
-        };
+    vm.saveItem = function (item) {
+        item.editStatus = false;
+    };
 
-        vm.editItem = function (item) {
-            item.editStatus = true;
-        };
+    vm.deleteItem = function (item, index) {
+        vm.entity.factor_schedules.splice(index, 1);
+    };
 
-        vm.saveItem = function (item) {
-            item.editStatus = false;
-        };
+    vm.addRow = function () {
+        vm.entity.factor_schedules.push({
+            factor_value: vm.newItem.value,
+            effective_date: moment(new Date(vm.newItem.date)).format('YYYY-MM-DD')
+        });
 
-        vm.deleteItem = function (item, index) {
-            vm.entity.factor_schedules.splice(index, 1);
-        };
-
-        vm.addRow = function () {
-            vm.entity.factor_schedules.push({
-                factor_value: vm.newItem.value,
-                effective_date: moment(new Date(vm.newItem.date)).format('YYYY-MM-DD')
-            });
-
-            vm.newItem.value = null;
-            vm.newItem.date = null
-        }
-
-		vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
-			vm.entity = $scope.$parent.vm.entity;
-		});
-
+        vm.newItem.value = null;
+        vm.newItem.date = null
     }
 
-}());
+    vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
+        vm.entity = $scope.$parent.vm.entity;
+    });
+
+};

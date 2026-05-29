@@ -1,18 +1,10 @@
-/**
- * Created by szhitenev on 15.10.2022.
- */
-(function () {
+import dataStatsRepository from '../repositories/dataStatsRepository';
 
-    var dataStatsRepository = require('../repositories/dataStatsRepository');
+var getStats = function (period) {
+    return dataStatsRepository.getStats(period);
+};
 
-    var getStats = function (period) {
-        return dataStatsRepository.getStats(period);
-    };
+export default {
+    getStats: getStats,
 
-    module.exports = {
-        getStats: getStats,
-
-    }
-
-
-}());
+};

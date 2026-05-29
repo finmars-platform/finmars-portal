@@ -1,259 +1,250 @@
-/**
- * Created by szhitenev on 04.05.2016.
- */
-// import baseUrlService from "../services/baseUrlService";
-(function () {
+'use strict';
 
-    'use strict';
+import baseUrlService from "../services/baseUrlService";
+import cookieService from '../../../../core/services/cookieService';
+import xhrService from '../../../../core/services/xhrService';
+import configureRepositoryUrlService from '../services/configureRepositoryUrlService';
+// var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrlService = require("../services/baseUrlService").default;
-    var cookieService = require('../../../../core/services/cookieService').default;
-    var xhrService = require('../../../../core/services/xhrService').default;
+var baseUrl = baseUrlService.resolve();
 
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService').default;
-    // var baseUrlService = require('../services/baseUrlService');
+var getClassifierNodeList = function () {
 
-    var baseUrl = baseUrlService.resolve();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var getClassifierNodeList = function () {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-classifier/node/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var getClassifierNodeByKey = function (id) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-classifier/node/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var getClassifierNodeByKey = function (id) {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-classifier/node/' + id + '/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var getClassifierList = function () {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-classifier/node/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var getClassifierList = function () {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-classifier/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var getClassifierByKey = function (id) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-classifier/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var getClassifierByKey = function (id) {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-classifier/' + id + '/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var getList = function (options) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-classifier/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var getList = function (options) {
+    return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/', options),
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var getListLight = function (options) {
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var getListLight = function (options) {
+    return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/light/', options),
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var getByKey = function (id) {
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/light/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var getByKey = function (id) {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/' + id + '/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var create = function (portfolio) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var create = function (portfolio) {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/',
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(portfolio)
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var update = function (id, portfolio) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(portfolio)
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var update = function (id, portfolio) {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/' + id + '/',
+        {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(portfolio)
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var updateBulk = function (portfolios) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/' + id + '/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(portfolio)
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var updateBulk = function (portfolios) {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/bulk-update/',
+        {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(portfolios)
+        })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var deleteByKey = function (id) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/bulk-update/',
-            {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(portfolios)
-            })
-    };
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-    var deleteByKey = function (id) {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/' + id + '/',
+        {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+        return new Promise(function (resolve, reject) {
+            resolve({status: 'deleted'});
+        });
+        //return data.json();
+    })
+};
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+var deleteBulk = function (data) {
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/' + id + '/',
-            {
-                method: 'DELETE',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
+
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/bulk-delete/',
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(function (data) {
             return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
-            //return data.json();
         })
-    };
+};
 
-    var deleteBulk = function (data) {
+export default {
+    getClassifierNodeList: getClassifierNodeList,
+    getClassifierNodeByKey: getClassifierNodeByKey,
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    getClassifierList: getClassifierList,
+    getClassifierByKey: getClassifierByKey,
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio/bulk-delete/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(function (data) {
-                return new Promise(function (resolve, reject) {
-                    resolve({status: 'deleted'});
-                });
-            })
-    };
+    getList: getList,
+    getListLight: getListLight,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey,
 
-    module.exports = {
-        getClassifierNodeList: getClassifierNodeList,
-        getClassifierNodeByKey: getClassifierNodeByKey,
-
-        getClassifierList: getClassifierList,
-        getClassifierByKey: getClassifierByKey,
-
-        getList: getList,
-        getListLight: getListLight,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
-
-        updateBulk: updateBulk,
-        deleteBulk: deleteBulk
-    }
-
-}());
+    updateBulk: updateBulk,
+    deleteBulk: deleteBulk
+};

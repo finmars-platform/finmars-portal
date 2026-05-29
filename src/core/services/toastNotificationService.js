@@ -1,40 +1,28 @@
-/**
- * Created by szhitenev on 15.06.2016.
- *
- * Deprecated. Use shell/scripts/app/services/toastNotificationService.js instead.
- *
- */
+var success = function (message) {
+    toastr.success(message);
+};
 
-(function () {
+var error = function (message) {
 
-    var success = function (message) {
-        toastr.success(message);
-    };
+    var searchParams = new URLSearchParams(window.location.search);
 
-    var error = function (message) {
+    // if (searchParams.get('debug') === 'true') {
+        toastr.error(message);
+    // }
 
-        var searchParams = new URLSearchParams(window.location.search);
+};
 
-        // if (searchParams.get('debug') === 'true') {
-            toastr.error(message);
-        // }
+var warning = function (message) {
+    toastr.warning(message)
+};
 
-    };
+var info = function (message) {
+    toastr.info(message);
+};
 
-    var warning = function (message) {
-        toastr.warning(message)
-    };
-
-    var info = function (message) {
-        toastr.info(message);
-    };
-
-    module.exports = {
-        success: success,
-        error: error,
-        info: info,
-        warning: warning
-    }
-
-
-}());
+export default {
+    success: success,
+    error: error,
+    info: info,
+    warning: warning
+};

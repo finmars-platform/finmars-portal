@@ -1,129 +1,122 @@
-/**
- * Created by szhitenev on 03.08.2023.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import portfolioBundleService from '../../services/portfolioBundleService';
 
-    var portfolioBundleService = require('../../services/portfolioBundleService');
+export default function ($scope, $mdDialog) {
 
-    module.exports = function ($scope, $mdDialog) {
+    var vm = this;
 
-        var vm = this;
+    vm.readyStatus = {content: false};
+    vm.items = [];
 
-        vm.readyStatus = {content: false};
-        vm.items = [];
+    vm.getList = function () {
 
-        vm.getList = function () {
+        portfolioBundleService.getList({
+            pageSize: 1000
+        }).then(function (data) {
 
-            portfolioBundleService.getList({
-                pageSize: 1000
-            }).then(function (data) {
+            vm.items = data.results;
 
-                vm.items = data.results;
+            vm.readyStatus.content = true;
 
-                vm.readyStatus.content = true;
+            $scope.$apply();
 
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.editPortfolioBundle = function ($event, item) {
-
-            $mdDialog.show({
-                controller: 'PortfolioBundleDialogController as vm',
-                templateUrl: 'views/dialogs/portfolio-bundle-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                clickOutsideToClose: false,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                locals: {
-                    data: {
-                        item: item
-                    }
-
-                }
-            }).then(function (res) {
-
-                if(res.status === 'agree') {
-                    vm.getList();
-                }
-
-            })
-
-        };
-
-        vm.addPortfolioBundle = function ($event) {
-
-            $mdDialog.show({
-                controller: 'PortfolioBundleDialogController as vm',
-                templateUrl: 'views/dialogs/portfolio-bundle-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                clickOutsideToClose: false,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                locals: {
-                    data: {}
-
-                }
-            }).then(function (res) {
-
-                if(res.status === 'agree') {
-                    vm.getList();
-                }
-
-            })
-
-        };
-
-        vm.deletePortfolioBundle = function($event, item, $index){
-
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                clickOutsideToClose: false,
-                locals: {
-                    warning: {
-                        title: 'Warning',
-                        description: "<p>Are you sure you want to delete Portfolio Bundle <b>" + item.name + '</b>?</p>'
-                    }
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    portfolioBundleService.deleteByKey(item.id).then(function (value) {
-                        vm.getList();
-                    })
-
-                }
-
-            })
-
-        };
-
-        vm.init = function () {
-
-            vm.getList();
-
-        };
-
-        vm.init();
+        })
 
     };
 
-}());
+    vm.editPortfolioBundle = function ($event, item) {
+
+        $mdDialog.show({
+            controller: 'PortfolioBundleDialogController as vm',
+            templateUrl: 'views/dialogs/portfolio-bundle-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            clickOutsideToClose: false,
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            multiple: true,
+            locals: {
+                data: {
+                    item: item
+                }
+
+            }
+        }).then(function (res) {
+
+            if(res.status === 'agree') {
+                vm.getList();
+            }
+
+        })
+
+    };
+
+    vm.addPortfolioBundle = function ($event) {
+
+        $mdDialog.show({
+            controller: 'PortfolioBundleDialogController as vm',
+            templateUrl: 'views/dialogs/portfolio-bundle-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            clickOutsideToClose: false,
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            multiple: true,
+            locals: {
+                data: {}
+
+            }
+        }).then(function (res) {
+
+            if(res.status === 'agree') {
+                vm.getList();
+            }
+
+        })
+
+    };
+
+    vm.deletePortfolioBundle = function($event, item, $index){
+
+        $mdDialog.show({
+            controller: 'WarningDialogController as vm',
+            templateUrl: 'views/dialogs/warning-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            clickOutsideToClose: false,
+            locals: {
+                warning: {
+                    title: 'Warning',
+                    description: "<p>Are you sure you want to delete Portfolio Bundle <b>" + item.name + '</b>?</p>'
+                }
+            },
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            multiple: true
+        }).then(function (res) {
+
+            if (res.status === 'agree') {
+
+                portfolioBundleService.deleteByKey(item.id).then(function (value) {
+                    vm.getList();
+                })
+
+            }
+
+        })
+
+    };
+
+    vm.init = function () {
+
+        vm.getList();
+
+    };
+
+    vm.init();
+
+};

@@ -1,184 +1,179 @@
-(function () {
+'use strict';
 
-	'use strict';
+import gtEvents from '../../../services/gridTableEvents';
+import ChipsListEventService from "../../../services/eventService";
+import directivesEvents from "../../../services/events/directivesEvents";
 
-	let gtEvents = require('../../../services/gridTableEvents');
+export default function ($mdDialog) {
+    return {
+        restrict: 'E',
+        scope: {
+            row: '=',
+            column: '=',
+            gtDataService: '=',
+            gtEventService: '='
+        },
+        templateUrl: 'views/directives/gridTable/cells/grid-table-multiselector-cell-view.html',
+        link: function (scope, elem, attrs) {
 
-	let ChipsListEventService = require("../../../services/eventService");
-	let directivesEvents = require("../../../services/events/directivesEvents");
+            let cellMethods = scope.column.methods || {};
 
-	module.exports = function ($mdDialog) {
-		return {
-			restrict: 'E',
-			scope: {
-				row: '=',
-				column: '=',
-				gtDataService: '=',
-				gtEventService: '='
-			},
-			templateUrl: 'views/directives/gridTable/cells/grid-table-multiselector-cell-view.html',
-			link: function (scope, elem, attrs) {
+            let onCellValueChange = function () {
 
-				let cellMethods = scope.column.methods || {};
+                let rowData = {
+                    key: scope.row.key,
+                    order: scope.row.order
+                };
 
-				let onCellValueChange = function () {
+                let colData = {
+                    key: scope.column.key,
+                    order: scope.column.order
+                };
 
-					let rowData = {
-						key: scope.row.key,
-						order: scope.row.order
-					};
+                if (cellMethods.onChange) {
+                    cellMethods.onChange(rowData, colData, scope.gtDataService, scope.gtEventService);
+                }
 
-					let colData = {
-						key: scope.column.key,
-						order: scope.column.order
-					};
+                scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, {row: rowData, column: colData});
 
-					if (cellMethods.onChange) {
-						cellMethods.onChange(rowData, colData, scope.gtDataService, scope.gtEventService);
-					}
+            };
 
-					scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, {row: rowData, column: colData});
+            let getMultiselectorOptions = function () {
 
-				};
+                return new Promise(function (resolve) {
 
-				let getMultiselectorOptions = function () {
+                    scope.column.settings.getItemsMethod().then(function (data) {
 
-					return new Promise(function (resolve) {
+                        scope.column.settings.selectorOptions = data.results
+                        resolve();
 
-						scope.column.settings.getItemsMethod().then(function (data) {
+                    }).catch(function () {
 
-							scope.column.settings.selectorOptions = data.results
-							resolve();
+                        scope.column.settings.selectorOptions = []
+                        resolve();
 
-						}).catch(function () {
+                    });
 
-							scope.column.settings.selectorOptions = []
-							resolve();
+                });
 
-						});
+            };
 
-					});
+            let formatDataForChips = function () {
 
-				};
+                scope.chipsList = [];
 
-				let formatDataForChips = function () {
+                scope.column.settings.value.forEach(function (selOption) {
 
-					scope.chipsList = [];
+                    let selOptId = selOption;
 
-					scope.column.settings.value.forEach(function (selOption) {
+                    if (typeof selOptId === 'object') {
+                        selOptId = selOption.id;
+                    }
 
-						let selOptId = selOption;
+                    for (let i = 0; i < scope.column.settings.selectorOptions.length; i++) {
 
-						if (typeof selOptId === 'object') {
-							selOptId = selOption.id;
-						}
+                        let option = scope.column.settings.selectorOptions[i];
 
-						for (let i = 0; i < scope.column.settings.selectorOptions.length; i++) {
+                        if (option.id === selOptId) {
 
-							let option = scope.column.settings.selectorOptions[i];
+                            scope.chipsList.push({
+                                id: selOptId,
+                                text: option.name
+                            });
 
-							if (option.id === selOptId) {
+                        }
 
-								scope.chipsList.push({
-									id: selOptId,
-									text: option.name
-								});
+                    }
 
-							}
+                });
 
-						}
+            };
 
-					});
+            let onCellClick = function (event) {
 
-				};
+                event.preventDefault();
+                event.stopPropagation();
 
-				let onCellClick = function (event) {
+                $mdDialog.show({
+                    controller: "TwoFieldsMultiselectDialogController as vm",
+                    templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
+                    targetEvent: event,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            items: scope.column.settings.selectorOptions,
+                            model: scope.column.settings.value,
+                            nameProperty: 'name',
+                            orderOptions: scope.column.settings.orderOptions,
+                            strictOrder: scope.column.settings.strictOrder,
+                            optionsCheckboxes: scope.column.settings.optionsCheckboxes,
+                        }
+                    }
 
-					event.preventDefault();
-					event.stopPropagation();
+                }).then(function (res) {
 
-					$mdDialog.show({
-						controller: "TwoFieldsMultiselectDialogController as vm",
-						templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
-						targetEvent: event,
-						multiple: true,
-						locals: {
-							data: {
-								items: scope.column.settings.selectorOptions,
-								model: scope.column.settings.value,
-								nameProperty: 'name',
-								orderOptions: scope.column.settings.orderOptions,
-								strictOrder: scope.column.settings.strictOrder,
-								optionsCheckboxes: scope.column.settings.optionsCheckboxes,
-							}
-						}
+                    if (res.status === "agree") {
 
-					}).then(function (res) {
+                        scope.column.settings.value = res.selectedItems;
 
-						if (res.status === "agree") {
+                        formatDataForChips();
+                        let chipsList = JSON.parse(JSON.stringify(scope.chipsList));
 
-							scope.column.settings.value = res.selectedItems;
+                        scope.chipsListEventService.dispatchEvent(
+                            directivesEvents.CHIPS_LIST_CHANGED,
+                            {chipsList: chipsList, updateScope: true}
+                        );
 
-							formatDataForChips();
-							let chipsList = JSON.parse(JSON.stringify(scope.chipsList));
+                        setTimeout(function () {
 
-							scope.chipsListEventService.dispatchEvent(
-								directivesEvents.CHIPS_LIST_CHANGED,
-								{chipsList: chipsList, updateScope: true}
-							);
+                            onCellValueChange();
 
-							setTimeout(function () {
+                        }, 500);
 
-								onCellValueChange();
+                    }
 
-							}, 500);
+                });
 
-						}
+            };
 
-					});
+            let init = async function () {
 
-				};
+                scope.chipsListEventService = new ChipsListEventService();
 
-				let init = async function () {
+                scope.chipsOrderSettings = 'true';
 
-					scope.chipsListEventService = new ChipsListEventService();
+                if (scope.strictOrder) {
+                    scope.chipsOrderSettings = ''
+                }
 
-					scope.chipsOrderSettings = 'true';
+                if ( !scope.column.settings.selectorOptions && scope.column.settings.getItemsMethod ) {
+                    await getMultiselectorOptions();
+                }
 
-					if (scope.strictOrder) {
-						scope.chipsOrderSettings = ''
-					}
+                if (!scope.column.isDisabled) {
+                    elem[0].addEventListener('click', onCellClick);
+                }
 
-					if ( !scope.column.settings.selectorOptions && scope.column.settings.getItemsMethod ) {
-						await getMultiselectorOptions();
-					}
+                formatDataForChips();
 
-					if (!scope.column.isDisabled) {
-						elem[0].addEventListener('click', onCellClick);
-					}
+            };
 
-					formatDataForChips();
+            scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
 
-				};
+                formatDataForChips();
 
-				scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
+                scope.chipsListEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
 
-					formatDataForChips();
+                scope.chipsListEventService.dispatchEvent(
+                    directivesEvents.CHIPS_LIST_CHANGED,
+                    {chipsList: scope.chipsList, updateScope: false}
+                );
 
-					scope.chipsListEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
+            });
 
-					scope.chipsListEventService.dispatchEvent(
-						directivesEvents.CHIPS_LIST_CHANGED,
-						{chipsList: scope.chipsList, updateScope: false}
-					);
+            init();
 
-				});
+        }
 
-				init();
-
-			}
-
-		}
-	}
-
-}());
+    }
+};

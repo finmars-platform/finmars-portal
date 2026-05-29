@@ -1,285 +1,281 @@
-(function () {
+'use strict';
 
-	'use strict';
+import popupEvents from "../../../../services/events/popupEvents";
+import evEvents from "../../../../services/entityViewerEvents";
+import metaHelper from '../../../../helpers/meta.helper';
 
-	const popupEvents = require("../../../../services/events/popupEvents");
-	const evEvents = require("../../../../services/entityViewerEvents");
+export default function ($mdDialog, specificDataService, userFilterService, gFiltersHelper) {
+    return {
+        restrict: 'E',
+        scope: {
+            filterKey: '<',
+            evDataService: '=',
+            evEventService: '=',
+            attributeDataService: '=',
+            popupEventService: '=',
 
-	const metaHelper = require('../../../../helpers/meta.helper').default;
+            onCancel: '&',
+            onSave: '&'
+        },
+        templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-filter-view.html',
+        controllerAs: 'vm',
+        controller: ['$scope', function RvFilterController ($scope) {
 
-	module.exports = function ($mdDialog, specificDataService, userFilterService, gFiltersHelper) {
-		return {
-			restrict: 'E',
-			scope: {
-				filterKey: '<',
-				evDataService: '=',
-				evEventService: '=',
-				attributeDataService: '=',
-				popupEventService: '=',
+            let vm = this;
 
-				onCancel: '&',
-				onSave: '&'
-			},
-			templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-filter-view.html',
-			controllerAs: 'vm',
-			controller: ['$scope', function RvFilterController ($scope) {
+            vm.evDataService = $scope.evDataService;
+            vm.evEventService = $scope.evEventService;
+            vm.attributeDataService = $scope.attributeDataService;
+            vm.popupEventService = $scope.popupEventService;
 
-				let vm = this;
+            // vm.columnRowsContent = [];
+            vm.showSelectMenu = false;
 
-				vm.evDataService = $scope.evDataService;
-				vm.evEventService = $scope.evEventService;
-				vm.attributeDataService = $scope.attributeDataService;
-				vm.popupEventService = $scope.popupEventService;
+            vm.isRootEntityViewer = vm.evDataService.isRootEntityViewer();
+            vm.useFromAbove = vm.evDataService.getUseFromAbove();
 
-				// vm.columnRowsContent = [];
-				vm.showSelectMenu = false;
+            vm.filterNotFound = false;
 
-				vm.isRootEntityViewer = vm.evDataService.isRootEntityViewer();
-				vm.useFromAbove = vm.evDataService.getUseFromAbove();
+            const entityType = $scope.evDataService.getEntityType();
+            const contentType = $scope.evDataService.getContentType();
+            const attrsList = vm.attributeDataService.getAllAttributesByEntityType(entityType);
 
-				vm.filterNotFound = false;
+            let filtersList;
+            let useFromAboveFilters;
+            let isUseFromAboveFilter = false;
+            let filterIndex = -1;
 
-				const entityType = $scope.evDataService.getEntityType();
-				const contentType = $scope.evDataService.getContentType();
-				const attrsList = vm.attributeDataService.getAllAttributesByEntityType(entityType);
+            const findFilter = function () {
 
-				let filtersList;
-				let useFromAboveFilters;
-				let isUseFromAboveFilter = false;
-				let filterIndex = -1;
+                let allFilters = structuredClone( vm.evDataService.getFilters() );
+                filtersList = [];
+                useFromAboveFilters = [];
 
-				const findFilter = function () {
+                isUseFromAboveFilter = false;
 
-					let allFilters = structuredClone( vm.evDataService.getFilters() );
-					filtersList = [];
-					useFromAboveFilters = [];
+                allFilters.forEach((filter) => {
 
-					isUseFromAboveFilter = false;
+                    if ( isUseFromAbove(filter) ) {
 
-					allFilters.forEach((filter) => {
+                        useFromAboveFilters.push(filter);
 
-						if ( isUseFromAbove(filter) ) {
+                        if (filter.key === $scope.filterKey) {
 
-							useFromAboveFilters.push(filter);
+                            vm.filter = filter
+                            isUseFromAboveFilter = true;
+                            filterIndex = useFromAboveFilters.length - 1;
 
-							if (filter.key === $scope.filterKey) {
+                        }
 
-								vm.filter = filter
-								isUseFromAboveFilter = true;
-								filterIndex = useFromAboveFilters.length - 1;
+                    }
 
-							}
+                    else {
 
-						}
+                        filtersList.push(filter);
 
-						else {
+                        if (filter.key === $scope.filterKey) {
 
-							filtersList.push(filter);
+                            vm.filter = filter
+                            filterIndex = filtersList.length - 1;
 
-							if (filter.key === $scope.filterKey) {
+                        }
 
-								vm.filter = filter
-								filterIndex = filtersList.length - 1;
+                    }
 
-							}
+                });
 
-						}
+                if (filterIndex > -1) {
+                    vm.filter = gFiltersHelper.setFilterDefaultOptions(vm.filter, true);
 
-					});
+                } else {
+                    vm.filterNotFound = true;
+                }
 
-					if (filterIndex > -1) {
-						vm.filter = gFiltersHelper.setFilterDefaultOptions(vm.filter, true);
+            };
 
-					} else {
-						vm.filterNotFound = true;
-					}
+            const getFilterAttr = attrKey => {
+                return attrsList.find(attr => attr.key === attrKey);
+            };
 
-				};
+            vm.getDataForSelects = async function () {
 
-				const getFilterAttr = attrKey => {
-					return attrsList.find(attr => attr.key === attrKey);
-				};
+                /* var columnRowsContent  = userFilterService.getCellValueByKey(vm.evDataService, vm.filter.key);
 
-				vm.getDataForSelects = async function () {
+                vm.columnRowsContent = columnRowsContent.map(userFilterService.mapColRowsContent); */
 
-					/* var columnRowsContent  = userFilterService.getCellValueByKey(vm.evDataService, vm.filter.key);
+                let filterAttr = getFilterAttr(vm.filter.key);
 
-					vm.columnRowsContent = columnRowsContent.map(userFilterService.mapColRowsContent); */
+                let key = vm.filter.key; // for dynamic attribute
+                let content_type = filterAttr.content_type;
 
-					let filterAttr = getFilterAttr(vm.filter.key);
+                const reportOptions = vm.evDataService.getReportOptions();
 
-					let key = vm.filter.key; // for dynamic attribute
-					let content_type = filterAttr.content_type;
+                // `report_instance_id` needed for custom fields and system attributes of report
+                let options = {
+                    filters: {
+                        report_instance_id: reportOptions.report_instance_id
+                    }
+                };
 
-					const reportOptions = vm.evDataService.getReportOptions();
+                if ( key.startsWith('custom_fields.') ) {
 
-					// `report_instance_id` needed for custom fields and system attributes of report
-					let options = {
-						filters: {
-							report_instance_id: reportOptions.report_instance_id
-						}
-					};
+                    content_type = contentType;
 
-					if ( key.startsWith('custom_fields.') ) {
+                }
+                else if ( !key.includes('attributes.') ) { // not dynamic attribute
 
-						content_type = contentType;
+                    const keyParts = vm.filter.key.split(".");
+                    key = keyParts.at(-1);
 
-					}
-					else if ( !key.includes('attributes.') ) { // not dynamic attribute
+                }
 
-						const keyParts = vm.filter.key.split(".");
-						key = keyParts.at(-1);
+                const res = await specificDataService.getValuesForSelect(
+                    content_type, key, vm.filter.value_type, options
+                );
 
-					}
+                if (vm.filter.value_type === 40) {
+                    // there is data processing inside rvDateFilterDirective
+                    return res;
 
-					const res = await specificDataService.getValuesForSelect(
-						content_type, key, vm.filter.value_type, options
-					);
+                } else {
+                    return res.results.map( userFilterService.mapColRowsContent );
+                }
 
-					if (vm.filter.value_type === 40) {
-						// there is data processing inside rvDateFilterDirective
-						return res;
+            };
 
-					} else {
-						return res.results.map( userFilterService.mapColRowsContent );
-					}
+            var dialogParent = document.querySelector('.dialog-containers-wrap');
 
-				};
+            vm.openUseFromAboveSettings = function () {
 
-				var dialogParent = document.querySelector('.dialog-containers-wrap');
+                return new Promise(function (resolve) {
 
-				vm.openUseFromAboveSettings = function () {
+                    $mdDialog.show({
+                        controller: 'UseFromAboveDialogController as vm',
+                        templateUrl: 'views/dialogs/use-from-above-dialog-view.html',
+                        parent: dialogParent,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                item: vm.filter.options.use_from_above.key,
+                                data: { value_type: vm.filter.value_type },
+                                entityType: vm.filter.options.use_from_above.attrs_entity_type,
+                                filterType: vm.filter.options.filter_type
+                            },
+                            attributeDataService: vm.attributeDataService
+                        }
 
-					return new Promise(function (resolve) {
+                    }).then(function (res) {
 
-						$mdDialog.show({
-							controller: 'UseFromAboveDialogController as vm',
-							templateUrl: 'views/dialogs/use-from-above-dialog-view.html',
-							parent: dialogParent,
-							multiple: true,
-							locals: {
-								data: {
-									item: vm.filter.options.use_from_above.key,
-									data: { value_type: vm.filter.value_type },
-									entityType: vm.filter.options.use_from_above.attrs_entity_type,
-									filterType: vm.filter.options.filter_type
-								},
-								attributeDataService: vm.attributeDataService
-							}
+                        console.log('openUseFromAboveSettings.res', res)
+                        console.log('openUseFromAboveSettings.vm.filter', vm.filter)
 
-						}).then(function (res) {
+                        if (res.status === 'agree') {
 
-							console.log('openUseFromAboveSettings.res', res)
-							console.log('openUseFromAboveSettings.vm.filter', vm.filter)
 
-							if (res.status === 'agree') {
+                            if (vm.filter.options.use_from_above.key !== res.data.item ||
+                                vm.filter.options.filter_type !== res.data.filterType) {
 
+                                vm.filter.options.use_from_above = {}
 
-								if (vm.filter.options.use_from_above.key !== res.data.item ||
-									vm.filter.options.filter_type !== res.data.filterType) {
+                                vm.filter.options.use_from_above.key = res.data.item
+                                vm.filter.options.filter_type = res.data.filterType
+                                vm.filter.options.use_from_above.attrs_entity_type = res.data.attrsEntityType
 
-									vm.filter.options.use_from_above = {}
+                                // resolve('use_from_above');
+                                resolve(vm.filter);
 
-									vm.filter.options.use_from_above.key = res.data.item
-									vm.filter.options.filter_type = res.data.filterType
-									vm.filter.options.use_from_above.attrs_entity_type = res.data.attrsEntityType
+                            }
 
-									// resolve('use_from_above');
-									resolve(vm.filter);
+                        } else {
 
-								}
+                            // resolve(vm.filter.options.filter_type);
+                            resolve(vm.filter);
+                        }
 
-							} else {
+                    });
 
-								// resolve(vm.filter.options.filter_type);
-								resolve(vm.filter);
-							}
+                });
 
-						});
+            }
 
-					});
+            const isUseFromAbove = (filterData) => {
+                return !!(filterData.options.use_from_above && Object.keys(filterData.options.use_from_above).length);
+            };
 
-				}
+            vm.getActiveFilterType = (filterTypesList) => {
 
-				const isUseFromAbove = (filterData) => {
-					return !!(filterData.options.use_from_above && Object.keys(filterData.options.use_from_above).length);
-				};
+                console.log('vm.getActiveFilterType vm.filter', vm.filter)
 
-				vm.getActiveFilterType = (filterTypesList) => {
+                if (vm.filter.options.use_from_above &&
+                    Object.keys(vm.filter.options.use_from_above).length) {
 
-					console.log('vm.getActiveFilterType vm.filter', vm.filter)
+                    return 'use_from_above';
 
-					if (vm.filter.options.use_from_above &&
-						Object.keys(vm.filter.options.use_from_above).length) {
+                } else {
 
-						return 'use_from_above';
+                    const activeType = filterTypesList.find(type => {
+                        // return type.value === vm.filter.options.filter_type;
+                        return type.id === vm.filter.options.filter_type;
+                    });
 
-					} else {
+                    // return activeType ? activeType.value : null;
+                    return activeType ? activeType.id : null;
 
-						const activeType = filterTypesList.find(type => {
-							// return type.value === vm.filter.options.filter_type;
-							return type.id === vm.filter.options.filter_type;
-						});
+                }
 
-						// return activeType ? activeType.value : null;
-						return activeType ? activeType.id : null;
+            };
 
-					}
+            vm.saveFilterSettings = function () {
 
-				};
+                if (isUseFromAboveFilter !== isUseFromAbove(vm.filter)) { // is use from above toggled
 
-				vm.saveFilterSettings = function () {
+                    if (isUseFromAboveFilter) { // became ordinary filter
 
-					if (isUseFromAboveFilter !== isUseFromAbove(vm.filter)) { // is use from above toggled
+                        filtersList.push(vm.filter);
+                        useFromAboveFilters.splice(filterIndex, 1);
 
-						if (isUseFromAboveFilter) { // became ordinary filter
+                    } else { // became use from above filter
 
-							filtersList.push(vm.filter);
-							useFromAboveFilters.splice(filterIndex, 1);
+                        filtersList.splice(filterIndex, 1);
+                        useFromAboveFilters.push(vm.filter);
 
-						} else { // became use from above filter
+                    }
 
-							filtersList.splice(filterIndex, 1);
-							useFromAboveFilters.push(vm.filter);
+                }
 
-						}
+                let allFilters = useFromAboveFilters.concat(filtersList);
 
-					}
+                vm.evDataService.setFilters(allFilters);
 
-					let allFilters = useFromAboveFilters.concat(filtersList);
+                $scope.onSave();
+                $scope.$destroy();
 
-					vm.evDataService.setFilters(allFilters);
+            };
 
-					$scope.onSave();
-					$scope.$destroy();
+            vm.cancel = function () {
+                $scope.onCancel();
+                $scope.$destroy();
+            };
 
-				};
+            const init = function () {
 
-				vm.cancel = function () {
-					$scope.onCancel();
-					$scope.$destroy();
-				};
+                findFilter();
 
-				const init = function () {
+                vm.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-					findFilter();
+                    findFilter();
 
-					vm.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+                });
 
-						findFilter();
 
-					});
+                vm.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, function () {
+                    $scope.$destroy();
+                });
 
+            };
 
-					vm.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, function () {
-						$scope.$destroy();
-					});
+            init();
 
-				};
-
-				init();
-
-			}]
-		};
-	}
-}());
+        }]
+    };
+};

@@ -1,111 +1,104 @@
-/**
- * Created by szhitenev on 23.06.2022.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import expressionProcedureService from '../../../services/procedures/expressionProcedureService';
 
-    var expressionProcedureService = require('../../../services/procedures/expressionProcedureService').default;
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.item = {};
 
-        vm.item = {};
+    vm.schemes = [];
+    vm.providers = [];
 
-        vm.schemes = [];
-        vm.providers = [];
+    vm.readyStatus = {procedure: false};
 
-        vm.readyStatus = {procedure: false};
+    vm.toggleStatus = {
+        'date_from': 'datepicker',
+        'date_to': 'datepicker'
+    };
 
-        vm.toggleStatus = {
-            'date_from': 'datepicker',
-            'date_to': 'datepicker'
-        };
+    vm.toggle = function (key) {
 
-        vm.toggle = function (key) {
-
-            if (vm.toggleStatus[key] === 'datepicker') {
-                vm.toggleStatus[key] = 'expr'
-            } else {
-                vm.toggleStatus[key] = 'datepicker'
-            }
-
-            vm.item[key] = null;
-            vm.item[key + '_expr'] = null;
-
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.agree = function () {
-
-            vm.item.code = vm.editor.getValue()
-
-            expressionProcedureService.create(vm.item).then(function (data) {
-
-                $mdDialog.hide({status: 'agree', data: {item: data}});
-
-            })
-
-        };
-
-
-        vm.universalOptionsChange = function () {
-
-            vm.item.data = JSON.parse(vm.item.data_string)
+        if (vm.toggleStatus[key] === 'datepicker') {
+            vm.toggleStatus[key] = 'expr'
+        } else {
+            vm.toggleStatus[key] = 'datepicker'
         }
 
-        vm.universalFieldChange = function () {
-            vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
-        }
+        vm.item[key] = null;
+        vm.item[key + '_expr'] = null;
 
-        vm.initExpressionEditor = function () {
+    };
 
-            setTimeout(function () {
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-                vm.editor = ace.edit('aceEditor');
-                vm.editor.setTheme("ace/theme/monokai");
-                vm.editor.getSession().setMode("ace/mode/python");
-                vm.editor.getSession().setUseWorker(false);
-                vm.editor.setHighlightActiveLine(false);
-                vm.editor.setShowPrintMargin(false);
+    vm.agree = function () {
 
-                ace.require("ace/ext/language_tools");
-                vm.editor.setOptions({
-                    enableBasicAutocompletion: true,
-                    enableLiveAutocompletion: true,
-                    enableSnippets: true
-                });
-                vm.editor.setFontSize(14)
-                vm.editor.setBehavioursEnabled(true);
-                vm.editor.setValue(vm.item.code)
+        vm.item.code = vm.editor.getValue()
 
-                vm.editor.focus();
-                vm.editor.navigateFileStart();
+        expressionProcedureService.create(vm.item).then(function (data) {
 
-            }, 100)
+            $mdDialog.hide({status: 'agree', data: {item: data}});
+
+        })
+
+    };
 
 
-        }
+    vm.universalOptionsChange = function () {
 
+        vm.item.data = JSON.parse(vm.item.data_string)
+    }
 
-        vm.init = function () {
+    vm.universalFieldChange = function () {
+        vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
+    }
 
-            if (data.item) {
-                vm.item = data.item;
-            }
+    vm.initExpressionEditor = function () {
 
-            vm.initExpressionEditor();
+        setTimeout(function () {
 
-            vm.readyStatus.procedure = true;
+            vm.editor = ace.edit('aceEditor');
+            vm.editor.setTheme("ace/theme/monokai");
+            vm.editor.getSession().setMode("ace/mode/python");
+            vm.editor.getSession().setUseWorker(false);
+            vm.editor.setHighlightActiveLine(false);
+            vm.editor.setShowPrintMargin(false);
 
-        };
+            ace.require("ace/ext/language_tools");
+            vm.editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: true
+            });
+            vm.editor.setFontSize(14)
+            vm.editor.setBehavioursEnabled(true);
+            vm.editor.setValue(vm.item.code)
 
-        vm.init();
+            vm.editor.focus();
+            vm.editor.navigateFileStart();
+
+        }, 100)
+
 
     }
 
-}());
+
+    vm.init = function () {
+
+        if (data.item) {
+            vm.item = data.item;
+        }
+
+        vm.initExpressionEditor();
+
+        vm.readyStatus.procedure = true;
+
+    };
+
+    vm.init();
+
+};

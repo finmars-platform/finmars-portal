@@ -1,18 +1,14 @@
-(function () {
+import tooltipRepository from '../repositories/tooltipsRepository';
 
-    var tooltipRepository = require('../repositories/tooltipsRepository');
+var getTooltipsList = function (options) {
+    return tooltipRepository.getList(options);
+}
 
-    var getTooltipsList = function (options) {
-        return tooltipRepository.getList(options);
-    }
+var updateTooltipsList = function (tooltipsList) {
+    return tooltipRepository.update(tooltipsList);
+}
 
-    var updateTooltipsList = function (tooltipsList) {
-        return tooltipRepository.update(tooltipsList);
-    }
-
-    module.exports = {
-        getTooltipsList: getTooltipsList,
-        updateTooltipsList: updateTooltipsList
-    }
-
-}());
+export default {
+    getTooltipsList: getTooltipsList,
+    updateTooltipsList: updateTooltipsList
+};

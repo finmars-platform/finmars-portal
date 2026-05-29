@@ -1,1458 +1,1522 @@
+import ReportHelper from "../helpers/reportHelper";
+const reportHelper = new ReportHelper();
+
+import GFiltersHelper from "../helpers/gFiltersHelper";
+const gFiltersHelper = new GFiltersHelper();
+
+import uiService from "./uiService";
+import objectComparisonHelper from '../helpers/objectsComparisonHelper';
+
+// const uiService = require('../services/uiService').default;
+
+import entityResolverService from '../services/entityResolverService';
+
+// const middlewareService = require('../services/middlewareService');
+import evEvents from '../services/entityViewerEvents';
+
+import evDataHelper from '../helpers/ev-data.helper';
+import evRvCommonHelper from '../helpers/ev-rv-common.helper';
+import metaHelper from '../helpers/meta.helper';
+
+'use strict';
+
 /**
- * Created by szhitenev on 06.05.2016.
+ * Insert dynamic attributes' values into entity's root level
+ *
+ * @param entity {Object}
+ * @param attrs {Array}
  */
-// import ReportHelper from "../helpers/reportHelper";
+let transformItem = function (entity, attrs) {
 
+    if (entity.attributes) {
 
-/**
- * Entity viewer helper service.
- * @module entityViewerHelperService
- */
-(function () {
+        let key;
 
-    const ReportHelper = require("../helpers/reportHelper").default;
-    const reportHelper = new ReportHelper();
+        attrs.forEach(function (attributeType) {
 
-    const GFiltersHelper = require("../helpers/gFiltersHelper").default;
-    const gFiltersHelper = new GFiltersHelper();
+            entity.attributes.forEach(function (attribute) {
 
-    const uiService = require("./uiService").default;
-    const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-    // const uiService = require('../services/uiService').default;
+                if (attributeType.user_code === attribute.attribute_type_object.user_code) {
 
-    const entityResolverService = require('../services/entityResolverService');
+                    key = attributeType.user_code;
 
-    // const middlewareService = require('../services/middlewareService');
-    const evEvents = require('../services/entityViewerEvents');
-    const evDataHelper = require('../helpers/ev-data.helper').default;
-    const evRvCommonHelper = require('../helpers/ev-rv-common.helper').default;
-    const metaHelper = require('../helpers/meta.helper').default;
-
-    'use strict';
-
-    /**
-     * Insert dynamic attributes' values into entity's root level
-     *
-     * @param entity {Object}
-     * @param attrs {Array}
-     */
-    let transformItem = function (entity, attrs) {
-
-        if (entity.attributes) {
-
-            let key;
-
-            attrs.forEach(function (attributeType) {
-
-                entity.attributes.forEach(function (attribute) {
-
-                    if (attributeType.user_code === attribute.attribute_type_object.user_code) {
-
-                        key = attributeType.user_code;
-
-                        if (attributeType.value_type === 10) {
-                            entity[key] = attribute.value_string
-                        }
-
-                        if (attributeType.value_type === 20) {
-                            entity[key] = attribute.value_float
-                        }
-
-                        if (attributeType.value_type === 30) {
-                            entity[key] = attribute.classifier
-                        }
-
-                        if (attributeType.value_type === 40) {
-                            entity[key] = attribute.value_date
-                        }
-
+                    if (attributeType.value_type === 10) {
+                        entity[key] = attribute.value_string
                     }
 
-                })
-
-            });
-
-
-        }
-
-    };
-
-    /**
-     * Check if layout has been changed before changing masteruser
-     * @param {object} activeLayoutConfig - Object with configuration of layout saved on server
-     * @param {object} layoutCurrentConfig - Object with current
-     * @param {boolean} isReport
-     * @memberOf module:entityViewerHelperService
-     * @return {boolean} Returns true if layout has not been changed, otherwise false
-     */
-    const checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
-
-        if (isReport) {
-
-            if (activeLayoutConfig.data.reportOptions) {
-                /*delete activeLayoutConfig.data.reportOptions.task_id;
-                delete activeLayoutConfig.data.reportOptions.recieved_at;
-                delete activeLayoutConfig.data.reportOptions.task_status;*/
-                activeLayoutConfig.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(activeLayoutConfig.data.reportOptions);
-            }
-
-            if ( activeLayoutConfig.data.hasOwnProperty('reportLayoutOptions') && activeLayoutConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions') ) {
-
-                if (activeLayoutConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
-                    delete activeLayoutConfig.data.reportOptions.pl_first_date;
-                    delete activeLayoutConfig.data.reportOptions.begin_date;
-                }
-
-                if (activeLayoutConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
-                    delete activeLayoutConfig.data.reportOptions.report_date;
-                    delete activeLayoutConfig.data.reportOptions.end_date;
-                }
-
-            }
-
-            if (layoutCurrentConfig.data.reportOptions) {
-                /*delete layoutCurrentConfig.data.reportOptions.task_id;
-                delete layoutCurrentConfig.data.reportOptions.recieved_at;
-                delete layoutCurrentConfig.data.reportOptions.task_status;*/
-                layoutCurrentConfig.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(layoutCurrentConfig.data.reportOptions);
-            }
-
-            if (layoutCurrentConfig.data.hasOwnProperty('reportLayoutOptions') && layoutCurrentConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
-
-                if (layoutCurrentConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
-                    delete layoutCurrentConfig.data.reportOptions.pl_first_date;
-                    delete layoutCurrentConfig.data.reportOptions.begin_date;
-                }
-
-                if (layoutCurrentConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
-                    delete layoutCurrentConfig.data.reportOptions.report_date;
-                    delete layoutCurrentConfig.data.reportOptions.end_date;
-                }
-
-            }
-
-        }
-
-        let layoutIsNotChanged = objectComparisonHelper.areObjectsTheSame(activeLayoutConfig, layoutCurrentConfig);
-
-        return layoutIsNotChanged;
-    };
-
-    const saveLayoutsChanges = function (spChangedLayout, layoutHasChanges, activeLayoutConfig, layoutCurrentConfig, layoutNewName, entityType, isReport) {
-
-        let layoutsSavePromises = [];
-
-        // if split panel layout changed, save it
-        if (spChangedLayout) {
-
-            var saveSPLayout = new Promise(function (spLayoutSaveRes) {
-
-                if (spChangedLayout.hasOwnProperty('id')) {
-                    uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
-                        spLayoutSaveRes(true);
-                    });
-                } else {
-                    uiService.createListLayout(entityType, spChangedLayout).then(function () {
-                        spLayoutSaveRes(true);
-                    });
-                }
-
-            });
-
-            layoutsSavePromises.push(saveSPLayout);
-
-        }
-
-        let saveNeeded = layoutHasChanges;
-
-        if (isReport) {
-            saveNeeded = activeLayoutConfig && layoutHasChanges
-        }
-
-        if (saveNeeded) {
-
-            var saveLayout = new Promise(function (saveLayoutRes) {
-
-                if (layoutCurrentConfig.hasOwnProperty('id')) {
-
-                    uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
-                        saveLayoutRes(true);
-                    });
-
-                } else {
-
-                    if (layoutNewName) {
-                        layoutCurrentConfig.name = layoutNewName;
+                    if (attributeType.value_type === 20) {
+                        entity[key] = attribute.value_float
                     }
 
-                    uiService.createListLayout(entityType, layoutCurrentConfig).then(function () {
-                        saveLayoutRes(true);
-                    });
-
-                }
-
-            });
-
-            layoutsSavePromises.push(saveLayout);
-        }
-
-        return Promise.all(layoutsSavePromises);
-
-    };
-
-    /**
-     * @param {Object} evDataService - instance of entity viewer data service
-     * @param {boolean} isReport
-     * @param {Object=} activeLayoutConfig
-     * @param {Object=} layoutCurrentConfig
-     *
-     * @returns {boolean} 'true' if layout has been changed, 'false' otherwise
-     * */
-    var checkRootLayoutForChanges = function (evDataService, isReport, activeLayoutConfig, layoutCurrentConfig) {
-
-        if (activeLayoutConfig === undefined) {
-            activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
-        }
-
-        if (activeLayoutConfig && activeLayoutConfig.data) {
-
-            if (layoutCurrentConfig === undefined) {
-                layoutCurrentConfig = evDataService.getLayoutCurrentConfiguration(isReport);
-            }
-
-            return !checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
-        }
-
-        return false;
-
-    };
-
-    /** @returns {boolean|Object} Returns a layout for split panel that has been changed, otherwise returns 'false'  */
-    const checkSplitPanelForChanges = function (evDataService, splitPanelExchangeService) {
-
-        const additions = evDataService.getAdditions();
-
-        if (additions.isOpen) {
-            return splitPanelExchangeService.getSplitPanelChangedLayout();
-        }
-
-        return false;
-
-    };
-
-    /**
-     * Check layouts for root and split panel for changes and warn about loosing them.
-     *
-     * @param {Object} evDataService
-     * @param {Object} splitPanelExchangeService
-     * @param {Object} $mdDialog
-     *
-     * @returns {Promise<boolean>}
-     */
-    const warnAboutChangesToLoose = function (evDataService, splitPanelExchangeService, $mdDialog) {
-
-        const entityType = evDataService.getEntityType();
-        const isReport = evDataService.isEntityReport();
-
-        const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
-        let layoutCurrentConfig;
-
-        if (activeLayoutConfig && activeLayoutConfig.data) {
-            layoutCurrentConfig = evDataService.getLayoutCurrentConfiguration(isReport);
-        }
-        /** 'false' or object of a layout to update / create **/
-        var spChanged = checkSplitPanelForChanges(evDataService, splitPanelExchangeService);
-        var layoutChanged = checkRootLayoutForChanges(evDataService, isReport, activeLayoutConfig, layoutCurrentConfig);
-
-        if (!layoutChanged && !spChanged) {
-
-            return new Promise(resolve => {
-                resolve(true)
-            });
-
-        }
-
-        return new Promise(function (resolve, reject) {
-
-            $mdDialog.show({
-                controller: 'LayoutChangesLossWarningDialogController as vm',
-                templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                preserveScope: true,
-                autoWrap: true,
-                multiple: true,
-                locals: {
-                    data: {
-                        evDataService: evDataService,
-                        entityType: entityType
+                    if (attributeType.value_type === 30) {
+                        entity[key] = attribute.classifier
                     }
+
+                    if (attributeType.value_type === 40) {
+                        entity[key] = attribute.value_date
+                    }
+
                 }
+
             })
-                .then(function (res) {
 
-                    if (res.status === 'save_layout') {
+        });
 
-                        const layoutNewName = (res.data && res.data.layoutName) ? res.data.layoutName : '';
 
-                        saveLayoutsChanges(spChanged, layoutChanged, activeLayoutConfig, layoutCurrentConfig, layoutNewName, entityType, isReport)
-                            .then(function () {
+    }
 
-                                resolve(true);
-                                $mdDialog.hide();
+};
 
-                            }).catch(error => reject(error));
+/**
+ * Check if layout has been changed before changing masteruser
+ * @param {object} activeLayoutConfig - Object with configuration of layout saved on server
+ * @param {object} layoutCurrentConfig - Object with current
+ * @param {boolean} isReport
+ * @memberOf module:entityViewerHelperService
+ * @return {boolean} Returns true if layout has not been changed, otherwise false
+ */
+const checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
 
-                    } else if (res.status === 'do_not_save_layout') {
+    if (isReport) {
 
-                        resolve(true);
-                        $mdDialog.hide();
+        if (activeLayoutConfig.data.reportOptions) {
+            /*delete activeLayoutConfig.data.reportOptions.task_id;
+            delete activeLayoutConfig.data.reportOptions.recieved_at;
+            delete activeLayoutConfig.data.reportOptions.task_status;*/
+            activeLayoutConfig.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(activeLayoutConfig.data.reportOptions);
+        }
 
-                    } else {
-                        reject(false);
-                    }
+        if ( activeLayoutConfig.data.hasOwnProperty('reportLayoutOptions') && activeLayoutConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions') ) {
 
+            if (activeLayoutConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+                delete activeLayoutConfig.data.reportOptions.pl_first_date;
+                delete activeLayoutConfig.data.reportOptions.begin_date;
+            }
+
+            if (activeLayoutConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+                delete activeLayoutConfig.data.reportOptions.report_date;
+                delete activeLayoutConfig.data.reportOptions.end_date;
+            }
+
+        }
+
+        if (layoutCurrentConfig.data.reportOptions) {
+            /*delete layoutCurrentConfig.data.reportOptions.task_id;
+            delete layoutCurrentConfig.data.reportOptions.recieved_at;
+            delete layoutCurrentConfig.data.reportOptions.task_status;*/
+            layoutCurrentConfig.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(layoutCurrentConfig.data.reportOptions);
+        }
+
+        if (layoutCurrentConfig.data.hasOwnProperty('reportLayoutOptions') && layoutCurrentConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
+
+            if (layoutCurrentConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+                delete layoutCurrentConfig.data.reportOptions.pl_first_date;
+                delete layoutCurrentConfig.data.reportOptions.begin_date;
+            }
+
+            if (layoutCurrentConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+                delete layoutCurrentConfig.data.reportOptions.report_date;
+                delete layoutCurrentConfig.data.reportOptions.end_date;
+            }
+
+        }
+
+    }
+
+    let layoutIsNotChanged = objectComparisonHelper.areObjectsTheSame(activeLayoutConfig, layoutCurrentConfig);
+
+    return layoutIsNotChanged;
+};
+
+const saveLayoutsChanges = function (spChangedLayout, layoutHasChanges, activeLayoutConfig, layoutCurrentConfig, layoutNewName, entityType, isReport) {
+
+    let layoutsSavePromises = [];
+
+    // if split panel layout changed, save it
+    if (spChangedLayout) {
+
+        var saveSPLayout = new Promise(function (spLayoutSaveRes) {
+
+            if (spChangedLayout.hasOwnProperty('id')) {
+                uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
+                    spLayoutSaveRes(true);
+                });
+            } else {
+                uiService.createListLayout(entityType, spChangedLayout).then(function () {
+                    spLayoutSaveRes(true);
+                });
+            }
+
+        });
+
+        layoutsSavePromises.push(saveSPLayout);
+
+    }
+
+    let saveNeeded = layoutHasChanges;
+
+    if (isReport) {
+        saveNeeded = activeLayoutConfig && layoutHasChanges
+    }
+
+    if (saveNeeded) {
+
+        var saveLayout = new Promise(function (saveLayoutRes) {
+
+            if (layoutCurrentConfig.hasOwnProperty('id')) {
+
+                uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                    saveLayoutRes(true);
                 });
 
-        })
-        /*if (layoutHasChanges || spChangedLayout) {
+            } else {
 
-            $mdDialog.show({
-                controller: 'LayoutChangesLossWarningDialogController as vm',
-                templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                preserveScope: true,
-                autoWrap: true,
-                multiple: true,
-                locals: {
-                    data: {
-                        evDataService: vm.entityViewerDataService,
-                        entityType: vm.entityType
-                    }
+                if (layoutNewName) {
+                    layoutCurrentConfig.name = layoutNewName;
                 }
-            })
-                .then(function (res, rej) {
 
-                    if (res.status === 'save_layout') {
+                uiService.createListLayout(entityType, layoutCurrentConfig).then(function () {
+                    saveLayoutRes(true);
+                });
 
-                        var layoutsSavePromises = [];
+            }
 
-                        // if split panel layout changed, save it
-                        if (spChangedLayout) {
+        });
 
-                            var saveSPLayoutChanges = new Promise(function (spLayoutSaveRes, spLayoutSaveRej) {
+        layoutsSavePromises.push(saveLayout);
+    }
 
-                                if (spChangedLayout.hasOwnProperty('id')) {
-                                    uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
-                                        spLayoutSaveRes(true);
-                                    });
-                                } else {
-                                    uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
-                                        spLayoutSaveRes(true);
-                                    });
+    return Promise.all(layoutsSavePromises);
+
+};
+
+/**
+ * @param {Object} evDataService - instance of entity viewer data service
+ * @param {boolean} isReport
+ * @param {Object=} activeLayoutConfig
+ * @param {Object=} layoutCurrentConfig
+ *
+ * @returns {boolean} 'true' if layout has been changed, 'false' otherwise
+ * */
+var checkRootLayoutForChanges = function (evDataService, isReport, activeLayoutConfig, layoutCurrentConfig) {
+
+    if (activeLayoutConfig === undefined) {
+        activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+    }
+
+    if (activeLayoutConfig && activeLayoutConfig.data) {
+
+        if (layoutCurrentConfig === undefined) {
+            layoutCurrentConfig = evDataService.getLayoutCurrentConfiguration(isReport);
+        }
+
+        return !checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
+    }
+
+    return false;
+
+};
+
+/** @returns {boolean|Object} Returns a layout for split panel that has been changed, otherwise returns 'false'  */
+const checkSplitPanelForChanges = function (evDataService, splitPanelExchangeService) {
+
+    const additions = evDataService.getAdditions();
+
+    if (additions.isOpen) {
+        return splitPanelExchangeService.getSplitPanelChangedLayout();
+    }
+
+    return false;
+
+};
+
+/**
+ * Check layouts for root and split panel for changes and warn about loosing them.
+ *
+ * @param {Object} evDataService
+ * @param {Object} splitPanelExchangeService
+ * @param {Object} $mdDialog
+ *
+ * @returns {Promise<boolean>}
+ */
+const warnAboutChangesToLoose = function (evDataService, splitPanelExchangeService, $mdDialog) {
+
+    const entityType = evDataService.getEntityType();
+    const isReport = evDataService.isEntityReport();
+
+    const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+    let layoutCurrentConfig;
+
+    if (activeLayoutConfig && activeLayoutConfig.data) {
+        layoutCurrentConfig = evDataService.getLayoutCurrentConfiguration(isReport);
+    }
+    /** 'false' or object of a layout to update / create **/
+    var spChanged = checkSplitPanelForChanges(evDataService, splitPanelExchangeService);
+    var layoutChanged = checkRootLayoutForChanges(evDataService, isReport, activeLayoutConfig, layoutCurrentConfig);
+
+    if (!layoutChanged && !spChanged) {
+
+        return new Promise(resolve => {
+            resolve(true)
+        });
+
+    }
+
+    return new Promise(function (resolve, reject) {
+
+        $mdDialog.show({
+            controller: 'LayoutChangesLossWarningDialogController as vm',
+            templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            preserveScope: true,
+            autoWrap: true,
+            multiple: true,
+            locals: {
+                data: {
+                    evDataService: evDataService,
+                    entityType: entityType
+                }
+            }
+        })
+            .then(function (res) {
+
+                if (res.status === 'save_layout') {
+
+                    const layoutNewName = (res.data && res.data.layoutName) ? res.data.layoutName : '';
+
+                    saveLayoutsChanges(spChanged, layoutChanged, activeLayoutConfig, layoutCurrentConfig, layoutNewName, entityType, isReport)
+                        .then(function () {
+
+                            resolve(true);
+                            $mdDialog.hide();
+
+                        }).catch(error => reject(error));
+
+                } else if (res.status === 'do_not_save_layout') {
+
+                    resolve(true);
+                    $mdDialog.hide();
+
+                } else {
+                    reject(false);
+                }
+
+            });
+
+    })
+    /*if (layoutHasChanges || spChangedLayout) {
+
+        $mdDialog.show({
+            controller: 'LayoutChangesLossWarningDialogController as vm',
+            templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            preserveScope: true,
+            autoWrap: true,
+            multiple: true,
+            locals: {
+                data: {
+                    evDataService: vm.entityViewerDataService,
+                    entityType: vm.entityType
+                }
+            }
+        })
+            .then(function (res, rej) {
+
+                if (res.status === 'save_layout') {
+
+                    var layoutsSavePromises = [];
+
+                    // if split panel layout changed, save it
+                    if (spChangedLayout) {
+
+                        var saveSPLayoutChanges = new Promise(function (spLayoutSaveRes, spLayoutSaveRej) {
+
+                            if (spChangedLayout.hasOwnProperty('id')) {
+                                uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
+                                    spLayoutSaveRes(true);
+                                });
+                            } else {
+                                uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
+                                    spLayoutSaveRes(true);
+                                });
+                            }
+
+                        });
+
+                        layoutsSavePromises.push(saveSPLayoutChanges);
+
+                    }
+                    // < if split panel layout changed, save it >
+
+                    if (activeLayoutConfig && layoutHasChanges) {
+
+                        var saveLayoutChanges = new Promise(function (saveLayoutRes, saveLayoutRej) {
+
+                            if (layoutCurrentConfig.hasOwnProperty('id')) {
+
+                                uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                                    saveLayoutRes(true);
+                                });
+
+                            } else {
+
+                                if (res.data && res.data.layoutName) {
+                                    layoutCurrentConfig.name = res.data.layoutName;
                                 }
 
-                            });
+                                /!* When saving is_default: true layout on backend, others become is_default: false
+                                uiService.getDefaultListLayout(vm.entityType).then(function (data) {
 
-                            layoutsSavePromises.push(saveSPLayoutChanges);
+                                    layoutCurrentConfig.is_default = true;
 
-                        }
-                        // < if split panel layout changed, save it >
+                                    if (data.count > 0 && data.results) {
+                                        var activeLayout = data.results[0];
+                                        activeLayout.is_default = false;
 
-                        if (activeLayoutConfig && layoutHasChanges) {
+                                        uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
 
-                            var saveLayoutChanges = new Promise(function (saveLayoutRes, saveLayoutRej) {
-
-                                if (layoutCurrentConfig.hasOwnProperty('id')) {
-
-                                    uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
-                                        saveLayoutRes(true);
-                                    });
-
-                                } else {
-
-                                    if (res.data && res.data.layoutName) {
-                                        layoutCurrentConfig.name = res.data.layoutName;
-                                    }
-
-                                    /!* When saving is_default: true layout on backend, others become is_default: false
-                                    uiService.getDefaultListLayout(vm.entityType).then(function (data) {
-
-                                        layoutCurrentConfig.is_default = true;
-
-                                        if (data.count > 0 && data.results) {
-                                            var activeLayout = data.results[0];
-                                            activeLayout.is_default = false;
-
-                                            uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
-
-                                                uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                                    saveLayoutRes(true);
-                                                });
-
-                                            });
-
-                                        } else {
                                             uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
                                                 saveLayoutRes(true);
                                             });
-                                        }
 
-                                    });*!/
-                                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                        saveLayoutRes(true);
-                                    });
+                                        });
 
-                                }
+                                    } else {
+                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                            saveLayoutRes(true);
+                                        });
+                                    }
 
-                                layoutsSavePromises.push(saveLayoutChanges);
+                                });*!/
+                                uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                    saveLayoutRes(true);
+                                });
 
-                            });
-                        }
+                            }
 
-                        Promise.all(layoutsSavePromises).then(function () {
-                            resolve(true);
+                            layoutsSavePromises.push(saveLayoutChanges);
+
                         });
-
-                    } else if (res.status === 'do_not_save_layout') {
-
-                        resolve(true);
-
-                    } else {
-
-                        reject(false);
-
                     }
 
-                }).catch(function () {
-                reject(false);
-            });
+                    Promise.all(layoutsSavePromises).then(function () {
+                        resolve(true);
+                    });
 
-        } else {
-            resolve(true);
-        }*/
+                } else if (res.status === 'do_not_save_layout') {
 
-    };
-
-    /**
-     * Turn table attribute into group, column or filter
-     * @param {('column'|'group'|'filter')} form - In what form get attribute. values: 'column', 'group', 'filter'.
-     * @param {object} attrInstance - Object with attribute data on which attribute form will be based
-     * @memberOf module:entityViewerHelperService
-     * @return {object} Return attribute in form of group, column or filter
-     */
-    const getTableAttrInFormOf = function (form, attrInstance) {
-        console.log("add filter getTableAttrInFormOf attrInstance", attrInstance);
-        let attrTypeToAdd = {};
-
-        attrTypeToAdd.key = attrInstance.key;
-
-        if (form === 'group' || form === 'column') {
-
-            if (attrInstance.hasOwnProperty('entity')) {
-                attrTypeToAdd.entity = attrInstance.entity;
-            }
-
-            // DEPRECATED
-            if (attrInstance.hasOwnProperty('id')) {
-                attrTypeToAdd.id = attrInstance.id;
-            }
-
-        }
-
-        if (attrInstance.hasOwnProperty('groups')) {
-            attrTypeToAdd.groups = attrInstance.groups;
-        }
-
-        if (attrInstance.hasOwnProperty('columns')) {
-            attrTypeToAdd.columns = attrInstance.columns;
-        }
-
-        if (attrInstance.hasOwnProperty('filters')) {
-            attrTypeToAdd.filters = attrInstance.filters;
-        }
-
-        attrTypeToAdd.name = attrInstance.name;
-        attrTypeToAdd.value_type = attrInstance.value_type;
-
-        if (attrInstance.layout_name) {
-            attrTypeToAdd.layout_name = attrInstance.layout_name;
-        }
-
-        if (!attrTypeToAdd.options) {
-            attrTypeToAdd.options = {};
-        }
-
-        switch (form) {
-
-            case 'group':
-                attrTypeToAdd.groups = true;
-
-                attrTypeToAdd.options.sort = null;
-                attrTypeToAdd.options.sort_settings = {};
-
-                break;
-
-            case 'column':
-
-                attrTypeToAdd.columns = true;
-
-                attrTypeToAdd.options.sort = null;
-                attrTypeToAdd.options.sort_settings = {};
-
-                break;
-
-            case 'filter':
-
-                attrTypeToAdd.filters = true;
-
-                /*if (!attrTypeToAdd.options.filter_type) {
-                    attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
-                }
-
-                if (!attrTypeToAdd.options.filter_values) {
-                    attrTypeToAdd.options.filter_values = [];
-                }
-
-                if (!attrTypeToAdd.options.hasOwnProperty('exclude_empty_cells')) {
-                    attrTypeToAdd.options.exclude_empty_cells = false;
-                }*/
-                attrTypeToAdd = gFiltersHelper.setFilterDefaultOptions(attrTypeToAdd);
-
-                break;
-        }
-
-        if (form === 'group' || form === 'column') {
-
-            attrTypeToAdd.style = {
-                width: evDataHelper.getColumnWidth(attrTypeToAdd)
-            }
-
-        }
-
-        return attrTypeToAdd;
-
-    };
-
-    /**
-     * Get value of dynamic attribute by it's user_code
-     * @param {object} dAttrData - Data of dynamic attribute
-     * @memberOf module:entityViewerHelperService
-     * @return {*} Return value of dynamic attribute
-     */
-    const getDynamicAttrValue = function (dAttrData) {
-
-        // let attrVal;
-
-        if (dAttrData.attribute_type_object.value_type === 30) {
-
-            /* if (dAttrData.classifier_object) {
-                attrVal = dAttrData.classifier_object.name;
-
-            } else {
-                attrVal = '';
-            } */
-            if (dAttrData.classifier_object) {
-                return {
-                    classifier: dAttrData.classifier, // can be changed on a form of entity and be different from dAttrData.classifier_object.id
-                    classifier_object: dAttrData.classifier_object
-                };
-            }
-
-            return null;
-
-
-        } else {
-
-            switch (dAttrData.attribute_type_object.value_type) {
-                case 10:
-                    return dAttrData.value_string;
-
-                case 20:
-                    return dAttrData.value_float;
-
-                case 40:
-                    return dAttrData.value_date;
-
-            }
-
-        }
-
-    };
-
-    const setDynamicAttrValue = function (dAttrData, value) {
-
-        /* if (dAttrData.attribute_type_object.value_type === 30) {
-
-            if (dAttrData.classifier_object) {
-                attrVal = dAttrData.classifier_object.name;
-            } else {
-                attrVal = '';
-            }
-
-        } else {
-
-            switch (dAttrData.attribute_type_object.value_type) {
-                case 10:
-                    attrVal = dAttrData.value_string;
-                    break;
-                case 20:
-                    attrVal = dAttrData.value_float;
-                    break;
-                case 40:
-                    attrVal = dAttrData.value_date;
-                    break;
-            }
-
-        } */
-
-        switch (dAttrData.attribute_type_object.value_type) {
-            case 10:
-                dAttrData.value_string = value;
-                break;
-            case 20:
-                dAttrData.value_float = value;
-                break;
-            case 30:
-                dAttrData.classifier = value;
-                break;
-            case 40:
-                dAttrData.value_date = value;
-                break;
-        }
-
-        return dAttrData;
-
-    };
-
-    /**
-     * Get value of dynamic attribute by it's user_code
-     * @param {string} userCode - Dynamic attribute user code
-     * @param {array} dAttrsList - Array of objects with data of dynamic attribute
-     * @memberOf module:entityViewerHelperService
-     * @return {string|float|date} Return value of dynamic attribute
-     */
-    const getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
-
-        let cellValue;
-
-        for (let da = 0; da < dAttrsList.length; da++) {
-            let dynamicAttributeData = dAttrsList[da];
-
-            if (dynamicAttributeData.attribute_type_object.user_code === userCode) {
-
-                cellValue = getDynamicAttrValue(dynamicAttributeData);
-                break;
-
-            }
-
-        }
-
-        return cellValue;
-
-    };
-
-    /**
-     * Find dynamic attribute by user_code and set its value
-     *
-     * @param {string} userCode - Dynamic attribute user code
-     * @param {array} dAttrsList - Array of objects with data of dynamic attribute
-     * @param {string|number|null|undefined} value - value to set into dynamic attribute
-     * @memberOf module:entityViewerHelperService
-     * @return {Array} - list of dynamic attributes
-     */
-    const setDynamicAttrValueByUserCode = function (userCode, dAttrsList, value) {
-
-        let da;
-        for (da = 0; da < dAttrsList.length; da++) {
-            let dynamicAttributeData = dAttrsList[da];
-
-            if (dynamicAttributeData.attribute_type_object.user_code === userCode) {
-
-                dAttrsList[da] = setDynamicAttrValue(dynamicAttributeData, value);
-                break;
-
-            }
-
-        }
-
-        return dAttrsList;
-
-    };
-
-    const getAttributesLayoutNames = function (columns) {
-
-        const result = {};
-
-        columns.forEach(col => {
-            if (col.layout_name) result[col.key] = col.layout_name;
-        })
-
-        return result;
-
-    };
-
-    /**
-     * Try to get layout by user code and use it. If no layout with such user code was found, get default layout.
-     * @memberOf module:entityViewerHelperService
-     *
-     * @param {object} viewModel - view model of current reportViewerController or entityViewerController
-     * @param {string} userCode
-     * @param {obj} $mdDialog
-     * @param {string} viewContext
-     * @return {Promise<any>}
-     */
-    let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
-
-        return new Promise(function (resolve) {
-            /* uiService.getListLayout(viewModel.entityType, {
-                pageSize: 1000,
-                filters: {
-                    user_code: userCode
-                }
-
-            }) */
-            uiService.getListLayoutByUserCode(viewModel.entityType, userCode).then(async function (activeLayoutData) {
-
-                let activeLayout = null;
-
-                if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results[0]) {
-                    activeLayout = activeLayoutData.results[0];
-                }
-
-                if (activeLayout) {
-
-                    await viewModel.setLayout(activeLayout);
-                    resolve();
+                    resolve(true);
 
                 } else {
 
-                    $mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/info-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        clickOutsideToClose: false,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true,
-                        locals: {
-                            info: {
-                                title: 'Warning',
-                                description: "Layout " + name + " is not found. Switching back to Default Layout."
-                            }
-                        }
-
-                    }).then(async function (value) {
-
-                        await getDefaultLayout(viewModel, viewContext);
-
-                        resolve();
-
-                    })
+                    reject(false);
 
                 }
 
-            });
-
+            }).catch(function () {
+            reject(false);
         });
 
-    };
+    } else {
+        resolve(true);
+    }*/
 
-    /**
-     * @param {object} viewModel - view model of current reportViewerController or entityViewerController
-     * @param {string} viewContext
-     * @memberOf module:entityViewerHelperService
-     * @return {promise}
-     */
-    let getDefaultLayout = function (viewModel, viewContext) {
+};
 
-        return new Promise(function (resolve, reject) {
+/**
+ * Turn table attribute into group, column or filter
+ * @param {('column'|'group'|'filter')} form - In what form get attribute. values: 'column', 'group', 'filter'.
+ * @param {object} attrInstance - Object with attribute data on which attribute form will be based
+ * @memberOf module:entityViewerHelperService
+ * @return {object} Return attribute in form of group, column or filter
+ */
+const getTableAttrInFormOf = function (form, attrInstance) {
+    console.log("add filter getTableAttrInFormOf attrInstance", attrInstance);
+    let attrTypeToAdd = {};
 
-            uiService.getDefaultListLayout(viewModel.entityType).then(async function (defaultLayoutData) {
+    attrTypeToAdd.key = attrInstance.key;
 
-                let defaultLayout = null;
-                if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+    if (form === 'group' || form === 'column') {
 
-                    defaultLayout = defaultLayoutData.results[0];
-                    /* if (viewContext === 'split_panel') {
-                        middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
-                    } */
-
-                }
-
-                await viewModel.setLayout(defaultLayout);
-
-                resolve();
-
-            }).catch(function (error) {
-                reject(error);
-            });
-
-        });
-
-    };
-
-
-    /**
-     * Get max columns from tabs of Edit Layout
-     * @param {String} entityType
-     * @param {Array} editLayoutTabs
-     * @memberOf module:entityViewerHelperService
-     * @returns {number}
-     */
-    var getEditLayoutMaxColumns = function (entityType, editLayoutTabs) {
-
-        let maxCols = 0;
-        const alwaysMaxWidth = ['instrument-type', 'transaction-type', 'account-type'];
-
-        if (alwaysMaxWidth.includes(entityType)) {
-            return 6;
+        if (attrInstance.hasOwnProperty('entity')) {
+            attrTypeToAdd.entity = attrInstance.entity;
         }
 
-        editLayoutTabs.forEach(function (tab) {
-
-            if (tab.layout && tab.layout.columns &&
-                tab.layout.columns > maxCols) {
-
-                maxCols = tab.layout.columns;
-
-            }
-
-        })
-
-        /* const widths = editLayoutTabs
-            .map(tab => tab.layout && tab.layout.columns)
-            .filter(num => Boolean(Number(num)));
-
-        const maxWidth = Math.max(...widths) */
-
-        return maxCols ? maxCols : 6;
-
-    };
-
-    /**
-     * Get big drawer width percentage by fixed area columns
-     * @param {number} columns
-     * @returns {string}
-     */
-    var getBigDrawerWidth = function (columns) {
-
-        let viewportWidth = window.innerWidth;
-
-        let widthPercent = 75;
-
-        switch (columns) {
-            case 5:
-            case 4:
-                widthPercent = 49;
-                break;
-            case 3:
-                widthPercent = 39;
-                break;
-            case 2:
-            case 1:
-                widthPercent = 27;
-                break;
-
+        // DEPRECATED
+        if (attrInstance.hasOwnProperty('id')) {
+            attrTypeToAdd.id = attrInstance.id;
         }
-
-        let drawerWidth = (viewportWidth * widthPercent / 100) + 'px';
-
-        return drawerWidth;
 
     }
 
-    /**
-     * Format data for popupDirective in fixed area
-     * @param {object} viewModel - of add / edit controller
-     * @param {array} keysOfFixedFieldsAttrs - array of strings that are keys of entity attributes
-     * @returns {object} object where each property corresponding to field inside popup
-     */
-    var getFieldsForFixedAreaPopup = function (viewModel) {
+    if (attrInstance.hasOwnProperty('groups')) {
+        attrTypeToAdd.groups = attrInstance.groups;
+    }
 
-        return new Promise(function (resolve, reject) {
+    if (attrInstance.hasOwnProperty('columns')) {
+        attrTypeToAdd.columns = attrInstance.columns;
+    }
 
-            const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc, key) => {
+    if (attrInstance.hasOwnProperty('filters')) {
+        attrTypeToAdd.filters = attrInstance.filters;
+    }
 
-                const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
+    attrTypeToAdd.name = attrInstance.name;
+    attrTypeToAdd.value_type = attrInstance.value_type;
 
-                if (!attr) {
-                    return acc;
-                }
+    if (attrInstance.layout_name) {
+        attrTypeToAdd.layout_name = attrInstance.layout_name;
+    }
 
-                const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
-                const field = {
-                    [fieldKey]: {name: attr.name, value: viewModel.entity[key]}
-                };
+    if (!attrTypeToAdd.options) {
+        attrTypeToAdd.options = {};
+    }
 
-                if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
-                    field[fieldKey].value_entity = attr.value_entity;
-                }
+    switch (form) {
 
-                return {...acc, ...field};
+        case 'group':
+            attrTypeToAdd.groups = true;
 
-            }, {});
+            attrTypeToAdd.options.sort = null;
+            attrTypeToAdd.options.sort_settings = {};
 
-            fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
-            fields.showByDefault = {
-                key: 'Show by default',
-                value: viewModel.showByDefault,
-                options: viewModel.showByDefaultOptions
+            break;
+
+        case 'column':
+
+            attrTypeToAdd.columns = true;
+
+            attrTypeToAdd.options.sort = null;
+            attrTypeToAdd.options.sort_settings = {};
+
+            break;
+
+        case 'filter':
+
+            attrTypeToAdd.filters = true;
+
+            /*if (!attrTypeToAdd.options.filter_type) {
+                attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
             }
 
-            // get options for 'type' or 'instrument type' fields
-            if (fields.hasOwnProperty('type')) {
+            if (!attrTypeToAdd.options.filter_values) {
+                attrTypeToAdd.options.filter_values = [];
+            }
 
-                entityResolverService.getListLight(fields.type.value_entity).then((data) => {
+            if (!attrTypeToAdd.options.hasOwnProperty('exclude_empty_cells')) {
+                attrTypeToAdd.options.exclude_empty_cells = false;
+            }*/
+            attrTypeToAdd = gFiltersHelper.setFilterDefaultOptions(attrTypeToAdd);
 
-                    const options = Array.isArray(data) ? data : data.results;
-                    fields.type.options = options;
-                    viewModel.setTypeSelectorOptions(options);
+            break;
+    }
 
-                    resolve(fields);
+    if (form === 'group' || form === 'column') {
 
-                }).catch(error => reject(error));
+        attrTypeToAdd.style = {
+            width: evDataHelper.getColumnWidth(attrTypeToAdd)
+        }
+
+    }
+
+    return attrTypeToAdd;
+
+};
+
+/**
+ * Get value of dynamic attribute by it's user_code
+ * @param {object} dAttrData - Data of dynamic attribute
+ * @memberOf module:entityViewerHelperService
+ * @return {*} Return value of dynamic attribute
+ */
+const getDynamicAttrValue = function (dAttrData) {
+
+    // let attrVal;
+
+    if (dAttrData.attribute_type_object.value_type === 30) {
+
+        /* if (dAttrData.classifier_object) {
+            attrVal = dAttrData.classifier_object.name;
+
+        } else {
+            attrVal = '';
+        } */
+        if (dAttrData.classifier_object) {
+            return {
+                classifier: dAttrData.classifier, // can be changed on a form of entity and be different from dAttrData.classifier_object.id
+                classifier_object: dAttrData.classifier_object
+            };
+        }
+
+        return null;
+
+
+    } else {
+
+        switch (dAttrData.attribute_type_object.value_type) {
+            case 10:
+                return dAttrData.value_string;
+
+            case 20:
+                return dAttrData.value_float;
+
+            case 40:
+                return dAttrData.value_date;
+
+        }
+
+    }
+
+};
+
+const setDynamicAttrValue = function (dAttrData, value) {
+
+    /* if (dAttrData.attribute_type_object.value_type === 30) {
+
+        if (dAttrData.classifier_object) {
+            attrVal = dAttrData.classifier_object.name;
+        } else {
+            attrVal = '';
+        }
+
+    } else {
+
+        switch (dAttrData.attribute_type_object.value_type) {
+            case 10:
+                attrVal = dAttrData.value_string;
+                break;
+            case 20:
+                attrVal = dAttrData.value_float;
+                break;
+            case 40:
+                attrVal = dAttrData.value_date;
+                break;
+        }
+
+    } */
+
+    switch (dAttrData.attribute_type_object.value_type) {
+        case 10:
+            dAttrData.value_string = value;
+            break;
+        case 20:
+            dAttrData.value_float = value;
+            break;
+        case 30:
+            dAttrData.classifier = value;
+            break;
+        case 40:
+            dAttrData.value_date = value;
+            break;
+    }
+
+    return dAttrData;
+
+};
+
+/**
+ * Get value of dynamic attribute by it's user_code
+ * @param {string} userCode - Dynamic attribute user code
+ * @param {array} dAttrsList - Array of objects with data of dynamic attribute
+ * @memberOf module:entityViewerHelperService
+ * @return {string|float|date} Return value of dynamic attribute
+ */
+const getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
+
+    let cellValue;
+
+    for (let da = 0; da < dAttrsList.length; da++) {
+        let dynamicAttributeData = dAttrsList[da];
+
+        if (dynamicAttributeData.attribute_type_object.user_code === userCode) {
+
+            cellValue = getDynamicAttrValue(dynamicAttributeData);
+            break;
+
+        }
+
+    }
+
+    return cellValue;
+
+};
+
+/**
+ * Find dynamic attribute by user_code and set its value
+ *
+ * @param {string} userCode - Dynamic attribute user code
+ * @param {array} dAttrsList - Array of objects with data of dynamic attribute
+ * @param {string|number|null|undefined} value - value to set into dynamic attribute
+ * @memberOf module:entityViewerHelperService
+ * @return {Array} - list of dynamic attributes
+ */
+const setDynamicAttrValueByUserCode = function (userCode, dAttrsList, value) {
+
+    let da;
+    for (da = 0; da < dAttrsList.length; da++) {
+        let dynamicAttributeData = dAttrsList[da];
+
+        if (dynamicAttributeData.attribute_type_object.user_code === userCode) {
+
+            dAttrsList[da] = setDynamicAttrValue(dynamicAttributeData, value);
+            break;
+
+        }
+
+    }
+
+    return dAttrsList;
+
+};
+
+const getAttributesLayoutNames = function (columns) {
+
+    const result = {};
+
+    columns.forEach(col => {
+        if (col.layout_name) result[col.key] = col.layout_name;
+    })
+
+    return result;
+
+};
+
+/**
+ * Try to get layout by user code and use it. If no layout with such user code was found, get default layout.
+ * @memberOf module:entityViewerHelperService
+ *
+ * @param {object} viewModel - view model of current reportViewerController or entityViewerController
+ * @param {string} userCode
+ * @param {obj} $mdDialog
+ * @param {string} viewContext
+ * @return {Promise<any>}
+ */
+let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
+
+    return new Promise(function (resolve) {
+        /* uiService.getListLayout(viewModel.entityType, {
+            pageSize: 1000,
+            filters: {
+                user_code: userCode
+            }
+
+        }) */
+        uiService.getListLayoutByUserCode(viewModel.entityType, userCode).then(async function (activeLayoutData) {
+
+            let activeLayout = null;
+
+            if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results[0]) {
+                activeLayout = activeLayoutData.results[0];
+            }
+
+            if (activeLayout) {
+
+                await viewModel.setLayout(activeLayout);
+                resolve();
 
             } else {
-                resolve(fields);
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Warning',
+                            description: "Layout " + name + " is not found. Switching back to Default Layout."
+                        }
+                    }
+
+                }).then(async function (value) {
+
+                    await getDefaultLayout(viewModel, viewContext);
+
+                    resolve();
+
+                })
+
             }
 
         });
 
-    };
+    });
 
-    var getBigDrawerOptions = function (layout, entityType) {
+};
 
-        var tabColumns = 6;
+/**
+ * @param {object} viewModel - view model of current reportViewerController or entityViewerController
+ * @param {string} viewContext
+ * @memberOf module:entityViewerHelperService
+ * @return {promise}
+ */
+let getDefaultLayout = function (viewModel, viewContext) {
 
-        if (layout.results.length) {
+    return new Promise(function (resolve, reject) {
 
-            var tabs = Array.isArray(layout.results[0].data) ? layout.results[0].data : layout.results[0].data.tabs;
+        uiService.getDefaultListLayout(viewModel.entityType).then(async function (defaultLayoutData) {
 
-            /*if (entityType !== 'instrument-type') {
-                fixedAreaColumns = getEditLayoutMaxColumns(entityType, tabs);
-            }*/
-            tabColumns = getEditLayoutMaxColumns(entityType, tabs);
+            let defaultLayout = null;
+            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
 
-        }
+                defaultLayout = defaultLayoutData.results[0];
+                /* if (viewContext === 'split_panel') {
+                    middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
+                } */
 
-        var bigDrawerWidth = getBigDrawerWidth(tabColumns);
-
-        return {
-            width: bigDrawerWidth,
-            tabColumns: tabColumns,
-            editLayout: layout
-        }
-    };
-
-    var insertObjectAfterCreateHandler = function (evDataService, evEventService, resultItem) {
-
-        var groups = evDataService.getDataAsList();
-        var requestParameters = evDataService.getAllRequestParameters();
-        var requestParametersKeys = Object.keys(requestParameters);
-
-        var matchedRequestParameter;
-
-        for (var i = 0; i < requestParametersKeys.length; i = i + 1) {
-
-            var key = requestParametersKeys[i];
-
-            var match = true;
-
-            /*var filter_types = requestParameters[key].body.groups_types.map(function (item) {
-                return item.key
-            });*/
-            var groupTypes = evDataHelper.getGroupsTypesToLevel(requestParameters[key].level, evDataService);
-            var filtersKeys = groupTypes.map(gType => gType.key);
-
-            var filter_values = requestParameters[key].body.groups_values;
-
-            if (filter_values.length) {
-                filter_values.forEach(function (value, index) {
-
-                    if (resultItem[filtersKeys[index]] !== value) {
-                        match = false
-                    }
-
-
-                })
-            } else {
-
-                if (filtersKeys.length) {
-                    match = false;
-                }
             }
 
-            if (match) {
-                matchedRequestParameter = requestParameters[key];
-                break;
-            }
+            await viewModel.setLayout(defaultLayout);
+
+            resolve();
+
+        }).catch(function (error) {
+            reject(error);
+        });
+
+    });
+
+};
+
+
+/**
+ * Get max columns from tabs of Edit Layout
+ * @param {String} entityType
+ * @param {Array} editLayoutTabs
+ * @memberOf module:entityViewerHelperService
+ * @returns {number}
+ */
+var getEditLayoutMaxColumns = function (entityType, editLayoutTabs) {
+
+    let maxCols = 0;
+    const alwaysMaxWidth = ['instrument-type', 'transaction-type', 'account-type'];
+
+    if (alwaysMaxWidth.includes(entityType)) {
+        return 6;
+    }
+
+    editLayoutTabs.forEach(function (tab) {
+
+        if (tab.layout && tab.layout.columns &&
+            tab.layout.columns > maxCols) {
+
+            maxCols = tab.layout.columns;
 
         }
 
-        if (matchedRequestParameter) {
+    })
 
-            groups.forEach(function (group) {
+    /* const widths = editLayoutTabs
+        .map(tab => tab.layout && tab.layout.columns)
+        .filter(num => Boolean(Number(num)));
 
-                if (group.___id === matchedRequestParameter.id) {
+    const maxWidth = Math.max(...widths) */
 
-                    var exampleItem = group.results[0]; // copying of ___type, ___parentId and etc fields
+    return maxCols ? maxCols : 6;
 
-                    var result = Object.assign({}, exampleItem, resultItem);
+};
 
-                    result.___id = evRvCommonHelper.getId(result);
-                    var beforeControlRowIndex = group.results.length - 1;
+/**
+ * Get big drawer width percentage by fixed area columns
+ * @param {number} columns
+ * @returns {string}
+ */
+var getBigDrawerWidth = function (columns) {
 
-                    group.results.splice(beforeControlRowIndex, 0, result);
+    let viewportWidth = window.innerWidth;
 
+    let widthPercent = 75;
+
+    switch (columns) {
+        case 5:
+        case 4:
+            widthPercent = 49;
+            break;
+        case 3:
+            widthPercent = 39;
+            break;
+        case 2:
+        case 1:
+            widthPercent = 27;
+            break;
+
+    }
+
+    let drawerWidth = (viewportWidth * widthPercent / 100) + 'px';
+
+    return drawerWidth;
+
+}
+
+/**
+ * Format data for popupDirective in fixed area
+ * @param {object} viewModel - of add / edit controller
+ * @param {array} keysOfFixedFieldsAttrs - array of strings that are keys of entity attributes
+ * @returns {object} object where each property corresponding to field inside popup
+ */
+var getFieldsForFixedAreaPopup = function (viewModel) {
+
+    return new Promise(function (resolve, reject) {
+
+        const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc, key) => {
+
+            const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
+
+            if (!attr) {
+                return acc;
+            }
+
+            const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
+            const field = {
+                [fieldKey]: {name: attr.name, value: viewModel.entity[key]}
+            };
+
+            if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
+                field[fieldKey].value_entity = attr.value_entity;
+            }
+
+            return {...acc, ...field};
+
+        }, {});
+
+        fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
+        fields.showByDefault = {
+            key: 'Show by default',
+            value: viewModel.showByDefault,
+            options: viewModel.showByDefaultOptions
+        }
+
+        // get options for 'type' or 'instrument type' fields
+        if (fields.hasOwnProperty('type')) {
+
+            entityResolverService.getListLight(fields.type.value_entity).then((data) => {
+
+                const options = Array.isArray(data) ? data : data.results;
+                fields.type.options = options;
+                viewModel.setTypeSelectorOptions(options);
+
+                resolve(fields);
+
+            }).catch(error => reject(error));
+
+        } else {
+            resolve(fields);
+        }
+
+    });
+
+};
+
+var getBigDrawerOptions = function (layout, entityType) {
+
+    var tabColumns = 6;
+
+    if (layout.results.length) {
+
+        var tabs = Array.isArray(layout.results[0].data) ? layout.results[0].data : layout.results[0].data.tabs;
+
+        /*if (entityType !== 'instrument-type') {
+            fixedAreaColumns = getEditLayoutMaxColumns(entityType, tabs);
+        }*/
+        tabColumns = getEditLayoutMaxColumns(entityType, tabs);
+
+    }
+
+    var bigDrawerWidth = getBigDrawerWidth(tabColumns);
+
+    return {
+        width: bigDrawerWidth,
+        tabColumns: tabColumns,
+        editLayout: layout
+    }
+};
+
+var insertObjectAfterCreateHandler = function (evDataService, evEventService, resultItem) {
+
+    var groups = evDataService.getDataAsList();
+    var requestParameters = evDataService.getAllRequestParameters();
+    var requestParametersKeys = Object.keys(requestParameters);
+
+    var matchedRequestParameter;
+
+    for (var i = 0; i < requestParametersKeys.length; i = i + 1) {
+
+        var key = requestParametersKeys[i];
+
+        var match = true;
+
+        /*var filter_types = requestParameters[key].body.groups_types.map(function (item) {
+            return item.key
+        });*/
+        var groupTypes = evDataHelper.getGroupsTypesToLevel(requestParameters[key].level, evDataService);
+        var filtersKeys = groupTypes.map(gType => gType.key);
+
+        var filter_values = requestParameters[key].body.groups_values;
+
+        if (filter_values.length) {
+            filter_values.forEach(function (value, index) {
+
+                if (resultItem[filtersKeys[index]] !== value) {
+                    match = false
                 }
 
 
             })
+        } else {
 
+            if (filtersKeys.length) {
+                match = false;
+            }
         }
+
+        if (match) {
+            matchedRequestParameter = requestParameters[key];
+            break;
+        }
+
+    }
+
+    if (matchedRequestParameter) {
+
+        groups.forEach(function (group) {
+
+            if (group.___id === matchedRequestParameter.id) {
+
+                var exampleItem = group.results[0]; // copying of ___type, ___parentId and etc fields
+
+                var result = Object.assign({}, exampleItem, resultItem);
+
+                result.___id = evRvCommonHelper.getId(result);
+                var beforeControlRowIndex = group.results.length - 1;
+
+                group.results.splice(beforeControlRowIndex, 0, result);
+
+            }
+
+
+        })
+
+    }
+
+    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+};
+
+var postEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
+
+    /* evDataService.setActiveObjectAction(null);
+    evDataService.setActiveObjectActionData(null); */
+    evDataService.setRowsActionData(null);
+
+    if (res.status === 'agree') {
+        updateEntityInsideTable(evDataService, evEventService, res);
+
+    } else if (res.status === 'copy') {
+
+        const entitytype = res.data.entityType;
+        const entity = res.data.entity;
+
+        openEntityViewerAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
+
+    } else if (res.status === 'delete') {
+        updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
+    }
+
+};
+
+var postAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, resultItem) { // resultItem need because complex transaction have different data
+
+    if (res.status === 'agree') {
+        insertObjectAfterCreateHandler(evDataService, evEventService, resultItem);
+    } else if (res.status === 'edit') {
+
+        insertObjectAfterCreateHandler(evDataService, evEventService, resultItem);
+        // open edit window
+        const entitytype = resultItem.entityType;
+        const entityId = resultItem.entity.id;
+        openEntityViewerEditDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entityId);
+
+    }
+
+};
+
+var postTTypeEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
+
+    /* evDataService.setActiveObjectAction(null);
+    evDataService.setActiveObjectActionData(null); */
+    evDataService.setRowsActionData(null);
+
+    if (res.status === 'agree') {
+        updateEntityInsideTable(evDataService, evEventService, res);
+    } else if (res.status === 'delete') {
+
+        var objects = evDataService.getObjects();
+
+        objects.forEach(function (obj) {
+
+            if (entityId === obj.id) {
+
+                var parent = evDataService.getData(obj.___parentId);
+
+                parent.results = parent.results.filter(function (resultItem) {
+                    return resultItem.id !== entityId
+                });
+
+                evDataService.setData(parent)
+
+            }
+
+        });
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
+
+    } else if (res.status === 'copy') {
+
+        const entitytype = res.data.entityType;
+        const entity = res.data.entity;
+
+        openTTypeAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
+
+    }
+
+};
+
+var postTTypeAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res) {
+
+    if (res.status === 'agree') {
+        insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
+    } else if (res.status === 'edit') {
+
+        insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
+        // open edit window
+        const entitytype = res.data.entityType;
+        const entityId = res.data.entity.id;
+        openTTypeEditDrawer(
+            evDataService,
+            evEventService,
+            layout,
+            $bigDrawer,
+            entitytype,
+            entityId
+        );
+
+    }
+};
+
+var postInstrumentTypeEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
+
+    /* evDataService.setActiveObjectAction(null);
+    evDataService.setActiveObjectActionData(null); */
+    evDataService.setRowsActionData(null);
+
+    if (res.status === 'agree') {
+        updateEntityInsideTable(evDataService, evEventService, res);
+    } else if (res.status === 'delete') {
+
+        var objects = evDataService.getObjects();
+
+        objects.forEach(function (obj) {
+
+            if (entityId === obj.id) {
+
+                var parent = evDataService.getData(obj.___parentId);
+
+                parent.results = parent.results.filter(function (resultItem) {
+                    return resultItem.id !== entityId
+                });
+
+                evDataService.setData(parent)
+
+            }
+
+        });
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
+
+    } else if (res.status === 'copy') {
+
+        const entitytype = res.data.entityType;
+        const entity = res.data.entity;
+
+        openInstrumentTypeAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
+
+    }
+
+};
+
+var postInstrumentTypeAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res) {
+
+    if (res.status === 'agree') {
+        insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
+    } else if (res.status === 'edit') {
+
+        insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
+        // open edit window
+        const entitytype = res.data.entityType;
+        const entityId = res.data.entity.id;
+        openInstrumentTypeEditDrawer(
+            evDataService,
+            evEventService,
+            layout,
+            $bigDrawer,
+            entitytype,
+            entityId
+        );
+
+    }
+};
+
+var postComplexTransactionEditionAction = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
+
+    /* evDataService.setActiveObjectAction(null);
+    evDataService.setActiveObjectActionData(null); */
+    evDataService.setRowsActionData(null);
+
+    if (res.status === 'agree') {
+
+        var objects = evDataService.getObjects();
+
+        objects.forEach(function (obj) {
+
+            if (res.data.complex_transaction.id === obj.id) {
+
+                Object.keys(res.data.complex_transaction).forEach(function (key) {
+
+                    obj[key] = res.data.complex_transaction[key]
+
+                });
+
+                evDataService.setObject(obj);
+
+            }
+
+        });
 
         evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-    };
+    } else if (res.status === 'delete') {
 
-    var postEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
+        updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
 
-        /* evDataService.setActiveObjectAction(null);
-        evDataService.setActiveObjectActionData(null); */
-        evDataService.setRowsActionData(null);
+    } else if (res.status === 'copy') {
 
-        if (res.status === 'agree') {
-            updateEntityInsideTable(evDataService, evEventService, res);
+        const entitytype = res.data.entityType;
+        const entity = res.data.entity;
+        const isCopy = true;
 
-        } else if (res.status === 'copy') {
+        const originalComplexTransaction = res.data.originalComplexTransaction
 
-            const entitytype = res.data.entityType;
-            const entity = res.data.entity;
+        openComplexTransactionAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity, isCopy, originalComplexTransaction)
 
-            openEntityViewerAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
+    } else if (res.status === 'disagree' &&
+        res.data && res.data.updateRowIcon) {
 
-        } else if (res.status === 'delete') {
-            updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
-        }
+        var tIsLocked = res.data.updateRowIcon.is_locked;
+        var tIsCanceled = res.data.updateRowIcon.is_canceled;
+        var activeObject = evDataService.getActiveObject();
+        var transactionObj = evDataService.getObject(activeObject.___id, activeObject.___parentId);
 
-    };
+        transactionObj.is_locked = tIsLocked;
+        transactionObj.is_canceled = tIsCanceled;
+        evDataService.setObject(transactionObj);
 
-    var postAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, resultItem) { // resultItem need because complex transaction have different data
+        evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
 
-        if (res.status === 'agree') {
-            insertObjectAfterCreateHandler(evDataService, evEventService, resultItem);
-        } else if (res.status === 'edit') {
+    } else if (res.status === 'rebook_transaction') {
 
-            insertObjectAfterCreateHandler(evDataService, evEventService, resultItem);
-            // open edit window
-            const entitytype = resultItem.entityType;
-            const entityId = resultItem.entity.id;
-            openEntityViewerEditDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entityId);
-
-        }
-
-    };
-
-    var postTTypeEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
-
-        /* evDataService.setActiveObjectAction(null);
-        evDataService.setActiveObjectActionData(null); */
-        evDataService.setRowsActionData(null);
-
-        if (res.status === 'agree') {
-            updateEntityInsideTable(evDataService, evEventService, res);
-        } else if (res.status === 'delete') {
-
-            var objects = evDataService.getObjects();
-
-            objects.forEach(function (obj) {
-
-                if (entityId === obj.id) {
-
-                    var parent = evDataService.getData(obj.___parentId);
-
-                    parent.results = parent.results.filter(function (resultItem) {
-                        return resultItem.id !== entityId
-                    });
-
-                    evDataService.setData(parent)
-
-                }
-
-            });
-
-            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-            updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
-
-        } else if (res.status === 'copy') {
-
-            const entitytype = res.data.entityType;
-            const entity = res.data.entity;
-
-            openTTypeAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
-
-        }
-
-    };
-
-    var postTTypeAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res) {
-
-        if (res.status === 'agree') {
-            insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
-        } else if (res.status === 'edit') {
-
-            insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
-            // open edit window
-            const entitytype = res.data.entityType;
-            const entityId = res.data.entity.id;
-            openTTypeEditDrawer(
-                evDataService,
-                evEventService,
-                layout,
-                $bigDrawer,
-                entitytype,
-                entityId
-            );
-
-        }
-    };
-
-    var postInstrumentTypeEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
-
-        /* evDataService.setActiveObjectAction(null);
-        evDataService.setActiveObjectActionData(null); */
-        evDataService.setRowsActionData(null);
-
-        if (res.status === 'agree') {
-            updateEntityInsideTable(evDataService, evEventService, res);
-        } else if (res.status === 'delete') {
-
-            var objects = evDataService.getObjects();
-
-            objects.forEach(function (obj) {
-
-                if (entityId === obj.id) {
-
-                    var parent = evDataService.getData(obj.___parentId);
-
-                    parent.results = parent.results.filter(function (resultItem) {
-                        return resultItem.id !== entityId
-                    });
-
-                    evDataService.setData(parent)
-
-                }
-
-            });
-
-            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-            updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
-
-        } else if (res.status === 'copy') {
-
-            const entitytype = res.data.entityType;
-            const entity = res.data.entity;
-
-            openInstrumentTypeAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
-
-        }
-
-    };
-
-    var postInstrumentTypeAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res) {
-
-        if (res.status === 'agree') {
-            insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
-        } else if (res.status === 'edit') {
-
-            insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
-            // open edit window
-            const entitytype = res.data.entityType;
-            const entityId = res.data.entity.id;
-            openInstrumentTypeEditDrawer(
-                evDataService,
-                evEventService,
-                layout,
-                $bigDrawer,
-                entitytype,
-                entityId
-            );
-
-        }
-    };
-
-    var postComplexTransactionEditionAction = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
-
-        /* evDataService.setActiveObjectAction(null);
-        evDataService.setActiveObjectActionData(null); */
-        evDataService.setRowsActionData(null);
-
-        if (res.status === 'agree') {
-
-            var objects = evDataService.getObjects();
-
-            objects.forEach(function (obj) {
-
-                if (res.data.complex_transaction.id === obj.id) {
-
-                    Object.keys(res.data.complex_transaction).forEach(function (key) {
-
-                        obj[key] = res.data.complex_transaction[key]
-
-                    });
-
-                    evDataService.setObject(obj);
-
-                }
-
-            });
-
-            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-        } else if (res.status === 'delete') {
-
-            updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
-
-        } else if (res.status === 'copy') {
-
-            const entitytype = res.data.entityType;
-            const entity = res.data.entity;
-            const isCopy = true;
-
-            const originalComplexTransaction = res.data.originalComplexTransaction
-
-            openComplexTransactionAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity, isCopy, originalComplexTransaction)
-
-        } else if (res.status === 'disagree' &&
-            res.data && res.data.updateRowIcon) {
-
-            var tIsLocked = res.data.updateRowIcon.is_locked;
-            var tIsCanceled = res.data.updateRowIcon.is_canceled;
-            var activeObject = evDataService.getActiveObject();
-            var transactionObj = evDataService.getObject(activeObject.___id, activeObject.___parentId);
-
-            transactionObj.is_locked = tIsLocked;
-            transactionObj.is_canceled = tIsCanceled;
-            evDataService.setObject(transactionObj);
-
-            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
-
-        } else if (res.status === 'rebook_transaction') {
-
-            openComplexTransactionEditDrawer(
-                evDataService,
-                evEventService,
-                $bigDrawer,
-                entityId,
-                layout
-            );
-
-        }
-
-    };
-
-    var openComplexTransactionAddDrawer = function (
-        evDataService,
-        evEventService,
-        layout,
-        $bigDrawer,
-        entityType,
-        entity,
-        isCopy,
-        originalComplexTransaction
-    ) {
-
-        /* $mdDialog.show({
-            controller: 'ComplexTransactionAddDialogController as vm',
-            templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-            parent: document.querySelector('.dialog-containers-wrap'),
-            targetEvent: ev,
-            locals: {
-                entityType: scope.entityType,
-                entity: {},
-                data: {}
-            }
-        }).then(function (res) {
-
-            if (res && res.res === 'agree') {
-                scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
-            }
-
-        }) */
-        var bigDrawerWidth = getBigDrawerWidth(4);
-
-        $bigDrawer.show({
-            controller: 'ComplexTransactionAddDialogController as vm',
-            templateUrl: 'views/entity-viewer/complex-transaction-add-drawer-view.html',
-            addResizeButton: false,
-            drawerWidth: bigDrawerWidth,
-            locals: {
-                entityType: entityType,
-                entity: entity,
-                data: {
-                    openedIn: 'big-drawer',
-                    editLayout: layout,
-                    isCopy: isCopy,
-                    originalComplexTransaction: originalComplexTransaction
-                }
-            }
-
-        }).then(function (res) {
-
-            var resultItem = null;
-            if (res.data) {
-                resultItem = res.data.complex_transaction;
-            }
-
-            postAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, resultItem);
-
-        });
-    };
-
-    /**
-     *
-     * @param evDataService {Object} - entityViewerDataService
-     * @param evEventService {Object} - entityViewerEventService
-     * @param $bigDrawer {Object} - bigDrawer module
-     * @param entityId {number} - complex transaction id
-     * @param layout {Object=} - layout of form
-     */
-    var openComplexTransactionEditDrawer = function (evDataService, evEventService, $bigDrawer, entityId, layout) {
-
-        var bigDrawerWidth = getBigDrawerWidth(4);
-
-        $bigDrawer.show({
-            controller: 'ComplexTransactionEditDialogController as vm',
-            templateUrl: 'views/entity-viewer/complex-transaction-edit-drawer-view.html',
-            addResizeButton: false,
-            drawerWidth: bigDrawerWidth,
-            locals: {
-                entityType: 'complex-transaction',
-                entityId: entityId,
-                data: {
-                    openedIn: 'big-drawer',
-                    editLayout: layout
-                }
-            }
-
-        }).then(function (res) {
-
-            postComplexTransactionEditionAction(evDataService, evEventService, layout, $bigDrawer, res, entityId);
-
-        });
+        openComplexTransactionEditDrawer(
+            evDataService,
+            evEventService,
+            $bigDrawer,
+            entityId,
+            layout
+        );
 
     }
 
-    var openComplexTransactionPreviewDrawer = function (evDataService, evEventService, $bigDrawer, $mdDialog, entityId, layout) {
+};
 
-        try {
-            metaHelper.closeComponent('big-drawer', $mdDialog, $bigDrawer, {status: 'disagree'});
-        } catch (e) {
-            console.warn("nothing to close")
+var openComplexTransactionAddDrawer = function (
+    evDataService,
+    evEventService,
+    layout,
+    $bigDrawer,
+    entityType,
+    entity,
+    isCopy,
+    originalComplexTransaction
+) {
+
+    /* $mdDialog.show({
+        controller: 'ComplexTransactionAddDialogController as vm',
+        templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+        parent: document.querySelector('.dialog-containers-wrap'),
+        targetEvent: ev,
+        locals: {
+            entityType: scope.entityType,
+            entity: {},
+            data: {}
         }
-        var bigDrawerWidth = getBigDrawerWidth(4);
+    }).then(function (res) {
 
+        if (res && res.res === 'agree') {
+            scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
+        }
 
-        $bigDrawer.show({
-            controller: 'ComplexTransactionEditDialogController as vm',
-            templateUrl: 'views/entity-viewer/complex-transaction-edit-drawer-view.html',
-            addResizeButton: false,
-            drawerWidth: bigDrawerWidth,
-            showBackdrop: false,
-            closeAnimation: false,
-            openAnimation: false,
-            locals: {
-                entityType: 'complex-transaction',
-                entityId: entityId,
-                data: {
-                    openedIn: 'big-drawer',
-                    editLayout: layout,
-                    previewMode: true,
-                }
+    }) */
+    var bigDrawerWidth = getBigDrawerWidth(4);
+
+    $bigDrawer.show({
+        controller: 'ComplexTransactionAddDialogController as vm',
+        templateUrl: 'views/entity-viewer/complex-transaction-add-drawer-view.html',
+        addResizeButton: false,
+        drawerWidth: bigDrawerWidth,
+        locals: {
+            entityType: entityType,
+            entity: entity,
+            data: {
+                openedIn: 'big-drawer',
+                editLayout: layout,
+                isCopy: isCopy,
+                originalComplexTransaction: originalComplexTransaction
             }
+        }
 
-        }).then(function (res) {
+    }).then(function (res) {
 
-            postComplexTransactionEditionAction(evDataService, evEventService, layout, $bigDrawer, res, entityId);
+        var resultItem = null;
+        if (res.data) {
+            resultItem = res.data.complex_transaction;
+        }
 
-        });
+        postAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, resultItem);
 
+    });
+};
 
+/**
+ *
+ * @param evDataService {Object} - entityViewerDataService
+ * @param evEventService {Object} - entityViewerEventService
+ * @param $bigDrawer {Object} - bigDrawer module
+ * @param entityId {number} - complex transaction id
+ * @param layout {Object=} - layout of form
+ */
+var openComplexTransactionEditDrawer = function (evDataService, evEventService, $bigDrawer, entityId, layout) {
+
+    var bigDrawerWidth = getBigDrawerWidth(4);
+
+    $bigDrawer.show({
+        controller: 'ComplexTransactionEditDialogController as vm',
+        templateUrl: 'views/entity-viewer/complex-transaction-edit-drawer-view.html',
+        addResizeButton: false,
+        drawerWidth: bigDrawerWidth,
+        locals: {
+            entityType: 'complex-transaction',
+            entityId: entityId,
+            data: {
+                openedIn: 'big-drawer',
+                editLayout: layout
+            }
+        }
+
+    }).then(function (res) {
+
+        postComplexTransactionEditionAction(evDataService, evEventService, layout, $bigDrawer, res, entityId);
+
+    });
+
+}
+
+var openComplexTransactionPreviewDrawer = function (evDataService, evEventService, $bigDrawer, $mdDialog, entityId, layout) {
+
+    try {
+        metaHelper.closeComponent('big-drawer', $mdDialog, $bigDrawer, {status: 'disagree'});
+    } catch (e) {
+        console.warn("nothing to close")
     }
+    var bigDrawerWidth = getBigDrawerWidth(4);
 
-    var openTTypeAddDrawer = function (
-        evDataService,
-        evEventService,
-        layout,
-        $bigDrawer,
-        entityType,
-        entity
-    ) {
 
-        /*							$mdDialog.show({
-                                        controller: 'TransactionTypeAddDialogController as vm',
-                                        templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-                                        parent: document.querySelector('.dialog-containers-wrap'),
-                                        targetEvent: ev,
-                                        locals: {
-                                            entityType: scope.entityType,
-                                            entity: {}
-                                        }
-
-                                    }).then(postAddEntityFn);*/
-
-        var bigDrawerWidth = getBigDrawerWidth(6);
-
-        $bigDrawer.show({
-            controller: 'TransactionTypeAddDialogController as vm',
-            templateUrl: 'views/entity-viewer/transaction-type-add-drawer-view.html',
-            addResizeButton: false, // ttype always have max width without resize button
-            drawerWidth: bigDrawerWidth,
-            locals: {
-                entityType: entityType,
-                entity: entity,
-                data: {
-                    openedIn: 'big-drawer',
-                    editLayout: layout
-                }
+    $bigDrawer.show({
+        controller: 'ComplexTransactionEditDialogController as vm',
+        templateUrl: 'views/entity-viewer/complex-transaction-edit-drawer-view.html',
+        addResizeButton: false,
+        drawerWidth: bigDrawerWidth,
+        showBackdrop: false,
+        closeAnimation: false,
+        openAnimation: false,
+        locals: {
+            entityType: 'complex-transaction',
+            entityId: entityId,
+            data: {
+                openedIn: 'big-drawer',
+                editLayout: layout,
+                previewMode: true,
             }
+        }
 
-        }).then(function (res) {
+    }).then(function (res) {
 
-            postTTypeAdditionActions(evDataService, evEventService, layout, $bigDrawer, res);
+        postComplexTransactionEditionAction(evDataService, evEventService, layout, $bigDrawer, res, entityId);
 
-        });
-
-    };
+    });
 
 
-    var openTTypeEditDrawer = function (
-        evDataService,
-        evEventService,
-        layout,
-        $bigDrawer,
-        entitytype,
-        entityId
-    ) {
+}
 
-        var bigDrawerWidth = getBigDrawerWidth(6);
+var openTTypeAddDrawer = function (
+    evDataService,
+    evEventService,
+    layout,
+    $bigDrawer,
+    entityType,
+    entity
+) {
 
-        /*						$mdDialog.show({
-                                    controller: 'TransactionTypeEditDialogController as vm',
-                                    templateUrl: 'views/entity-viewer/transaction-type-edit-dialog-view.html',
+    /*							$mdDialog.show({
+                                    controller: 'TransactionTypeAddDialogController as vm',
+                                    templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
                                     parent: document.querySelector('.dialog-containers-wrap'),
-                                    targetEvent: activeObject.event,
-                                    //clickOutsideToClose: false,
+                                    targetEvent: ev,
                                     locals: {
-                                        entityType: entitytype,
-                                        entityId: activeObject.id,
-                                        openedIn: 'dialog'
+                                        entityType: scope.entityType,
+                                        entity: {}
                                     }
-                                })
-                                    .then(function (res) {
 
-                                    vm.entityViewerDataService.setActiveObjectAction(null);
+                                }).then(postAddEntityFn);*/
+
+    var bigDrawerWidth = getBigDrawerWidth(6);
+
+    $bigDrawer.show({
+        controller: 'TransactionTypeAddDialogController as vm',
+        templateUrl: 'views/entity-viewer/transaction-type-add-drawer-view.html',
+        addResizeButton: false, // ttype always have max width without resize button
+        drawerWidth: bigDrawerWidth,
+        locals: {
+            entityType: entityType,
+            entity: entity,
+            data: {
+                openedIn: 'big-drawer',
+                editLayout: layout
+            }
+        }
+
+    }).then(function (res) {
+
+        postTTypeAdditionActions(evDataService, evEventService, layout, $bigDrawer, res);
+
+    });
+
+};
+
+
+var openTTypeEditDrawer = function (
+    evDataService,
+    evEventService,
+    layout,
+    $bigDrawer,
+    entitytype,
+    entityId
+) {
+
+    var bigDrawerWidth = getBigDrawerWidth(6);
+
+    /*						$mdDialog.show({
+                                controller: 'TransactionTypeEditDialogController as vm',
+                                templateUrl: 'views/entity-viewer/transaction-type-edit-dialog-view.html',
+                                parent: document.querySelector('.dialog-containers-wrap'),
+                                targetEvent: activeObject.event,
+                                //clickOutsideToClose: false,
+                                locals: {
+                                    entityType: entitytype,
+                                    entityId: activeObject.id,
+                                    openedIn: 'dialog'
+                                }
+                            })
+                                .then(function (res) {
+
+                                vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                                if (res && res.res === 'agree') {
+
+                                    if (res.data.action === 'delete') {
+
+                                        var objects = vm.entityViewerDataService.getObjects();
+
+                                        objects.forEach(function (obj) {
+
+                                            if (activeObject.id === obj.id) {
+
+                                                var parent = vm.entityViewerDataService.getData(obj.___parentId);
+
+                                                parent.results = parent.results.filter(function (resultItem) {
+                                                    return resultItem.id !== activeObject.id
+                                                });
+
+                                                vm.entityViewerDataService.setData(parent)
+
+                                            }
+
+                                        });
+
+                                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                        updateTableAfterEntitiesDeletion([activeObject.id]);
+
+                                    } else {
+
+                                        console.log('res', res);
+
+                                        var objects = vm.entityViewerDataService.getObjects();
+
+                                        objects.forEach(function (obj) {
+
+                                            if (res.data.id === obj.id) {
+
+                                                Object.keys(res.data).forEach(function (key) {
+
+                                                    obj[key] = res.data[key]
+
+                                                });
+
+                                                vm.entityViewerDataService.setObject(obj);
+
+                                            }
+
+                                        });
+
+                                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                    }
+
+                                }
+                            });*/
+    $bigDrawer.show({
+        controller: 'TransactionTypeEditDialogController as vm',
+        templateUrl: 'views/entity-viewer/transaction-type-edit-drawer-view.html',
+        addResizeButton: false, // ttype always have max width without resize button
+        drawerWidth: bigDrawerWidth,
+        locals: {
+            entityType: entitytype,
+            entityId: entityId,
+            data: {
+                openedIn: 'big-drawer',
+                editLayout: layout
+            }
+        }
+
+    }).then(function (res) {
+
+        postTTypeEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
+
+        /*                            vm.entityViewerDataService.setActiveObjectAction(null);
                                     vm.entityViewerDataService.setActiveObjectActionData(null);
 
                                     if (res && res.res === 'agree') {
@@ -1478,7 +1542,7 @@
                                             });
 
                                             vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                            updateTableAfterEntitiesDeletion([activeObject.id]);
+                                            evHelperService.updateTableAfterEntitiesDeletion(vm, [activeObject.id]);
 
                                         } else {
 
@@ -1506,659 +1570,583 @@
 
                                         }
 
-                                    }
-                                });*/
-        $bigDrawer.show({
-            controller: 'TransactionTypeEditDialogController as vm',
-            templateUrl: 'views/entity-viewer/transaction-type-edit-drawer-view.html',
-            addResizeButton: false, // ttype always have max width without resize button
-            drawerWidth: bigDrawerWidth,
-            locals: {
-                entityType: entitytype,
-                entityId: entityId,
-                data: {
-                    openedIn: 'big-drawer',
-                    editLayout: layout
-                }
+                                    }*/
+
+    });
+};
+
+
+var openInstrumentTypeAddDrawer = function (
+    evDataService,
+    evEventService,
+    layout,
+    $bigDrawer,
+    entityType,
+    entity
+) {
+
+    var bigDrawerWidth = getBigDrawerWidth(6);
+
+    $bigDrawer.show({
+        controller: 'InstrumentTypeAddDialogController as vm',
+        templateUrl: 'views/entity-viewer/instrument-type-add-drawer-view.html',
+        addResizeButton: false, // ttype always have max width without resize button
+        drawerWidth: bigDrawerWidth,
+        locals: {
+            entityType: entityType,
+            entity: entity,
+            data: {
+                openedIn: 'big-drawer',
+                editLayout: layout
             }
+        }
 
-        }).then(function (res) {
+    }).then(function (res) {
 
-            postTTypeEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
+        postInstrumentTypeAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data);
 
-            /*                            vm.entityViewerDataService.setActiveObjectAction(null);
-                                        vm.entityViewerDataService.setActiveObjectActionData(null);
+    });
 
-                                        if (res && res.res === 'agree') {
-
-                                            if (res.data.action === 'delete') {
-
-                                                var objects = vm.entityViewerDataService.getObjects();
-
-                                                objects.forEach(function (obj) {
-
-                                                    if (activeObject.id === obj.id) {
-
-                                                        var parent = vm.entityViewerDataService.getData(obj.___parentId);
-
-                                                        parent.results = parent.results.filter(function (resultItem) {
-                                                            return resultItem.id !== activeObject.id
-                                                        });
-
-                                                        vm.entityViewerDataService.setData(parent)
-
-                                                    }
-
-                                                });
-
-                                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                                evHelperService.updateTableAfterEntitiesDeletion(vm, [activeObject.id]);
-
-                                            } else {
-
-                                                console.log('res', res);
-
-                                                var objects = vm.entityViewerDataService.getObjects();
-
-                                                objects.forEach(function (obj) {
-
-                                                    if (res.data.id === obj.id) {
-
-                                                        Object.keys(res.data).forEach(function (key) {
-
-                                                            obj[key] = res.data[key]
-
-                                                        });
-
-                                                        vm.entityViewerDataService.setObject(obj);
-
-                                                    }
-
-                                                });
-
-                                                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                                            }
-
-                                        }*/
-
-        });
-    };
+};
 
 
-    var openInstrumentTypeAddDrawer = function (
-        evDataService,
-        evEventService,
-        layout,
-        $bigDrawer,
-        entityType,
-        entity
-    ) {
+var openInstrumentTypeEditDrawer = function (evDataService, evEventService, layout, $bigDrawer, entitytype, entityId) {
 
-        var bigDrawerWidth = getBigDrawerWidth(6);
+    var bigDrawerWidth = getBigDrawerWidth(6);
 
-        $bigDrawer.show({
-            controller: 'InstrumentTypeAddDialogController as vm',
-            templateUrl: 'views/entity-viewer/instrument-type-add-drawer-view.html',
-            addResizeButton: false, // ttype always have max width without resize button
-            drawerWidth: bigDrawerWidth,
-            locals: {
-                entityType: entityType,
-                entity: entity,
-                data: {
-                    openedIn: 'big-drawer',
-                    editLayout: layout
-                }
+    $bigDrawer.show({
+        controller: 'InstrumentTypeEditDialogController as vm',
+        templateUrl: 'views/entity-viewer/instrument-type-edit-drawer-view.html',
+        addResizeButton: false, // ttype always have max width without resize button
+        drawerWidth: bigDrawerWidth,
+        locals: {
+            entityType: entitytype,
+            entityId: entityId,
+            data: {
+                openedIn: 'big-drawer',
+                editLayout: layout
             }
+        }
 
-        }).then(function (res) {
+    }).then(function (res) {
 
-            postInstrumentTypeAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data);
-
-        });
-
-    };
+        postInstrumentTypeEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
 
 
-    var openInstrumentTypeEditDrawer = function (evDataService, evEventService, layout, $bigDrawer, entitytype, entityId) {
+    });
+};
 
-        var bigDrawerWidth = getBigDrawerWidth(6);
 
-        $bigDrawer.show({
-            controller: 'InstrumentTypeEditDialogController as vm',
-            templateUrl: 'views/entity-viewer/instrument-type-edit-drawer-view.html',
-            addResizeButton: false, // ttype always have max width without resize button
-            drawerWidth: bigDrawerWidth,
-            locals: {
-                entityType: entitytype,
-                entityId: entityId,
-                data: {
-                    openedIn: 'big-drawer',
-                    editLayout: layout
-                }
+var openEntityViewerAddDrawer = function (evDataService, evEventService, layout, $bigDrawer, entityType, entity) {
+
+    /* $mdDialog.show({
+        controller: 'EntityViewerAddDialogController as vm',
+        templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+        parent: document.querySelector('.dialog-containers-wrap'),
+        targetEvent: ev,
+        locals: {
+            entityType: scope.entityType,
+            entity: {},
+            data: {
+                openedIn: 'modal-dialog'
             }
+        }
 
-        }).then(function (res) {
+    }).then(postAddEntityFn); */
 
-            postInstrumentTypeEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
+    var bigDrawerOptions = getBigDrawerOptions(layout, entityType);
 
-
-        });
-    };
-
-
-    var openEntityViewerAddDrawer = function (evDataService, evEventService, layout, $bigDrawer, entityType, entity) {
-
-        /* $mdDialog.show({
-            controller: 'EntityViewerAddDialogController as vm',
-            templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-            parent: document.querySelector('.dialog-containers-wrap'),
-            targetEvent: ev,
-            locals: {
-                entityType: scope.entityType,
-                entity: {},
-                data: {
-                    openedIn: 'modal-dialog'
-                }
+    $bigDrawer.show({
+        controller: 'EntityViewerAddDialogController as vm',
+        templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
+        addResizeButton: true,
+        drawerWidth: bigDrawerOptions.width,
+        locals: {
+            entityType: entityType,
+            entity: entity,
+            data: {
+                openedIn: 'big-drawer',
+                editLayout: bigDrawerOptions.editLayout,
+                tabColumns: bigDrawerOptions.tabColumns
             }
+        }
 
-        }).then(postAddEntityFn); */
+    }).then(function (res) {
 
-        var bigDrawerOptions = getBigDrawerOptions(layout, entityType);
+        postAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data);
 
-        $bigDrawer.show({
-            controller: 'EntityViewerAddDialogController as vm',
-            templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
-            addResizeButton: true,
-            drawerWidth: bigDrawerOptions.width,
-            locals: {
-                entityType: entityType,
-                entity: entity,
-                data: {
-                    openedIn: 'big-drawer',
-                    editLayout: bigDrawerOptions.editLayout,
-                    tabColumns: bigDrawerOptions.tabColumns
-                }
-            }
+    });
 
-        }).then(function (res) {
-
-            postAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data);
-
-        });
-
-    };
+};
 
 
-    var openEntityViewerEditDrawer = function (evDataService, evEventService, layout, $bigDrawer, entityType, entityId) {
+var openEntityViewerEditDrawer = function (evDataService, evEventService, layout, $bigDrawer, entityType, entityId) {
 
-        var bigDrawerOptions = getBigDrawerOptions(layout, entityType);
+    var bigDrawerOptions = getBigDrawerOptions(layout, entityType);
 
-        /* $mdDialog.show({
-            controller: 'EntityViewerEditDialogController as vm',
-            templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-            parent: document.querySelector('.dialog-containers-wrap'),
-            targetEvent: activeObject.event,
-            //clickOutsideToClose: false,
-            locals: {
-                entityType: entityType,
-                entityId: activeObject.id,
-                data: {}
-            }
-        }).then(function (res) {
+    /* $mdDialog.show({
+        controller: 'EntityViewerEditDialogController as vm',
+        templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+        parent: document.querySelector('.dialog-containers-wrap'),
+        targetEvent: activeObject.event,
+        //clickOutsideToClose: false,
+        locals: {
+            entityType: entityType,
+            entityId: activeObject.id,
+            data: {}
+        }
+    }).then(function (res) {
 
-            vm.entityViewerDataService.setActiveObjectAction(null);
-            vm.entityViewerDataService.setActiveObjectActionData(null);
+        vm.entityViewerDataService.setActiveObjectAction(null);
+        vm.entityViewerDataService.setActiveObjectActionData(null);
 
-            if (res && res.res === 'agree') {
+        if (res && res.res === 'agree') {
 
-                if (res.data.action === 'delete') {
+            if (res.data.action === 'delete') {
 
-                    var objects = vm.entityViewerDataService.getObjects();
+                var objects = vm.entityViewerDataService.getObjects();
 
-                    objects.forEach(function (obj) {
+                objects.forEach(function (obj) {
 
-                        if (activeObject.id === obj.id) {
+                    if (activeObject.id === obj.id) {
 
-                            var parent = vm.entityViewerDataService.getData(obj.___parentId);
+                        var parent = vm.entityViewerDataService.getData(obj.___parentId);
 
-                            parent.results = parent.results.filter(function (resultItem) {
-                                return resultItem.id !== activeObject.id
-                            });
+                        parent.results = parent.results.filter(function (resultItem) {
+                            return resultItem.id !== activeObject.id
+                        });
 
-                            vm.entityViewerDataService.setData(parent)
+                        vm.entityViewerDataService.setData(parent)
 
-                        }
-
-                    });
-
-                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                } else {
-
-                    var objects = vm.entityViewerDataService.getObjects();
-
-                    objects.forEach(function (obj) {
-
-                        if (res.data.id === obj.id) {
-
-                            Object.keys(res.data).forEach(function (key) {
-
-                                obj[key] = res.data[key]
-
-                            });
-
-                            vm.entityViewerDataService.setObject(obj);
-
-                        }
-
-                    });
-
-                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                }
-
-            }
-
-        }); */
-        $bigDrawer.show({
-            controller: 'EntityViewerEditDialogController as vm',
-            templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
-            addResizeButton: true,
-            drawerWidth: bigDrawerOptions.width,
-            locals: {
-                entityType: entityType,
-                entityId: entityId,
-                data: {
-                    openedIn: 'big-drawer',
-                    editLayout: bigDrawerOptions.editLayout,
-                    tabColumns: bigDrawerOptions.tabColumns
-                }
-            }
-
-        }).then(function (res) {
-
-            postEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
-
-        });
-    };
-
-    var updateTableAfterEntitiesDeletion = function (evDataService, evEventService) {
-
-        /*var evOptions = evDataService.getEntityViewerOptions();
-        var objects = evDataService.getObjects();
-
-        objects.forEach(function (obj) {
-
-            if (deletedEntitiesIds.includes(obj.id)) {
-
-                var parent = evDataService.getData(obj.___parentId);
-
-                // if deleted entities shown, mark them
-                if (evOptions.entity_filters && evOptions.entity_filters.includes('deleted')) {
-
-                    parent.results.forEach(function (resultItem) {
-
-                        if (deletedEntitiesIds.includes(resultItem.id)) {
-                            resultItem.is_deleted = true;
-                        }
-
-                    });
-
-                } else { // if deleted entities hidden, remove them
-
-                    parent.results = parent.results.filter(function (resultItem) {
-                        return !deletedEntitiesIds.includes(resultItem.id);
-                    });
-
-                }
-
-                evDataService.setData(parent);
-
-            }
-
-        });
-
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
-        evDataService.resetTableContent(false);
-
-        evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-    };
-
-    var updateEntityInsideTable = function (evDataService, evEventService, res) {
-
-        var objects = evDataService.getObjects();
-
-        objects.forEach(function (obj) {
-
-            if (res.data.id === obj.id) {
-
-                Object.keys(res.data).forEach(function (key) {
-
-                    obj[key] = res.data[key]
+                    }
 
                 });
 
-                evDataService.setObject(obj);
+                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
+            } else {
+
+                var objects = vm.entityViewerDataService.getObjects();
+
+                objects.forEach(function (obj) {
+
+                    if (res.data.id === obj.id) {
+
+                        Object.keys(res.data).forEach(function (key) {
+
+                            obj[key] = res.data[key]
+
+                        });
+
+                        vm.entityViewerDataService.setObject(obj);
+
+                    }
+
+                });
+
+                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
             }
-
-        });
-
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-    };
-
-    /**
-     * @param {Object} pricingPolicy
-     * @param {Array<Object>} instrumentPricingSchemes
-     * @param {Object} entity - data of ev entity
-     */
-    var onPricingSchemeChangeInsidePricingPolicy = function (pricingPolicy, instrumentPricingSchemes, entity) {
-
-        pricingPolicy.pricing_scheme_object = null;
-        pricingPolicy.default_value = null;
-        pricingPolicy.attribute_key = null;
-        pricingPolicy.data = null;
-
-        instrumentPricingSchemes.forEach(function (scheme) {
-
-            if (scheme.id === pricingPolicy.pricing_scheme) {
-
-                pricingPolicy.pricing_scheme_object = scheme;
-            }
-
-        })
-
-        if (pricingPolicy.pricing_scheme_object && pricingPolicy.pricing_scheme_object.type_settings) {
-
-            pricingPolicy.data = pricingPolicy.pricing_scheme_object.type_settings.data;
-            pricingPolicy.attribute_key = pricingPolicy.pricing_scheme_object.type_settings.attribute_key;
-            pricingPolicy.default_value = pricingPolicy.pricing_scheme_object.type_settings.default_value;
 
         }
 
-        entity.pricing_policies = entity.pricing_policies.map(function (policy) {
+    }); */
+    $bigDrawer.show({
+        controller: 'EntityViewerEditDialogController as vm',
+        templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
+        addResizeButton: true,
+        drawerWidth: bigDrawerOptions.width,
+        locals: {
+            entityType: entityType,
+            entityId: entityId,
+            data: {
+                openedIn: 'big-drawer',
+                editLayout: bigDrawerOptions.editLayout,
+                tabColumns: bigDrawerOptions.tabColumns
+            }
+        }
 
-            if (policy.id === pricingPolicy.id) {
-                return Object.assign({}, pricingPolicy);
+    }).then(function (res) {
+
+        postEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
+
+    });
+};
+
+var updateTableAfterEntitiesDeletion = function (evDataService, evEventService) {
+
+    /*var evOptions = evDataService.getEntityViewerOptions();
+    var objects = evDataService.getObjects();
+
+    objects.forEach(function (obj) {
+
+        if (deletedEntitiesIds.includes(obj.id)) {
+
+            var parent = evDataService.getData(obj.___parentId);
+
+            // if deleted entities shown, mark them
+            if (evOptions.entity_filters && evOptions.entity_filters.includes('deleted')) {
+
+                parent.results.forEach(function (resultItem) {
+
+                    if (deletedEntitiesIds.includes(resultItem.id)) {
+                        resultItem.is_deleted = true;
+                    }
+
+                });
+
+            } else { // if deleted entities hidden, remove them
+
+                parent.results = parent.results.filter(function (resultItem) {
+                    return !deletedEntitiesIds.includes(resultItem.id);
+                });
+
             }
 
-            return policy;
+            evDataService.setData(parent);
 
-        });
+        }
 
-    };
+    });
 
-    function isRestorable(entityType) {
-        return !['complex-transaction', 'price-history', 'currency-history', 'portfolio-register'].includes(entityType);
+    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
+    evDataService.resetTableContent(false);
+
+    evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+};
+
+var updateEntityInsideTable = function (evDataService, evEventService, res) {
+
+    var objects = evDataService.getObjects();
+
+    objects.forEach(function (obj) {
+
+        if (res.data.id === obj.id) {
+
+            Object.keys(res.data).forEach(function (key) {
+
+                obj[key] = res.data[key]
+
+            });
+
+            evDataService.setObject(obj);
+
+        }
+
+    });
+
+    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+};
+
+/**
+ * @param {Object} pricingPolicy
+ * @param {Array<Object>} instrumentPricingSchemes
+ * @param {Object} entity - data of ev entity
+ */
+var onPricingSchemeChangeInsidePricingPolicy = function (pricingPolicy, instrumentPricingSchemes, entity) {
+
+    pricingPolicy.pricing_scheme_object = null;
+    pricingPolicy.default_value = null;
+    pricingPolicy.attribute_key = null;
+    pricingPolicy.data = null;
+
+    instrumentPricingSchemes.forEach(function (scheme) {
+
+        if (scheme.id === pricingPolicy.pricing_scheme) {
+
+            pricingPolicy.pricing_scheme_object = scheme;
+        }
+
+    })
+
+    if (pricingPolicy.pricing_scheme_object && pricingPolicy.pricing_scheme_object.type_settings) {
+
+        pricingPolicy.data = pricingPolicy.pricing_scheme_object.type_settings.data;
+        pricingPolicy.attribute_key = pricingPolicy.pricing_scheme_object.type_settings.attribute_key;
+        pricingPolicy.default_value = pricingPolicy.pricing_scheme_object.type_settings.default_value;
+
     }
 
-    function getNameOfStateForEditingEntity($state) {
+    entity.pricing_policies = entity.pricing_policies.map(function (policy) {
 
-        let _stateName = $state.current.name;
-
-        if (_stateName.endsWith("-edition")) {
-            return _stateName;
+        if (policy.id === pricingPolicy.id) {
+            return Object.assign({}, pricingPolicy);
         }
 
-        _stateName = _stateName + "-edition";
+        return policy;
 
-        const stateDeclaration = $state.get(_stateName);
+    });
 
-        if (!stateDeclaration) {
-            throw new Error(
-                "[getNameOfStateForEditingEntity] The following state does not " +
-                `exist ${_stateName}`
-            )
-        }
+};
 
+function isRestorable(entityType) {
+    return !['complex-transaction', 'price-history', 'currency-history', 'portfolio-register'].includes(entityType);
+}
+
+function getNameOfStateForEditingEntity($state) {
+
+    let _stateName = $state.current.name;
+
+    if (_stateName.endsWith("-edition")) {
         return _stateName;
+    }
+
+    _stateName = _stateName + "-edition";
+
+    const stateDeclaration = $state.get(_stateName);
+
+    if (!stateDeclaration) {
+        throw new Error(
+            "[getNameOfStateForEditingEntity] The following state does not " +
+            `exist ${_stateName}`
+        )
+    }
+
+    return _stateName;
+
+}
+
+function checkEditionState(stateName) {
+
+    if ( !stateName || !stateName.endsWith("-edition") ) {
+
+        return new Error(
+            "[entityViewerHelperService copyLinkToEvForm] An invalid $state " +
+            "was passed. Expected a $state for edition of entities " +
+            `got: ${stateName}`
+        )
 
     }
 
-    function checkEditionState(stateName) {
+}
 
-        if ( !stateName || !stateName.endsWith("-edition") ) {
+/**
+ * Copies to clipboard a link to a webpage for editing an entity
+ *
+ * @param {Object} $state - $state from ui router
+ * @param {String} stateName - name of a $state for editing entity viewer
+ * @param {Object} toastNotificationService
+ * @param {
+ *      {
+ *          entityId?: Number,
+ *          entityUserCode?: String,
+ *          transactionCode?: Number,
+ *          complexTransactionCode?: Number,
+ *          tab?: String,
+ *          strategyNumber?: String,
+ *      }
+ * } options
+ * @param {Number} [options.transactionCode] - for
+ * editing "transactions.transaction"
+ * @param {Number} [options.complexTransactionCode] - for
+ * editing "transactions.complextransaction"
+ * @param {String} [options.strategyNumber] - string because a router param
+ * `strategyNumber` is of type "path"
+ */
+function copyLinkToEvForm($state, stateName, toastNotificationService, options={}) {
 
-            return new Error(
-                "[entityViewerHelperService copyLinkToEvForm] An invalid $state " +
-                "was passed. Expected a $state for edition of entities " +
-                `got: ${stateName}`
-            )
-
-        }
-
-    }
-
-    /**
-     * Copies to clipboard a link to a webpage for editing an entity
-     *
-     * @param {Object} $state - $state from ui router
-     * @param {String} stateName - name of a $state for editing entity viewer
-     * @param {Object} toastNotificationService
-     * @param {
-     *      {
-     *          entityId?: Number,
-     *          entityUserCode?: String,
-     *          transactionCode?: Number,
-     *          complexTransactionCode?: Number,
-     *          tab?: String,
-     *          strategyNumber?: String,
-     *      }
-     * } options
-     * @param {Number} [options.transactionCode] - for
-     * editing "transactions.transaction"
-     * @param {Number} [options.complexTransactionCode] - for
-     * editing "transactions.complextransaction"
-     * @param {String} [options.strategyNumber] - string because a router param
-     * `strategyNumber` is of type "path"
-     */
-    function copyLinkToEvForm($state, stateName, toastNotificationService, options={}) {
-
-        function validateArguments(stateDeclaration) {
-
-            if ( stateDeclaration.params.hasOwnProperty("id") ) {
-
-                if ( !options.entityId || !Number.isInteger(options.entityId) ) {
-
-                    return "[entityViewerHelperService copyLinkToEvForm] " +
-                        "An invalid options.entityId for " +
-                        `the $state '${stateName}': ${options.entityId}`;
-
-                }
-
-            }
-            else if ( stateDeclaration.params.hasOwnProperty("userCode") ) { // getting entity bu user_code
-
-                if (!options.entityUserCode || typeof options.entityUserCode !== "string") {
-
-                    return "[entityViewerHelperService copyLinkToEvForm] " +
-                        "An invalid options.entityUserCode for " +
-                        `the $state '${stateName}': ${options.entityUserCode}`;
-
-                }
-
-            }
-            else if (stateDeclaration.data.entityType === "transaction") {
-
-                if (!options.transactionCode || !Number.isInteger(options.transactionCode) ) {
-
-                    return "[entityViewerHelperService copyLinkToEvForm] " +
-                        "An invalid options.transactionCode for " +
-                        `the $state '${stateName}': ${options.transactionCode}`;
-
-                }
-
-            }
-            else if (stateDeclaration.data.entityType === "complex-transaction") {
-
-                if ( !Number.isInteger(options.complexTransactionCode) ) {
-
-                    return "[entityViewerHelperService copyLinkToEvForm] An invalid " +
-                        `options.complexTransactionCode for a $state '${stateName}': ` +
-                        `${options.complexTransactionCode}`;
-
-                }
-
-            }
-
-            if (
-                stateName === "app.portal.data.strategy-edition" &&
-                !["1", "2", "3"].includes(options.strategyNumber)
-            ) {
-
-                return "[entityViewerHelperService copyLinkToEvForm] " +
-                    `Invalid number of a strategy provided: ${options.strategyNumber}`;
-
-            }
-
-        }
-
-        const invalidStateError = checkEditionState(stateName);
-
-        if (invalidStateError) {
-            throw invalidStateError;
-        }
-
-        const stateDeclaration = $state.get(stateName);
-
-        let params = {};
-
-        const errorMsg = validateArguments(stateDeclaration);
-
-        if (errorMsg) {
-            throw new Error(errorMsg);
-        }
+    function validateArguments(stateDeclaration) {
 
         if ( stateDeclaration.params.hasOwnProperty("id") ) {
-            params.id = options.entityId;
+
+            if ( !options.entityId || !Number.isInteger(options.entityId) ) {
+
+                return "[entityViewerHelperService copyLinkToEvForm] " +
+                    "An invalid options.entityId for " +
+                    `the $state '${stateName}': ${options.entityId}`;
+
+            }
+
         }
-        else if ( stateDeclaration.params.hasOwnProperty("userCode") ) {
-            params.userCode = options.entityUserCode;
+        else if ( stateDeclaration.params.hasOwnProperty("userCode") ) { // getting entity bu user_code
+
+            if (!options.entityUserCode || typeof options.entityUserCode !== "string") {
+
+                return "[entityViewerHelperService copyLinkToEvForm] " +
+                    "An invalid options.entityUserCode for " +
+                    `the $state '${stateName}': ${options.entityUserCode}`;
+
+            }
+
         }
         else if (stateDeclaration.data.entityType === "transaction") {
-            params.transactionCode = options.transactionCode;
+
+            if (!options.transactionCode || !Number.isInteger(options.transactionCode) ) {
+
+                return "[entityViewerHelperService copyLinkToEvForm] " +
+                    "An invalid options.transactionCode for " +
+                    `the $state '${stateName}': ${options.transactionCode}`;
+
+            }
+
         }
         else if (stateDeclaration.data.entityType === "complex-transaction") {
-            params.code = options.complexTransactionCode;
+
+            if ( !Number.isInteger(options.complexTransactionCode) ) {
+
+                return "[entityViewerHelperService copyLinkToEvForm] An invalid " +
+                    `options.complexTransactionCode for a $state '${stateName}': ` +
+                    `${options.complexTransactionCode}`;
+
+            }
+
         }
 
-        if (options.tab) params.tab = options.tab;
+        if (
+            stateName === "app.portal.data.strategy-edition" &&
+            !["1", "2", "3"].includes(options.strategyNumber)
+        ) {
 
-        if (stateName === "app.portal.data.strategy-edition") {
-            params.strategyNumber = options.strategyNumber;
+            return "[entityViewerHelperService copyLinkToEvForm] " +
+                `Invalid number of a strategy provided: ${options.strategyNumber}`;
+
         }
 
-        const linkToEvForm = $state.href(stateName, params, {absolute: true});
-
-        navigator.clipboard.writeText(linkToEvForm).then(() => {
-
-            toastNotificationService.success(
-                "Link copied to clipboard",
-                "Success",
-                {
-                    onclick: function (event) {
-                        navigator.clipboard.writeText(linkToEvForm)
-                    },
-                }
-            );
-
-        })
-
-        /*$mdDialog.show({
-            controller: "InputsDialogController as vm",
-            templateUrl: "views/dialogs/inputs-dialog-view.html",
-            parent: document.querySelector('.dialog-containers-wrap'),
-            locals: {
-                title: "Copied to clipboard",
-                inputsList: [{model: linkToEvForm}]
-            },
-            multiple: true,
-        })*/
-
-
     }
 
-    function getEvStateNameForEditionState(stateName) {
+    const invalidStateError = checkEditionState(stateName);
 
-        const invalidStateError = checkEditionState(stateName);
-
-        if (invalidStateError) {
-            throw invalidStateError;
-        }
-
-        return stateName.slice(0, -8); // slice '-edition' part
-
+    if (invalidStateError) {
+        throw invalidStateError;
     }
 
-    function doesEntityHaveEditionState(entityType) {
-        return [
-            'portfolio',
-            'account',
-            'counterparty',
-            'responsible',
-            'currency',
-            'currency-history',
-            'instrument',
-            'instrument-type',
-            'portfolio',
-            'portfolio-register',
-            'portfolio-register-record',
-            'portfolio-reconcile-group',
-            'strategy-1',
-            'strategy-2',
-            'strategy-3',
-            'price-history',
-            'transaction',
-            'complex-transaction',
-            'transaction-type',
-        ].includes(entityType)
+    const stateDeclaration = $state.get(stateName);
+
+    let params = {};
+
+    const errorMsg = validateArguments(stateDeclaration);
+
+    if (errorMsg) {
+        throw new Error(errorMsg);
     }
 
-    module.exports = {
-        transformItem: transformItem,
-        checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
-        checkRootLayoutForChanges: checkRootLayoutForChanges,
-        checkSplitPanelForChanges: checkSplitPanelForChanges,
-        warnAboutChangesToLoose: warnAboutChangesToLoose,
-        getTableAttrInFormOf: getTableAttrInFormOf,
-
-        getDynamicAttrValue: getDynamicAttrValue,
-        setDynamicAttrValue: setDynamicAttrValue,
-        getLayoutByUserCode: getLayoutByUserCode,
-        getDefaultLayout: getDefaultLayout,
-        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
-        setDynamicAttrValueByUserCode: setDynamicAttrValueByUserCode,
-        getAttributesLayoutNames: getAttributesLayoutNames,
-
-        getEditLayoutMaxColumns: getEditLayoutMaxColumns,
-        getBigDrawerWidth: getBigDrawerWidth,
-
-        updateTableAfterEntitiesDeletion: updateTableAfterEntitiesDeletion,
-
-        postEditionActions: postEditionActions,
-        openEntityViewerEditDrawer: openEntityViewerEditDrawer,
-        openEntityViewerAddDrawer: openEntityViewerAddDrawer,
-
-        openTTypeEditDrawer: openTTypeEditDrawer,
-        openTTypeAddDrawer: openTTypeAddDrawer,
-
-        openInstrumentTypeEditDrawer: openInstrumentTypeEditDrawer,
-        openInstrumentTypeAddDrawer: openInstrumentTypeAddDrawer,
-
-        openComplexTransactionEditDrawer: openComplexTransactionEditDrawer,
-        openComplexTransactionAddDrawer: openComplexTransactionAddDrawer,
-        openComplexTransactionViewDrawer: openComplexTransactionPreviewDrawer,
-
-        postAdditionActions: postAdditionActions,
-
-        onPricingSchemeChangeInsidePricingPolicy: onPricingSchemeChangeInsidePricingPolicy,
-        isRestorable: isRestorable,
-        copyLinkToEvForm: copyLinkToEvForm,
-        getEvStateNameForEditionState: getEvStateNameForEditionState,
-        getNameOfStateForEditingEntity: getNameOfStateForEditingEntity,
-        doesEntityHaveEditionState: doesEntityHaveEditionState,
+    if ( stateDeclaration.params.hasOwnProperty("id") ) {
+        params.id = options.entityId;
+    }
+    else if ( stateDeclaration.params.hasOwnProperty("userCode") ) {
+        params.userCode = options.entityUserCode;
+    }
+    else if (stateDeclaration.data.entityType === "transaction") {
+        params.transactionCode = options.transactionCode;
+    }
+    else if (stateDeclaration.data.entityType === "complex-transaction") {
+        params.code = options.complexTransactionCode;
     }
 
-}());
+    if (options.tab) params.tab = options.tab;
+
+    if (stateName === "app.portal.data.strategy-edition") {
+        params.strategyNumber = options.strategyNumber;
+    }
+
+    const linkToEvForm = $state.href(stateName, params, {absolute: true});
+
+    navigator.clipboard.writeText(linkToEvForm).then(() => {
+
+        toastNotificationService.success(
+            "Link copied to clipboard",
+            "Success",
+            {
+                onclick: function (event) {
+                    navigator.clipboard.writeText(linkToEvForm)
+                },
+            }
+        );
+
+    })
+
+    /*$mdDialog.show({
+        controller: "InputsDialogController as vm",
+        templateUrl: "views/dialogs/inputs-dialog-view.html",
+        parent: document.querySelector('.dialog-containers-wrap'),
+        locals: {
+            title: "Copied to clipboard",
+            inputsList: [{model: linkToEvForm}]
+        },
+        multiple: true,
+    })*/
+
+
+}
+
+function getEvStateNameForEditionState(stateName) {
+
+    const invalidStateError = checkEditionState(stateName);
+
+    if (invalidStateError) {
+        throw invalidStateError;
+    }
+
+    return stateName.slice(0, -8); // slice '-edition' part
+
+}
+
+function doesEntityHaveEditionState(entityType) {
+    return [
+        'portfolio',
+        'account',
+        'counterparty',
+        'responsible',
+        'currency',
+        'currency-history',
+        'instrument',
+        'instrument-type',
+        'portfolio',
+        'portfolio-register',
+        'portfolio-register-record',
+        'portfolio-reconcile-group',
+        'strategy-1',
+        'strategy-2',
+        'strategy-3',
+        'price-history',
+        'transaction',
+        'complex-transaction',
+        'transaction-type',
+    ].includes(entityType)
+}
+
+export default {
+    transformItem: transformItem,
+    checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
+    checkRootLayoutForChanges: checkRootLayoutForChanges,
+    checkSplitPanelForChanges: checkSplitPanelForChanges,
+    warnAboutChangesToLoose: warnAboutChangesToLoose,
+    getTableAttrInFormOf: getTableAttrInFormOf,
+
+    getDynamicAttrValue: getDynamicAttrValue,
+    setDynamicAttrValue: setDynamicAttrValue,
+    getLayoutByUserCode: getLayoutByUserCode,
+    getDefaultLayout: getDefaultLayout,
+    getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
+    setDynamicAttrValueByUserCode: setDynamicAttrValueByUserCode,
+    getAttributesLayoutNames: getAttributesLayoutNames,
+
+    getEditLayoutMaxColumns: getEditLayoutMaxColumns,
+    getBigDrawerWidth: getBigDrawerWidth,
+
+    updateTableAfterEntitiesDeletion: updateTableAfterEntitiesDeletion,
+
+    postEditionActions: postEditionActions,
+    openEntityViewerEditDrawer: openEntityViewerEditDrawer,
+    openEntityViewerAddDrawer: openEntityViewerAddDrawer,
+
+    openTTypeEditDrawer: openTTypeEditDrawer,
+    openTTypeAddDrawer: openTTypeAddDrawer,
+
+    openInstrumentTypeEditDrawer: openInstrumentTypeEditDrawer,
+    openInstrumentTypeAddDrawer: openInstrumentTypeAddDrawer,
+
+    openComplexTransactionEditDrawer: openComplexTransactionEditDrawer,
+    openComplexTransactionAddDrawer: openComplexTransactionAddDrawer,
+    openComplexTransactionViewDrawer: openComplexTransactionPreviewDrawer,
+
+    postAdditionActions: postAdditionActions,
+
+    onPricingSchemeChangeInsidePricingPolicy: onPricingSchemeChangeInsidePricingPolicy,
+    isRestorable: isRestorable,
+    copyLinkToEvForm: copyLinkToEvForm,
+    getEvStateNameForEditionState: getEvStateNameForEditionState,
+    getNameOfStateForEditingEntity: getNameOfStateForEditingEntity,
+    doesEntityHaveEditionState: doesEntityHaveEditionState,
+};

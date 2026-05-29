@@ -1,164 +1,156 @@
-/**
- * Created by szhitenev on 04.11.16.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import evEvents from '../../../services/entityViewerEvents';
+import uiService from '../../../services/uiService';
+import inviteToSharedConfigurationFileService from '../../../services/inviteToSharedConfigurationFileService';
+import shareConfigurationFileService from '../../../services/shareConfigurationFileService';
 
-    var evEvents = require('../../../services/entityViewerEvents');
+// var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
 
-    var uiService = require('../../../services/uiService').default;
+export default function ($scope, $mdDialog, backendConfigurationImportService, options) {
 
-    var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
-    var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
-    // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
+    var vm = this;
 
-    module.exports = function ($scope, $mdDialog, backendConfigurationImportService, options) {
+    vm.readyStatus = {items: false};
 
-        var vm = this;
+    vm.invites = [];
 
-        vm.readyStatus = {items: false};
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.invites = [];
+    vm.acceptInvite = function ($event, invite) {
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+        console.log("Accept invite: ", $event, invite);
 
-        vm.acceptInvite = function ($event, invite) {
+        invite.status = 1;
 
-            console.log("Accept invite: ", $event, invite);
+        inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (data) {
 
-            invite.status = 1;
+            var sharedFile = data;
 
-            inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (data) {
+            vm.importConfig = {data: sharedFile.shared_configuration_file_object.data, mode: 'overwrite'};
 
-                var sharedFile = data;
+            new Promise(function (resolve, reject) {
 
-                vm.importConfig = {data: sharedFile.shared_configuration_file_object.data, mode: 'overwrite'};
+                vm.importConfiguration(resolve)
 
-                new Promise(function (resolve, reject) {
+            }).then(function (data) {
 
-                    vm.importConfiguration(resolve)
+                console.log("Import Finished");
 
-                }).then(function (data) {
+                vm.getInvites();
 
-                    console.log("Import Finished");
+                vm.getList().then(function (data) {
 
-                    vm.getInvites();
+                    vm.items.forEach(function (item) {
 
-                    vm.getList().then(function (data) {
+                        if (item.name === sharedFile.shared_configuration_file_object.name) {
+                            item.sourced_from_global_layout = sharedFile.shared_configuration_file;
 
-                        vm.items.forEach(function (item) {
-
-                            if (item.name === sharedFile.shared_configuration_file_object.name) {
-                                item.sourced_from_global_layout = sharedFile.shared_configuration_file;
-
-                                uiService.updateListLayout(item.id, item).then(function (value) {
+                            uiService.updateListLayout(item.id, item).then(function (value) {
 
 
-                                    vm.getList().then(function (value1) {
+                                vm.getList().then(function (value1) {
 
-                                        $mdDialog.show({
-                                            controller: 'InfoDialogController as vm',
-                                            templateUrl: 'views/info-dialog-view.html',
-                                            parent: document.querySelector('.dialog-containers-wrap'),
-                                            targetEvent: $event,
-                                            clickOutsideToClose: false,
-                                            preserveScope: true,
-                                            autoWrap: true,
-                                            skipHide: true,
-                                            multiple: true,
-                                            locals: {
-                                                info: {
-                                                    title: 'Success',
-                                                    description: "Layout is installed"
-                                                }
+                                    $mdDialog.show({
+                                        controller: 'InfoDialogController as vm',
+                                        templateUrl: 'views/info-dialog-view.html',
+                                        parent: document.querySelector('.dialog-containers-wrap'),
+                                        targetEvent: $event,
+                                        clickOutsideToClose: false,
+                                        preserveScope: true,
+                                        autoWrap: true,
+                                        skipHide: true,
+                                        multiple: true,
+                                        locals: {
+                                            info: {
+                                                title: 'Success',
+                                                description: "Layout is installed"
                                             }
-                                        })
-
+                                        }
                                     })
 
                                 })
 
-                            }
+                            })
 
-                        })
+                        }
 
                     })
 
-                });
+                })
 
-            })
+            });
 
-        };
+        })
 
-        vm.declineInvite = function ($event, invite) {
+    };
 
-            console.log("Decline invite: ", $event, invite);
+    vm.declineInvite = function ($event, invite) {
 
-            invite.status = 2;
+        console.log("Decline invite: ", $event, invite);
 
-            inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (value) {
+        invite.status = 2;
 
-                vm.getInvites();
-
-            })
-
-        };
-
-        vm.importConfiguration = function (resolve) {
-
-            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
-
-                vm.importConfig = data;
-
-                $scope.$apply();
-
-                if (vm.importConfig.task_status === 'SUCCESS') {
-
-                    resolve()
-
-                } else {
-
-                    setTimeout(function () {
-                        vm.importConfiguration(resolve);
-                    }, 1000)
-
-                }
-
-            })
-
-        };
-
-        vm.getInvites = function () {
-
-            inviteToSharedConfigurationFileService.getListOfMyInvites({
-                filters: {
-                    status: '0'
-                }
-            }).then(function (data) {
-
-                vm.invites = data.results;
-
-                vm.readyStatus.items = true;
-
-                console.log('vm.invites', vm.invites);
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.init = function () {
+        inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (value) {
 
             vm.getInvites();
 
-        };
+        })
 
-        vm.init();
+    };
 
-    }
+    vm.importConfiguration = function (resolve) {
 
-}());
+        backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+
+            vm.importConfig = data;
+
+            $scope.$apply();
+
+            if (vm.importConfig.task_status === 'SUCCESS') {
+
+                resolve()
+
+            } else {
+
+                setTimeout(function () {
+                    vm.importConfiguration(resolve);
+                }, 1000)
+
+            }
+
+        })
+
+    };
+
+    vm.getInvites = function () {
+
+        inviteToSharedConfigurationFileService.getListOfMyInvites({
+            filters: {
+                status: '0'
+            }
+        }).then(function (data) {
+
+            vm.invites = data.results;
+
+            vm.readyStatus.items = true;
+
+            console.log('vm.invites', vm.invites);
+
+            $scope.$apply();
+
+        })
+
+    };
+
+    vm.init = function () {
+
+        vm.getInvites();
+
+    };
+
+    vm.init();
+
+};

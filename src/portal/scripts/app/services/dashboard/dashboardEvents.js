@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 
     //region Common events
     'RELOAD_COMPONENT': 'RELOAD_COMPONENT',

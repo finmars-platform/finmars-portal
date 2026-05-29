@@ -1,171 +1,165 @@
-/**
- * Created by szhitenev on 17.06.2016.
- */
-// import baseUrlService from "../services/baseUrlService";
-(function () {
+'use strict';
 
-	'use strict';
+import baseUrlService from "../services/baseUrlService";
 
-	var baseUrlService = require("../services/baseUrlService").default;
-	// var baseUrlService = require('../services/baseUrlService');
-	var cookieService = require('../../../../core/services/cookieService').default;
-	var xhrService = require('../../../../core/services/xhrService').default;
-	var baseUrl = baseUrlService.resolve();
+// var baseUrlService = require('../services/baseUrlService');
+import cookieService from '../../../../core/services/cookieService';
 
-	var getPricingConditionChoices = function () {
+import xhrService from '../../../../core/services/xhrService';
+var baseUrl = baseUrlService.resolve();
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+var getPricingConditionChoices = function () {
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/pricing-condition/',
-			{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			})
-	};
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-	var getCountryChoices = function () {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/pricing-condition/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+var getCountryChoices = function () {
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/country/',
-			{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			})
-	};
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-	var getDailyPricingModelChoices = function () {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/country/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+var getDailyPricingModelChoices = function () {
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/daily-pricing-model/',
-			{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			})
-	};
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-	var getPaymentSizeDetailChoices = function () {
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/daily-pricing-model/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+var getPaymentSizeDetailChoices = function () {
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/payment-size-detail/',
-			{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			})
-	};
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-	var getTransactionClassList = function () {
-		/* return new Promise(function (resolve, reject) {
-			resolve([
-				{
-					"id": 1,
-					"user_code": "BUY",
-					"name": "Buy",
-					"description": "Buy"
-				},
-				{
-					"id": 8,
-					"user_code": "CASH_INFLOW",
-					"name": "Cash-Inflow",
-					"description": "Cash-Inflow"
-				},
-				{
-					"id": 9,
-					"user_code": "CASH_OUTFLOW",
-					"name": "Cash-Outflow",
-					"description": "Cash-Outflow"
-				},
-				{
-					"id": 10,
-					"user_code": "PLACEHOLDER",
-					"name": "Default",
-					"description": "Default"
-				},
-				{
-					"id": 3,
-					"user_code": "FX_TRADE",
-					"name": "FX Trade",
-					"description": "FX Trade"
-				},
-				{
-					"id": 7,
-					"user_code": "FX_TRANSFER",
-					"name": "FX Transfer",
-					"description": "FX Transfer"
-				},
-				{
-					"id": 4,
-					"user_code": "INSTRUMENT_PL",
-					"name": "Instrument PL",
-					"description": "Instrument PL"
-				},
-				{
-					"id": 2,
-					"user_code": "SELL",
-					"name": "Sell",
-					"description": "Sell"
-				},
-				{
-					"id": 5,
-					"user_code": "TRANSACTION_PL",
-					"name": "Transaction PL",
-					"description": "Transaction PL"
-				},
-				{
-					"id": 6,
-					"user_code": "TRANSFER",
-					"name": "Transfer",
-					"description": "Transfer"
-				}
-			]);
-		}); */
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/payment-size-detail/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+};
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-class/',
-			{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			});
-	};
+var getTransactionClassList = function () {
+    /* return new Promise(function (resolve, reject) {
+        resolve([
+            {
+                "id": 1,
+                "user_code": "BUY",
+                "name": "Buy",
+                "description": "Buy"
+            },
+            {
+                "id": 8,
+                "user_code": "CASH_INFLOW",
+                "name": "Cash-Inflow",
+                "description": "Cash-Inflow"
+            },
+            {
+                "id": 9,
+                "user_code": "CASH_OUTFLOW",
+                "name": "Cash-Outflow",
+                "description": "Cash-Outflow"
+            },
+            {
+                "id": 10,
+                "user_code": "PLACEHOLDER",
+                "name": "Default",
+                "description": "Default"
+            },
+            {
+                "id": 3,
+                "user_code": "FX_TRADE",
+                "name": "FX Trade",
+                "description": "FX Trade"
+            },
+            {
+                "id": 7,
+                "user_code": "FX_TRANSFER",
+                "name": "FX Transfer",
+                "description": "FX Transfer"
+            },
+            {
+                "id": 4,
+                "user_code": "INSTRUMENT_PL",
+                "name": "Instrument PL",
+                "description": "Instrument PL"
+            },
+            {
+                "id": 2,
+                "user_code": "SELL",
+                "name": "Sell",
+                "description": "Sell"
+            },
+            {
+                "id": 5,
+                "user_code": "TRANSACTION_PL",
+                "name": "Transaction PL",
+                "description": "Transaction PL"
+            },
+            {
+                "id": 6,
+                "user_code": "TRANSFER",
+                "name": "Transfer",
+                "description": "Transfer"
+            }
+        ]);
+    }); */
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-	module.exports = {
-		getDailyPricingModelChoices: getDailyPricingModelChoices,
-		getPaymentSizeDetailChoices: getPaymentSizeDetailChoices,
-		getTransactionClassList: getTransactionClassList,
-		getPricingConditionChoices: getPricingConditionChoices,
-		getCountryChoices: getCountryChoices
-	}
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-class/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        });
+};
 
-}());
+export default {
+    getDailyPricingModelChoices: getDailyPricingModelChoices,
+    getPaymentSizeDetailChoices: getPaymentSizeDetailChoices,
+    getTransactionClassList: getTransactionClassList,
+    getPricingConditionChoices: getPricingConditionChoices,
+    getCountryChoices: getCountryChoices
+};

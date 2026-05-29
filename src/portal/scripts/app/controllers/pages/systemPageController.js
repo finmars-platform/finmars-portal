@@ -4,7 +4,7 @@
 
 'use strict';
 
-const downloadFileHelper = require('../../helpers/downloadFileHelper');
+import downloadFileHelper from '../../helpers/downloadFileHelper';
 
 export default function ($scope, $mdDialog, toastNotificationService, authorizerService, globalDataService, masterUserService, utilsService) {
 
@@ -184,4 +184,4 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
 
     vm.init();
 
-};
+}

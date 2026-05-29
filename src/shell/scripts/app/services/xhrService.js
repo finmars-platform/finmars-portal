@@ -6,7 +6,7 @@
 'use strict';
 
 
-var md5helper = require('./md5.helper').default;
+import md5helper from './md5.helper';
 
 export default function (errorService, cookieService) {
 
@@ -190,4 +190,4 @@ export default function (errorService, cookieService) {
     processResponse: processResponse,
   }
 
-};
+}

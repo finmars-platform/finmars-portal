@@ -1,270 +1,262 @@
-/**
- * Created by szhitenev on 11.07.2022.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import downloadFileHelper from '../../helpers/downloadFileHelper';
+import metaHelper from '../../helpers/meta.helper';
 
-    var downloadFileHelper = require('../../helpers/downloadFileHelper');
-    var metaHelper = require('../../helpers/meta.helper').default;
+export default function ($scope, $mdDialog, data) {
 
+    var vm = this;
 
-    module.exports = function ($scope, $mdDialog, data) {
+    console.log('filePreviewDialogController data', data);
 
-        var vm = this;
+    vm.data = data;
 
-        console.log('filePreviewDialogController data', data);
+    vm.contentType = 'json'
 
-        vm.data = data;
+    vm.download = function () {
 
-        vm.contentType = 'json'
+        var content = vm.data.content
 
-        vm.download = function () {
-
-            var content = vm.data.content
-
-            if (typeof vm.data.content === 'object') {
-                content = JSON.stringify(vm.data.content, null, 4);
-            }
-
-            var name = 'file'
-
-            if (vm.data.file_descriptor) {
-                name = vm.data.file_descriptor.name
-            }
-
-            if (vm.data.info && (vm.data.info.file_report_object || vm.data.info.file_report)) {
-                name = vm.data.info.file_report_object?.name || vm.data.info.file_report?.name
-            }
-
-            downloadFileHelper.downloadFile(content, "application/force-download", name);
-
+        if (typeof vm.data.content === 'object') {
+            content = JSON.stringify(vm.data.content, null, 4);
         }
 
-        vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
-        };
+        var name = 'file'
 
-        vm.initJsonEditor = function () {
-
-            setTimeout(function () {
-
-                vm.editor = ace.edit('filePreviewAceEditor');
-                vm.editor.setTheme("ace/theme/monokai");
-                vm.editor.getSession().setMode("ace/mode/json");
-                vm.editor.getSession().setUseWorker(false);
-                vm.editor.setHighlightActiveLine(false);
-                vm.editor.setShowPrintMargin(false);
-                ace.require("ace/ext/language_tools");
-                vm.editor.setOptions({
-                    enableBasicAutocompletion: true,
-                    enableSnippets: true
-                });
-                vm.editor.setFontSize(14)
-                vm.editor.setBehavioursEnabled(true);
-                vm.editor.setValue(vm.data.content_formatted)
-
-                vm.editor.focus();
-                vm.editor.navigateFileStart();
-
-            }, 100)
-
+        if (vm.data.file_descriptor) {
+            name = vm.data.file_descriptor.name
         }
 
-        vm.initYamlEditor = function () {
-
-            setTimeout(function () {
-
-                vm.editor = ace.edit('filePreviewAceEditor');
-                vm.editor.setTheme("ace/theme/monokai");
-                vm.editor.getSession().setMode("ace/mode/yaml");
-                vm.editor.getSession().setUseWorker(false);
-                vm.editor.setHighlightActiveLine(false);
-                vm.editor.setShowPrintMargin(false);
-                ace.require("ace/ext/language_tools");
-                vm.editor.setOptions({
-                    enableBasicAutocompletion: true,
-                    enableSnippets: true
-                });
-                vm.editor.setFontSize(14)
-                vm.editor.setBehavioursEnabled(true);
-                vm.editor.setValue(vm.data.content_formatted)
-
-                vm.editor.focus();
-                vm.editor.navigateFileStart();
-
-            }, 100)
-
+        if (vm.data.info && (vm.data.info.file_report_object || vm.data.info.file_report)) {
+            name = vm.data.info.file_report_object?.name || vm.data.info.file_report?.name
         }
 
-        vm.initPythonEditor = function () {
+        downloadFileHelper.downloadFile(content, "application/force-download", name);
 
-            setTimeout(function () {
+    }
 
-                vm.editor = ace.edit('filePreviewAceEditor');
-                vm.editor.setTheme("ace/theme/monokai");
-                vm.editor.getSession().setMode("ace/mode/python");
-                vm.editor.getSession().setUseWorker(false);
-                vm.editor.setHighlightActiveLine(false);
-                vm.editor.setShowPrintMargin(false);
-                ace.require("ace/ext/language_tools");
-                vm.editor.setOptions({
-                    enableBasicAutocompletion: true,
-                    enableSnippets: true
-                });
-                vm.editor.setFontSize(14)
-                vm.editor.setBehavioursEnabled(true);
-                vm.editor.setValue(vm.data.content_formatted)
+    vm.agree = function () {
+        $mdDialog.hide({status: 'agree'});
+    };
 
-                vm.editor.focus();
-                vm.editor.navigateFileStart();
+    vm.initJsonEditor = function () {
 
-            }, 100)
+        setTimeout(function () {
 
-        }
+            vm.editor = ace.edit('filePreviewAceEditor');
+            vm.editor.setTheme("ace/theme/monokai");
+            vm.editor.getSession().setMode("ace/mode/json");
+            vm.editor.getSession().setUseWorker(false);
+            vm.editor.setHighlightActiveLine(false);
+            vm.editor.setShowPrintMargin(false);
+            ace.require("ace/ext/language_tools");
+            vm.editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableSnippets: true
+            });
+            vm.editor.setFontSize(14)
+            vm.editor.setBehavioursEnabled(true);
+            vm.editor.setValue(vm.data.content_formatted)
 
-        vm.formatCSV = function () {
+            vm.editor.focus();
+            vm.editor.navigateFileStart();
 
-            var result = ""
+        }, 100)
 
-            var lines = vm.data.content.split(/\r?\n/);
+    }
 
-            result = "<table><tbody>"
+    vm.initYamlEditor = function () {
 
-            lines.forEach(function (line) {
+        setTimeout(function () {
 
-                var pieces = line.split(",")
+            vm.editor = ace.edit('filePreviewAceEditor');
+            vm.editor.setTheme("ace/theme/monokai");
+            vm.editor.getSession().setMode("ace/mode/yaml");
+            vm.editor.getSession().setUseWorker(false);
+            vm.editor.setHighlightActiveLine(false);
+            vm.editor.setShowPrintMargin(false);
+            ace.require("ace/ext/language_tools");
+            vm.editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableSnippets: true
+            });
+            vm.editor.setFontSize(14)
+            vm.editor.setBehavioursEnabled(true);
+            vm.editor.setValue(vm.data.content_formatted)
 
-                result = result + "<tr>"
+            vm.editor.focus();
+            vm.editor.navigateFileStart();
 
-                pieces.forEach(function (piece) {
+        }, 100)
 
-                    result = result + "<td>" + piece + "</td>"
+    }
 
-                })
+    vm.initPythonEditor = function () {
 
-                result = result + "</tr>"
+        setTimeout(function () {
 
+            vm.editor = ace.edit('filePreviewAceEditor');
+            vm.editor.setTheme("ace/theme/monokai");
+            vm.editor.getSession().setMode("ace/mode/python");
+            vm.editor.getSession().setUseWorker(false);
+            vm.editor.setHighlightActiveLine(false);
+            vm.editor.setShowPrintMargin(false);
+            ace.require("ace/ext/language_tools");
+            vm.editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableSnippets: true
+            });
+            vm.editor.setFontSize(14)
+            vm.editor.setBehavioursEnabled(true);
+            vm.editor.setValue(vm.data.content_formatted)
+
+            vm.editor.focus();
+            vm.editor.navigateFileStart();
+
+        }, 100)
+
+    }
+
+    vm.formatCSV = function () {
+
+        var result = ""
+
+        var lines = vm.data.content.split(/\r?\n/);
+
+        result = "<table><tbody>"
+
+        lines.forEach(function (line) {
+
+            var pieces = line.split(",")
+
+            result = result + "<tr>"
+
+            pieces.forEach(function (piece) {
+
+                result = result + "<td>" + piece + "</td>"
 
             })
 
-
-            result = result + "</tbody></table>"
-
-
-            return result
+            result = result + "</tr>"
 
 
-        }
-
-        vm.copyContent = function (content) {
-
-            metaHelper.copyToBuffer(content)
-
-        }
-
-        vm.formatContent = function () {
-
-            var name = '';
-            var fileUrl = '';
-
-            if (vm.data.file_descriptor) {
-                name = vm.data.file_descriptor.name
-            }
-
-            if (vm.data.info && (vm.data.info.file_report_object || vm.data.info.file_report)) {
-                name = vm.data.info.file_report_object?.name || vm.data.info.file_report?.name;
-                fileUrl = vm.data.info.file_report_object?.file_url || vm.data.info.file_report?.file_url;
-            }
-
-            if (name.indexOf('.csv') !== -1) {
-
-                vm.contentType = 'csv'
-
-                vm.data.content_formatted = vm.formatCSV()
-
-            } else if (name.indexOf('.json') !== -1 || fileUrl.indexOf('.json') !== -1) {
-
-                vm.contentType = 'json'
-
-                vm.data.content_formatted = JSON.stringify(vm.data.content, null, 4)
-
-                vm.initJsonEditor()
-
-            } else if (name.indexOf('.py') !== -1 || fileUrl.indexOf('.py') !== -1) {
-
-                vm.contentType = 'python'
-
-                vm.data.content_formatted = vm.data.content
-
-                vm.initPythonEditor()
-
-            } else if (
-              name.indexOf('.yml') !== -1 ||
-              name.indexOf('.yaml') !== -1 ||
-              fileUrl.indexOf('.yml') !== -1 ||
-              fileUrl.indexOf('.yaml') !== -1
-            ) {
-
-                vm.contentType = 'yaml'
-
-                vm.data.content_formatted = vm.data.content
-
-                vm.initYamlEditor()
-
-            } else if (name.indexOf('.txt') !== -1) {
-
-                vm.contentType = 'text'
-
-                vm.data.content_formatted = vm.data.content
-
-            } else if (name.indexOf('.log') !== -1) {
-
-                vm.contentType = 'text'
-
-                vm.data.content_formatted = vm.data.content
-
-            } else if (name.indexOf('.png') !== -1 || name.indexOf('.jpg') !== -1 || name.indexOf('.gif') !== -1) {
-
-                vm.contentType = 'image'
-
-                var urlCreator = window.URL || window.webkitURL;
-                var imageUrl = urlCreator.createObjectURL(vm.data.blob);
-                document.querySelector("#preview-image").src = imageUrl;
-
-            }
+        })
 
 
-        }
+        result = result + "</tbody></table>"
 
-        vm.readBlob = function () {
 
-            var reader = new FileReader();
+        return result
 
-            reader.addEventListener("loadend", function (e) {
-                vm.data.content = reader.result;
 
-                vm.formatContent();
-
-                $scope.$apply();
-
-            });
-
-            reader.readAsText(vm.data.content);
-
-        }
-
-        vm.init = function () {
-
-            if (vm.data.content instanceof Blob) {
-                vm.readBlob()
-            } else {
-                vm.formatContent()
-            }
-
-        }
-
-        vm.init()
     }
 
-}());
+    vm.copyContent = function (content) {
+
+        metaHelper.copyToBuffer(content)
+
+    }
+
+    vm.formatContent = function () {
+
+        var name = '';
+        var fileUrl = '';
+
+        if (vm.data.file_descriptor) {
+            name = vm.data.file_descriptor.name
+        }
+
+        if (vm.data.info && (vm.data.info.file_report_object || vm.data.info.file_report)) {
+            name = vm.data.info.file_report_object?.name || vm.data.info.file_report?.name;
+            fileUrl = vm.data.info.file_report_object?.file_url || vm.data.info.file_report?.file_url;
+        }
+
+        if (name.indexOf('.csv') !== -1) {
+
+            vm.contentType = 'csv'
+
+            vm.data.content_formatted = vm.formatCSV()
+
+        } else if (name.indexOf('.json') !== -1 || fileUrl.indexOf('.json') !== -1) {
+
+            vm.contentType = 'json'
+
+            vm.data.content_formatted = JSON.stringify(vm.data.content, null, 4)
+
+            vm.initJsonEditor()
+
+        } else if (name.indexOf('.py') !== -1 || fileUrl.indexOf('.py') !== -1) {
+
+            vm.contentType = 'python'
+
+            vm.data.content_formatted = vm.data.content
+
+            vm.initPythonEditor()
+
+        } else if (
+          name.indexOf('.yml') !== -1 ||
+          name.indexOf('.yaml') !== -1 ||
+          fileUrl.indexOf('.yml') !== -1 ||
+          fileUrl.indexOf('.yaml') !== -1
+        ) {
+
+            vm.contentType = 'yaml'
+
+            vm.data.content_formatted = vm.data.content
+
+            vm.initYamlEditor()
+
+        } else if (name.indexOf('.txt') !== -1) {
+
+            vm.contentType = 'text'
+
+            vm.data.content_formatted = vm.data.content
+
+        } else if (name.indexOf('.log') !== -1) {
+
+            vm.contentType = 'text'
+
+            vm.data.content_formatted = vm.data.content
+
+        } else if (name.indexOf('.png') !== -1 || name.indexOf('.jpg') !== -1 || name.indexOf('.gif') !== -1) {
+
+            vm.contentType = 'image'
+
+            var urlCreator = window.URL || window.webkitURL;
+            var imageUrl = urlCreator.createObjectURL(vm.data.blob);
+            document.querySelector("#preview-image").src = imageUrl;
+
+        }
+
+
+    }
+
+    vm.readBlob = function () {
+
+        var reader = new FileReader();
+
+        reader.addEventListener("loadend", function (e) {
+            vm.data.content = reader.result;
+
+            vm.formatContent();
+
+            $scope.$apply();
+
+        });
+
+        reader.readAsText(vm.data.content);
+
+    }
+
+    vm.init = function () {
+
+        if (vm.data.content instanceof Blob) {
+            vm.readBlob()
+        } else {
+            vm.formatContent()
+        }
+
+    }
+
+    vm.init()
+};

@@ -1,135 +1,128 @@
-/**
- * Created by mevstratov on 11.07.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import evEvents from '../../services/entityViewerEvents';
 
-    var evEvents = require('../../services/entityViewerEvents');
+export default function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
 
-    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
+    var vm = this;
 
-        var vm = this;
+    vm.entityType = entityViewerDataService.getEntityType();
+    vm.multiselectorOptions = [];
 
-        vm.entityType = entityViewerDataService.getEntityType();
-        vm.multiselectorOptions = [];
+    var pagePagination = entityViewerDataService.getPagination();
 
-        var pagePagination = entityViewerDataService.getPagination();
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+    var getMultiselectorData = function () {
+
+        var result = {
+            optionsList: [],
+            selectedByDefault: []
         };
 
-        var getMultiselectorData = function () {
+        switch (vm.entityType) {
+            case "instrument":
 
-            var result = {
-                optionsList: [],
-                selectedByDefault: []
-            };
+                result.optionsList = [
+                    {id: 'active', name: 'Active', activeByDefault: ''},
+                    {id: 'inactive', name: 'Inactive', activeByDefault: ''},
+                    {id: 'disabled', name: 'Disabled', activeByDefault: ''},
+                    {id: 'deleted', name: 'Deleted', activeByDefault: ''}
+                ]
 
-            switch (vm.entityType) {
-                case "instrument":
+                result.selectedByDefault = ['active', 'inactive', 'disabled']
 
-                    result.optionsList = [
-                        {id: 'active', name: 'Active', activeByDefault: ''},
-                        {id: 'inactive', name: 'Inactive', activeByDefault: ''},
-                        {id: 'disabled', name: 'Disabled', activeByDefault: ''},
-                        {id: 'deleted', name: 'Deleted', activeByDefault: ''}
-                    ]
+                break;
 
-                    result.selectedByDefault = ['active', 'inactive', 'disabled']
+            case "complex-transaction":
 
-                    break;
+                result.optionsList = [
+                    {id: 'locked', name: 'Locked'},
+                    {id: 'unlocked', name: 'Unlocked'},
+                    {id: 'ignored', name: 'Ignored'},
+                    {id: 'partially_visible', name: 'Partially Visible'}
+                ]
 
-                case "complex-transaction":
+                result.selectedByDefault = ['locked', 'unlocked']
 
-                    result.optionsList = [
-                        {id: 'locked', name: 'Locked'},
-                        {id: 'unlocked', name: 'Unlocked'},
-                        {id: 'ignored', name: 'Ignored'},
-                        {id: 'partially_visible', name: 'Partially Visible'}
-                    ]
+                break;
 
-                    result.selectedByDefault = ['locked', 'unlocked']
+            default:
 
-                    break;
+                result.optionsList = [
+                    {id: 'enabled', name: 'Enabled'},
+                    {id: 'disabled', name: 'Disabled'},
+                    {id: 'deleted', name: 'Deleted'}
+                ]
 
-                default:
+                result.selectedByDefault = ['enabled', 'disabled']
 
-                    result.optionsList = [
-                        {id: 'enabled', name: 'Enabled'},
-                        {id: 'disabled', name: 'Disabled'},
-                        {id: 'deleted', name: 'Deleted'}
-                    ]
-
-                    result.selectedByDefault = ['enabled', 'disabled']
-
-                    break;
-            }
-
-            return result;
-
+                break;
         }
 
-        vm.saveSettings = function () {
-
-            if (pagePagination.page_size !== vm.itemsToLoad) {
-
-                pagePagination = entityViewerDataService.getPagination();
-                pagePagination.page_size = vm.itemsToLoad;
-
-                entityViewerDataService.setPagination(pagePagination);
-
-                entityViewerEventService.dispatchEvent(evEvents.ENTITY_VIEWER_PAGINATION_CHANGED);
-
-            }
-
-            var entityViewerOptions = {};
-            //entityViewerOptions.complex_transaction_filters = vm.complexTransactionFilters;
-            entityViewerOptions.entity_filters = vm.entityFilters;
-            if (vm.entityType === 'complex-transaction') {
-                entityViewerOptions.complex_transaction_filters = vm.complexTransactionFilters;
-            }
-
-            entityViewerDataService.setEntityViewerOptions(entityViewerOptions);
-
-            $mdDialog.hide({status: 'agree'});
-        };
-
-        var init = function () {
-
-            var entityViewerOptions = entityViewerDataService.getEntityViewerOptions();
-
-            console.log('entityViewerOptions', entityViewerOptions);
-
-            var multselData = getMultiselectorData();
-            vm.multiselectorOptions = multselData.optionsList;
-            //vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters;
-            vm.entityFilters = entityViewerOptions.entity_filters;
-            if (vm.entityType === 'complex-transaction') {
-                vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters;
-            } else {
-                vm.complexTransactionFilters = ['booked']
-            }
-
-            console.log('complexTransactionFilters', vm.complexTransactionFilters);
-
-            // DEPRECATED
-            // if (vm.entityType === "complex-transaction" && entityViewerOptions.complex_transaction_filters) {
-            // 	vm.entityFilters = entityViewerOptions.complex_transaction_filters;
-            // }
-
-            if (!vm.entityFilters) {
-                vm.entityFilters = multselData.selectedByDefault;
-            }
-
-            console.log("ev settings entityFilters ", vm.entityFilters);
-            vm.itemsToLoad = pagePagination.page_size;
-
-        };
-
-        init();
+        return result;
 
     }
 
-}());
+    vm.saveSettings = function () {
+
+        if (pagePagination.page_size !== vm.itemsToLoad) {
+
+            pagePagination = entityViewerDataService.getPagination();
+            pagePagination.page_size = vm.itemsToLoad;
+
+            entityViewerDataService.setPagination(pagePagination);
+
+            entityViewerEventService.dispatchEvent(evEvents.ENTITY_VIEWER_PAGINATION_CHANGED);
+
+        }
+
+        var entityViewerOptions = {};
+        //entityViewerOptions.complex_transaction_filters = vm.complexTransactionFilters;
+        entityViewerOptions.entity_filters = vm.entityFilters;
+        if (vm.entityType === 'complex-transaction') {
+            entityViewerOptions.complex_transaction_filters = vm.complexTransactionFilters;
+        }
+
+        entityViewerDataService.setEntityViewerOptions(entityViewerOptions);
+
+        $mdDialog.hide({status: 'agree'});
+    };
+
+    var init = function () {
+
+        var entityViewerOptions = entityViewerDataService.getEntityViewerOptions();
+
+        console.log('entityViewerOptions', entityViewerOptions);
+
+        var multselData = getMultiselectorData();
+        vm.multiselectorOptions = multselData.optionsList;
+        //vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters;
+        vm.entityFilters = entityViewerOptions.entity_filters;
+        if (vm.entityType === 'complex-transaction') {
+            vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters;
+        } else {
+            vm.complexTransactionFilters = ['booked']
+        }
+
+        console.log('complexTransactionFilters', vm.complexTransactionFilters);
+
+        // DEPRECATED
+        // if (vm.entityType === "complex-transaction" && entityViewerOptions.complex_transaction_filters) {
+        // 	vm.entityFilters = entityViewerOptions.complex_transaction_filters;
+        // }
+
+        if (!vm.entityFilters) {
+            vm.entityFilters = multselData.selectedByDefault;
+        }
+
+        console.log("ev settings entityFilters ", vm.entityFilters);
+        vm.itemsToLoad = pagePagination.page_size;
+
+    };
+
+    init();
+
+};

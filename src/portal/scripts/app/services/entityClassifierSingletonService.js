@@ -1,53 +1,46 @@
-/**
- * Created by szhitenev on 15.06.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import entityClassifierService from './entityClassifierService';
 
-    var entityClassifierService = require('./entityClassifierService');
+var entitiesByKey = {};
 
-    var entitiesByKey = {};
+var getList = function (entity) {
+    return entityClassifierService.getList(entity);
+};
 
-    var getList = function (entity) {
-        return entityClassifierService.getList(entity);
-    };
+var getByKey = function (entity, id) {
+    return new Promise(function (resolve) {
 
-    var getByKey = function (entity, id) {
-        return new Promise(function (resolve) {
+        //console.log('///////', entity + '_' + id);
 
-            //console.log('///////', entity + '_' + id);
-
-            if (!entitiesByKey[entity + '_' + id]) {
-                entitiesByKey[entity + '_' + id] = {};
-                entityClassifierService.getByKey(entity, id).then(function (data) {
-                    entitiesByKey[entity + '_' + id] = data;
-                    resolve({key: entity + '_' + id, data: entitiesByKey[entity + '_' + id]});
-                })
-            } else {
+        if (!entitiesByKey[entity + '_' + id]) {
+            entitiesByKey[entity + '_' + id] = {};
+            entityClassifierService.getByKey(entity, id).then(function (data) {
+                entitiesByKey[entity + '_' + id] = data;
                 resolve({key: entity + '_' + id, data: entitiesByKey[entity + '_' + id]});
-            }
-        })
-    };
+            })
+        } else {
+            resolve({key: entity + '_' + id, data: entitiesByKey[entity + '_' + id]});
+        }
+    })
+};
 
-    var create = function (entity, attributeType) {
-        return entityClassifierService.create(entity, attributeType);
-    };
+var create = function (entity, attributeType) {
+    return entityClassifierService.create(entity, attributeType);
+};
 
-    var update = function (entity, id, attributeType) {
-        return entityClassifierService.update(entity, id, attributeType);
-    };
+var update = function (entity, id, attributeType) {
+    return entityClassifierService.update(entity, id, attributeType);
+};
 
-    var deleteByKey = function (entity, id) {
-        return entityClassifierService.deleteByKey(entity, id);
-    };
+var deleteByKey = function (entity, id) {
+    return entityClassifierService.deleteByKey(entity, id);
+};
 
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey
-    }
-
-}());
+export default {
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey
+};

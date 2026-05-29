@@ -1,48 +1,42 @@
-/**
- * Created by mevstratov on 27.02.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+// var logService = require('../../../../../core/services/logService');
 
-    // var logService = require('../../../../../core/services/logService');
+import timeZonesService from '../../services/timeZonesService';
 
-    var timeZonesService = require('../../services/timeZonesService');
+// var usersService = require('../../services/usersService');
 
-    // var usersService = require('../../services/usersService');
+export default function ($scope, $mdDialog, usersService, globalDataService) {
+    // logService.controller('ActionsNotificationsSettingsDialogController', 'initialized');
 
-    module.exports = function ($scope, $mdDialog, usersService, globalDataService) {
-        // logService.controller('ActionsNotificationsSettingsDialogController', 'initialized');
+    var vm = this;
 
-        var vm = this;
+    vm.readyStatus = {member: false};
 
-        vm.readyStatus = {member: false};
+    vm.timeZones = timeZonesService.getList();
 
-        vm.timeZones = timeZonesService.getList();
+    /* usersService.getOwnMemberSettings().then(function (data) {
+        vm.member = data.results[0];
+        vm.readyStatus.member = true;
+        $scope.$apply();
+    }); */
+    vm.member = globalDataService.getMember();
+    vm.readyStatus.member = true;
 
-        /* usersService.getOwnMemberSettings().then(function (data) {
-            vm.member = data.results[0];
-            vm.readyStatus.member = true;
-            $scope.$apply();
-        }); */
-		vm.member = globalDataService.getMember();
-		vm.readyStatus.member = true;
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.save = function () {
+        usersService.updateOwnMemberSettings(vm.member.id, vm.member).then(function (response) {
 
-        vm.save = function () {
-            usersService.updateOwnMemberSettings(vm.member.id, vm.member).then(function (response) {
+            $mdDialog.hide({status: 'success'});
 
-                $mdDialog.hide({status: 'success'});
+        }, function (error) {
 
-            }, function (error) {
+            console.log('notifications error', error);
+            $mdDialog.hide({status: error});
 
-                console.log('notifications error', error);
-                $mdDialog.hide({status: error});
-
-            });
-        };
-    }
-}());
+        });
+    };
+};

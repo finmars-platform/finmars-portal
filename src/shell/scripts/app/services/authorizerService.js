@@ -7,7 +7,6 @@
 
 import AuthorizerRepository from '../repositories/authorizerRepository.js';
 
-import {getVersions} from "../../../../portal/scripts/app/controllers/pages/updateCenterController";
 // import usersRepository from "../repositories/usersRepository";
 /** @module authorizerService */
 export default function (cookieService, globalDataService, xhrService) {

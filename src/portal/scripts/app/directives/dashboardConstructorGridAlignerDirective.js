@@ -1,244 +1,237 @@
-/**
- * Created by szhitenev on 30.05.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import dashboardConstructorEvents from '../services/dashboard-constructor/dashboardConstructorEvents';
 
-    var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents');
+export default function () {
+    return {
+        restrict: 'AE',
+        scope: {
+            dashboardConstructorDataService: '=',
+            dashboardConstructorEventService: '=',
+            tabNumber: '='
+        },
+        link: function (scope, elem, attr) {
 
-    module.exports = function () {
-        return {
-            restrict: 'AE',
-            scope: {
-                dashboardConstructorDataService: '=',
-                dashboardConstructorEventService: '=',
-                tabNumber: '='
-            },
-            link: function (scope, elem, attr) {
+            scope.columnsTotal = 1;
+            scope.rowsTotal = 1;
 
-                scope.columnsTotal = 1;
-                scope.rowsTotal = 1;
+            scope.cellWidth = 0;
+            scope.cellHeight = 0;
 
-                scope.cellWidth = 0;
-                scope.cellHeight = 0;
+            // scope.cellMinWidth = 100;
+            scope.cellMinWidth = 75;
 
-                // scope.cellMinWidth = 100;
-                scope.cellMinWidth = 75;
-
-                scope.rowControlsHolderElem;
-                scope.dashboardLayoutElem;
+            scope.rowControlsHolderElem;
+            scope.dashboardLayoutElem;
 
 
-                scope.calculateSingleCellWidth = function () {
+            scope.calculateSingleCellWidth = function () {
 
-                    var rowControlsWidth = 110;
+                var rowControlsWidth = 110;
 
-                    var tabWidth = $(elem).width() - rowControlsWidth;
+                var tabWidth = $(elem).width() - rowControlsWidth;
 
-                    scope.cellWidth = Math.floor(tabWidth / scope.columnsTotal);
+                scope.cellWidth = Math.floor(tabWidth / scope.columnsTotal);
 
-                    if (scope.cellWidth < scope.cellMinWidth) {
-                        scope.cellWidth = scope.cellMinWidth;
-                    }
+                if (scope.cellWidth < scope.cellMinWidth) {
+                    scope.cellWidth = scope.cellMinWidth;
+                }
 
-                };
+            };
 
-                scope.calculateSingleCellHeight = function () {
+            scope.calculateSingleCellHeight = function () {
 
-                    // var tabHeight = $(elem).height();
-                    //
-                    // console.log('tabHeight', tabHeight);
-                    //
-                    // scope.cellHeight = Math.floor(tabHeight / scope.rowsTotal)
+                // var tabHeight = $(elem).height();
+                //
+                // console.log('tabHeight', tabHeight);
+                //
+                // scope.cellHeight = Math.floor(tabHeight / scope.rowsTotal)
 
-                    // scope.cellHeight = 50; // var it be fixed value
-                    scope.cellHeight = 75; // var it be fixed value
+                // scope.cellHeight = 50; // var it be fixed value
+                scope.cellHeight = 75; // var it be fixed value
 
-                };
+            };
 
-                scope.resizeLayoutWidth = function () {
+            scope.resizeLayoutWidth = function () {
 
-                    var rowControlsWidth = 110;
-                    var accordionGuideWidth = 110;
+                var rowControlsWidth = 110;
+                var accordionGuideWidth = 110;
 
-                    // scope.dashboardLayoutElem.style.width = (scope.columnsTotal * scope.cellWidth + rowControlsWidth - accordionGuideWidth) + 'px'
-                    scope.dashboardLayoutElem.style.width = '100%';
+                // scope.dashboardLayoutElem.style.width = (scope.columnsTotal * scope.cellWidth + rowControlsWidth - accordionGuideWidth) + 'px'
+                scope.dashboardLayoutElem.style.width = '100%';
 
-                };
+            };
 
-                scope.resizeGridCells = function () {
+            scope.resizeGridCells = function () {
 
-                    var layout = scope.dashboardConstructorDataService.getData();
-                    var tab;
+                var layout = scope.dashboardConstructorDataService.getData();
+                var tab;
 
-                    if (scope.tabNumber === 'fixed_area') {
-                        tab = layout.data.fixed_area;
-                    } else {
-                        tab = layout.data.tabs[scope.tabNumber];
-                    }
+                if (scope.tabNumber === 'fixed_area') {
+                    tab = layout.data.fixed_area;
+                } else {
+                    tab = layout.data.tabs[scope.tabNumber];
+                }
 
-                    scope.rowsTotal = tab.layout.rows_count;
-                    scope.columnsTotal = tab.layout.columns_count;
+                scope.rowsTotal = tab.layout.rows_count;
+                scope.columnsTotal = tab.layout.columns_count;
 
-                    var elements = $(elem).find('.dashboard-constructor-cell');
-                    var domElem;
-                    var layoutElem;
+                var elements = $(elem).find('.dashboard-constructor-cell');
+                var domElem;
+                var layoutElem;
 
-                    var rowNumber;
-                    var columnNumber;
+                var rowNumber;
+                var columnNumber;
 
-                    console.log('elements', elements);
+                console.log('elements', elements);
 
 
-                    for (var i = 0; i < elements.length; i = i + 1) {
+                for (var i = 0; i < elements.length; i = i + 1) {
 
-                        domElem = elements[i];
+                    domElem = elements[i];
 
-                        rowNumber = parseInt(domElem.dataset.row, 10);
-                        columnNumber = parseInt(domElem.dataset.column, 10);
-                        layoutElem = tab.layout.rows[rowNumber].columns[columnNumber];
+                    rowNumber = parseInt(domElem.dataset.row, 10);
+                    columnNumber = parseInt(domElem.dataset.column, 10);
+                    layoutElem = tab.layout.rows[rowNumber].columns[columnNumber];
 
-                        if (layoutElem.cell_type === 'empty') {
+                    if (layoutElem.cell_type === 'empty') {
 
-                            if (layoutElem.is_hidden) {
-                                domElem.style.display = 'none';
-                            } else {
-                                domElem.style.display = 'flex';
-                            }
-
+                        if (layoutElem.is_hidden) {
+                            domElem.style.display = 'none';
+                        } else {
+                            domElem.style.display = 'flex';
                         }
 
-                        /*if (layoutElem.cell_type === 'component') {
-
-                            // nothing here yet
-                        }*/
-
-                        domElem.style.width = (layoutElem.colspan * scope.cellWidth) + 'px';
-                        domElem.style.height = (layoutElem.rowspan * scope.cellHeight) + 'px';
-
-                        domElem.style.position = 'absolute';
-                        domElem.style.top = (rowNumber * scope.cellHeight) + 'px';
-                        domElem.style.left = (columnNumber * scope.cellWidth) + 'px';
-
                     }
 
+                    /*if (layoutElem.cell_type === 'component') {
 
-                };
+                        // nothing here yet
+                    }*/
 
-                scope.resizeRowControls = function () {
+                    domElem.style.width = (layoutElem.colspan * scope.cellWidth) + 'px';
+                    domElem.style.height = (layoutElem.rowspan * scope.cellHeight) + 'px';
 
-                    var elements = $(elem).find('.dashboard-constructor-row-controls');
-                    var domElem;
-                    var rowNumber;
+                    domElem.style.position = 'absolute';
+                    domElem.style.top = (rowNumber * scope.cellHeight) + 'px';
+                    domElem.style.left = (columnNumber * scope.cellWidth) + 'px';
 
-                    for (var i = 0; i < elements.length; i = i + 1) {
-
-                        domElem = elements[i];
-                        rowNumber = parseInt(domElem.dataset.row, 10);
-
-                        domElem.style.top = (rowNumber * scope.cellHeight) + 'px';
-
-                    }
+                }
 
 
-                };
+            };
 
-                scope.updateRowControlsHolderPosition = function (event) {
+            scope.resizeRowControls = function () {
 
-                    var layout = scope.dashboardConstructorDataService.getData();
+                var elements = $(elem).find('.dashboard-constructor-row-controls');
+                var domElem;
+                var rowNumber;
 
-                    var rowControlsOffset = 100;
+                for (var i = 0; i < elements.length; i = i + 1) {
 
-                    var tab;
+                    domElem = elements[i];
+                    rowNumber = parseInt(domElem.dataset.row, 10);
 
-                    if (scope.tabNumber === 'fixed_area') {
-                        tab = layout.data.fixed_area;
-                    } else {
-                        tab = layout.data.tabs[scope.tabNumber];
-                    }
+                    domElem.style.top = (rowNumber * scope.cellHeight) + 'px';
 
-                    scope.columnsTotal = tab.layout.columns_count;
-
-                    var columnWidth = 121;
-
-                    console.log('scope.cellWidth', scope.cellWidth);
-
-                    scope.rowControlsHolderElem.style.left = (scope.columnsTotal * scope.cellWidth) + 'px'
-
-                };
-
-                scope.resize = function () {
-
-                    var layout = scope.dashboardConstructorDataService.getData();
-
-                    var tab;
-
-                    if (scope.tabNumber === 'fixed_area') {
-                        tab = layout.data.fixed_area;
-                    } else {
-                        tab = layout.data.tabs[scope.tabNumber];
-                    }
-
-                    scope.rowsTotal = tab.layout.rows_count;
-                    scope.columnsTotal = tab.layout.columns_count;
+                }
 
 
-                    scope.calculateSingleCellHeight();
-                    scope.calculateSingleCellWidth();
+            };
 
-                    // console.log('cellHeight', scope.cellHeight);
+            scope.updateRowControlsHolderPosition = function (event) {
 
-                    scope.resizeLayoutWidth();
-                    scope.resizeGridCells();
-                    scope.resizeRowControls();
-                    scope.updateRowControlsHolderPosition();
+                var layout = scope.dashboardConstructorDataService.getData();
 
-                };
+                var rowControlsOffset = 100;
 
-                scope.init = function () {
+                var tab;
 
-                    setTimeout(function () {
+                if (scope.tabNumber === 'fixed_area') {
+                    tab = layout.data.fixed_area;
+                } else {
+                    tab = layout.data.tabs[scope.tabNumber];
+                }
 
-                        scope.rowControlsHolderElem = $(elem).find('.row-controls-holder')[0];
-                        scope.dashboardLayoutElem = $(elem).find('.dashboard-layout')[0];
+                scope.columnsTotal = tab.layout.columns_count;
+
+                var columnWidth = 121;
+
+                console.log('scope.cellWidth', scope.cellWidth);
+
+                scope.rowControlsHolderElem.style.left = (scope.columnsTotal * scope.cellWidth) + 'px'
+
+            };
+
+            scope.resize = function () {
+
+                var layout = scope.dashboardConstructorDataService.getData();
+
+                var tab;
+
+                if (scope.tabNumber === 'fixed_area') {
+                    tab = layout.data.fixed_area;
+                } else {
+                    tab = layout.data.tabs[scope.tabNumber];
+                }
+
+                scope.rowsTotal = tab.layout.rows_count;
+                scope.columnsTotal = tab.layout.columns_count;
 
 
+                scope.calculateSingleCellHeight();
+                scope.calculateSingleCellWidth();
+
+                // console.log('cellHeight', scope.cellHeight);
+
+                scope.resizeLayoutWidth();
+                scope.resizeGridCells();
+                scope.resizeRowControls();
+                scope.updateRowControlsHolderPosition();
+
+            };
+
+            scope.init = function () {
+
+                setTimeout(function () {
+
+                    scope.rowControlsHolderElem = $(elem).find('.row-controls-holder')[0];
+                    scope.dashboardLayoutElem = $(elem).find('.dashboard-layout')[0];
+
+
+                    scope.resize();
+
+                    scope.dashboardConstructorEventService.addEventListener(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE, function () {
+
+                        setTimeout(function () {
+                            scope.resize()
+                        }, 0);
+
+                    });
+
+                    window.addEventListener('resize', function () {
                         scope.resize();
+                    });
 
-                        scope.dashboardConstructorEventService.addEventListener(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE, function () {
-
-                            setTimeout(function () {
-                                scope.resize()
-                            }, 0);
-
-                        });
-
-                        window.addEventListener('resize', function () {
-                            scope.resize();
-                        });
-
-                        console.log('elem', elem);
+                    console.log('elem', elem);
 
 
-                        elem[0].addEventListener("scroll", function (event) {
-                            //console.log('here?', event);
-                            scope.updateRowControlsHolderPosition(event)
-                        });
+                    elem[0].addEventListener("scroll", function (event) {
+                        //console.log('here?', event);
+                        scope.updateRowControlsHolderPosition(event)
+                    });
 
-                        elem[0].dispatchEvent(new Event('scroll'))
+                    elem[0].dispatchEvent(new Event('scroll'))
 
-                        scope.$apply();
+                    scope.$apply();
 
-                    }, 0)
+                }, 0)
 
-                };
+            };
 
-                scope.init();
+            scope.init();
 
 
-            }
         }
     }
-
-}());
+};

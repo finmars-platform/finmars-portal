@@ -1,23 +1,16 @@
-/**
- * Created by szhitenev on 08.06.2016.
- */
-(function(){
+'use strict';
 
-    'use strict';
+import logService from '../../../../../core/services/logService';
 
-    var logService = require('../../../../../core/services/logService');
+export default function($scope, $mdDialog, success){
 
-    module.exports = function($scope, $mdDialog, success){
+    logService.controller('SuccessDialogController', 'initialized');
 
-        logService.controller('SuccessDialogController', 'initialized');
+    var vm = this;
 
-        var vm = this;
+    vm.success = success;
 
-        vm.success = success;
-
-        vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
-        };
-    }
-
-}());
+    vm.agree = function () {
+        $mdDialog.hide({status: 'agree'});
+    };
+};

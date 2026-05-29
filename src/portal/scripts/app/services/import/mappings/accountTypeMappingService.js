@@ -1,38 +1,31 @@
-/**
- * Created by szhitenev on 19.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import accountTypeMappingRepository from '../../../repositories/import/mappings/accountTypeMappingRepository';
 
-    var accountTypeMappingRepository = require('../../../repositories/import/mappings/accountTypeMappingRepository');
+var getList = function (options) {
+    return accountTypeMappingRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return accountTypeMappingRepository.getList(options);
-    };
+var getByKey = function (id) {
+    return accountTypeMappingRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return accountTypeMappingRepository.getByKey(id);
-    };
+var create = function (map) {
+    return accountTypeMappingRepository.create(map);
+};
 
-    var create = function (map) {
-        return accountTypeMappingRepository.create(map);
-    };
+var update = function (id, map) {
+    return accountTypeMappingRepository.update(id, map);
+};
 
-    var update = function (id, map) {
-        return accountTypeMappingRepository.update(id, map);
-    };
+var deleteByKey = function (id) {
+    return accountTypeMappingRepository.deleteByKey(id);
+};
 
-    var deleteByKey = function (id) {
-        return accountTypeMappingRepository.deleteByKey(id);
-    };
-
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey
-    }
-
-}());
+export default {
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey
+};

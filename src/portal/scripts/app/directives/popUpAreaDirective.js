@@ -1,20 +1,17 @@
-(function () {
+'use strict';
 
-    'use strict';
+export default function () {
+    return {
+        restrict: 'E',
+        scope: {
+            options: '<',
+            data: '='
+        },
+        templateUrl: 'views/directive/pop-up-view.html',
+        link: function (scope, elem, attrs) {
 
-    module.exports = function () {
-        return {
-            restrict: 'E',
-            scope: {
-                options: '<',
-                data: '='
-            },
-            templateUrl: 'views/directive/pop-up-view.html',
-            link: function (scope, elem, attrs) {
+            scope.cellValue = '';
 
-                scope.cellValue = '';
-
-            }
         }
     }
-}());
+};

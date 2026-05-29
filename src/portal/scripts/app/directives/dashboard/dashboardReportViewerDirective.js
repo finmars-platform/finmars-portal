@@ -1,196 +1,192 @@
-const dashboardEvents = require("../../services/dashboard/dashboardEvents");
-const dashboardComponentStatuses = require("../../services/dashboard/dashboardComponentStatuses");
-(function () {
 
-    'use strict';
+'use strict';
 
-    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
-    var evEvents = require('../../services/entityViewerEvents');
-    var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
+import dashboardEvents from '../../services/dashboard/dashboardEvents';
+import evEvents from '../../services/entityViewerEvents';
+import dashboardComponentStatuses from '../../services/dashboard/dashboardComponentStatuses';
 
-    module.exports = function ($mdDialog, dashboardHelper, metaContentTypesService) {
-        return {
-            restriction: 'E',
-            scope: {
-                tabNumber: '=',
-                rowNumber: '=',
-                columnNumber: '=',
-                item: '=',
-                dashboardDataService: '=',
-                dashboardEventService: '=',
-                fillInModeData: '=?' // data about component inside tabs for filled in component
-            },
-            templateUrl: 'views/directives/dashboard/dashboard-report-viewer-view.html',
-            link: function (scope, elem, attr) {
+export default function ($mdDialog, dashboardHelper, metaContentTypesService) {
+    return {
+        restriction: 'E',
+        scope: {
+            tabNumber: '=',
+            rowNumber: '=',
+            columnNumber: '=',
+            item: '=',
+            dashboardDataService: '=',
+            dashboardEventService: '=',
+            fillInModeData: '=?' // data about component inside tabs for filled in component
+        },
+        templateUrl: 'views/directives/dashboard/dashboard-report-viewer-view.html',
+        link: function (scope, elem, attr) {
 
-                scope.readyStatus = {
-                    data: 'processing',
-                    disabled: false
-                };
+            scope.readyStatus = {
+                data: 'processing',
+                disabled: false
+            };
 
-                var componentData;
-                var componentElem = elem[0].querySelector('.dashboardComponent');
+            var componentData;
+            var componentElem = elem[0].querySelector('.dashboardComponent');
 
-                if (scope.item && scope.item.data) {
+            if (scope.item && scope.item.data) {
 
-                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+                componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
-                    if (componentData.type === 'report_viewer_split_panel') {
-                        componentData.type = 'report_viewer';
-                    }
-
-                    if (componentData.custom_component_name) {
-                        scope.customName = componentData.custom_component_name;
-                    }
-
+                if (componentData.type === 'report_viewer_split_panel') {
+                    componentData.type = 'report_viewer';
                 }
 
-                if (componentData && !componentData.settings.filters) {
-                    componentData.settings.filters = {
-                        show_filters_area: false,
-                        show_use_from_above_filters: false,
+                if (componentData.custom_component_name) {
+                    scope.customName = componentData.custom_component_name;
+                }
+
+            }
+
+            if (componentData && !componentData.settings.filters) {
+                componentData.settings.filters = {
+                    show_filters_area: false,
+                    show_use_from_above_filters: false,
+                }
+            }
+
+            scope.showFiltersArea = componentData.settings.filters.show_filters_area;
+            scope.showUseFromAboveFilters = componentData.settings.filters.show_use_from_above_filters;
+
+            scope.vm = {
+                tabNumber: scope.tabNumber,
+                rowNumber: scope.rowNumber,
+                columnNumber: scope.columnNumber,
+                componentData: componentData,
+                entityType: componentData.settings.entity_type,
+                contentType: metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type),
+                componentElement: componentElem,
+                dashboardDataService: scope.dashboardDataService,
+                dashboardEventService: scope.dashboardEventService
+            };
+
+            if (scope.fillInModeData) {
+                scope.vm.entityViewerDataService = scope.fillInModeData.entityViewerDataService;
+                scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
+            }
+
+            scope.openComponentSettingsEditorDialog = function ($event) {
+
+                var dashboardComponents = scope.dashboardDataService.getComponents();
+
+                $mdDialog.show({
+                    controller: 'DashboardReportViewerComponentSettingsDialogController as vm',
+                    templateUrl: 'views/dialogs/dashboard/component-settings/dashboard-report-viewer-component-settings-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    autoWrap: true,
+                    multiple: true,
+                    locals: {
+                        item: scope.vm.componentData,
+                        data: {
+                            dashboardComponents: dashboardComponents
+                        }
                     }
-                }
 
-                scope.showFiltersArea = componentData.settings.filters.show_filters_area;
-                scope.showUseFromAboveFilters = componentData.settings.filters.show_use_from_above_filters;
+                }).then(function (res) {
 
-                scope.vm = {
-                    tabNumber: scope.tabNumber,
-                    rowNumber: scope.rowNumber,
-                    columnNumber: scope.columnNumber,
-                    componentData: componentData,
-                    entityType: componentData.settings.entity_type,
-                    contentType: metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type),
-                    componentElement: componentElem,
-                    dashboardDataService: scope.dashboardDataService,
-                    dashboardEventService: scope.dashboardEventService
-                };
+                    if (res.status === 'agree') {
 
-                if (scope.fillInModeData) {
-                    scope.vm.entityViewerDataService = scope.fillInModeData.entityViewerDataService;
-                    scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
-                }
+                        componentData = res.data.item;
 
-                scope.openComponentSettingsEditorDialog = function ($event) {
+                        scope.dashboardDataService.updateComponent(componentData);
 
-                    var dashboardComponents = scope.dashboardDataService.getComponents();
 
-                    $mdDialog.show({
-                        controller: 'DashboardReportViewerComponentSettingsDialogController as vm',
-                        templateUrl: 'views/dialogs/dashboard/component-settings/dashboard-report-viewer-component-settings-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
-                        autoWrap: true,
-                        multiple: true,
-                        locals: {
-                            item: scope.vm.componentData,
-                            data: {
-                                dashboardComponents: dashboardComponents
-                            }
+                        if (res.action === 'save') {
+                            dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
                         }
 
-                    }).then(function (res) {
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                        if (res.status === 'agree') {
+                        scope.disableFillInMode();
 
-                            componentData = res.data.item;
+                    }
 
-                            scope.dashboardDataService.updateComponent(componentData);
+                })
 
+            };
 
-                            if (res.action === 'save') {
-                                dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
-                            }
+            scope.toggleFilterBlock = function () {
+                dashboardHelper.toggleFilterBlock(scope);
+            };
 
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+            scope.openMissingPricesDialog = function ($event) {
 
-                            scope.disableFillInMode();
-
+                $mdDialog.show({
+                    controller: 'ReportPriceCheckerDialogController as vm',
+                    templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    locals: {
+                        data: {
+                            missingPricesData: scope.missingPricesData,
+                            evDataService: scope.evDataService
                         }
+                    }
+                })
 
-                    })
+            };
 
-                };
+            scope.init = function () {
 
-                scope.toggleFilterBlock = function () {
-                    dashboardHelper.toggleFilterBlock(scope);
-                };
+                console.log("DASHBOARD.REPORT.INIT")
 
-                scope.openMissingPricesDialog = function ($event) {
+                scope.readyStatus.data = 'processing'
 
-                    $mdDialog.show({
-                        controller: 'ReportPriceCheckerDialogController as vm',
-                        templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
-                        locals: {
-                            data: {
-                                missingPricesData: scope.missingPricesData,
-                                evDataService: scope.evDataService
-                            }
-                        }
-                    })
+                // scope.initEventListeners();
 
-                };
+                scope.vm.componentData.settings.components.topPart = false; // for already existing layouts
 
-                scope.init = function () {
+                scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
 
-                    console.log("DASHBOARD.REPORT.INIT")
+                // Will be set to active inside DashboardReportViewerController
+                // scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                // scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    scope.readyStatus.data = 'processing'
+                setTimeout(function () {
+                    scope.readyStatus.data = 'ready';
+                    scope.$apply();
+                }, 1000)
 
-                    // scope.initEventListeners();
-
-                    scope.vm.componentData.settings.components.topPart = false; // for already existing layouts
-
-                    scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
-
-                    // Will be set to active inside DashboardReportViewerController
-                    // scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                    // scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                    setTimeout(function () {
-                        scope.readyStatus.data = 'ready';
-                        scope.$apply();
-                    }, 1000)
-
-                };
+            };
 
 
-                scope.dashboardInit = function () {
+            scope.dashboardInit = function () {
 
-                    // Component put himself in INIT Status
-                    // so that dashboard manager can start processing it
-                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                // Component put himself in INIT Status
+                // so that dashboard manager can start processing it
+                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+                scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+                    var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
 
-                        if (status === dashboardComponentStatuses.START) {
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                            scope.init();
-                        }
-
-                    });
-
-                    scope.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
-
+                    if (status === dashboardComponentStatuses.START) {
                         scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                         scope.init();
+                    }
 
-                    })
+                });
 
-                }
+                scope.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
 
-                scope.dashboardInit();
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    scope.init();
+
+                })
 
             }
+
+            scope.dashboardInit();
+
         }
     }
-}());
+};

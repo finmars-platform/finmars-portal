@@ -1,36 +1,29 @@
-/**
- * Created by szhitenev on 03.03.2020.
- */
-(function(){
+'use strict';
 
-    'use strict';
+import currencyHistoryErrorService from '../../services/pricing/currencyHistoryErrorService';
 
-    var currencyHistoryErrorService = require('../../services/pricing/currencyHistoryErrorService');
+export default function($scope){
 
-    module.exports = function($scope){
+    var vm = this;
 
-        var vm = this;
+    vm.entityType = 'currency-history-error'; // deprecated
+    vm.contentType = 'pricing.currencyhistoryerror';
+    vm.entityRaw = [];
 
-        vm.entityType = 'currency-history-error'; // deprecated
-        vm.contentType = 'pricing.currencyhistoryerror';
-        vm.entityRaw = [];
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
+    vm.entityViewer = {extraFeatures: []};
 
-        vm.entityViewer = {extraFeatures: []};
+    vm.getList = function(options){
+        return currencyHistoryErrorService.getList(options).then(function(data){
+            return data;
+        })
+    };
 
-        vm.getList = function(options){
-            return currencyHistoryErrorService.getList(options).then(function(data){
-                return data;
-            })
-        };
+    vm.init = function(){
+        vm.readyStatus.content = true
+    };
 
-        vm.init = function(){
-            vm.readyStatus.content = true
-        };
+    vm.init()
 
-        vm.init()
-
-    }
-
-}());
+};

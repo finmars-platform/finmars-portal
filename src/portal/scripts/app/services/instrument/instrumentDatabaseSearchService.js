@@ -1,18 +1,10 @@
-/**
- * Created by szhitenev on 10.11.2021.
- */
-(function () {
+import instrumentDatabaseSearchRepository from '../../repositories/instrument/instrumentDatabaseSearchRepository';
 
-    var instrumentDatabaseSearchRepository = require('../../repositories/instrument/instrumentDatabaseSearchRepository');
-
-    var getList = function (name, options) {
-        return instrumentDatabaseSearchRepository.getList(name, options);
-    };
+var getList = function (name, options) {
+    return instrumentDatabaseSearchRepository.getList(name, options);
+};
 
 
-    module.exports = {
-        getList: getList
-    }
-
-
-}());
+export default {
+    getList: getList
+};

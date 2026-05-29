@@ -1,49 +1,42 @@
-/**
- * Created by szhitenev on 04.10.2021.
- */
-(function () {
+'use strict';
 
-    'use strict';
+// var authorizerService = require('../../services/authorizerService');
+import masterUserBackupsService from '../../services/masterUserBackupsService';
 
-    // var authorizerService = require('../../services/authorizerService');
-    var masterUserBackupsService = require('../../services/masterUserBackupsService');
+// var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    // var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+export default function ($scope, $mdDialog, data, toastNotificationService, profileAuthorizerService, commonDialogsService) {
 
-    module.exports = function ($scope, $mdDialog, data, toastNotificationService, profileAuthorizerService, commonDialogsService) {
+    var vm = this;
 
-        var vm = this;
+    vm.processing = false;
 
-        vm.processing = false;
+    vm.backup = data.backup;
 
-        vm.backup = data.backup;
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.agree = function ($event) {
 
-        vm.agree = function ($event) {
+        vm.processing = true;
 
-            vm.processing = true;
+        masterUserBackupsService.deleteMasterUserBackup(vm.backup.id).then(function () {
 
-            masterUserBackupsService.deleteMasterUserBackup(vm.backup.id).then(function () {
+            vm.processing = false;
 
-                vm.processing = false;
+            $scope.$apply();
 
-                $scope.$apply();
+            toastNotificationService.success("Ecosystem " + vm.backup.name + ' was deleted');
 
-                toastNotificationService.success("Ecosystem " + vm.backup.name + ' was deleted');
+            $mdDialog.hide({status: 'agree'});
 
-                $mdDialog.hide({status: 'agree'});
+        }).catch(function (error) {
 
-            }).catch(function (error) {
+            vm.processing = false;
+            $scope.$apply();
 
-                vm.processing = false;
-                $scope.$apply();
+        })
 
-            })
-
-        };
-    }
-
-}());
+    };
+};

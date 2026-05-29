@@ -1,38 +1,31 @@
-/**
- * Created by szhitenev on 19.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import instrumentMappingRepository from '../../../repositories/import/mappings/instrumentMappingRepository';
 
-    var instrumentMappingRepository = require('../../../repositories/import/mappings/instrumentMappingRepository');
+var getList = function (options) {
+    return instrumentMappingRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return instrumentMappingRepository.getList(options);
-    };
+var getByKey = function (id) {
+    return instrumentMappingRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return instrumentMappingRepository.getByKey(id);
-    };
+var create = function (map) {
+    return instrumentMappingRepository.create(map);
+};
 
-    var create = function (map) {
-        return instrumentMappingRepository.create(map);
-    };
+var update = function (id, map) {
+    return instrumentMappingRepository.update(id, map);
+};
 
-    var update = function (id, map) {
-        return instrumentMappingRepository.update(id, map);
-    };
+var deleteByKey = function (id) {
+    return instrumentMappingRepository.deleteByKey(id);
+};
 
-    var deleteByKey = function (id) {
-        return instrumentMappingRepository.deleteByKey(id);
-    };
-
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey
-    }
-
-}());
+export default {
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey
+};

@@ -1,91 +1,83 @@
-/**
- * Created by szhitenev on 29.01.2020.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import plReportInstanceService from '../../services/plReportInstanceService';
 
-    var plReportInstanceService = require('../../services/plReportInstanceService').default;
+export default function ($scope, $mdDialog) {
 
+    var vm = this;
 
-    module.exports = function ($scope, $mdDialog) {
+    vm.readyStatus = {content: false};
+    vm.items = [];
 
-        var vm = this;
+    vm.getList = function () {
 
-        vm.readyStatus = {content: false};
-        vm.items = [];
+        plReportInstanceService.getList({pageSize: 1000}).then(function (data) {
 
-        vm.getList = function () {
+            vm.items = data.results.map(function (item) {
+                item.settings = JSON.stringify(JSON.parse(item.settings), null, 4)
+                return item
+            });
 
-            plReportInstanceService.getList({pageSize: 1000}).then(function (data) {
+            vm.readyStatus.content = true;
 
-                vm.items = data.results.map(function (item) {
-                    item.settings = JSON.stringify(JSON.parse(item.settings), null, 4)
-                    return item
-                });
+            $scope.$apply();
 
-                vm.readyStatus.content = true;
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        vm.deleteItem = function ($event, item, $index) {
-
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                clickOutsideToClose: false,
-                locals: {
-                    warning: {
-                        title: 'Warning',
-                        description: "<p>Are you sure you want to delete Balance Report Instance <b>" + item.name + '</b>?</p>'
-                    }
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    plReportInstanceService.deleteByKey(item.id).then(function (value) {
-                        vm.getList();
-                    })
-
-                }
-
-            })
-
-        };
-
-        vm.init = function () {
-
-            vm.getList();
-
-        };
-
-        vm.clearAllCache = async function () {
-
-            vm.processing = true
-
-            for (const item of vm.items) {
-
-                await plReportInstanceService.deleteByKey(item.id)
-            }
-
-            vm.processing = false;
-
-            vm.getList();
-        }
-
-        vm.init();
+        })
 
     };
 
-}());
+    vm.deleteItem = function ($event, item, $index) {
+
+        $mdDialog.show({
+            controller: 'WarningDialogController as vm',
+            templateUrl: 'views/dialogs/warning-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            clickOutsideToClose: false,
+            locals: {
+                warning: {
+                    title: 'Warning',
+                    description: "<p>Are you sure you want to delete Balance Report Instance <b>" + item.name + '</b>?</p>'
+                }
+            },
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            multiple: true
+        }).then(function (res) {
+
+            if (res.status === 'agree') {
+
+                plReportInstanceService.deleteByKey(item.id).then(function (value) {
+                    vm.getList();
+                })
+
+            }
+
+        })
+
+    };
+
+    vm.init = function () {
+
+        vm.getList();
+
+    };
+
+    vm.clearAllCache = async function () {
+
+        vm.processing = true
+
+        for (const item of vm.items) {
+
+            await plReportInstanceService.deleteByKey(item.id)
+        }
+
+        vm.processing = false;
+
+        vm.getList();
+    }
+
+    vm.init();
+
+};

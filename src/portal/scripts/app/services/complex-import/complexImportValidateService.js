@@ -1,178 +1,189 @@
-/**
- * Created by szhitenev on 12.09.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import importEntityService from '../import/importEntityService';
+import importTransactionService from '../../services/import/importTransactionService';
 
-    var importEntityService = require('../import/importEntityService');
-    var importTransactionService = require('../../services/import/importTransactionService');
+var importSimple = function (resolve, reject, config, index, updateCounter) {
 
-    var importSimple = function (resolve, reject, config, index, updateCounter) {
+    var formData = new FormData();
 
-        var formData = new FormData();
+    if (config.task_id) {
+        formData.append('task_id', config.task_id);
+    } else {
 
-        if (config.task_id) {
-            formData.append('task_id', config.task_id);
+        formData.append('file', config.file);
+        formData.append('scheme', config.scheme);
+        formData.append('error_handler', config.error_handler);
+        formData.append('missing_data_handler', config.missing_data_handler);
+        formData.append('classifier_handler', config.classifier_handler);
+        formData.append('delimiter', config.delimiter);
+        formData.append('mode', config.mode);
+
+    }
+
+    // console.log('action', action);
+
+    importEntityService.validateImport(formData).then(function (data) {
+
+        config = data;
+
+        updateCounter(index, config);
+
+        if (config.task_status === 'SUCCESS') {
+            resolve({
+                config: config,
+                data: data
+            });
         } else {
-
-            formData.append('file', config.file);
-            formData.append('scheme', config.scheme);
-            formData.append('error_handler', config.error_handler);
-            formData.append('missing_data_handler', config.missing_data_handler);
-            formData.append('classifier_handler', config.classifier_handler);
-            formData.append('delimiter', config.delimiter);
-            formData.append('mode', config.mode);
+            setTimeout(function () {
+                importSimple(resolve, reject, config, index, updateCounter);
+            }, 1000)
 
         }
 
-        // console.log('action', action);
+    }).catch(function (e) {
+        reject(e);
+    })
 
-        importEntityService.validateImport(formData).then(function (data) {
+};
 
-            config = data;
+var handleCsvImportAction = function (action, file, delimiter, index, updateCounter) {
 
-            updateCounter(index, config);
+    return new Promise(function (resolve, reject) {
 
-            if (config.task_status === 'SUCCESS') {
-                resolve({
-                    config: config,
-                    data: data
-                });
-            } else {
-                setTimeout(function () {
-                    importSimple(resolve, reject, config, index, updateCounter);
-                }, 1000)
+        var config = {
+            file: file,
+            scheme: action.csv_import_scheme,
+            error_handler: action.error_handler,
+            missing_data_handler: action.missing_data_handler,
+            classifier_handler: action.classifier_handler,
+            delimiter: delimiter,
+            mode: action.mode
+        };
 
-            }
+        // console.log('handleComplexTransactionImportAction.config', config)
 
-        }).catch(function (e) {
-            reject(e);
-        })
+        importSimple(resolve, reject, config, index, updateCounter);
 
-    };
+    })
 
-    var handleCsvImportAction = function (action, file, delimiter, index, updateCounter) {
+};
 
-        return new Promise(function (resolve, reject) {
+var importComplexTransactions = function (resolve, reject, config, index, updateCounter) {
 
-            var config = {
-                file: file,
-                scheme: action.csv_import_scheme,
-                error_handler: action.error_handler,
-                missing_data_handler: action.missing_data_handler,
-                classifier_handler: action.classifier_handler,
-                delimiter: delimiter,
-                mode: action.mode
-            };
+    var formData = new FormData();
 
-            // console.log('handleComplexTransactionImportAction.config', config)
+    if (config.task_id) {
+        formData.append('task_id', config.task_id);
+    } else {
 
-            importSimple(resolve, reject, config, index, updateCounter);
+        formData.append('file', config.file);
+        formData.append('scheme', config.scheme);
+        formData.append('error_handling', config.error_handling);
+        formData.append('missing_data_handler', config.missing_data_handler);
+        formData.append('delimiter', config.delimiter);
+    }
 
-        })
+    importTransactionService.validateImport(formData).then(function (data) {
 
-    };
+        config = data;
 
-    var importComplexTransactions = function (resolve, reject, config, index, updateCounter) {
+        updateCounter(index, config);
 
-        var formData = new FormData();
-
-        if (config.task_id) {
-            formData.append('task_id', config.task_id);
+        if (config.task_status === 'SUCCESS') {
+            resolve({
+                config: config,
+                data: data
+            });
         } else {
+            setTimeout(function () {
+                importComplexTransactions(resolve, reject, config, index, updateCounter);
+            }, 1000)
 
-            formData.append('file', config.file);
-            formData.append('scheme', config.scheme);
-            formData.append('error_handling', config.error_handling);
-            formData.append('missing_data_handler', config.missing_data_handler);
-            formData.append('delimiter', config.delimiter);
         }
 
-        importTransactionService.validateImport(formData).then(function (data) {
 
-            config = data;
+    }).catch(function (e) {
+        reject(e);
+    });
 
-            updateCounter(index, config);
+};
 
-            if (config.task_status === 'SUCCESS') {
-                resolve({
-                    config: config,
-                    data: data
-                });
-            } else {
-                setTimeout(function () {
-                    importComplexTransactions(resolve, reject, config, index, updateCounter);
-                }, 1000)
+var handleComplexTransactionImportAction = function (action, file, delimiter, index, updateCounter) {
+
+    return new Promise(function (resolve, reject) {
+
+        var config = {
+            file: file,
+            scheme: action.complex_transaction_import_scheme,
+            error_handling: action.error_handler,
+            missing_data_handler: action.missing_data_handler,
+            delimiter: delimiter
+        };
+
+        // console.log('handleComplexTransactionImportAction.config', config)
+
+        importComplexTransactions(resolve, reject, config, index, updateCounter);
+
+    })
+
+};
+
+var processAction = function (action, file, delimiter, index, updateCounter) {
+
+    return new Promise(function (resolve) {
+
+        if (action.skip){
+
+            resolve({
+                config: {},
+                data: {
+                    skip: true
+                }
+            })
+
+        } else {
+
+            if (action.csv_import_scheme) {
+                resolve(handleCsvImportAction(action.csv_import_scheme, file, delimiter, index, updateCounter))
+            }
+
+            if (action.complex_transaction_import_scheme) {
+                resolve(handleComplexTransactionImportAction(action.complex_transaction_import_scheme, file, delimiter, index, updateCounter))
+            }
+
+        }
+
+    })
+};
+
+var processActionOneByOne = function (resolve, reject, result, actions, file, delimiter, index, updateCounter) {
+
+    processAction(actions[index], file, delimiter, index, updateCounter).then(function (res) {
+
+        // console.log('processAction.res', res);
+        result.configs[index] = res.config;
+        result.errors[index] = [];
+
+        if (res.data.hasOwnProperty('error_rows') && res.data.error_rows.length) {
+
+            var errors = res.data.error_rows.filter(function (item) {
+                return item.level === 'error';
+            });
+
+            if (errors.length) {
+
+                result.errors[index] = errors
 
             }
 
+        }
 
-        }).catch(function (e) {
-            reject(e);
-        });
+        if (res.data.hasOwnProperty('stats')) {
 
-    };
+            if (res.data.stats) {
 
-    var handleComplexTransactionImportAction = function (action, file, delimiter, index, updateCounter) {
-
-        return new Promise(function (resolve, reject) {
-
-            var config = {
-                file: file,
-                scheme: action.complex_transaction_import_scheme,
-                error_handling: action.error_handler,
-                missing_data_handler: action.missing_data_handler,
-                delimiter: delimiter
-            };
-
-            // console.log('handleComplexTransactionImportAction.config', config)
-
-            importComplexTransactions(resolve, reject, config, index, updateCounter);
-
-        })
-
-    };
-
-    var processAction = function (action, file, delimiter, index, updateCounter) {
-
-        return new Promise(function (resolve) {
-
-            if (action.skip){
-
-                resolve({
-                    config: {},
-                    data: {
-                        skip: true
-                    }
-                })
-
-            } else {
-
-                if (action.csv_import_scheme) {
-                    resolve(handleCsvImportAction(action.csv_import_scheme, file, delimiter, index, updateCounter))
-                }
-
-                if (action.complex_transaction_import_scheme) {
-                    resolve(handleComplexTransactionImportAction(action.complex_transaction_import_scheme, file, delimiter, index, updateCounter))
-                }
-
-            }
-
-        })
-    };
-
-    var processActionOneByOne = function (resolve, reject, result, actions, file, delimiter, index, updateCounter) {
-
-        processAction(actions[index], file, delimiter, index, updateCounter).then(function (res) {
-
-            // console.log('processAction.res', res);
-            result.configs[index] = res.config;
-            result.errors[index] = [];
-
-            if (res.data.hasOwnProperty('error_rows') && res.data.error_rows.length) {
-
-                var errors = res.data.error_rows.filter(function (item) {
+                var errors = res.data.stats.filter(function (item) {
                     return item.level === 'error';
                 });
 
@@ -184,78 +195,60 @@
 
             }
 
-            if (res.data.hasOwnProperty('stats')) {
+        }
 
-                if (res.data.stats) {
+        result.import_results.push(res.data);
 
-                    var errors = res.data.stats.filter(function (item) {
-                        return item.level === 'error';
-                    });
+        index = index + 1;
 
-                    if (errors.length) {
+        updateCounter(index, res.config);
 
-                        result.errors[index] = errors
+        if (index < actions.length) {
 
-                    }
+            processActionOneByOne(resolve, reject, result, actions, file, delimiter, index, updateCounter)
 
-                }
+        } else {
 
-            }
+            resolve(result);
 
-            result.import_results.push(res.data);
+        }
 
-            index = index + 1;
+    })
+    .catch(function (e) {
+        reject(e)
+    })
 
-            updateCounter(index, res.config);
+};
 
-            if (index < actions.length) {
+var validateImport = function (file, delimiter, scheme, updateCounter) {
 
-                processActionOneByOne(resolve, reject, result, actions, file, delimiter, index, updateCounter)
+    return new Promise(function (resolve, reject) {
 
-            } else {
+        // console.log('file', file);
+        // console.log('config', scheme);
 
-                resolve(result);
+        var result = {
+            import_results: [],
+            errors: [],
+            configs: []
+        };
 
-            }
+        if (scheme.actions.length) {
 
-        })
-        .catch(function (e) {
-            reject(e)
-        })
+            var index = 0;
 
-    };
+            processActionOneByOne(resolve, reject, result, scheme.actions, file, delimiter, index, updateCounter)
 
-    var validateImport = function (file, delimiter, scheme, updateCounter) {
+        } else {
 
-        return new Promise(function (resolve, reject) {
+            resolve(result)
 
-            // console.log('file', file);
-            // console.log('config', scheme);
+        }
 
-            var result = {
-                import_results: [],
-                errors: [],
-                configs: []
-            };
+    })
 
-            if (scheme.actions.length) {
+};
 
-                var index = 0;
-
-                processActionOneByOne(resolve, reject, result, scheme.actions, file, delimiter, index, updateCounter)
-
-            } else {
-
-                resolve(result)
-
-            }
-
-        })
-
-    };
-
-    module.exports = {
-        validateImport: validateImport
-    }
-
-}());
+export default {
+    validateImport: validateImport
+};

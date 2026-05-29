@@ -1,115 +1,108 @@
-/**
- * Created by szhitenev on 17.08.2016.
- */
-(function () {
+import uiService from '../../../services/uiService';
+import newMemberSetupConfigurationService from '../../../services/newMemberSetupConfigurationService';
 
-    var uiService = require('../../../services/uiService').default;
-    var newMemberSetupConfigurationService = require('../../../services/newMemberSetupConfigurationService');
+export default function ($scope, $mdDialog) {
 
-    module.exports = function ($scope, $mdDialog) {
+    var vm = this;
 
-        var vm = this;
+    vm.items = [];
 
-        vm.items = [];
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
+    vm.getList = function () {
 
-        vm.getList = function () {
+        vm.readyStatus.content = false;
 
-            vm.readyStatus.content = false;
+        newMemberSetupConfigurationService.getList().then(function (data) {
 
-            newMemberSetupConfigurationService.getList().then(function (data) {
+            vm.items = data.results;
 
-                vm.items = data.results;
+            vm.readyStatus.content = true;
 
-                vm.readyStatus.content = true;
+            $scope.$apply();
 
-                $scope.$apply();
+        })
 
-            })
+    };
 
-        };
+    vm.editItem = function ($event, item) {
 
-        vm.editItem = function ($event, item) {
+        $mdDialog.show({
+            controller: 'EditConfigurationDialogController as vm',
+            templateUrl: 'views/dialogs/edit-configuration-dialog-view.html',
+            targetEvent: $event,
+            preserveScope: true,
+            locals: {
+                item: item
+            },
+            autoWrap: true,
+            skipHid: true
+        }).then(function (res) {
 
-            $mdDialog.show({
-                controller: 'EditConfigurationDialogController as vm',
-                templateUrl: 'views/dialogs/edit-configuration-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                locals: {
-                    item: item
-                },
-                autoWrap: true,
-                skipHid: true
-            }).then(function (res) {
+            if (res.status === 'agree') {
 
-                if (res.status === 'agree') {
+                vm.getList();
 
+            }
+
+        })
+
+    };
+
+    vm.deleteItem = function ($event, item) {
+        $mdDialog.show({
+            controller: 'WarningDialogController as vm',
+            templateUrl: 'views/dialogs/warning-dialog-view.html',
+            targetEvent: $event,
+            locals: {
+                warning: {
+                    title: 'Warning!',
+                    description: 'Are you sure to delete ' + item.name
+                }
+            },
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            multiple: true
+        }).then(function (res) {
+            if (res.status === 'agree') {
+
+                newMemberSetupConfigurationService.deleteByKey(item.id);
+                setTimeout(function () {
                     vm.getList();
+                }, 100)
 
-                }
+            }
+        });
+    };
 
-            })
+    vm.addItem = function ($event) {
 
-        };
+        $mdDialog.show({
+            controller: 'CreateConfigurationDialogController as vm',
+            templateUrl: 'views/dialogs/create-configuration-dialog-view.html',
+            targetEvent: $event,
+            preserveScope: true,
+            autoWrap: true,
+            skipHid: true
+        }).then(function (res) {
 
-        vm.deleteItem = function ($event, item) {
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                targetEvent: $event,
-                locals: {
-                    warning: {
-                        title: 'Warning!',
-                        description: 'Are you sure to delete ' + item.name
-                    }
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
-            }).then(function (res) {
-                if (res.status === 'agree') {
+            if (res.status === 'agree') {
 
-                    newMemberSetupConfigurationService.deleteByKey(item.id);
-                    setTimeout(function () {
-                        vm.getList();
-                    }, 100)
+                vm.getList();
 
-                }
-            });
-        };
+            }
 
-        vm.addItem = function ($event) {
+        })
 
-            $mdDialog.show({
-                controller: 'CreateConfigurationDialogController as vm',
-                templateUrl: 'views/dialogs/create-configuration-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHid: true
-            }).then(function (res) {
+    };
 
-                if (res.status === 'agree') {
+    vm.init = function () {
 
-                    vm.getList();
+        vm.getList();
 
-                }
+    };
 
-            })
+    vm.init();
 
-        };
-
-        vm.init = function () {
-
-            vm.getList();
-
-        };
-
-        vm.init();
-
-    }
-
-}());
+};

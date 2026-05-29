@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 
 	'MODEL_CHANGED_FROM_OUTSIDE': 'MODEL_CHANGED_FROM_OUTSIDE',
 

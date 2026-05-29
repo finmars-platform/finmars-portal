@@ -4,7 +4,7 @@ window.base_api_url = '';
 
 const resolve = () => {
 
-	if ('__PROJECT_ENV__') {
+	if (window.PROJECT_ENV) {
 
 		// const host = '__API_HOST__';
 		const host = window.API_HOST;

@@ -1,19 +1,12 @@
-/**
- * Created by szhitenev on 25.08.2016.
- */
-(function(){
+'use strict';
 
-    'use strict';
+import importPricingRepository from '../../repositories/import/importPricingRepository';
 
-    var importPricingRepository = require('../../repositories/import/importPricingRepository');
-
-    var create = function(price){
-        return importPricingRepository.create(price);
-    };
+var create = function(price){
+    return importPricingRepository.create(price);
+};
 
 
-    module.exports = {
-        create: create
-    }
-
-}());
+export default {
+    create: create
+};

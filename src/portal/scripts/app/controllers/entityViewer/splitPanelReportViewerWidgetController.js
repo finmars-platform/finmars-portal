@@ -1,8 +1,7 @@
-const EntityViewerDataService = require('../../services/entityViewerDataService');
-const EntityViewerEventService = require('../../services/eventService');
-const SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
-
-const evEvents = require('../../services/entityViewerEvents');
+import EntityViewerDataService from '../../services/entityViewerDataService';
+import EntityViewerEventService from '../../services/eventService';
+import SplitPanelExchangeService from '../../services/groupTable/exchangeWithSplitPanelService';
+import evEvents from '../../services/entityViewerEvents';
 
 export default function ($scope, $uiRouterGlobals, metaContentTypesService) {
 

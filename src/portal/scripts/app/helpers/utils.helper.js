@@ -1,490 +1,481 @@
-/**
- * Module contains different useful functions
- * @module UtilsHelper
- */
-(function () {
+'use strict';
 
-    'use strict';
+// var metaHelper = require('./meta.helper');
 
-    // var metaHelper = require('./meta.helper');
+function debounce(func, wait, immediate) {
 
-    function debounce(func, wait, immediate) {
-
-        var timeout;
-        return function () {
-            var context = this, args = arguments;
-            var later = function () {
-                timeout = null;
-                if (!immediate) func.apply(context, args);
-            };
-            var callNow = immediate && !timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-            if (callNow) func.apply(context, args);
+    var timeout;
+    return function () {
+        var context = this, args = arguments;
+        var later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
         };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
 
-    }
+}
 
-    /**
-     *
-     * @param fn {Function}
-     * @param wait {number} - milliseconds to wait
-     * @param [options] {Object}
-     * @param {boolean} [options.trailing=true] - execute fn on its last call after wait time
-     * @returns {(function(): void)|*}
-     */
-    function throttle(fn, wait, options) {
+/**
+ *
+ * @param fn {Function}
+ * @param wait {number} - milliseconds to wait
+ * @param [options] {Object}
+ * @param {boolean} [options.trailing=true] - execute fn on its last call after wait time
+ * @returns {(function(): void)|*}
+ */
+function throttle(fn, wait, options) {
 
-        var time = Date.now();
-        var timeout = null;
-        options = options || {};
+    var time = Date.now();
+    var timeout = null;
+    options = options || {};
 
-        return function () {
-            var waitRemains = time + wait - Date.now();
+    return function () {
+        var waitRemains = time + wait - Date.now();
 
-            if (waitRemains < 0) {
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = null;
-                }
+        if (waitRemains < 0) {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = null;
+            }
+            fn();
+            time = Date.now();
+        } else if (options.trailing !== false && !timeout && waitRemains > 0) {
+            timeout = setTimeout(function () {
+                timeout = null;
                 fn();
                 time = Date.now();
-            } else if (options.trailing !== false && !timeout && waitRemains > 0) {
-                timeout = setTimeout(function () {
-                    timeout = null;
-                    fn();
-                    time = Date.now();
-                }, waitRemains);
-            }
-        };
-    }
+            }, waitRemains);
+        }
+    };
+}
 
-    function floor10(value, exp) {
-        return decimalAdjust('floor', value, exp);
-    }
+function floor10(value, exp) {
+    return decimalAdjust('floor', value, exp);
+}
 
-    // Old method, not efficient
-    // function flattenTree(root, key) {
-    //
-    //     var flatten = [Object.assign({}, root)];
-    //     // delete flatten[0][key];
-    //
-    //     if (root[key] && root[key].length > 0) {
-    //         return flatten.concat(root[key]
-    //             .map(function (child) {
-    //                 return flattenTree(child, key)
-    //             })
-    //             .reduce(function (a, b) {
-    //                 return a.concat(b)
-    //             }, [])
-    //         );
-    //     }
-    //
-    //     return flatten;
-    // }
+// Old method, not efficient
+// function flattenTree(root, key) {
+//
+//     var flatten = [Object.assign({}, root)];
+//     // delete flatten[0][key];
+//
+//     if (root[key] && root[key].length > 0) {
+//         return flatten.concat(root[key]
+//             .map(function (child) {
+//                 return flattenTree(child, key)
+//             })
+//             .reduce(function (a, b) {
+//                 return a.concat(b)
+//             }, [])
+//         );
+//     }
+//
+//     return flatten;
+// }
 
-    function flattenTree(root, key) {
-        const stack = [root];
-        const result = [];
+function flattenTree(root, key) {
+    const stack = [root];
+    const result = [];
 
-        while (stack.length) {
-            const node = stack.pop();
+    while (stack.length) {
+        const node = stack.pop();
 
-            if (node) {
-                result.push(Object.assign({}, node));
+        if (node) {
+            result.push(Object.assign({}, node));
 
-                if (node[key]) {
-                    for (let i = node[key].length - 1; i >= 0; i--) {
-                        stack.push(node[key][i]);
-                    }
+            if (node[key]) {
+                for (let i = node[key].length - 1; i >= 0; i--) {
+                    stack.push(node[key][i]);
                 }
             }
         }
-
-        return result;
     }
 
-    function insertItemInNode(list, map, node, data) {
+    return result;
+}
 
-        var index = 0;
+function insertItemInNode(list, map, node, data) {
 
-        data[node.___parentId].results.forEach(function (item, i) {
+    var index = 0;
 
-            if (item && item.___id === node.___id) {
-                index = i;
-            }
+    data[node.___parentId].results.forEach(function (item, i) {
 
-        });
-
-        list[map[node.___parentId]].results[index] = node;
-
-    }
-
-    function convertToTree(data, rootGroup, optimize) {
-
-        var list = [];
-
-        for (const item of rootGroup.results) {
-            if (!data[item.___id]) {
-
-                if (item.___type === 'group' || item.___type === 'placeholder_group') {
-                    data[item.___id] = item;
-                }
-            }
+        if (item && item.___id === node.___id) {
+            index = i;
         }
 
-        /** Index of a group or an object inside the array `results`
-         * of their parent group */
-        var indicesInsideParentData = {
-            [rootGroup.___id]: null
-        };
+    });
 
-        Object.keys(data).forEach(function (key) {
+    list[map[node.___parentId]].results[index] = node;
 
-            if (data[key].___type === 'group' || data[key].___type === 'placeholder_group') {
+}
 
-                if ( data[key].hasOwnProperty('results') ) {
+function convertToTree(data, rootGroup, optimize) {
 
-                    data[key].results.forEach(function (item, index) {
+    var list = [];
 
-                        indicesInsideParentData[item.___id] = index;
+    for (const item of rootGroup.results) {
+        if (!data[item.___id]) {
 
-                        try { // temporary for debugging plat691
+            if (item.___type === 'group' || item.___type === 'placeholder_group') {
+                data[item.___id] = item;
+            }
+        }
+    }
 
-                            if (!data[item.___id]) {
-                                data[item.___id] = item;
-                            }
+    /** Index of a group or an object inside the array `results`
+     * of their parent group */
+    var indicesInsideParentData = {
+        [rootGroup.___id]: null
+    };
 
-                        } catch (e) {
+    Object.keys(data).forEach(function (key) {
 
-                            console.error(
-                                `plat691 [utilsHelper.convertToTree] ` +
-                                "data " +
-                                JSON.parse(JSON.stringify(data))
-                            );
-                            console.error(
-                                `plat691 [utilsHelper.convertToTree] ` +
-                                "key, data[key] " +
-                                key, JSON.parse(JSON.stringify( data[key] ))
-                            );
-                            console.error(
-                                `plat691 [utilsHelper.convertToTree] ` +
-                                `item index ${index}`
-                            );
-                            throw e;
+        if (data[key].___type === 'group' || data[key].___type === 'placeholder_group') {
+
+            if ( data[key].hasOwnProperty('results') ) {
+
+                data[key].results.forEach(function (item, index) {
+
+                    indicesInsideParentData[item.___id] = index;
+
+                    try { // temporary for debugging plat691
+
+                        if (!data[item.___id]) {
+                            data[item.___id] = item;
                         }
 
-                    });
+                    } catch (e) {
 
-
-                }
-
-            }
-
-        });
-
-        console.timeEnd("convertToTree.thirdLoop");
-
-        // var extendedKeys = Object.keys(data);
-
-        console.time("convertToTree.forthLoop");
-
-        // console.log('convertToTree.extendedKeys', extendedKeys)
-        // performance update
-
-        /** Used to find index of a group or an object inside `list` by its ___id  */
-        var listMap = {};
-        var typeSpecificProps = [
-            "___is_selected",
-            "___subtotal_type",
-            "___items_count",
-            "___group_name",
-            "___is_open",
-            "___has_selected_child",
-            "___group_identifier",
-        ];
-
-        Object.keys(indicesInsideParentData).forEach(function (key) {
-
-            if ( data[key].___id !== rootGroup.___id &&
-                !indicesInsideParentData[data[key].___id] &&
-                indicesInsideParentData[data[key].___id] !== 0 ) {
-
-                console.error(`[utilsHelper convertToTree] Unable to find index inside the parent for the node: `, node);
-
-            }
-
-            var listItem = {
-                ___tree_index: indicesInsideParentData[key],
-                ___id: data[key].___id,
-                ___parentId: data[key].___parentId,
-                ___level: data[key].___level,
-                ___type: data[key].___type,
-            };
-
-            typeSpecificProps.forEach(function (prop) {
-
-                if ( data[key].hasOwnProperty(prop) ) {
-                    listItem[prop] = data[key][prop]
-                }
-
-            })
-
-            if (
-                (data[key].___type === 'group' || data[key].___type === 'placeholder_group') &&
-                data[key].hasOwnProperty('results')
-            ) {
-
-                listItem.results = [];
-
-            }
-
-            listMap[listItem.___id] = list.length;
-
-            list.push(listItem);
-
-        });
-
-        console.timeEnd("convertToTree.forthLoop");
-
-        console.time("convertToTree.toTree");
-
-        var node, roots = [];
-        var i;
-        for (i = 0; i < list.length; i += 1) {
-            node = list[i];
-
-            if (node.___id !== rootGroup.___id) {
-
-                var parentListIndex = listMap[node.___parentId];
-
-                if ( !parentListIndex && parentListIndex !== 0 ) {
-                    console.error(`[utilsHelper convertToTree] Unable to identify index inside list for the parent of: `, node);
-                }
-
-                if ( !list[parentListIndex] ) {
-                    console.error(`[utilsHelper convertToTree] Can not find parent for: `, node);
-                }
-
-                // verify `___type`, `___subtotal_type`, `___subtotal_subtype`
-
-
-                if ( list[parentListIndex]?.results ) {
-                    list[parentListIndex].results.splice(node.___tree_index, 0, node);
-                }
-
-                /* TODO: if everything alright delete in release 1.17.0
-
-                if (node.___type === 'group' || node.___type === 'placeholder_group') {
-                    // insertItemInNode(list, map, node, dataOrderReference)
-                    list[map[node.___parentId]].results[node.___index] = node;
-                } else if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'control') {
-                    list[map[node.___parentId]].results.push(node)
-                } else if (node.___type === 'blankline' && node.___blankline_type === 'area') {
-
-                    list[map[node.___parentId]].results.push(node)
-
-                } else if (node.___type === 'subtotal' && node.___subtotal_type === 'proxyline') {
-                    list[map[node.___parentId]].results.unshift(node)
-                } else if (node.___type === 'subtotal' && node.___subtotal_type === 'line') {
-                    list[map[node.___parentId]].results.unshift(node)
-                } else if (node.___type === 'subtotal' && node.___subtotal_type === 'area') {
-                    list[map[node.___parentId]].results.push(node)
-                } else if (node.___type === 'subtotal' && node.___subtotal_type === 'arealine') {
-
-                    if (node.___subtotal_subtype === 'line') {
-                        list[map[node.___parentId]].results.unshift(node)
-                    } else if (node.___subtotal_subtype === 'area') {
-                        list[map[node.___parentId]].results.push(node)
+                        console.error(
+                            `plat691 [utilsHelper.convertToTree] ` +
+                            "data " +
+                            JSON.parse(JSON.stringify(data))
+                        );
+                        console.error(
+                            `plat691 [utilsHelper.convertToTree] ` +
+                            "key, data[key] " +
+                            key, JSON.parse(JSON.stringify( data[key] ))
+                        );
+                        console.error(
+                            `plat691 [utilsHelper.convertToTree] ` +
+                            `item index ${index}`
+                        );
+                        throw e;
                     }
 
-                }
-                else if (node.___type === 'control') {
+                });
 
-                    list[map[node.___parentId]].results.push(node)
-
-                }*/
-
-            } else {
-
-                roots.push(node);
 
             }
+
         }
 
-        console.timeEnd("convertToTree.toTree");
+    });
 
-        return roots[0];
+    console.timeEnd("convertToTree.thirdLoop");
 
-    }
+    // var extendedKeys = Object.keys(data);
 
-    function convertTreeToList(tree) {
-        return flattenTree(tree, 'results');
-    }
+    console.time("convertToTree.forthLoop");
 
-    /**
-     * Use only when creating flat list. E.g. inside `rvDataHelper.getFlatStructure`.
-     * CAREFUL! Mutates `data`. Even shallow copying is not used
-     * to increase performance.
-     *
-     * @param { [{}] } list
-     * @param {Object} data
-     * @return { [{}] }
-     */
-    function fillListWithData(list, data) {
+    // console.log('convertToTree.extendedKeys', extendedKeys)
+    // performance update
 
-        // console.log('fillListWithData', data);
+    /** Used to find index of a group or an object inside `list` by its ___id  */
+    var listMap = {};
+    var typeSpecificProps = [
+        "___is_selected",
+        "___subtotal_type",
+        "___items_count",
+        "___group_name",
+        "___is_open",
+        "___has_selected_child",
+        "___group_identifier",
+    ];
 
-        list = list.map(function (item) {
+    Object.keys(indicesInsideParentData).forEach(function (key) {
 
-            delete data[item.___id].___fromData;
+        if ( data[key].___id !== rootGroup.___id &&
+            !indicesInsideParentData[data[key].___id] &&
+            indicesInsideParentData[data[key].___id] !== 0 ) {
 
-            return data[item.___id];
+            console.error(`[utilsHelper convertToTree] Unable to find index inside the parent for the node: `, node);
+
+        }
+
+        var listItem = {
+            ___tree_index: indicesInsideParentData[key],
+            ___id: data[key].___id,
+            ___parentId: data[key].___parentId,
+            ___level: data[key].___level,
+            ___type: data[key].___type,
+        };
+
+        typeSpecificProps.forEach(function (prop) {
+
+            if ( data[key].hasOwnProperty(prop) ) {
+                listItem[prop] = data[key][prop]
+            }
 
         })
 
-        return list
-    }
+        if (
+            (data[key].___type === 'group' || data[key].___type === 'placeholder_group') &&
+            data[key].hasOwnProperty('results')
+        ) {
 
-    function toNextLevel(item, result) {
-
-        if (item.hasOwnProperty('results')) {
-
-            result[item.___id] = item;
-
-            item.results.forEach(function (child) {
-
-                toNextLevel(child, result);
-
-            })
+            listItem.results = [];
 
         }
 
-    }
+        listMap[listItem.___id] = list.length;
 
-    function convertTreeToTreeList(tree) {
+        list.push(listItem);
 
-        var resultAsObj = {};
-        var result = [];
+    });
 
-        toNextLevel(tree, resultAsObj);
+    console.timeEnd("convertToTree.forthLoop");
 
-        // console.log('convertTreeToTreeList.resultAsObj', resultAsObj);
+    console.time("convertToTree.toTree");
 
-        Object.keys(resultAsObj).forEach(function (key) {
-            result.push(resultAsObj[key]);
-        });
+    var node, roots = [];
+    var i;
+    for (i = 0; i < list.length; i += 1) {
+        node = list[i];
 
-        // console.log('convertTreeToTreeList.result', resultAsObj);
+        if (node.___id !== rootGroup.___id) {
 
-        return result;
+            var parentListIndex = listMap[node.___parentId];
 
-    }
-
-    function orderSort(property, sortOrder) {
-
-        return function (a, b) {
-
-            if (a[property] === null || a[property] === undefined) {
-                return 1 * sortOrder;
-            }
-            if (b[property] === null || b[property] === undefined) {
-                return -1 * sortOrder;
+            if ( !parentListIndex && parentListIndex !== 0 ) {
+                console.error(`[utilsHelper convertToTree] Unable to identify index inside list for the parent of: `, node);
             }
 
-            if (a[property] < b[property]) {
-                return -1 * sortOrder
+            if ( !list[parentListIndex] ) {
+                console.error(`[utilsHelper convertToTree] Can not find parent for: `, node);
             }
 
-            if (a[property] > b[property]) {
-                return 1 * sortOrder
+            // verify `___type`, `___subtotal_type`, `___subtotal_subtype`
+
+
+            if ( list[parentListIndex]?.results ) {
+                list[parentListIndex].results.splice(node.___tree_index, 0, node);
             }
 
-        }
+            /* TODO: if everything alright delete in release 1.17.0
 
-    }
+            if (node.___type === 'group' || node.___type === 'placeholder_group') {
+                // insertItemInNode(list, map, node, dataOrderReference)
+                list[map[node.___parentId]].results[node.___index] = node;
+            } else if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'control') {
+                list[map[node.___parentId]].results.push(node)
+            } else if (node.___type === 'blankline' && node.___blankline_type === 'area') {
 
-    const sortItems = function (items, property) {
+                list[map[node.___parentId]].results.push(node)
 
-        var sortOrder = 1;
-        if (property[0] === "-") {
-            sortOrder = -1;
-            property = property.substr(1);
-        }
+            } else if (node.___type === 'subtotal' && node.___subtotal_type === 'proxyline') {
+                list[map[node.___parentId]].results.unshift(node)
+            } else if (node.___type === 'subtotal' && node.___subtotal_type === 'line') {
+                list[map[node.___parentId]].results.unshift(node)
+            } else if (node.___type === 'subtotal' && node.___subtotal_type === 'area') {
+                list[map[node.___parentId]].results.push(node)
+            } else if (node.___type === 'subtotal' && node.___subtotal_type === 'arealine') {
 
-        return items.sort(orderSort(property, sortOrder))
-
-    };
-
-    // comparator for orderBy which set empty item last
-    const emptyLastComparator = (v1, v2) => {
-
-        // If we don't get strings, just compare by index
-        if (v1.type !== 'string' || v2.type !== 'string') {
-            return (v1.index < v2.index) ? -1 : 1;
-        }
-
-        if (v1.value === '') {
-            return 1
-        }
-
-        if (v2.value === '') {
-            return -1;
-        }
-
-        return v1.value.toLowerCase() < v2.value.toLowerCase() ? -1 : 1;
-    };
-
-
-    function isEqual(value1, value2) {
-        if (typeof value1 !== typeof value2) return false;
-        if (typeof value1 === 'object' && value1 !== null && value2 !== null) {
-            if (Array.isArray(value1)) {
-                if (!Array.isArray(value2) || value1.length !== value2.length) return false;
-                for (let i = 0; i < value1.length; i++) {
-                    if (!isEqual(value1[i], value2[i])) return false;
+                if (node.___subtotal_subtype === 'line') {
+                    list[map[node.___parentId]].results.unshift(node)
+                } else if (node.___subtotal_subtype === 'area') {
+                    list[map[node.___parentId]].results.push(node)
                 }
-                return true;
-            } else {
-                const keys1 = Object.keys(value1);
-                const keys2 = Object.keys(value2);
-                if (keys1.length !== keys2.length) return false;
-                for (const key of keys1) {
-                    if (!keys2.includes(key) || !isEqual(value1[key], value2[key])) return false;
-                }
-                return true;
+
+            }
+            else if (node.___type === 'control') {
+
+                list[map[node.___parentId]].results.push(node)
+
+            }*/
+
+        } else {
+
+            roots.push(node);
+
+        }
+    }
+
+    console.timeEnd("convertToTree.toTree");
+
+    return roots[0];
+
+}
+
+function convertTreeToList(tree) {
+    return flattenTree(tree, 'results');
+}
+
+/**
+ * Use only when creating flat list. E.g. inside `rvDataHelper.getFlatStructure`.
+ * CAREFUL! Mutates `data`. Even shallow copying is not used
+ * to increase performance.
+ *
+ * @param { [{}] } list
+ * @param {Object} data
+ * @return { [{}] }
+ */
+function fillListWithData(list, data) {
+
+    // console.log('fillListWithData', data);
+
+    list = list.map(function (item) {
+
+        delete data[item.___id].___fromData;
+
+        return data[item.___id];
+
+    })
+
+    return list
+}
+
+function toNextLevel(item, result) {
+
+    if (item.hasOwnProperty('results')) {
+
+        result[item.___id] = item;
+
+        item.results.forEach(function (child) {
+
+            toNextLevel(child, result);
+
+        })
+
+    }
+
+}
+
+function convertTreeToTreeList(tree) {
+
+    var resultAsObj = {};
+    var result = [];
+
+    toNextLevel(tree, resultAsObj);
+
+    // console.log('convertTreeToTreeList.resultAsObj', resultAsObj);
+
+    Object.keys(resultAsObj).forEach(function (key) {
+        result.push(resultAsObj[key]);
+    });
+
+    // console.log('convertTreeToTreeList.result', resultAsObj);
+
+    return result;
+
+}
+
+function orderSort(property, sortOrder) {
+
+    return function (a, b) {
+
+        if (a[property] === null || a[property] === undefined) {
+            return 1 * sortOrder;
+        }
+        if (b[property] === null || b[property] === undefined) {
+            return -1 * sortOrder;
+        }
+
+        if (a[property] < b[property]) {
+            return -1 * sortOrder
+        }
+
+        if (a[property] > b[property]) {
+            return 1 * sortOrder
+        }
+
+    }
+
+}
+
+const sortItems = function (items, property) {
+
+    var sortOrder = 1;
+    if (property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+
+    return items.sort(orderSort(property, sortOrder))
+
+};
+
+// comparator for orderBy which set empty item last
+const emptyLastComparator = (v1, v2) => {
+
+    // If we don't get strings, just compare by index
+    if (v1.type !== 'string' || v2.type !== 'string') {
+        return (v1.index < v2.index) ? -1 : 1;
+    }
+
+    if (v1.value === '') {
+        return 1
+    }
+
+    if (v2.value === '') {
+        return -1;
+    }
+
+    return v1.value.toLowerCase() < v2.value.toLowerCase() ? -1 : 1;
+};
+
+
+function isEqual(value1, value2) {
+    if (typeof value1 !== typeof value2) return false;
+    if (typeof value1 === 'object' && value1 !== null && value2 !== null) {
+        if (Array.isArray(value1)) {
+            if (!Array.isArray(value2) || value1.length !== value2.length) return false;
+            for (let i = 0; i < value1.length; i++) {
+                if (!isEqual(value1[i], value2[i])) return false;
+            }
+            return true;
+        } else {
+            const keys1 = Object.keys(value1);
+            const keys2 = Object.keys(value2);
+            if (keys1.length !== keys2.length) return false;
+            for (const key of keys1) {
+                if (!keys2.includes(key) || !isEqual(value1[key], value2[key])) return false;
+            }
+            return true;
+        }
+    }
+    return value1 === value2;
+}
+
+function hasStateChanged(oldState, newState, fieldsToCompare) {
+
+    if (fieldsToCompare) {
+        for (const field of fieldsToCompare) {
+            if (!isEqual(oldState[field], newState[field])) {
+                return true; // Change detected
             }
         }
-        return value1 === value2;
     }
 
-    function hasStateChanged(oldState, newState, fieldsToCompare) {
+    return false; // No changes detected
+}
 
-        if (fieldsToCompare) {
-            for (const field of fieldsToCompare) {
-                if (!isEqual(oldState[field], newState[field])) {
-                    return true; // Change detected
-                }
-            }
-        }
+export default {
+    floor10: floor10,
+    debounce: debounce,
+    throttle: throttle,
+    convertToTree: convertToTree,
+    convertTreeToList: convertTreeToList,
+    fillListWithData: fillListWithData,
+    convertTreeToTreeList: convertTreeToTreeList,
 
-        return false; // No changes detected
-    }
-
-    module.exports = {
-        floor10: floor10,
-        debounce: debounce,
-        throttle: throttle,
-        convertToTree: convertToTree,
-        convertTreeToList: convertTreeToList,
-        fillListWithData: fillListWithData,
-        convertTreeToTreeList: convertTreeToTreeList,
-
-        sortItems: sortItems,
-        emptyLastComparator: emptyLastComparator,
-        isEqual: isEqual,
-        hasStateChanged: hasStateChanged
-    }
-
-
-}());
+    sortItems: sortItems,
+    emptyLastComparator: emptyLastComparator,
+    isEqual: isEqual,
+    hasStateChanged: hasStateChanged
+};

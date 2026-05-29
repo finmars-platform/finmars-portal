@@ -1,50 +1,42 @@
-/**
- * Created by szhitenev on 21.10.2023.
- */
-(function () {
+'use strict';
 
-    'use strict';
+export function getAttributes() {
+    return [
+        {
+            "key": "name",
+            "name": "Name",
+            "value_type": 10
+        },
+        {
+            "key": "short_name",
+            "name": "Short name",
+            "value_type": 10
+        },
+        {
+            "key": "user_code",
+            "name": "User code",
+            "value_type": 10
+        },
+        {
+            "key": "public_name",
+            "name": "Public name",
+            "value_type": 10
+        },
+        {
+            "key": "notes",
+            "name": "Notes",
+            "value_type": 10
+        },
+        {
+            "key": "configuration_code",
+            "name": "Configuration code",
+            "value_type": 10
+        },
+    ]
+};
 
-    var getAttributes = function () {
-        return [
-            {
-                "key": "name",
-                "name": "Name",
-                "value_type": 10
-            },
-            {
-                "key": "short_name",
-                "name": "Short name",
-                "value_type": 10
-            },
-            {
-                "key": "user_code",
-                "name": "User code",
-                "value_type": 10
-            },
-            {
-                "key": "public_name",
-                "name": "Public name",
-                "value_type": 10
-            },
-            {
-                "key": "notes",
-                "name": "Notes",
-                "value_type": 10
-            },
-            {
-                "key": "configuration_code",
-                "name": "Configuration code",
-                "value_type": 10
-            },
-        ]
-    };
+export default {
 
-    module.exports = {
+    getAttributes: getAttributes
 
-        getAttributes: getAttributes
-
-    }
-
-
-}())
+};

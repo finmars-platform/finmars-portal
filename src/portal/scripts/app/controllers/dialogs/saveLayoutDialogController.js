@@ -1,15 +1,11 @@
-(function () {
+'use strict';
 
-    'use strict';
+export default function ($scope, $mdDialog) {
 
-    module.exports = function ($scope, $mdDialog) {
+    var vm = this;
 
-    	var vm = this;
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-    }
-
-}());
+};

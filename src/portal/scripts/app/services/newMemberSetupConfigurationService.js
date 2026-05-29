@@ -1,142 +1,133 @@
-/**
- * Created by szhitenev on 28.04.2023.
- */
-// import baseUrlService from "../services/baseUrlService";
-(function () {
+import baseUrlService from "../services/baseUrlService";
+import cookieService from '../../../../core/services/cookieService';
+import configureRepositoryUrlService from '../services/configureRepositoryUrlService';
+// var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrlService = require("../services/baseUrlService").default;
-    var cookieService = require('../../../../core/services/cookieService').default;
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService').default;
-    // var baseUrlService = require('../services/baseUrlService');
+var baseUrl = baseUrlService.resolve();
 
-    var baseUrl = baseUrlService.resolve();
-
-    var getList = function () {
+var getList = function () {
 
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/?page_size=1000', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
+    // TODO change fetch to universal fetch
+    return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/?page_size=1000', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    }).then(function (data) {
+        return data.json();
+    })
 
-    };
+};
 
-    var getByKey = function (id) {
+var getByKey = function (id) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/' + id + '/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
+    // TODO change fetch to universal fetch
+    return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/' + id + '/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    }).then(function (data) {
+        return data.json();
+    })
 
-    };
+};
 
-    var create = function (data) {
+var create = function (data) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-            },
-            body: data
-        }).then(function (data) {
-            return data.json();
-        })
+    // TODO change fetch to universal fetch
+    return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+        },
+        body: data
+    }).then(function (data) {
+        return data.json();
+    })
 
-    };
+};
 
-    var update = function (id, data) {
+var update = function (id, data) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/' + id + '/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token')
-            },
-            body: data
-        }).then(function (data) {
-            return data.json();
-        })
+    // TODO change fetch to universal fetch
+    return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/' + id + '/', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token')
+        },
+        body: data
+    }).then(function (data) {
+        return data.json();
+    })
 
-    };
+};
 
-    var deleteByKey = function (id) {
+var deleteByKey = function (id) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/' + id + '/', {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
+    // TODO change fetch to universal fetch
+    return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/' + id + '/', {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 
-    };
+};
 
-    var install = function (id, data) {
+var install = function (id, data) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/' + id + '/install/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(function (data) {
-            return data.json();
-        })
+    // TODO change fetch to universal fetch
+    return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/new-member-setup-configuration/' + id + '/install/', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(function (data) {
+        return data.json();
+    })
 
-    };
+};
 
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
-        install: install
-    }
-
-
-}());
+export default {
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey,
+    install: install
+};

@@ -1,3 +1,9 @@
+import metaHelper from "../../helpers/meta.helper";
+import EventService from '../../services/eventService'
+import metaService from '../../services/metaService'
+import directivesEvent from '../../services/events/directivesEvents';
+
+import utilsHelper from "../../helpers/utils.helper";
 /**
  *
  * @param {String} userCode
@@ -37,15 +43,10 @@ const splitUserCode = function (userCode) {
 
 }
 
-const metaHelper = require("../../helpers/meta.helper");
 
 export default function (metaContentTypesService, globalDataService) {
 
-	const EventService = require("../../services/eventService");
-	const metaService = require("../../services/metaService").default;
-	const directivesEvent = require("../../services/events/directivesEvents");
 
-	const utilsHelper = require("../../helpers/utils.helper");
 
 	return {
 		restrict: "E",

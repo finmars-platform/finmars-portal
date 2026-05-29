@@ -1,212 +1,205 @@
-/**
- * Created by mevstratov on 02.08.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import metaService from '../../services/metaService';
 
-    var metaService = require('../../services/metaService').default;
+export default function ($scope, $mdDialog, metaContentTypesService, uiService, options) {
 
-    module.exports = function ($scope, $mdDialog, metaContentTypesService, uiService, options) {
+    console.log('selectLayoutDialogController.options', options);
 
-        console.log('selectLayoutDialogController.options', options);
+    var vm = this;
 
-        var vm = this;
+    var layoutsToLoad = options.entityType || 'all';
 
-        var layoutsToLoad = options.entityType || 'all';
+    vm.items = [];
 
-        vm.items = [];
+    vm.dialogTitle = options.dialogTitle || "Select layout";
 
-        vm.dialogTitle = options.dialogTitle || "Select layout";
+    vm.noFolding = options.noFolding;
 
-        vm.noFolding = options.noFolding;
+    vm.collapsingGroups = {
+        "reports.balancereport": false,
+        "reports.plreport": false,
+        "reports.transactionreport": false,
+        "portfolios.portfolio": false,
+        "accounts.account": false,
+        "accounts.accounttype": false,
+        "instruments.instrument": false,
+        "instruments.instrumenttype": false,
+        "instruments.pricingpolicy": false,
+        "instruments.pricehistory": false,
+        "transactions.transaction": false,
+        "transactions.complextransaction": false,
+        "transactions.transactiontype": false,
+        "transactions.transactiontypegroup": false,
+        "counterparties.responsible": false,
+        "counterparties.responsiblegroup": false,
+        "counterparties.counterparty": false,
+        "counterparties.counterpartygroup": false,
+        "currencies.currency": false,
+        "strategies.strategy1": false,
+        "strategies.strategy1subgroup": false,
+        "strategies.strategy2": false,
+        "strategies.strategy2subgroup": false,
+        "strategies.strategy3": false,
+        "strategies.strategy3subgroup": false
+    };
 
-        vm.collapsingGroups = {
-            "reports.balancereport": false,
-            "reports.plreport": false,
-            "reports.transactionreport": false,
-            "portfolios.portfolio": false,
-            "accounts.account": false,
-            "accounts.accounttype": false,
-            "instruments.instrument": false,
-            "instruments.instrumenttype": false,
-            "instruments.pricingpolicy": false,
-            "instruments.pricehistory": false,
-            "transactions.transaction": false,
-            "transactions.complextransaction": false,
-            "transactions.transactiontype": false,
-            "transactions.transactiontypegroup": false,
-            "counterparties.responsible": false,
-            "counterparties.responsiblegroup": false,
-            "counterparties.counterparty": false,
-            "counterparties.counterpartygroup": false,
-            "currencies.currency": false,
-            "strategies.strategy1": false,
-            "strategies.strategy1subgroup": false,
-            "strategies.strategy2": false,
-            "strategies.strategy2subgroup": false,
-            "strategies.strategy3": false,
-            "strategies.strategy3subgroup": false
-        };
+    function contentTypeToState(contentType) {
 
-        function contentTypeToState(contentType) {
+        var result = '';
 
-            var result = '';
+        metaContentTypesService.getListForUi().forEach(function (item) {
 
-            metaContentTypesService.getListForUi().forEach(function (item) {
+            if (item.key == contentType) {
 
-                if (item.key == contentType) {
-
-                    if (contentType.indexOf('reports') == 0) {
-                        result = 'app.portal.reports.' + item.entity;
-                    } else {
-                        result = 'app.portal.data.' + item.entity;
-                    }
+                if (contentType.indexOf('reports') == 0) {
+                    result = 'app.portal.reports.' + item.entity;
+                } else {
+                    result = 'app.portal.data.' + item.entity;
                 }
-
-            });
-
-            return result;
-        }
-
-        var setAttributeManagerContainersHeight = function () { // for collapse animation
-
-            var resizableLayoutsWrapList = document.querySelectorAll('.cb1-resizing-wrap');
-
-            for (var i = 0; i < resizableLayoutsWrapList.length; i++) {
-
-                var layoutsWrap = resizableLayoutsWrapList[i];
-                var layoutsHolder = layoutsWrap.querySelector('.select-layouts-layouts-holder');
-
-                var layoutsHolderHeight = layoutsHolder.clientHeight + 'px';
-                layoutsWrap.style.height = layoutsHolderHeight;
             }
 
-        };
-
-        metaService.getContentGroups('entityLayoutsGroups').then(function (data) {
-            vm.groups = data
         });
 
-        vm.readyStatus = {content: false};
+        return result;
+    }
 
-        var loadOptions = {
-            pageSize: 1000,
-            page: 1,
-            sort: {
-                key: 'content_type',
-                direction: 'DSC'
-            }
-        };
+    var setAttributeManagerContainersHeight = function () { // for collapse animation
 
-        vm.selectedLayoutId = null;
+        var resizableLayoutsWrapList = document.querySelectorAll('.cb1-resizing-wrap');
 
-        vm.expandAll = function () {
-            var keys = Object.keys(vm.collapsingGroups);
+        for (var i = 0; i < resizableLayoutsWrapList.length; i++) {
 
-            keys.forEach(function (key) {
-                vm.collapsingGroups[key] = false;
-            });
-        };
+            var layoutsWrap = resizableLayoutsWrapList[i];
+            var layoutsHolder = layoutsWrap.querySelector('.select-layouts-layouts-holder');
 
-        vm.collapseAll = function () {
-            var keys = Object.keys(vm.collapsingGroups);
+            var layoutsHolderHeight = layoutsHolder.clientHeight + 'px';
+            layoutsWrap.style.height = layoutsHolderHeight;
+        }
 
-            keys.forEach(function (key) {
-                vm.collapsingGroups[key] = true;
-            });
-        };
+    };
 
-        var getLayouts = function () {
+    metaService.getContentGroups('entityLayoutsGroups').then(function (data) {
+        vm.groups = data
+    });
 
-            uiService.getListLayout(layoutsToLoad, loadOptions).then(function (data) {
+    vm.readyStatus = {content: false};
 
-                vm.items = vm.items.concat(data.results);
+    var loadOptions = {
+        pageSize: 1000,
+        page: 1,
+        sort: {
+            key: 'content_type',
+            direction: 'DSC'
+        }
+    };
 
-                if (data.next) {
+    vm.selectedLayoutId = null;
 
-                    loadOptions.page = loadOptions.page + 1;
-                    getLayouts();
+    vm.expandAll = function () {
+        var keys = Object.keys(vm.collapsingGroups);
 
-                } else {
+        keys.forEach(function (key) {
+            vm.collapsingGroups[key] = false;
+        });
+    };
 
-                    var i,c;
-                    for (i = 0; i < vm.items.length; i++) {
-                        var item = vm.items[i];
+    vm.collapseAll = function () {
+        var keys = Object.keys(vm.collapsingGroups);
 
-                        if (Array.isArray(item.data.filters)) {
-                            var f;
-                            for (f = 0; f < item.data.filters.length; f++) {
-                                var filter = item.data.filters[f];
+        keys.forEach(function (key) {
+            vm.collapsingGroups[key] = true;
+        });
+    };
 
-                                if (filter.options.hasOwnProperty('use_from_above')) {
-                                    item.hasUseFromAboveFilter = true;
-                                    break;
-                                }
+    var getLayouts = function () {
 
-                            }
-                        }
+        uiService.getListLayout(layoutsToLoad, loadOptions).then(function (data) {
 
-                        for (c = 0; c < vm.groups.length; c++) {
-                            if (item.content_type === vm.groups[c].key) {
-                                vm.groups[c].content.push(item);
+            vm.items = vm.items.concat(data.results);
+
+            if (data.next) {
+
+                loadOptions.page = loadOptions.page + 1;
+                getLayouts();
+
+            } else {
+
+                var i,c;
+                for (i = 0; i < vm.items.length; i++) {
+                    var item = vm.items[i];
+
+                    if (Array.isArray(item.data.filters)) {
+                        var f;
+                        for (f = 0; f < item.data.filters.length; f++) {
+                            var filter = item.data.filters[f];
+
+                            if (filter.options.hasOwnProperty('use_from_above')) {
+                                item.hasUseFromAboveFilter = true;
                                 break;
                             }
+
                         }
                     }
 
-                    vm.readyStatus.content = true;
-                    $scope.$apply();
-                    setAttributeManagerContainersHeight();
+                    for (c = 0; c < vm.groups.length; c++) {
+                        if (item.content_type === vm.groups[c].key) {
+                            vm.groups[c].content.push(item);
+                            break;
+                        }
+                    }
                 }
 
-            });
-
-        };
-
-        vm.setLRWHeight = function () {
-            setTimeout(function () {
+                vm.readyStatus.content = true;
+                $scope.$apply();
                 setAttributeManagerContainersHeight();
-            }, 100);
-        };
-
-        vm.selectLayout = function (item) {
-            vm.selectedLayoutId = item.id;
-            vm.selectedContentType = item.content_type;
-            vm.selectedLayoutName = item.name;
-        };
-
-        vm.isSelectedLayout = function (layoutId) {
-
-            if (vm.selectedLayoutId === layoutId) {
-                return true;
             }
 
-            return false;
-        };
+        });
 
-        vm.agree = function () {
-            $mdDialog.hide({
-                status: 'agree',
-                data: {listLayoutId: vm.selectedLayoutId,
-                    state: contentTypeToState(vm.selectedContentType),
-                    name: vm.selectedLayoutName,
-                    content_type: vm.selectedContentType}
-            });
-        };
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.setLRWHeight = function () {
+        setTimeout(function () {
+            setAttributeManagerContainersHeight();
+        }, 100);
+    };
 
-        var init = function () {
-            getLayouts();
+    vm.selectLayout = function (item) {
+        vm.selectedLayoutId = item.id;
+        vm.selectedContentType = item.content_type;
+        vm.selectedLayoutName = item.name;
+    };
 
-            vm.setLRWHeight();
-        };
+    vm.isSelectedLayout = function (layoutId) {
 
-        init();
+        if (vm.selectedLayoutId === layoutId) {
+            return true;
+        }
 
-    }
+        return false;
+    };
 
-}());
+    vm.agree = function () {
+        $mdDialog.hide({
+            status: 'agree',
+            data: {listLayoutId: vm.selectedLayoutId,
+                state: contentTypeToState(vm.selectedContentType),
+                name: vm.selectedLayoutName,
+                content_type: vm.selectedContentType}
+        });
+    };
+
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+    var init = function () {
+        getLayouts();
+
+        vm.setLRWHeight();
+    };
+
+    init();
+
+};

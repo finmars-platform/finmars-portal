@@ -1,18 +1,11 @@
-/**
- * Created by szhitenev on 09.08.2016.
- */
-(function(){
+'use strict';
 
-    'use strict';
+import metaNotificationClassRepository from '../repositories/metaNotificationClassRepository';
 
-    var metaNotificationClassRepository = require('../repositories/metaNotificationClassRepository');
+var getList = function(options){
+    return metaNotificationClassRepository.getList(options);
+};
 
-    var getList = function(options){
-        return metaNotificationClassRepository.getList(options);
-    };
-
-    module.exports = {
-        getList: getList
-    }
-
-}());
+export default {
+    getList: getList
+};

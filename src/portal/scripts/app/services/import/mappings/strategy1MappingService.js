@@ -1,38 +1,31 @@
-/**
- * Created by szhitenev on 19.08.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import strategy1MappingRepository from '../../../repositories/import/mappings/strategy1MappingRepository';
 
-    var strategy1MappingRepository = require('../../../repositories/import/mappings/strategy1MappingRepository');
+var getList = function (options) {
+    return strategy1MappingRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return strategy1MappingRepository.getList(options);
-    };
+var getByKey = function (id) {
+    return strategy1MappingRepository.getByKey(id);
+};
 
-    var getByKey = function (id) {
-        return strategy1MappingRepository.getByKey(id);
-    };
+var create = function (map) {
+    return strategy1MappingRepository.create(map);
+};
 
-    var create = function (map) {
-        return strategy1MappingRepository.create(map);
-    };
+var update = function (id, map) {
+    return strategy1MappingRepository.update(id, map);
+};
 
-    var update = function (id, map) {
-        return strategy1MappingRepository.update(id, map);
-    };
+var deleteByKey = function (id) {
+    return strategy1MappingRepository.deleteByKey(id);
+};
 
-    var deleteByKey = function (id) {
-        return strategy1MappingRepository.deleteByKey(id);
-    };
-
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey
-    }
-
-}());
+export default {
+    getList: getList,
+    getByKey: getByKey,
+    create: create,
+    update: update,
+    deleteByKey: deleteByKey
+};

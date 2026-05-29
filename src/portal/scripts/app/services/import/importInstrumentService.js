@@ -1,18 +1,11 @@
-/**
- * Created by szhitenev on 22.08.2016.
- */
-(function(){
+'use strict';
 
-    'use strict';
+import importInstrumentRepository from '../../repositories/import/importInstrumentRepository';
 
-    var importInstrumentRepository = require('../../repositories/import/importInstrumentRepository');
+var startImport = function(config){
+    return importInstrumentRepository.startImport(config);
+};
 
-    var startImport = function(config){
-        return importInstrumentRepository.startImport(config);
-    };
-
-    module.exports = {
-        startImport: startImport
-    }
-
-}());
+export default {
+    startImport: startImport
+};

@@ -1,38 +1,31 @@
-/**
- * Created by szhitenev on 28.11.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+// var authorizerService = require('../../services/authorizerService');
 
-    // var authorizerService = require('../../services/authorizerService');
+// var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    // var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+export default function ($scope, $mdDialog, data, toastNotificationService, profileAuthorizerService) {
 
-    module.exports = function ($scope, $mdDialog, data, toastNotificationService, profileAuthorizerService) {
+    var vm = this;
+    vm.master_user = data.master_user;
 
-        var vm = this;
-        vm.master_user = data.master_user;
+    vm.name = vm.master_user.name;
 
-        vm.name = vm.master_user.name;
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.agree = function () {
 
-        vm.agree = function () {
+        vm.master_user.name = vm.name;
 
-            vm.master_user.name = vm.name;
+        profileAuthorizerService.updateMasterUser(vm.master_user.id, vm.master_user).then(function (data) {
 
-			profileAuthorizerService.updateMasterUser(vm.master_user.id, vm.master_user).then(function (data) {
+            toastNotificationService.success("Database was successfully renamed");
 
-                toastNotificationService.success("Database was successfully renamed");
+            $mdDialog.hide({status: 'agree'});
 
-                $mdDialog.hide({status: 'agree'});
+        })
 
-            })
-
-        };
-    }
-
-}());
+    };
+};

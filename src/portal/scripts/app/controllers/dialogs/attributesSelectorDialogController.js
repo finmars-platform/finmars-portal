@@ -1,6 +1,6 @@
 import baseUrlService from "../../../../../shell/scripts/app/services/baseUrlService";
 
-const metaHelper = require('../../helpers/meta.helper').default;
+import metaHelper from '../../helpers/meta.helper';
 
 /** @module attributesSelectorDialogController **/
 export default function ($scope, $mdDialog, toastNotificationService, uiService, globalDataService, data) {

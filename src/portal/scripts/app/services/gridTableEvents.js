@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     'CELL_VALUE_CHANGED': 'CELL_VALUE_CHANGED',
     'SELECTOR_INSIDE_CELL_OPENED': 'SELECTOR_INSIDE_CELL_OPENED',
 	'UPDATE_CELLS_CONTENT': 'UPDATE_CELLS_CONTENT', // use to update visible content of cells, if data changed outside grid table

@@ -1,63 +1,56 @@
-/**
- * Created by szhitenev on 18.12.2019.
- */
-(function () {
+'use strict';
 
-    'use strict';
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.item = data.item;
 
-        vm.item = data.item;
+    vm.attributes = [];
 
-        vm.attributes = [];
+    console.log("View Line", vm.item);
 
-        console.log("View Line", vm.item);
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.agree = function () {
+        $mdDialog.hide({status: 'agree'});
+    };
 
-        vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
-        };
+    vm.init = function () {
 
-        vm.init = function () {
-
-            console.log("vm", vm);
+        console.log("vm", vm);
 
 
-            vm.system_fields = [
-                'ignore_fields',
-                'auto_matched_fields',
-                'matched_fields',
-                'resolved_fields',
-                'conflicts_fields',
-                'new_fields',
-                'fields',
-                'results'
-            ];
+        vm.system_fields = [
+            'ignore_fields',
+            'auto_matched_fields',
+            'matched_fields',
+            'resolved_fields',
+            'conflicts_fields',
+            'new_fields',
+            'fields',
+            'results'
+        ];
 
-            Object.keys(vm.item).forEach(function (key) {
+        Object.keys(vm.item).forEach(function (key) {
 
-                if (key.indexOf('___') === -1) {
+            if (key.indexOf('___') === -1) {
 
-                    if (vm.system_fields.indexOf(key) === -1) {
+                if (vm.system_fields.indexOf(key) === -1) {
 
-                        vm.attributes.push({
-                            key: key,
-                            value: vm.item[key]
-                        })
-                    }
-
+                    vm.attributes.push({
+                        key: key,
+                        value: vm.item[key]
+                    })
                 }
 
-            })
+            }
 
-        };
+        })
 
-        vm.init();
-    }
+    };
 
-}());
+    vm.init();
+};

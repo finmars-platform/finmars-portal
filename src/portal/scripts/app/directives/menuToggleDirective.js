@@ -1,32 +1,25 @@
-/**
- * Created by szhitenev on 05.05.2016.
- */
-(function(){
+'use strict';
 
-    'use strict';
+export default function(){
 
-    module.exports = function(){
+    return {
+        scope: {
+            section: '='
+        },
+        templateUrl: 'views/directives/menu-toggle-view.html',
+        link: function(scope, elem) {
 
-        return {
-            scope: {
-                section: '='
-            },
-            templateUrl: 'views/directives/menu-toggle-view.html',
-            link: function(scope, elem) {
+            var controller = $(elem).parent().controller();
+            scope.isOpen = function(){
+                return controller.isOpen(scope.section);
+            };
 
-                var controller = $(elem).parent().controller();
-                scope.isOpen = function(){
-                    return controller.isOpen(scope.section);
-                };
-
-                scope.toggle = function($event){
-                    controller.toggleOpen($event, scope.section);
-                }
-
+            scope.toggle = function($event){
+                controller.toggleOpen($event, scope.section);
             }
+
         }
-
-
     }
 
-}());
+
+};

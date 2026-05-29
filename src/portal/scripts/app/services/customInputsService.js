@@ -1,4 +1,4 @@
-const popupEvents = require("./events/popupEvents");
+import popupEvents from "./events/popupEvents";
 
 /** @module customInputsService */
 export default function () {

@@ -1,385 +1,380 @@
-(function () {
+import dashboardComponentStatuses from './dashboardComponentStatuses';
 
-    var dashboardComponentStatuses = require('./dashboardComponentStatuses');
+export default function () {
 
+    var layoutData = { // basically its dashboard layout that we store on backend
+        name: '',
+        data: {
+            components_types: []
+        }
+    };
 
-    module.exports = function () {
+    var initializingControls = new Set(); // to keep track of controls that haven't set their value yet
 
-        var layoutData = { // basically its dashboard layout that we store on backend
-            name: '',
-            data: {
-                components_types: []
-            }
-        };
+    var projection;
 
-        var initializingControls = new Set(); // to keep track of controls that haven't set their value yet
+    var data = {
+        listLayout: null
+    };
 
-        var projection;
+    var tmpData = { // data that stored only in active session
+        componentsStatuses: {},
+        componentsRefreshRestriction: {},
+        componentsErrors: {},
+        actualRvLayouts: {}, // id of layouts stored in cache that are actual
+        componentsUIData: {}, // e.g. height, width of cell of component
+    };
 
-        var data = {
-            listLayout: null
-        };
+    function setData(data) {
+        layoutData = data
+    }
 
-        var tmpData = { // data that stored only in active session
-            componentsStatuses: {},
-            componentsRefreshRestriction: {},
-            componentsErrors: {},
-            actualRvLayouts: {}, // id of layouts stored in cache that are actual
-            componentsUIData: {}, // e.g. height, width of cell of component
-        };
+    function getData() {
+        return layoutData
+    }
 
-        function setData(data) {
-            layoutData = data
+    function setProjection(projectionData) {
+        projection = projectionData
+    }
+
+    function getProjection() {
+        return projection
+    }
+
+    function setAllComponentsOutputs(compsOutputs) {
+
+        if (!layoutData.data.components) {
+            layoutData.data.components = {}
         }
 
-        function getData() {
-            return layoutData
+        layoutData.data.components = compsOutputs;
+    }
+
+    function getAllComponentsOutputs() {
+
+        if (!layoutData.data.components) {
+            layoutData.data.components = {}
         }
 
-        function setProjection(projectionData) {
-            projection = projectionData
+        return layoutData.data.components;
+    }
+
+    function getAllComponentsOutputsByUserCodes() {
+        if (!layoutData.data.components) {
+            layoutData.data.components = {}
         }
 
-        function getProjection() {
-            return projection
-        }
+        var result = {}
 
-        function setAllComponentsOutputs(compsOutputs) {
+        layoutData.data.components.forEach(function (component) {
 
-            if (!layoutData.data.components) {
-                layoutData.data.components = {}
-            }
+            if (component.user_code) {
+                // result[component.user_code] = component // TODO WTF??????
+                if (layoutData.data.components[component.id]) {
+                    if (layoutData.data.components[component.id].output) {
 
-            layoutData.data.components = compsOutputs;
-        }
+                        result[component.user_code] = layoutData.data.components[component.id].output
 
-        function getAllComponentsOutputs() {
-
-            if (!layoutData.data.components) {
-                layoutData.data.components = {}
-            }
-
-            return layoutData.data.components;
-        }
-
-        function getAllComponentsOutputsByUserCodes() {
-            if (!layoutData.data.components) {
-                layoutData.data.components = {}
-            }
-
-            var result = {}
-
-            layoutData.data.components.forEach(function (component) {
-
-                if (component.user_code) {
-                    // result[component.user_code] = component // TODO WTF??????
-                    if (layoutData.data.components[component.id]) {
-                        if (layoutData.data.components[component.id].output) {
-
-                            result[component.user_code] = layoutData.data.components[component.id].output
-
-                        }
                     }
                 }
-
-            })
-
-            return result;
-
-        }
-
-        /**
-         * For now unnecessary because getComponentOutput are not used.
-         *
-         * @param componentId
-         * @param {Object} output
-         * @returns {*}
-         * @memberof: module:dashboardDataService
-         */
-        function setComponentOutput(user_code, output) {
-
-            // Probably need refactor
-            if (!layoutData.data.state) {
-                layoutData.data.state = {}
             }
 
-            if (!layoutData.data.state.hasOwnProperty('meta')) {
-                layoutData.data.state['meta'] = {}
-            }
+        })
 
-            layoutData.data.state['meta']['origin'] = 'finmars';
+        return result;
 
-            layoutData.data.state[user_code] = output
+    }
 
+    /**
+     * For now unnecessary because getComponentOutput are not used.
+     *
+     * @param componentId
+     * @param {Object} output
+     * @returns {*}
+     * @memberof: module:dashboardDataService
+     */
+    function setComponentOutput(user_code, output) {
+
+        // Probably need refactor
+        if (!layoutData.data.state) {
+            layoutData.data.state = {}
         }
 
-        /**
-         * For now actually no used anywhere. getComponentOutputOld used.
-         *
-         * @param user_code
-         * @returns {*}
-         * @memberof: dashboardDataService
-         */
-        function getComponentOutput(user_code) {
-            return layoutData.data.state[user_code]
+        if (!layoutData.data.state.hasOwnProperty('meta')) {
+            layoutData.data.state['meta'] = {}
         }
 
-        function getLayoutState() {
-            // since state object is not big, there is not much trouble to return new copy each time
-            // needs because each component in dashboard has lastSavedOutput
-            // components are using it to find out should they refresh if output changes
+        layoutData.data.state['meta']['origin'] = 'finmars';
 
-            if (layoutData.data.state) {
-                return JSON.parse(JSON.stringify(layoutData.data.state))
-            }
-            return {}
+        layoutData.data.state[user_code] = output
+
+    }
+
+    /**
+     * For now actually no used anywhere. getComponentOutputOld used.
+     *
+     * @param user_code
+     * @returns {*}
+     * @memberof: dashboardDataService
+     */
+    function getComponentOutput(user_code) {
+        return layoutData.data.state[user_code]
+    }
+
+    function getLayoutState() {
+        // since state object is not big, there is not much trouble to return new copy each time
+        // needs because each component in dashboard has lastSavedOutput
+        // components are using it to find out should they refresh if output changes
+
+        if (layoutData.data.state) {
+            return JSON.parse(JSON.stringify(layoutData.data.state))
+        }
+        return {}
+    }
+
+    function setLayoutState(data) {
+        return layoutData.data.state = data
+    }
+
+    function setComponentOutputOld(componentId, data) {
+
+        if (!layoutData.data.components) {
+            layoutData.data.components = {}
         }
 
-        function setLayoutState(data) {
-            return layoutData.data.state = data
+        console.log('layoutData.data.components[componentId]', layoutData.data.components[componentId]);
+
+        layoutData.data.components[componentId] = data
+
+    }
+
+    function getComponentOutputOld(componentId) {
+
+        if (!layoutData.data.components) {
+            layoutData.data.components = {}
         }
 
-        function setComponentOutputOld(componentId, data) {
+        return layoutData.data.components[componentId]
+    }
 
-            if (!layoutData.data.components) {
-                layoutData.data.components = {}
-            }
+    function setComponentStatus(componentId, status) {
 
-            console.log('layoutData.data.components[componentId]', layoutData.data.components[componentId]);
+        var componentData = getComponentById(componentId)
 
-            layoutData.data.components[componentId] = data
+        console.log("Dashboard.setComponentStatus.component " + componentData.name + " changed status: " + status)
 
-        }
+        tmpData.componentsStatuses[componentId] = status
 
-        function getComponentOutputOld(componentId) {
+    }
 
-            if (!layoutData.data.components) {
-                layoutData.data.components = {}
-            }
+    function getComponentStatus(componentId) {
+        return tmpData.componentsStatuses[componentId]
+    }
 
-            return layoutData.data.components[componentId]
-        }
+    function setComponentError(componentId, error) {
+        tmpData.componentsErrors[componentId] = error;
+    }
 
-        function setComponentStatus(componentId, status) {
+    function getComponentError(componentId) {
+        return tmpData.componentsErrors[componentId];
+    }
 
-            var componentData = getComponentById(componentId)
+    function setComponentRefreshRestriction(componentId, restrictionStatus) {
+        tmpData.componentsRefreshRestriction[componentId] = restrictionStatus;
+    }
 
-            console.log("Dashboard.setComponentStatus.component " + componentData.name + " changed status: " + status)
+    /*function getComponentRefreshRestriction (componentId) {
+        return tmpData.componentsRefreshRestriction[componentId];
+    }
 
-            tmpData.componentsStatuses[componentId] = status
-
-        }
-
-        function getComponentStatus(componentId) {
-            return tmpData.componentsStatuses[componentId]
-        }
-
-        function setComponentError(componentId, error) {
-            tmpData.componentsErrors[componentId] = error;
-        }
-
-        function getComponentError(componentId) {
-            return tmpData.componentsErrors[componentId];
-        }
-
-        function setComponentRefreshRestriction(componentId, restrictionStatus) {
+    function setAllComponentsRefreshRestriction (restrictionStatus) {
+        Object.keys(tmpData.componentsRefreshRestriction).forEach(function (componentId) {
             tmpData.componentsRefreshRestriction[componentId] = restrictionStatus;
-        }
+        });
+    }*/
 
-        /*function getComponentRefreshRestriction (componentId) {
-            return tmpData.componentsRefreshRestriction[componentId];
-        }
+    function getAllComponentsRefreshRestriction() {
+        return tmpData.componentsRefreshRestriction;
+    }
 
-        function setAllComponentsRefreshRestriction (restrictionStatus) {
-            Object.keys(tmpData.componentsRefreshRestriction).forEach(function (componentId) {
-                tmpData.componentsRefreshRestriction[componentId] = restrictionStatus;
-            });
-        }*/
+    function setComponentUIData(componentId, uiData) {
+        tmpData.componentsUIData[componentId] = uiData;
+    }
 
-        function getAllComponentsRefreshRestriction() {
-            return tmpData.componentsRefreshRestriction;
-        }
+    function getComponentUIData(componentId) {
+        return tmpData.componentsUIData[componentId];
+    }
 
-        function setComponentUIData(componentId, uiData) {
-            tmpData.componentsUIData[componentId] = uiData;
-        }
+    function getComponentStatusesAll() {
+        return tmpData.componentsStatuses
+    }
 
-        function getComponentUIData(componentId) {
-            return tmpData.componentsUIData[componentId];
-        }
+    function getComponents() {
+        return layoutData.data.components_types;
+    }
 
-        function getComponentStatusesAll() {
-            return tmpData.componentsStatuses
-        }
+    function setComponents(components) {
+        layoutData.data.components_types = components;
+    }
 
-        function getComponents() {
-            return layoutData.data.components_types;
-        }
+    function getComponentById(componentId) {
 
-        function setComponents(components) {
-            layoutData.data.components_types = components;
-        }
-
-        function getComponentById(componentId) {
-
-            for (var i = 0; i < layoutData.data.components_types.length; i++) {
-                if (layoutData.data.components_types[i].id === componentId) {
-                    return layoutData.data.components_types[i];
-                }
+        for (var i = 0; i < layoutData.data.components_types.length; i++) {
+            if (layoutData.data.components_types[i].id === componentId) {
+                return layoutData.data.components_types[i];
             }
-
-            return null;
         }
 
-        function updateComponent(componentData) {
+        return null;
+    }
 
-            for (var i = 0; i < layoutData.data.components_types.length; i++) {
-                if (layoutData.data.components_types[i].id === componentData.id) {
-                    layoutData.data.components_types[i] = componentData;
-                    break;
-                }
+    function updateComponent(componentData) {
+
+        for (var i = 0; i < layoutData.data.components_types.length; i++) {
+            if (layoutData.data.components_types[i].id === componentData.id) {
+                layoutData.data.components_types[i] = componentData;
+                break;
             }
-
-        }
-
-        function setActiveTab(tab) {
-            tmpData.activeTab = tab
-        }
-
-        function getActiveTab() {
-            return tmpData.activeTab
-        }
-
-        function setListLayout(listLayout) {
-            data.listLayout = listLayout;
-        }
-
-        function getListLayout() {
-            return data.listLayout;
-        }
-
-        function updateModifiedDate(modifiedDate) {
-            // updating listLayout prevents synchronization error when saving settings of component inside dashboard
-            var listLayout = getListLayout();
-            listLayout.modified_at = modifiedDate;
-
-            var layout = getData();
-            layout.modified_at = modifiedDate;
-
-        }
-
-        function setCachedLayoutsData(contentType, userCode, id) {
-
-            /*if (!tmpData.actualRvLayouts.includes(layoutId)) {
-                tmpData.actualRvLayouts.push(layoutId);
-            }*/
-            if (!tmpData.actualRvLayouts[contentType]) {
-                tmpData.actualRvLayouts[contentType] = {};
-            }
-
-            tmpData.actualRvLayouts[contentType][userCode] = id;
-
-        }
-
-        function getCachedLayoutsData() {
-            return tmpData.actualRvLayouts;
-        }
-
-        function setLayoutToOpen(layoutToOpen) {
-            tmpData.layoutToOpen = layoutToOpen;
-        }
-
-        function getLayoutToOpen() {
-            return tmpData.layoutToOpen;
-        }
-
-        function registerControl(componentId) {
-
-            initializingControls.add(componentId);
-
-        }
-
-        function areControlsReady() {
-
-            console.log('initializingControls', initializingControls);
-
-            var result = true;
-
-            initializingControls.forEach(function (componentId) {
-
-                var status = getComponentStatus(componentId);
-
-                if (status !== dashboardComponentStatuses.ACTIVE) {
-                    result = false;
-                }
-
-            })
-
-
-            return result // either there is no controls, or they all have set their value
-        }
-
-        /** @module: dashboardDataService */
-        return {
-
-            setData: setData,
-            getData: getData,
-            setListLayout: setListLayout,
-            getListLayout: getListLayout,
-            updateModifiedDate: updateModifiedDate,
-
-            setProjection: setProjection,
-            getProjection: getProjection,
-
-            setAllComponentsOutputs: setAllComponentsOutputs,
-            getAllComponentsOutputs: getAllComponentsOutputs,
-            getAllComponentsOutputsByUserCodes: getAllComponentsOutputsByUserCodes,
-
-            setComponentOutput: setComponentOutput, // szhitenev 2023-08-20
-            getComponentOutput: getComponentOutput,
-
-            setComponentOutputOld: setComponentOutputOld,
-            getComponentOutputOld: getComponentOutputOld,
-            setComponentStatus: setComponentStatus,
-            getComponentStatus: getComponentStatus,
-            setComponentError: setComponentError,
-            getComponentError: getComponentError,
-            setComponentRefreshRestriction: setComponentRefreshRestriction,
-            /* getComponentRefreshRestriction: getComponentRefreshRestriction,
-            setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction, */
-            getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
-            setComponentUIData: setComponentUIData,
-            getComponentUIData: getComponentUIData,
-            getComponents: getComponents,
-            setComponents: setComponents,
-            updateComponent: updateComponent,
-            getComponentById: getComponentById,
-
-            setActiveTab: setActiveTab,
-            getActiveTab: getActiveTab,
-
-            setCachedLayoutsData: setCachedLayoutsData,
-            getCachedLayoutsData: getCachedLayoutsData,
-
-            getComponentStatusesAll: getComponentStatusesAll,
-
-
-            // REFACTOR change layout from popup
-            setLayoutToOpen: setLayoutToOpen,
-            getLayoutToOpen: getLayoutToOpen,
-
-
-            // 2023-08-23
-            registerControl: registerControl,
-            areControlsReady: areControlsReady,
-
-
-            // 2023-11-11
-            getLayoutState: getLayoutState,
-            setLayoutState: setLayoutState
-
         }
 
     }
 
-}());
+    function setActiveTab(tab) {
+        tmpData.activeTab = tab
+    }
+
+    function getActiveTab() {
+        return tmpData.activeTab
+    }
+
+    function setListLayout(listLayout) {
+        data.listLayout = listLayout;
+    }
+
+    function getListLayout() {
+        return data.listLayout;
+    }
+
+    function updateModifiedDate(modifiedDate) {
+        // updating listLayout prevents synchronization error when saving settings of component inside dashboard
+        var listLayout = getListLayout();
+        listLayout.modified_at = modifiedDate;
+
+        var layout = getData();
+        layout.modified_at = modifiedDate;
+
+    }
+
+    function setCachedLayoutsData(contentType, userCode, id) {
+
+        /*if (!tmpData.actualRvLayouts.includes(layoutId)) {
+            tmpData.actualRvLayouts.push(layoutId);
+        }*/
+        if (!tmpData.actualRvLayouts[contentType]) {
+            tmpData.actualRvLayouts[contentType] = {};
+        }
+
+        tmpData.actualRvLayouts[contentType][userCode] = id;
+
+    }
+
+    function getCachedLayoutsData() {
+        return tmpData.actualRvLayouts;
+    }
+
+    function setLayoutToOpen(layoutToOpen) {
+        tmpData.layoutToOpen = layoutToOpen;
+    }
+
+    function getLayoutToOpen() {
+        return tmpData.layoutToOpen;
+    }
+
+    function registerControl(componentId) {
+
+        initializingControls.add(componentId);
+
+    }
+
+    function areControlsReady() {
+
+        console.log('initializingControls', initializingControls);
+
+        var result = true;
+
+        initializingControls.forEach(function (componentId) {
+
+            var status = getComponentStatus(componentId);
+
+            if (status !== dashboardComponentStatuses.ACTIVE) {
+                result = false;
+            }
+
+        })
+
+
+        return result // either there is no controls, or they all have set their value
+    }
+
+    /** @module: dashboardDataService */
+    return {
+
+        setData: setData,
+        getData: getData,
+        setListLayout: setListLayout,
+        getListLayout: getListLayout,
+        updateModifiedDate: updateModifiedDate,
+
+        setProjection: setProjection,
+        getProjection: getProjection,
+
+        setAllComponentsOutputs: setAllComponentsOutputs,
+        getAllComponentsOutputs: getAllComponentsOutputs,
+        getAllComponentsOutputsByUserCodes: getAllComponentsOutputsByUserCodes,
+
+        setComponentOutput: setComponentOutput, // szhitenev 2023-08-20
+        getComponentOutput: getComponentOutput,
+
+        setComponentOutputOld: setComponentOutputOld,
+        getComponentOutputOld: getComponentOutputOld,
+        setComponentStatus: setComponentStatus,
+        getComponentStatus: getComponentStatus,
+        setComponentError: setComponentError,
+        getComponentError: getComponentError,
+        setComponentRefreshRestriction: setComponentRefreshRestriction,
+        /* getComponentRefreshRestriction: getComponentRefreshRestriction,
+        setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction, */
+        getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
+        setComponentUIData: setComponentUIData,
+        getComponentUIData: getComponentUIData,
+        getComponents: getComponents,
+        setComponents: setComponents,
+        updateComponent: updateComponent,
+        getComponentById: getComponentById,
+
+        setActiveTab: setActiveTab,
+        getActiveTab: getActiveTab,
+
+        setCachedLayoutsData: setCachedLayoutsData,
+        getCachedLayoutsData: getCachedLayoutsData,
+
+        getComponentStatusesAll: getComponentStatusesAll,
+
+
+        // REFACTOR change layout from popup
+        setLayoutToOpen: setLayoutToOpen,
+        getLayoutToOpen: getLayoutToOpen,
+
+
+        // 2023-08-23
+        registerControl: registerControl,
+        areControlsReady: areControlsReady,
+
+
+        // 2023-11-11
+        getLayoutState: getLayoutState,
+        setLayoutState: setLayoutState
+
+    }
+
+};

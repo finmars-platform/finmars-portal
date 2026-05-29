@@ -1,126 +1,119 @@
-/**
- * Created by szhitenev on 03.08.2023.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import metaService from '../../services/metaService';
+import portfolioBundleService from '../../services/portfolioBundleService';
+import portfolioRegisterService from '../../services/portfolioRegisterService';
 
-    const metaService = require('../../services/metaService').default;
-    const portfolioBundleService = require('../../services/portfolioBundleService').default;
-    const portfolioRegisterService = require('../../services/portfolioRegisterService').default;
+export default function ($scope, $mdDialog, data) {
 
-    module.exports = function ($scope, $mdDialog, data) {
+    var vm = this;
 
-        var vm = this;
+    vm.item = {};
 
-        vm.item = {};
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.agree = function () {
 
-        vm.agree = function () {
+        if (vm.itemId) {
 
-            if (vm.itemId) {
-
-                portfolioBundleService.update(vm.item.id, vm.item).then(function (data) {
-
-                    vm.item = data;
-
-                    $mdDialog.hide({status: 'agree', data: {item: vm.item}});
-
-                });
-
-
-            } else {
-
-                portfolioBundleService.create(vm.item).then(function (data) {
-
-                    vm.item = data;
-
-                    $mdDialog.hide({status: 'agree', data: {item: vm.item}});
-
-                });
-
-            }
-
-
-        };
-
-        vm.getRegisters = function (options) {
-
-            if (!options) {
-                options = {
-                    pageSize: 1000,
-                    page: 1,
-                };
-            }
-
-            return metaService.loadDataFromAllPages(
-                portfolioRegisterService.getList,
-                [options]
-            )
-
-        };
-
-        vm.getItem = function () {
-
-            portfolioBundleService.getByKey(vm.itemId).then(function (data) {
+            portfolioBundleService.update(vm.item.id, vm.item).then(function (data) {
 
                 vm.item = data;
 
-                vm.readyStatus.content = true;
+                $mdDialog.hide({status: 'agree', data: {item: vm.item}});
 
-                $scope.$apply();
+            });
 
-            })
 
-        };
+        } else {
 
-        vm.editAsJson = function (ev) {
+            portfolioBundleService.create(vm.item).then(function (data) {
 
-            $mdDialog.show({
-                controller: 'EntityAsJsonEditorDialogController as vm',
-                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
-                parent: document.querySelector(".dialog-containers-wrap"),
-                targetEvent: ev,
-                multiple: true,
-                locals: {
-                    data: {
-                        item: vm.item,
-                        entityType: 'portfolio-bundle'
-                    }
-                }
-            }).then(function (res) {
+                vm.item = data;
 
-                if (res.status === "agree") {
+                $mdDialog.hide({status: 'agree', data: {item: vm.item}});
 
-                    vm.getItem();
-
-                }
-            })
+            });
 
         }
 
-        vm.init = function () {
 
-            if (data.item && data.item.id) {
+    };
 
-                vm.itemId = data.item.id
+    vm.getRegisters = function (options) {
+
+        if (!options) {
+            options = {
+                pageSize: 1000,
+                page: 1,
+            };
+        }
+
+        return metaService.loadDataFromAllPages(
+            portfolioRegisterService.getList,
+            [options]
+        )
+
+    };
+
+    vm.getItem = function () {
+
+        portfolioBundleService.getByKey(vm.itemId).then(function (data) {
+
+            vm.item = data;
+
+            vm.readyStatus.content = true;
+
+            $scope.$apply();
+
+        })
+
+    };
+
+    vm.editAsJson = function (ev) {
+
+        $mdDialog.show({
+            controller: 'EntityAsJsonEditorDialogController as vm',
+            templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+            parent: document.querySelector(".dialog-containers-wrap"),
+            targetEvent: ev,
+            multiple: true,
+            locals: {
+                data: {
+                    item: vm.item,
+                    entityType: 'portfolio-bundle'
+                }
+            }
+        }).then(function (res) {
+
+            if (res.status === "agree") {
 
                 vm.getItem();
 
-            } else {
-                vm.readyStatus.content = true;
             }
-
-
-        };
-
-        vm.init();
+        })
 
     }
 
-}());
+    vm.init = function () {
+
+        if (data.item && data.item.id) {
+
+            vm.itemId = data.item.id
+
+            vm.getItem();
+
+        } else {
+            vm.readyStatus.content = true;
+        }
+
+
+    };
+
+    vm.init();
+
+};

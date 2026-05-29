@@ -1,0 +1,6 @@
+{
+  "files": "vite.config.ts",
+  "compilerOptions": {
+    "target": "es2021"
+  }
+}

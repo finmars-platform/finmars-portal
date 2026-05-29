@@ -1,14 +1,9 @@
 "use strict";
 
 import directivesEvents from "../../services/events/directivesEvents";
-import directivesEvent from "../../services/events/directivesEvents";
+import popupEvents from "../../services/events/popupEvents";
 
 export default function () {
-
-    const EventService = require("../../services/eventService");
-	const directivesEvents = require("../../services/events/directivesEvents");
-	const popupEvents = require("../../services/events/popupEvents");
-
     return {
         restrict: "E",
         scope: {

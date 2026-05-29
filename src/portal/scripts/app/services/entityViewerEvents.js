@@ -2,7 +2,7 @@
  * @module entityViewerEvents
  */
 
-module.exports = {
+export default {
     'COLUMNS_CHANGE': 'COLUMNS_CHANGE',
     'FILTERS_CHANGE': 'FILTERS_CHANGE',
 	'FILTERS_TO_SHOW_CHANGE': 'FILTERS_TO_SHOW_CHANGE', // entity viewer filters to show (front or back) switched

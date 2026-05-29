@@ -1,18 +1,15 @@
 /**
  * Created by szhitenev on 12.09.2016.
  */
-var configurationImportRepository = require('../../repositories/import/configurationImportRepository');
+import configurationImportRepository from '../../repositories/import/configurationImportRepository';
 
-var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
-var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
-var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
-var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
-
-var bookmarkRepository = require('../../repositories/bookmarkRepository');
-
-var configurationImportCompatibilityService = require('./configurationImportCompatibilityService');
-
-var referenceTablesService = require('../../services/referenceTablesService');
+import csvImportSchemeService from '../../services/import/csvImportSchemeService';
+import complexImportSchemeService from '../../services/import/complexImportSchemeService';
+import priceDownloadSchemeService from '../../services/import/priceDownloadSchemeService';
+import instrumentDownloadSchemeService from '../../services/import/instrumentDownloadSchemeService';
+import bookmarkRepository from '../../repositories/bookmarkRepository';
+import configurationImportCompatibilityService from './configurationImportCompatibilityService';
+import referenceTablesService from '../../services/referenceTablesService';
 
 export default function (metaContentTypesService, attributeTypeService, customFieldService, entityResolverService, uiService, transactionImportSchemeService, configurationImportGetService, configurationImportMapService, configurationImportSyncService) {
 

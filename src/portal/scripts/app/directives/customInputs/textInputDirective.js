@@ -1,446 +1,443 @@
-(function () {
-
-	"use strict";
-
-	const stringHelper = require('../../helpers/stringHelper');
-	const metaHelper = require('../../helpers/meta.helper').default;
-
-	module.exports = function ($mdDialog) {
-		return {
-			restrict: "E",
-			scope: {
-				label: "@",
-				placeholderText: "@",
-				model: "=",
-				maxLength:"@",
-				customButtons: '=',
-				customStyles: "=",
-				eventSignal: "=",
-				smallOptions: "<",
+"use strict";
+
+import stringHelper from '../../helpers/stringHelper';
+import metaHelper from '../../helpers/meta.helper';
+
+export default function ($mdDialog) {
+    return {
+        restrict: "E",
+        scope: {
+            label: "@",
+            placeholderText: "@",
+            model: "=",
+            maxLength:"@",
+            customButtons: '=',
+            customStyles: "=",
+            eventSignal: "=",
+            smallOptions: "<",
 
-				isDisabled: "=",
-				isLocked: "@",
-				renderHyperlinks: "=",
+            isDisabled: "=",
+            isLocked: "@",
+            renderHyperlinks: "=",
 
-				onChangeCallback: "&?",
-				onBlurCallback: "&?",
-				// onFocus: "=" // I can't bind as "&?" because onFocus need event argument
-			},
-			templateUrl: "views/directives/customInputs/text-input-view.html",
-			link: function (scope, elem, attr) {
+            onChangeCallback: "&?",
+            onBlurCallback: "&?",
+            // onFocus: "=" // I can't bind as "&?" because onFocus need event argument
+        },
+        templateUrl: "views/directives/customInputs/text-input-view.html",
+        link: function (scope, elem, attr) {
 
-				let inputContainer; // = elem[0].querySelector(".textInputContainer");
+            let inputContainer; // = elem[0].querySelector(".textInputContainer");
 
-				let inputElem; // = elem[0].querySelector(".textInputElem");
-				let stylePreset;
-				const dialogParent = document.querySelector('.dialog-containers-wrap');
+            let inputElem; // = elem[0].querySelector(".textInputElem");
+            let stylePreset;
+            const dialogParent = document.querySelector('.dialog-containers-wrap');
 
-				/* TEXTAREA CODE
+            /* TEXTAREA CODE
 
-				var fullTextWrapper;
-				var fullTextElem;
+            var fullTextWrapper;
+            var fullTextElem;
 
-				scope.isReadonly = false;
-				scope.fullTextEnabled = false;
-				scope.fullText = {value: scope.model};*/
+            scope.isReadonly = false;
+            scope.fullTextEnabled = false;
+            scope.fullText = {value: scope.model};*/
 
-				/*
-				TIPS
-				customButtons
-					iconObj,
-                    tooltip: string with tooltip text,
-                    caption: string,
-                    classes: string with classes for elem,
-                    action: Object
-                    	key: identifier for an action
-                    	callback: function
-                    	parameters: parameter object for callback function
+            /*
+            TIPS
+            customButtons
+                iconObj,
+                tooltip: string with tooltip text,
+                caption: string,
+                classes: string with classes for elem,
+                action: Object
+                    key: identifier for an action
+                    callback: function
+                    parameters: parameter object for callback function
 
-				scope.smallOptions probable properties
-					tooltipText: custom tooltip text
-					notNull: turn on error mode if field is not filled
-					noIndicatorBtn: whether to show button at the right part of input
-					readonly: making input readonly
-				*/
-				if (scope.smallOptions) {
+            scope.smallOptions probable properties
+                tooltipText: custom tooltip text
+                notNull: turn on error mode if field is not filled
+                noIndicatorBtn: whether to show button at the right part of input
+                readonly: making input readonly
+            */
+            if (scope.smallOptions) {
 
-					scope.tooltipText = scope.smallOptions.tooltipText;
-					scope.isReadonly = scope.smallOptions.readonly;
-					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+                scope.tooltipText = scope.smallOptions.tooltipText;
+                scope.isReadonly = scope.smallOptions.readonly;
+                scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
 
-				}
+            }
 
-				scope.locked = scope.isLocked === 'true';
+            scope.locked = scope.isLocked === 'true';
 
-				scope.getInputContainerClasses = function () {
+            scope.getInputContainerClasses = function () {
 
-					var classes = "";
+                var classes = "";
 
-					if (scope.disabled()) {
-						classes = "custom-input-is-disabled";
+                if (scope.disabled()) {
+                    classes = "custom-input-is-disabled";
 
-					} else if (scope.error) {
-						classes = 'custom-input-error';
+                } else if (scope.error) {
+                    classes = 'custom-input-error';
 
-					} else if (stylePreset) {
-						classes = 'custom-input-preset' + stylePreset;
+                } else if (stylePreset) {
+                    classes = 'custom-input-preset' + stylePreset;
 
-					} else if (scope.valueIsValid) {
-						classes = 'custom-input-is-valid';
-					}
+                } else if (scope.valueIsValid) {
+                    classes = 'custom-input-is-valid';
+                }
 
-					if (scope.noIndicatorBtn) {
-						classes += " no-indicator-btn";
-					}
+                if (scope.noIndicatorBtn) {
+                    classes += " no-indicator-btn";
+                }
 
-					if (scope.renderHyperlinks) {
-						classes += " render-hyperlinks"
-					}
+                if (scope.renderHyperlinks) {
+                    classes += " render-hyperlinks"
+                }
 
-					if (scope.isReadonly) {
-						classes += " readonly"
-					}
+                if (scope.isReadonly) {
+                    classes += " readonly"
+                }
 
-					return classes;
+                return classes;
 
-				};
+            };
 
-				scope.unlockInput = function () {
-					scope.locked = false;
-				};
+            scope.unlockInput = function () {
+                scope.locked = false;
+            };
 
-				scope.disabled = function () {
-					return scope.isDisabled || scope.locked;
-				};
+            scope.disabled = function () {
+                return scope.isDisabled || scope.locked;
+            };
 
-				// var onChangeIndex;
+            // var onChangeIndex;
 
-				scope.onInputChange = function (modelVal) {
+            scope.onInputChange = function (modelVal) {
 
-					if (modelVal !== undefined) { // needed for textarea.customInputFullText
-						scope.model = modelVal;
-					}
+                if (modelVal !== undefined) { // needed for textarea.customInputFullText
+                    scope.model = modelVal;
+                }
 
-					// clearTimeout(onChangeIndex);
+                // clearTimeout(onChangeIndex);
 
-					setTimeout(() => {
+                setTimeout(() => {
 
-						scope.error = "";
-						stylePreset = "";
-						scope.valueIsValid = false;
+                    scope.error = "";
+                    stylePreset = "";
+                    scope.valueIsValid = false;
 
-						if (scope.model) {
-							scope.valueIsValid = true;
+                    if (scope.model) {
+                        scope.valueIsValid = true;
 
-						} else {
+                    } else {
 
-							if (scope.smallOptions && scope.smallOptions.notNull) {
-								scope.error = "Field should not be null";
-							}
+                        if (scope.smallOptions && scope.smallOptions.notNull) {
+                            scope.error = "Field should not be null";
+                        }
 
-						}
+                    }
 
-						/* if (scope.onChangeCallback) {
-							 setTimeout(function () {
-								scope.onChangeCallback();
-							}, 0);
-						} */
-						scope.$apply();
+                    /* if (scope.onChangeCallback) {
+                         setTimeout(function () {
+                            scope.onChangeCallback();
+                        }, 0);
+                    } */
+                    scope.$apply();
 
-						if (scope.onChangeCallback) scope.onChangeCallback({changedValue: scope.model});
+                    if (scope.onChangeCallback) scope.onChangeCallback({changedValue: scope.model});
 
-					}, 0);
+                }, 0);
 
-				};
+            };
 
-				var applyCustomStyles = function () {
+            var applyCustomStyles = function () {
 
-					Object.keys(scope.customStyles).forEach(function (className) {
+                Object.keys(scope.customStyles).forEach(function (className) {
 
-						var elemClass = "." + className;
-						var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
+                    var elemClass = "." + className;
+                    var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-						if (elemToApplyStyles.length) {
+                    if (elemToApplyStyles.length) {
 
-							elemToApplyStyles.forEach(function (htmlNode) {
-								htmlNode.style.cssText = scope.customStyles[className];
-							})
+                        elemToApplyStyles.forEach(function (htmlNode) {
+                            htmlNode.style.cssText = scope.customStyles[className];
+                        })
 
-						}
+                    }
 
-					});
+                });
 
-				};
+            };
 
-				scope.callFnForCustomBtn = function (actionData) {
+            scope.callFnForCustomBtn = function (actionData) {
 
-					if (actionData.parameters) {
-						actionData.callback(actionData.parameters);
-					} else {
-						actionData.callback();
-					}
+                if (actionData.parameters) {
+                    actionData.callback(actionData.parameters);
+                } else {
+                    actionData.callback();
+                }
 
-				};
+            };
 
-				scope.getHyperlinks = () => {
-					return stringHelper.parseAndInsertHyperlinks(scope.model, "class='openLinkInNewTab'");
-				};
+            scope.getHyperlinks = () => {
+                return stringHelper.parseAndInsertHyperlinks(scope.model, "class='openLinkInNewTab'");
+            };
 
-				scope.openTextInDialog = function ($event) {
+            scope.openTextInDialog = function ($event) {
 
-					$mdDialog.show({
-						controller: "TextEditorDialogController as vm",
-						templateUrl: "views/dialogs/text-editor-dialog-view.html",
-						parent: dialogParent,
-						targetEvent: $event,
-						multiple: true,
-						locals: {
-							data: {
-								title: "Text",
-								text: scope.model,
-							}
-						}
+                $mdDialog.show({
+                    controller: "TextEditorDialogController as vm",
+                    templateUrl: "views/dialogs/text-editor-dialog-view.html",
+                    parent: dialogParent,
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            title: "Text",
+                            text: scope.model,
+                        }
+                    }
 
-					}).then(function (res) {
+                }).then(function (res) {
 
-						if (res.status === "agree") {
+                    if (res.status === "agree") {
 
-							stylePreset = "";
-							scope.model = res.text;
+                        stylePreset = "";
+                        scope.model = res.text;
 
-							if (scope.onChangeCallback) {
+                        if (scope.onChangeCallback) {
 
-								setTimeout(function () {
-									scope.onChangeCallback({changedValue: scope.model});
-								}, 0);
+                            setTimeout(function () {
+                                scope.onChangeCallback({changedValue: scope.model});
+                            }, 0);
 
-							}
+                        }
 
-						}
-					});
-				};
+                    }
+                });
+            };
 
-				scope.onInputBlur = function () {
+            scope.onInputBlur = function () {
 
-					if (scope.onBlurCallback) {
+                if (scope.onBlurCallback) {
 
-						setTimeout(function () {
-							// without timeout changes will be discarded on fast blur
-							scope.onBlurCallback();
-						}, 250);
+                    setTimeout(function () {
+                        // without timeout changes will be discarded on fast blur
+                        scope.onBlurCallback();
+                    }, 250);
 
-					}
+                }
 
-				}
+            }
 
-				let initScopeWatchers = function () {
+            let initScopeWatchers = function () {
 
-					scope.$watch("model", function () {
-						if (scope.error && scope.model) {
-							scope.error = "";
-						}
-					});
+                scope.$watch("model", function () {
+                    if (scope.error && scope.model) {
+                        scope.error = "";
+                    }
+                });
 
-					if (scope.eventSignal) {
-					// this if prevents watcher below from running without need
+                if (scope.eventSignal) {
+                // this if prevents watcher below from running without need
 
-						scope.$watch("eventSignal", function () {
+                    scope.$watch("eventSignal", function () {
 
-							if (scope.eventSignal && scope.eventSignal.key) {
+                        if (scope.eventSignal && scope.eventSignal.key) {
 
-								switch (scope.eventSignal.key) {
+                            switch (scope.eventSignal.key) {
 
-									case "mark_not_valid_fields":
-										if (scope.smallOptions &&
-											scope.smallOptions.notNull &&
-											!scope.model) {
+                                case "mark_not_valid_fields":
+                                    if (scope.smallOptions &&
+                                        scope.smallOptions.notNull &&
+                                        !scope.model) {
 
-											scope.error = "Field should not be null";
+                                        scope.error = "Field should not be null";
 
-										}
+                                    }
 
-										break;
+                                    break;
 
-									case "error":
-										scope.error = scope.eventSignal.error;
-										break;
+                                case "error":
+                                    scope.error = scope.eventSignal.error;
+                                    break;
 
-									case "set_style_preset1":
-										stylePreset = 1;
-										break;
+                                case "set_style_preset1":
+                                    stylePreset = 1;
+                                    break;
 
-									case "set_style_preset2":
-										stylePreset = 2;
-										break;
+                                case "set_style_preset2":
+                                    stylePreset = 2;
+                                    break;
 
-									case "reset": // reset changes done by eventSignal
+                                case "reset": // reset changes done by eventSignal
 
-										scope.error = "";
-										stylePreset = "";
+                                    scope.error = "";
+                                    stylePreset = "";
 
-										break;
+                                    break;
 
-								}
+                            }
 
-								scope.eventSignal = {};
-							}
-						});
-					}
-				};
+                            scope.eventSignal = {};
+                        }
+                    });
+                }
+            };
 
-				/* TEXTAREA CODE
+            /* TEXTAREA CODE
 
-				let closeFulltext = function () {
+            let closeFulltext = function () {
 
-					inputContainer.classList.remove("custom-input-full-text-focused");
+                inputContainer.classList.remove("custom-input-full-text-focused");
 
-					// for hyperlink mode
-					inputElem.blur();
-					document.removeEventListener("keypress", closeFulltext);
-					// < for hyperlink mode >
+                // for hyperlink mode
+                inputElem.blur();
+                document.removeEventListener("keypress", closeFulltext);
+                // < for hyperlink mode >
 
-					if (scope.onBlurCallback) {
+                if (scope.onBlurCallback) {
 
-						setTimeout(function () {
-							// without timeout changes will be discarded on fast blur
-							scope.onBlurCallback();
-						}, 250);
+                    setTimeout(function () {
+                        // without timeout changes will be discarded on fast blur
+                        scope.onBlurCallback();
+                    }, 250);
 
-					}
+                }
 
-				};*/
+            };*/
 
-				let initEventListeners = function () {
+            let initEventListeners = function () {
 
-					elem[0].addEventListener("mouseover", function () {
-						inputContainer.classList.add("custom-input-hovered");
-					});
+                elem[0].addEventListener("mouseover", function () {
+                    inputContainer.classList.add("custom-input-hovered");
+                });
 
-					elem[0].addEventListener("mouseleave", function () {
-						inputContainer.classList.remove("custom-input-hovered");
-					});
+                elem[0].addEventListener("mouseleave", function () {
+                    inputContainer.classList.remove("custom-input-hovered");
+                });
 
-					if (scope.renderHyperlinks) {
+                if (scope.renderHyperlinks) {
 
-						inputElem.addEventListener("click", function (event) {
+                    inputElem.addEventListener("click", function (event) {
 
-							if (event.target.classList.contains('openLinkInNewTab')) {
+                        if (event.target.classList.contains('openLinkInNewTab')) {
 
-								metaHelper.openLinkInNewTab(event);
+                            metaHelper.openLinkInNewTab(event);
 
-							} /* TEXTAREA CODE
-							else {
+                        } /* TEXTAREA CODE
+                        else {
 
-								inputContainer.classList.add("custom-input-full-text-focused");
+                            inputContainer.classList.add("custom-input-full-text-focused");
 
-								fullTextElem.focus();
+                            fullTextElem.focus();
 
-								if (scope.renderHyperlinks) {
-									document.addEventListener("keyup", closeFulltext);
-								}
+                            if (scope.renderHyperlinks) {
+                                document.addEventListener("keyup", closeFulltext);
+                            }
 
-							} */
+                        } */
 
 
-						});
+                    });
 
-						/* TEXTAREA CODE
+                    /* TEXTAREA CODE
 
-						fullTextWrapper.addEventListener("mouseleave", closeFulltext);
-						fullTextElem.addEventListener("click", metaHelper.openLinkInNewTab); */
+                    fullTextWrapper.addEventListener("mouseleave", closeFulltext);
+                    fullTextElem.addEventListener("click", metaHelper.openLinkInNewTab); */
 
-					}
-					/* TEXTAREA CODE
-					else {
+                }
+                /* TEXTAREA CODE
+                else {
 
-						inputElem.addEventListener("focus", function () {
+                    inputElem.addEventListener("focus", function () {
 
-							inputContainer.classList.add("custom-input-full-text-focused");
+                        inputContainer.classList.add("custom-input-full-text-focused");
 
 
 
-							fullTextElem.focus();
+                        fullTextElem.focus();
 
-						});
+                    });
 
-						fullTextElem.addEventListener("blur", closeFulltext);
+                    fullTextElem.addEventListener("blur", closeFulltext);
 
-					} */
+                } */
 
-					/* TEXTAREA CODE
+                /* TEXTAREA CODE
 
-					fullTextElem.addEventListener("blur", function () {
+                fullTextElem.addEventListener("blur", function () {
 
-						if (typeof scope.onFocus === "function") {
+                    if (typeof scope.onFocus === "function") {
 
-							fullTextElem.removeEventListener("focus", scope.onFocus);
+                        fullTextElem.removeEventListener("focus", scope.onFocus);
 
-						}
+                    }
 
-						inputContainer.classList.remove("custom-input-full-text-focused");
+                    inputContainer.classList.remove("custom-input-full-text-focused");
 
-						if (scope.onBlurCallback) {
+                    if (scope.onBlurCallback) {
 
-							setTimeout(function () {
-								// without timeout changes will be discarded on fast blur
-								scope.onBlurCallback();
-							}, 250);
+                        setTimeout(function () {
+                            // without timeout changes will be discarded on fast blur
+                            scope.onBlurCallback();
+                        }, 250);
 
-						}
+                    }
 
-					});
+                });
 
-					if (typeof scope.onFocus === "function") {
+                if (typeof scope.onFocus === "function") {
 
-						fullTextElem.addEventListener("focus", scope.onFocus);
+                    fullTextElem.addEventListener("focus", scope.onFocus);
 
-					} */
+                } */
 
-					inputElem.addEventListener('focus', function () {
-						inputContainer.classList.add('custom-input-focused');
-					});
+                inputElem.addEventListener('focus', function () {
+                    inputContainer.classList.add('custom-input-focused');
+                });
 
-					inputElem.addEventListener('blur', function () {
-						inputContainer.classList.remove('custom-input-focused');
-					});
+                inputElem.addEventListener('blur', function () {
+                    inputContainer.classList.remove('custom-input-focused');
+                });
 
-				};
+            };
 
-				/* TEXTAREA CODE
+            /* TEXTAREA CODE
 
-				let elemsInintedNum = 0;
+            let elemsInintedNum = 0;
 
-				scope.elemInited = function () {
+            scope.elemInited = function () {
 
-					elemsInintedNum++;
+                elemsInintedNum++;
 
-					if (elemsInintedNum === 2) { // textInputElem, customInputFullText
-						scope.init();
-					}
+                if (elemsInintedNum === 2) { // textInputElem, customInputFullText
+                    scope.init();
+                }
 
-				}; */
+            }; */
 
-				scope.init = function () { // called from view by ngInit
+            scope.init = function () { // called from view by ngInit
 
-					inputContainer = elem[0].querySelector(".textInputContainer");
-					inputElem = elem[0].querySelector(".textInputElem");
+                inputContainer = elem[0].querySelector(".textInputContainer");
+                inputElem = elem[0].querySelector(".textInputElem");
 
-					/* TEXTAREA CODE
+                /* TEXTAREA CODE
 
-					fullTextWrapper = elem[0].querySelector(".customInputFullTextWrapper");
-					fullTextElem = fullTextWrapper.querySelector(".customInputFullText");*/
+                fullTextWrapper = elem[0].querySelector(".customInputFullTextWrapper");
+                fullTextElem = fullTextWrapper.querySelector(".customInputFullText");*/
 
-					initScopeWatchers();
+                initScopeWatchers();
 
-					initEventListeners();
+                initEventListeners();
 
-					if (scope.customStyles) {
-						applyCustomStyles();
-					}
+                if (scope.customStyles) {
+                    applyCustomStyles();
+                }
 
-				};
+            };
 
-			}
-		};
-	};
-})();
+        }
+    };
+};

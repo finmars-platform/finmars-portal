@@ -4,12 +4,5 @@
 
 'use strict';
 
-// import shellBaseUrlService from '../../../../shell/scripts/app/services/baseUrlService.js';
-
-(function () {
-
-    var shellBaseUrlService = require('../../../../shell/scripts/app/services/baseUrlService.js').default;
-
-    module.exports = shellBaseUrlService;
-
-})();
+import shellBaseUrlService from '../../../../shell/scripts/app/services/baseUrlService.js';
+export default shellBaseUrlService;

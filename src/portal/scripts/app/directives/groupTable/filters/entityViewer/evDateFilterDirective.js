@@ -1,106 +1,103 @@
-(function () {
+'use strict';
 
-	'use strict';
+import evEvents from "../../../../services/entityViewerEvents";
+import popupEvents from "../../../../services/events/popupEvents";
 
-	const evEvents = require("../../../../services/entityViewerEvents");
-	const popupEvents = require("../../../../services/events/popupEvents");
+export default function (specificDataService, gFiltersHelper) {
+    return {
+        require: '^^evFilter',
+        restrict: 'E',
+        scope: {},
+        templateUrl: 'views/directives/groupTable/filters/ev-rv-date-filter-view.html',
+        link: function (scope, elem, attrs, filterVm) {
 
-	module.exports = function (specificDataService, gFiltersHelper) {
-		return {
-			require: '^^evFilter',
-			restrict: 'E',
-			scope: {},
-			templateUrl: 'views/directives/groupTable/filters/ev-rv-date-filter-view.html',
-			link: function (scope, elem, attrs, filterVm) {
+            scope.filter = filterVm.filter;
+            scope.isReport = false;
+            scope.activeFilter = {
+                type: null
+            };
 
-				scope.filter = filterVm.filter;
-				scope.isReport = false;
-				scope.activeFilter = {
-					type: null
-				};
+            scope.filterTypes = [
+                {name: 'Equal', id: 'equal'},
+                {name: 'Not equal', id: 'not_equal'},
+                {name: 'Greater than', id: 'greater'},
+                {name: 'Greater or equal to', id: 'greater_equal'},
+                {name: 'Less than', id: 'less'},
+                {name: 'Less or equal to', id: 'less_equal'},
+                {name: 'From ... to ... (incl)', id: 'from_to'},
+                {name: 'Out of range (incl)', id: 'out_of_range'},
+                {name: 'Empty cells', id: 'empty'},
+                {name: 'Date tree', id: 'date_tree'},
+            ];
 
-				scope.filterTypes = [
-					{name: 'Equal', id: 'equal'},
-					{name: 'Not equal', id: 'not_equal'},
-					{name: 'Greater than', id: 'greater'},
-					{name: 'Greater or equal to', id: 'greater_equal'},
-					{name: 'Less than', id: 'less'},
-					{name: 'Less or equal to', id: 'less_equal'},
-					{name: 'From ... to ... (incl)', id: 'from_to'},
-					{name: 'Out of range (incl)', id: 'out_of_range'},
-					{name: 'Empty cells', id: 'empty'},
-					{name: 'Date tree', id: 'date_tree'},
-				];
+            scope.columnRowsContent = null;
 
-				scope.columnRowsContent = null;
+            scope.readyStatus = true;
 
-				scope.readyStatus = true;
+            const contentType = filterVm.evDataService.getContentType();
 
-				const contentType = filterVm.evDataService.getContentType();
+            const getDataForSelects = function () {
 
-				const getDataForSelects = function () {
+                scope.readyStatus = false;
 
-					scope.readyStatus = false;
+                specificDataService.getValuesForSelect(contentType, scope.filter.key, scope.filter.value_type).then(function (data) {
 
-					specificDataService.getValuesForSelect(contentType, scope.filter.key, scope.filter.value_type).then(function (data) {
+                    scope.columnRowsContent = data.results.map(cRowsContent => {
+                        return {value: cRowsContent};
+                    });
 
-						scope.columnRowsContent = data.results.map(cRowsContent => {
-							return {value: cRowsContent};
-						});
+                    scope.readyStatus = true;
 
-						scope.readyStatus = true;
+                    scope.$apply();
 
-						scope.$apply();
+                })
 
-					})
+            };
 
-				};
+            scope.dateTreeChanged =function (dateTree) {
+                scope.filter.options.filter_values = gFiltersHelper.convertDatesTreeToFlatList(dateTree);
+            }
 
-				scope.dateTreeChanged =function (dateTree) {
-					scope.filter.options.filter_values = gFiltersHelper.convertDatesTreeToFlatList(dateTree);
-				}
+            scope.changeFilterType = function (filterType) {
 
-				scope.changeFilterType = function (filterType) {
+                const resultList = gFiltersHelper.emptyDateFilter(filterType, scope.filter.options);
+                scope.activeFilter.type = resultList[0];
+                scope.filter.options = resultList[1];
 
-					const resultList = gFiltersHelper.emptyDateFilter(filterType, scope.filter.options);
-					scope.activeFilter.type = resultList[0];
-					scope.filter.options = resultList[1];
+                if (scope.filter.options.filter_type === 'date_tree' &&
+                    !scope.columnRowsContent) {
 
-					if (scope.filter.options.filter_type === 'date_tree' &&
-						!scope.columnRowsContent) {
+                    getDataForSelects();
 
-						getDataForSelects();
+                }
 
-					}
+            };
 
-				};
+            const initEventListeners = function () {
 
-				const initEventListeners = function () {
+                filterVm.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, function () {
 
-					filterVm.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, function () {
+                    // filterVm.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndId);
+                    scope.$destroy();
 
-						// filterVm.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndId);
-						scope.$destroy();
+                });
 
-					});
+            };
 
-				};
+            const init = function () {
 
-				const init = function () {
+                scope.activeFilter.type = filterVm.getActiveFilterType(scope.filterTypes);
 
-					scope.activeFilter.type = filterVm.getActiveFilterType(scope.filterTypes);
+                initEventListeners();
 
-					initEventListeners();
+                if (scope.filter.options.filter_type === 'date_tree') {
+                    getDataForSelects();
+                }
 
-					if (scope.filter.options.filter_type === 'date_tree') {
-						getDataForSelects();
-					}
+            };
 
-				};
+            init();
 
-				init();
-
-			}
-		}
-	}
-})();
+        }
+    }
+};

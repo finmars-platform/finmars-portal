@@ -1,4 +1,4 @@
-const evHelperService = require('../entityViewerHelperService');
+import evHelperService from '../entityViewerHelperService';
 
 export default function () {
     const getCellValueByKey = function (entityViewerDataService, key) {
@@ -107,4 +107,4 @@ export default function () {
         mapColRowsContent: mapColRowsContent,
     };
 
-};
+}

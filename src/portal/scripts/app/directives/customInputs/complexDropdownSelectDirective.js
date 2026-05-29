@@ -1,6 +1,6 @@
 'use strict';
 
-const directivesEvents = require('../../services/events/directivesEvents');
+import directivesEvents from '../../services/events/directivesEvents';
 
 export default function () {
 

@@ -1,42 +1,34 @@
-/**
- * Created by szhitenev on 16.05.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import logService from '../../../../../core/services/logService';
+import entityResolverService from '../../services/entityResolverService';
 
-    var logService = require('../../../../../core/services/logService');
+export default function ($scope, $mdDialog, entity, entityType) {
 
-    var entityResolverService = require('../../services/entityResolverService');
+    logService.controller('EntityViewerDeleteDialogController', 'initialized');
 
-    module.exports = function ($scope, $mdDialog, entity, entityType) {
+    var vm = this;
+    console.log('vm.entity', entity);
+    vm.entity = entity;
+    vm.entityType = entityType;
 
-        logService.controller('EntityViewerDeleteDialogController', 'initialized');
+    vm.displayCaption = function () {
+        if (vm.entity.name) {
+            return vm.entity.name;
+        }
+        return 'item';
+    };
 
-        var vm = this;
-        console.log('vm.entity', entity);
-        vm.entity = entity;
-        vm.entityType = entityType;
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.displayCaption = function () {
-            if (vm.entity.name) {
-                return vm.entity.name;
-            }
-            return 'item';
-        };
+    vm.delete = function () {
+        entityResolverService.deleteByKey(vm.entityType, vm.entity.id).then(function (data) {
+            console.log('deleted!', data);
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+            $mdDialog.hide({status: 'agree', data: {id: vm.entity.id}});
+        });
+    };
 
-        vm.delete = function () {
-            entityResolverService.deleteByKey(vm.entityType, vm.entity.id).then(function (data) {
-                console.log('deleted!', data);
-
-                $mdDialog.hide({status: 'agree', data: {id: vm.entity.id}});
-            });
-        };
-
-    }
-
-}());
+};

@@ -1,8 +1,7 @@
-const DashboardDataService = require('../../../../services/dashboard/dashboardDataService');
-const DashboardEventService = require('../../../../services/eventService');
-
-const dashboardEvents = require('../../../../services/dashboard/dashboardEvents');
-const dashboardComponentStatuses = require('../../../../services/dashboard/dashboardComponentStatuses');
+import DashboardDataService from '../../../../services/dashboard/dashboardDataService';
+import DashboardEventService from '../../../../services/eventService';
+import dashboardEvents from '../../../../services/dashboard/dashboardEvents';
+import dashboardComponentStatuses from '../../../../services/dashboard/dashboardComponentStatuses';
 
 export default function ($scope, $uiRouterGlobals, metaContentTypesService) {
 

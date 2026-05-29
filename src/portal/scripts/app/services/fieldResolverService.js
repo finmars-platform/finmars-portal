@@ -2,48 +2,43 @@
  * Created by szhitenev on 17.06.2016.
  */
 
-var entityFieldsRepository = require('../repositories/entityFieldsRepository').default;
-var accountRepository = require('../repositories/accountRepository');
-var accountTypeRepository = require('../repositories/accountTypeRepository');
-var instrumentService = require('../services/instrumentService');
-var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
-var portfolioTypeRepository = require('../repositories/portfolioTypeRepository');
-var portfolioReconcileGroupRepository = require('../repositories/portfolioReconcileGroupRepository');
-var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
-var instrumentClassRepository = require('../repositories/instrument/instrumentClassRepository');
-var portfolioClassRepository = require('../repositories/portfolioClassRepository');
-var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
-var currencyRepository = require('../repositories/currencyRepository');
-var portfolioRepository = require('../repositories/portfolioRepository');
-var resourceGroupRepository = require('../repositories/resource-group/resourceGroupRepository').default;
-var portfolioRegisterRepository = require('../repositories/portfolioRegisterRepository');
-var counterpartyRepository = require('../repositories/counterpartyRepository');
-var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
-var responsibleRepository = require('../repositories/responsibleRepository');
-var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
-var transactionTypeGroupRepository = require('../repositories/transaction/transactionTypeGroupRepository');
+import entityFieldsRepository from '../repositories/entityFieldsRepository';
 
-var strategyRepository = require('../repositories/strategyRepository');
-var strategyGroupRepository = require('../repositories/strategyGroupRepository');
-var strategySubgroupRepository = require('../repositories/strategySubgroupRepository');
-
-var accrualCalculationModelRepository = require('../repositories/accrualCalculationModelRepository');
-var instrumentPeriodicityRepository = require('../repositories/instrumentPeriodicityRepository');
-var metaEventClassRepository = require('../repositories/metaEventClassRepository');
-var metaNotificationClassRepository = require('../repositories/metaNotificationClassRepository');
-var clientRepository = require('../repositories/clientRepository').default;
-var vaultRecordRepository = require('../repositories/vaultRecordRepository').default;
-
-
-var instrumentPricingSchemeRepository = require('../repositories/pricing/instrumentPricingSchemeRepository');
-var currencyPricingSchemeRepository = require('../repositories/pricing/currencyPricingSchemeRepository');
-
-
-var providerRepository = require('../repositories/provenance/providerRepository').default;
-var providerVersionRepository = require('../repositories/provenance/providerVersionRepository').default;
-var sourceRepository = require('../repositories/provenance/sourceRepository').default;
-var sourceVersionRepository = require('../repositories/provenance/sourceVersionRepository').default;
-var platformVersionRepository = require('../repositories/provenance/platformVersionRepository').default;
+import accountRepository from '../repositories/accountRepository';
+import accountTypeRepository from '../repositories/accountTypeRepository';
+import instrumentService from '../services/instrumentService';
+import instrumentTypeRepository from '../repositories/instrumentTypeRepository';
+import portfolioTypeRepository from '../repositories/portfolioTypeRepository';
+import portfolioReconcileGroupRepository from '../repositories/portfolioReconcileGroupRepository';
+import importPriceDownloadSchemeRepository from '../repositories/import/importPriceDownloadSchemeRepository';
+import instrumentClassRepository from '../repositories/instrument/instrumentClassRepository';
+import portfolioClassRepository from '../repositories/portfolioClassRepository';
+import pricingPolicyRepository from '../repositories/pricingPolicyRepository';
+import currencyRepository from '../repositories/currencyRepository';
+import portfolioRepository from '../repositories/portfolioRepository';
+import resourceGroupRepository from '../repositories/resource-group/resourceGroupRepository';
+import portfolioRegisterRepository from '../repositories/portfolioRegisterRepository';
+import counterpartyRepository from '../repositories/counterpartyRepository';
+import counterpartyGroupRepository from '../repositories/counterpartyGroupRepository';
+import responsibleRepository from '../repositories/responsibleRepository';
+import responsibleGroupRepository from '../repositories/responsibleGroupRepository';
+import transactionTypeGroupRepository from '../repositories/transaction/transactionTypeGroupRepository';
+import strategyRepository from '../repositories/strategyRepository';
+import strategyGroupRepository from '../repositories/strategyGroupRepository';
+import strategySubgroupRepository from '../repositories/strategySubgroupRepository';
+import accrualCalculationModelRepository from '../repositories/accrualCalculationModelRepository';
+import instrumentPeriodicityRepository from '../repositories/instrumentPeriodicityRepository';
+import metaEventClassRepository from '../repositories/metaEventClassRepository';
+import metaNotificationClassRepository from '../repositories/metaNotificationClassRepository';
+import clientRepository from '../repositories/clientRepository';
+import vaultRecordRepository from '../repositories/vaultRecordRepository';
+import instrumentPricingSchemeRepository from '../repositories/pricing/instrumentPricingSchemeRepository';
+import currencyPricingSchemeRepository from '../repositories/pricing/currencyPricingSchemeRepository';
+import providerRepository from '../repositories/provenance/providerRepository';
+import providerVersionRepository from '../repositories/provenance/providerVersionRepository';
+import sourceRepository from '../repositories/provenance/sourceRepository';
+import sourceVersionRepository from '../repositories/provenance/sourceVersionRepository';
+import platformVersionRepository from '../repositories/provenance/platformVersionRepository';
 
 export default function (instrumentService, transactionTypeService, metaContentTypesService) {
 

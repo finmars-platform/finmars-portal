@@ -1,23 +1,16 @@
-/**
- * Created by szhitenev on 29.09.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import transactionClassRepository from '../../repositories/transaction/transactionClassRepository';
 
-    var transactionClassRepository = require('../../repositories/transaction/transactionClassRepository');
+var getList = function (options) {
+    return transactionClassRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return transactionClassRepository.getList(options);
-    };
+var getListSync = function(){
+    return transactionClassRepository.getListSync();
+};
 
-    var getListSync = function(){
-        return transactionClassRepository.getListSync();
-    };
-
-    module.exports = {
-        getList: getList,
-        getListSync: getListSync
-    }
-
-}());
+export default {
+    getList: getList,
+    getListSync: getListSync
+};

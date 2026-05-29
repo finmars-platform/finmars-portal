@@ -1,6 +1,6 @@
-var filterService = require('./filter.service').default;
-var sortService = require('./sort.service').default;
-var metaHelper = require('../../helpers/meta.helper').default;
+import filterService from './filter.service';
+import sortService from './sort.service';
+import metaHelper from '../../helpers/meta.helper';
 
 export default function (entityResolverService) {
 

@@ -1,32 +1,25 @@
-/**
- * Created by szhitenev on 19.11.2023.
- */
-(function(){
+'use strict';
 
-    'use strict';
+export default function($scope, priceHistoryService){
 
-    module.exports = function($scope, priceHistoryService){
+    console.log('{"controller": "DataPortfolioHistoryController", status: "initialized"}');
 
-        console.log('{"controller": "DataPortfolioHistoryController", status: "initialized"}');
+    var vm = this;
 
-        var vm = this;
+    vm.entityType = 'portfolio-history'; // deprecated
+    vm.contentType = 'portfolios.portfoliohistory';
 
-        vm.entityType = 'portfolio-history'; // deprecated
-        vm.contentType = 'portfolios.portfoliohistory';
+    vm.entityRaw = [];
 
-        vm.entityRaw = [];
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
-
-        vm.entityViewer = {extraFeatures: []};
+    vm.entityViewer = {extraFeatures: []};
 
 
-        vm.init = function(){
-            vm.readyStatus.content = true
-        };
+    vm.init = function(){
+        vm.readyStatus.content = true
+    };
 
-        vm.init()
+    vm.init()
 
-    }
-
-}());
+};

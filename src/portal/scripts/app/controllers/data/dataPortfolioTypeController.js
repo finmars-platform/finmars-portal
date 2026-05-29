@@ -1,36 +1,29 @@
-/**
- * Created by szhitenev on 02.02.2024.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import portfolioTypeService from '../../services/portfolioTypeService';
 
-    var portfolioTypeService = require('../../services/portfolioTypeService');
+export default function ($scope) {
 
-    module.exports = function ($scope) {
+    var vm = this;
 
-        var vm = this;
+    vm.readyStatus = {content: false};
 
-        vm.readyStatus = {content: false};
+    vm.entityType = 'portfolio-type'; // deprecated
+    vm.contentType = 'portfolios.portfoliotype';
+    vm.entityRaw = [];
 
-        vm.entityType = 'portfolio-type'; // deprecated
-        vm.contentType = 'portfolios.portfoliotype';
-        vm.entityRaw = [];
+    vm.entityViewer = {extraFeatures: []};
 
-        vm.entityViewer = {extraFeatures: []};
+    vm.getList = function (options) {
+        return portfolioTypeService.getListLight(options).then(function (data) {
+            return data;
+        })
+    };
 
-        vm.getList = function (options) {
-            return portfolioTypeService.getListLight(options).then(function (data) {
-                return data;
-            })
-        };
+    vm.init = function () {
+        vm.readyStatus.content = true
+    };
 
-        vm.init = function () {
-            vm.readyStatus.content = true
-        };
+    vm.init()
 
-        vm.init()
-
-    }
-
-}());
+};

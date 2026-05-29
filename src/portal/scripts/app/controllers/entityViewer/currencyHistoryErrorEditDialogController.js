@@ -1,75 +1,68 @@
-/**
- * Created by szhitenev on 04.03.2020.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import currencyHistoryErrorService from '../../services/pricing/currencyHistoryErrorService';
 
-    var currencyHistoryErrorService = require('../../services/pricing/currencyHistoryErrorService');
+export default function ($scope, $mdDialog, $state, entityId) {
 
-    module.exports = function ($scope, $mdDialog, $state, entityId) {
+    var vm = this;
 
-        var vm = this;
+    vm.entityId = entityId;
 
-        vm.entityId = entityId;
+    vm.readyStatus = {
+        entity: false
+    };
 
-        vm.readyStatus = {
-            entity: false
-        };
+    vm.checkReadyStatus = function () {
 
-        vm.checkReadyStatus = function () {
+        return vm.readyStatus.entity;
+    };
 
-            return vm.readyStatus.entity;
-        };
+    vm.getItem = function () {
 
-        vm.getItem = function () {
+        return new Promise(function (res, rej) {
 
-            return new Promise(function (res, rej) {
+            currencyHistoryErrorService.getByKey(vm.entityId).then(function (data) {
 
-                currencyHistoryErrorService.getByKey(vm.entityId).then(function (data) {
+                vm.entity = data;
 
-                    vm.entity = data;
+                vm.readyStatus.entity = true;
 
-                    vm.readyStatus.entity = true;
-
-                    $scope.$apply();
-
-
-                });
-
-            });
-
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-
-        vm.save = function ($event) {
-
-            currencyHistoryErrorService.update(vm.entityId, vm.entity).then(function (data) {
-
-                $mdDialog.hide({
-                    status: 'agree', data: {
-                        ids: [vm.entityId]
-                    }
-                });
+                $scope.$apply();
 
 
             });
 
-        };
+        });
+
+    };
+
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
 
-        vm.init = function () {
+    vm.save = function ($event) {
 
-            vm.getItem()
-        };
+        currencyHistoryErrorService.update(vm.entityId, vm.entity).then(function (data) {
 
-        vm.init();
+            $mdDialog.hide({
+                status: 'agree', data: {
+                    ids: [vm.entityId]
+                }
+            });
 
 
-    }
+        });
 
-}());
+    };
+
+
+    vm.init = function () {
+
+        vm.getItem()
+    };
+
+    vm.init();
+
+
+};

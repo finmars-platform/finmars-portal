@@ -1,35 +1,32 @@
-(function () {
-    'use strict';
+'use strict';
 
 
-    var instrumentEventService = require('../../../services/instrumentEventService');
+import instrumentEventService from '../../../services/instrumentEventService';
 
-    module.exports = function ($scope, $mdDialog, data) {
+export default function ($scope, $mdDialog, data) {
 
-        var vm = this;
+    var vm = this;
 
-        vm.event = data.event;
+    vm.event = data.event;
 
-        console.log('vm.event', vm.event);
+    console.log('vm.event', vm.event);
 
-        vm.skip = function () {
-            $mdDialog.hide();
-        };
+    vm.skip = function () {
+        $mdDialog.hide();
+    };
 
-        vm.skipAll = function(){
-            $mdDialog.hide({status: 'skip_all'});
-        };
+    vm.skipAll = function(){
+        $mdDialog.hide({status: 'skip_all'});
+    };
 
-        vm.informed = function () {
+    vm.informed = function () {
 
-            instrumentEventService.informedEventAction(vm.event.id).then(function () {
+        instrumentEventService.informedEventAction(vm.event.id).then(function () {
 
-                $mdDialog.hide({status: 'agree'});
+            $mdDialog.hide({status: 'agree'});
 
-            });
+        });
 
-        };
+    };
 
-    }
-
-}());
+};

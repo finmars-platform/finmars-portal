@@ -1,466 +1,457 @@
-/**
- * Created by sergey on 04.11.16.
- */
-// import metaContentTypesService from "../../../services/metaContentTypesService";
+'use strict';
 
-(function () {
+import uiService from '../../../services/uiService';
+import shareConfigurationFileService from '../../../services/shareConfigurationFileService';
 
-    'use strict';
+// var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
+import inviteToSharedConfigurationFileService from '../../../services/inviteToSharedConfigurationFileService';
 
-    var uiService = require('../../../services/uiService').default;
+export default function ($scope, $mdDialog, metaContentTypesService, backendConfigurationImportService, data) {
 
-    var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
-    // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
-    var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
+    var vm = this;
 
-    module.exports = function ($scope, $mdDialog, metaContentTypesService, backendConfigurationImportService, data) {
+    vm.readyStatus = {items: false};
+    var dashboardDataService = data.dashboardDataService;
+    var layoutsList = []; // list of layouts without properties added for rendering
+    var selectedLayout = null;
 
-        var vm = this;
+    vm.getList = function () {
 
-        vm.readyStatus = {items: false};
-        var dashboardDataService = data.dashboardDataService;
-        var layoutsList = []; // list of layouts without properties added for rendering
-        var selectedLayout = null;
+        return new Promise(function (resolve, reject) {
 
-        vm.getList = function () {
+            uiService.getDashboardLayoutList().then(function (data) {
+                vm.items = data.results;
+                layoutsList = data.results;
 
-            return new Promise(function (resolve, reject) {
-
-                uiService.getDashboardLayoutList().then(function (data) {
-                    vm.items = data.results;
-                    layoutsList = data.results;
-
-                    vm.readyStatus.items = true;
-                    $scope.$apply();
-                    resolve(data);
-
-                });
+                vm.readyStatus.items = true;
+                $scope.$apply();
+                resolve(data);
 
             });
 
-        };
+        });
 
-        vm.shareLayout = function ($event, item) {
+    };
 
-            var type = 'dashboard_viewer';
+    vm.shareLayout = function ($event, item) {
 
-            $mdDialog.show({
-                controller: 'UiShareLayoutDialogController as vm',
-                templateUrl: 'views/dialogs/ui/ui-share-layout-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                multiple: true,
-                clickOutsideToClose: false,
-                locals: {
-                    options: {
-                        layout: item,
-                        type: type
-                    }
+        var type = 'dashboard_viewer';
+
+        $mdDialog.show({
+            controller: 'UiShareLayoutDialogController as vm',
+            templateUrl: 'views/dialogs/ui/ui-share-layout-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            multiple: true,
+            clickOutsideToClose: false,
+            locals: {
+                options: {
+                    layout: item,
+                    type: type
                 }
-
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-                    vm.getList();
-                }
-
-            })
-
-        };
-
-        vm.renameLayout = function ($event, layout, index) {
-
-            $event.stopPropagation();
-
-            var layoutData = layoutsList[index];
-
-            $mdDialog.show({
-                controller: 'UiLayoutSaveAsDialogController as vm',
-                templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                multiple: true,
-                clickOutsideToClose: false,
-                locals: {
-                    data: {
-                        layoutName: layoutData.name,
-                        layoutUserCode: layoutData.user_code,
-                        dashboard: true,
-                    }
-                }
-
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    layoutData.name = res.data.name;
-                    layout.name = res.data.name;
-                    layoutData.user_code = res.data.user_code;
-                    layoutData.configuration_code = res.data.configuration_code;
-                    layout.user_code = res.data.user_code;
-                    layout.configuration_code = res.data.configuration_code;
-                    /*
-                    uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (data) {
-                        $scope.$apply()
-                    });
-                     */
-                    uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (data) {
-
-                        var listLayout = dashboardDataService.getListLayout();
-
-                        if (listLayout?.id === data.id) {
-
-                            var activeLayoutData = dashboardDataService.getData();
-
-                            listLayout.name = res.data.name;
-                            activeLayoutData.name = res.data.name;
-                            listLayout.user_code = res.data.user_code;
-                            activeLayoutData.user_code = res.data.user_code;
-                            listLayout.modified_at = data.modified_at;
-                            activeLayoutData.modified_at = data.modified_at;
-
-                            dashboardDataService.setListLayout(listLayout);
-                            dashboardDataService.setData(activeLayoutData);
-
-                        }
-
-                        $scope.$apply()
-
-                    });
-
-                }
-
-            })
-
-        };
-
-        vm.deleteItem = function (ev, item) {
-
-            ev.stopPropagation();
-
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: ev,
-                clickOutsideToClose: false,
-                locals: {
-                    warning: {
-                        title: 'Warning',
-                        description: 'Are you sure want to delete this layout?'
-                    }
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
-            }).then(function (res) {
-                if (res.status === 'agree') {
-
-                    uiService.deleteDashboardLayoutByKey(item.id).then(function (data) {
-                        vm.getList();
-                    });
-                }
-            })
-        };
-
-        vm.selectLayout = function (layout, $event) {
-            $event.stopPropagation();
-
-            if (!selectedLayout || layout.id !== selectedLayout.id) {
-
-                var selectedElem = $event.currentTarget;
-                var layoutsItemsList = document.querySelectorAll('.ll-layout-item');
-
-                layoutsItemsList.forEach(function (layoutItem) {
-                    if (layoutItem.classList.contains('active')) {
-                        layoutItem.classList.remove('active');
-                    }
-                });
-
-                selectedElem.classList.add('active');
-                selectedLayout = layout;
             }
 
-        };
+        }).then(function (res) {
 
-        vm.setAsDefault = function ($event, item, index) {
+            if (res.status === 'agree') {
+                vm.getList();
+            }
 
-            $event.stopPropagation();
+        })
 
-            var listLayout = dashboardDataService.getListLayout();
-            var activeLayoutData;
-            var layoutData = layoutsList[index];
+    };
 
-            if (!layoutData.is_default) {
+    vm.renameLayout = function ($event, layout, index) {
 
-                for (var i = 0; i < vm.items.length; i++) {
-                    var layout = vm.items[i];
+        $event.stopPropagation();
 
-                    if (layout.is_default) {
+        var layoutData = layoutsList[index];
 
-                        layout.is_default = false;
-                        layoutsList[i].is_default = false;
-
-                        // uiService.updateDashboardLayout(layoutsList[i].id, layoutsList[i]);
-                        if (listLayout?.id === layout.id) {
-
-                            activeLayoutData = dashboardDataService.getData();
-
-                            listLayout.is_default = false;
-                            activeLayoutData.is_default = false;
-
-                            dashboardDataService.setListLayout(listLayout);
-                            dashboardDataService.setData(activeLayoutData);
-
-                        }
-
-                        break;
-                    }
+        $mdDialog.show({
+            controller: 'UiLayoutSaveAsDialogController as vm',
+            templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            multiple: true,
+            clickOutsideToClose: false,
+            locals: {
+                data: {
+                    layoutName: layoutData.name,
+                    layoutUserCode: layoutData.user_code,
+                    dashboard: true,
                 }
+            }
 
-                layoutData.is_default = true;
-                item.is_default = true;
+        }).then(function (res) {
 
-                uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (updatedData) {
+            if (res.status === 'agree') {
 
-                    if (listLayout?.id === item.id) {
+                layoutData.name = res.data.name;
+                layout.name = res.data.name;
+                layoutData.user_code = res.data.user_code;
+                layoutData.configuration_code = res.data.configuration_code;
+                layout.user_code = res.data.user_code;
+                layout.configuration_code = res.data.configuration_code;
+                /*
+                uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (data) {
+                    $scope.$apply()
+                });
+                 */
+                uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (data) {
 
-                        activeLayoutData = dashboardDataService.getData();
+                    var listLayout = dashboardDataService.getListLayout();
 
-                        listLayout.is_default = true;
-                        activeLayoutData.is_default = true;
-                        listLayout.modified_at = updatedData.modified_at;
-                        activeLayoutData.modified_at = updatedData.modified_at;
+                    if (listLayout?.id === data.id) {
+
+                        var activeLayoutData = dashboardDataService.getData();
+
+                        listLayout.name = res.data.name;
+                        activeLayoutData.name = res.data.name;
+                        listLayout.user_code = res.data.user_code;
+                        activeLayoutData.user_code = res.data.user_code;
+                        listLayout.modified_at = data.modified_at;
+                        activeLayoutData.modified_at = data.modified_at;
 
                         dashboardDataService.setListLayout(listLayout);
                         dashboardDataService.setData(activeLayoutData);
 
                     }
 
+                    $scope.$apply()
+
                 });
 
             }
-        };
 
-        vm.isDefaultLayout = function (layout) {
+        })
 
-            return layout.is_default
-        };
+    };
 
-        vm.importConfiguration = function (resolve) {
+    vm.deleteItem = function (ev, item) {
 
-            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+        ev.stopPropagation();
 
-                vm.importConfig = data;
+        $mdDialog.show({
+            controller: 'WarningDialogController as vm',
+            templateUrl: 'views/dialogs/warning-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: ev,
+            clickOutsideToClose: false,
+            locals: {
+                warning: {
+                    title: 'Warning',
+                    description: 'Are you sure want to delete this layout?'
+                }
+            },
+            preserveScope: true,
+            autoWrap: true,
+            skipHide: true,
+            multiple: true
+        }).then(function (res) {
+            if (res.status === 'agree') {
 
-                $scope.$apply();
+                uiService.deleteDashboardLayoutByKey(item.id).then(function (data) {
+                    vm.getList();
+                });
+            }
+        })
+    };
 
-                if (vm.importConfig.task_status === 'SUCCESS') {
+    vm.selectLayout = function (layout, $event) {
+        $event.stopPropagation();
 
-                    resolve()
+        if (!selectedLayout || layout.id !== selectedLayout.id) {
 
-                } else {
+            var selectedElem = $event.currentTarget;
+            var layoutsItemsList = document.querySelectorAll('.ll-layout-item');
 
-                    setTimeout(function () {
-                        vm.importConfiguration(resolve);
-                    }, 1000)
+            layoutsItemsList.forEach(function (layoutItem) {
+                if (layoutItem.classList.contains('active')) {
+                    layoutItem.classList.remove('active');
+                }
+            });
+
+            selectedElem.classList.add('active');
+            selectedLayout = layout;
+        }
+
+    };
+
+    vm.setAsDefault = function ($event, item, index) {
+
+        $event.stopPropagation();
+
+        var listLayout = dashboardDataService.getListLayout();
+        var activeLayoutData;
+        var layoutData = layoutsList[index];
+
+        if (!layoutData.is_default) {
+
+            for (var i = 0; i < vm.items.length; i++) {
+                var layout = vm.items[i];
+
+                if (layout.is_default) {
+
+                    layout.is_default = false;
+                    layoutsList[i].is_default = false;
+
+                    // uiService.updateDashboardLayout(layoutsList[i].id, layoutsList[i]);
+                    if (listLayout?.id === layout.id) {
+
+                        activeLayoutData = dashboardDataService.getData();
+
+                        listLayout.is_default = false;
+                        activeLayoutData.is_default = false;
+
+                        dashboardDataService.setListLayout(listLayout);
+                        dashboardDataService.setData(activeLayoutData);
+
+                    }
+
+                    break;
+                }
+            }
+
+            layoutData.is_default = true;
+            item.is_default = true;
+
+            uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (updatedData) {
+
+                if (listLayout?.id === item.id) {
+
+                    activeLayoutData = dashboardDataService.getData();
+
+                    listLayout.is_default = true;
+                    activeLayoutData.is_default = true;
+                    listLayout.modified_at = updatedData.modified_at;
+                    activeLayoutData.modified_at = updatedData.modified_at;
+
+                    dashboardDataService.setListLayout(listLayout);
+                    dashboardDataService.setData(activeLayoutData);
 
                 }
 
-            })
+            });
 
-        };
+        }
+    };
 
-        vm.pullUpdate = function ($event, item, $index) {
+    vm.isDefaultLayout = function (layout) {
 
-            console.log("Pull Update for Layout:", item);
+        return layout.is_default
+    };
 
-            shareConfigurationFileService.getByKey(item.sourced_from_global_layout).then(function (data) {
+    vm.importConfiguration = function (resolve) {
 
-                var sharedFile = data;
+        backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
 
-                vm.importConfig = {data: sharedFile.data, mode: 'overwrite'};
+            vm.importConfig = data;
 
-                new Promise(function (resolve, reject) {
+            $scope.$apply();
 
-                    vm.importConfiguration(resolve)
+            if (vm.importConfig.task_status === 'SUCCESS') {
 
-                }).then(function (data) {
+                resolve()
 
-                    console.log("Import Finished");
+            } else {
 
-                    vm.getList().then(function (value) {
+                setTimeout(function () {
+                    vm.importConfiguration(resolve);
+                }, 1000)
 
-                        $mdDialog.show({
-                            controller: 'InfoDialogController as vm',
-                            templateUrl: 'views/info-dialog-view.html',
-                            parent: document.querySelector('.dialog-containers-wrap'),
-                            targetEvent: $event,
-                            clickOutsideToClose: false,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            locals: {
-                                info: {
-                                    title: 'Success',
-                                    description: "Layout is updated"
-                                }
+            }
+
+        })
+
+    };
+
+    vm.pullUpdate = function ($event, item, $index) {
+
+        console.log("Pull Update for Layout:", item);
+
+        shareConfigurationFileService.getByKey(item.sourced_from_global_layout).then(function (data) {
+
+            var sharedFile = data;
+
+            vm.importConfig = {data: sharedFile.data, mode: 'overwrite'};
+
+            new Promise(function (resolve, reject) {
+
+                vm.importConfiguration(resolve)
+
+            }).then(function (data) {
+
+                console.log("Import Finished");
+
+                vm.getList().then(function (value) {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: document.querySelector('.dialog-containers-wrap'),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            info: {
+                                title: 'Success',
+                                description: "Layout is updated"
                             }
-                        });
-
+                        }
                     });
 
-                })
+                });
 
             })
 
-        };
+        })
 
-        vm.acceptInvite = function ($event, invite) {
+    };
 
-            console.log("Accept invite: ", $event, invite);
+    vm.acceptInvite = function ($event, invite) {
 
-            invite.status = 1;
+        console.log("Accept invite: ", $event, invite);
 
-            // TODO import configuration and create new layout with sourced_from_global_layout
+        invite.status = 1;
 
-            inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (data) {
+        // TODO import configuration and create new layout with sourced_from_global_layout
 
-                var sharedFile = data;
+        inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (data) {
 
-                vm.importConfig = {data: sharedFile.shared_configuration_file_object.data, mode: 'overwrite'};
+            var sharedFile = data;
 
-                new Promise(function (resolve, reject) {
+            vm.importConfig = {data: sharedFile.shared_configuration_file_object.data, mode: 'overwrite'};
 
-                    vm.importConfiguration(resolve)
+            new Promise(function (resolve, reject) {
 
-                }).then(function (data) {
+                vm.importConfiguration(resolve)
 
-                    console.log("Import Finished");
+            }).then(function (data) {
 
-                    vm.getInvites();
-                    vm.getList().then(function (data) {
+                console.log("Import Finished");
 
-                        vm.items.forEach(function (item) {
+                vm.getInvites();
+                vm.getList().then(function (data) {
 
-                            if (item.name === sharedFile.shared_configuration_file_object.name) {
-                                item.sourced_from_global_layout = sharedFile.shared_configuration_file;
+                    vm.items.forEach(function (item) {
 
-                                uiService.updateDashboardLayout(item.id, item).then(function (value) {
+                        if (item.name === sharedFile.shared_configuration_file_object.name) {
+                            item.sourced_from_global_layout = sharedFile.shared_configuration_file;
 
-                                    vm.getList().then(function (value1) {
+                            uiService.updateDashboardLayout(item.id, item).then(function (value) {
 
-                                        $mdDialog.show({
-                                            controller: 'InfoDialogController as vm',
-                                            templateUrl: 'views/info-dialog-view.html',
-                                            parent: document.querySelector('.dialog-containers-wrap'),
-                                            targetEvent: $event,
-                                            clickOutsideToClose: false,
-                                            preserveScope: true,
-                                            autoWrap: true,
-                                            skipHide: true,
-                                            multiple: true,
-                                            locals: {
-                                                info: {
-                                                    title: 'Success',
-                                                    description: "Layout is installed"
-                                                }
+                                vm.getList().then(function (value1) {
+
+                                    $mdDialog.show({
+                                        controller: 'InfoDialogController as vm',
+                                        templateUrl: 'views/info-dialog-view.html',
+                                        parent: document.querySelector('.dialog-containers-wrap'),
+                                        targetEvent: $event,
+                                        clickOutsideToClose: false,
+                                        preserveScope: true,
+                                        autoWrap: true,
+                                        skipHide: true,
+                                        multiple: true,
+                                        locals: {
+                                            info: {
+                                                title: 'Success',
+                                                description: "Layout is installed"
                                             }
-                                        })
+                                        }
+                                    })
 
-                                    });
+                                });
 
-                                })
+                            })
 
-                            }
-
-                        })
+                        }
 
                     })
 
-                });
+                })
+
+            });
 
 
-            })
+        })
 
-        };
+    };
 
-        vm.declineInvite = function ($event, invite) {
+    vm.declineInvite = function ($event, invite) {
 
-            console.log("Decline invite: ", $event, invite);
+        console.log("Decline invite: ", $event, invite);
 
-            invite.status = 2;
+        invite.status = 2;
 
-            inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (value) {
-
-                vm.getInvites();
-
-            })
-
-        };
-
-        vm.getInvites = function () {
-
-            vm.invites = [];
-
-            // Deprecated
-            // inviteToSharedConfigurationFileService.getListOfMyInvites({
-            //     filters: {
-            //         status: '0'
-            //     }
-            // }).then(function (data) {
-            //
-            //     vm.invites = data.results;
-            //
-            //     console.log('vm.invites', vm.invites);
-            //
-            //     $scope.$apply();
-            //
-            // })
-
-        };
-
-        vm.openLayout = function (layout, $event) {
-
-            $event.stopPropagation();
-
-            selectedLayout = layout;
-
-            vm.agree();
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-        vm.agree = function () {
-
-            if (selectedLayout) {
-                selectedLayout.is_active = true;
-
-                uiService.updateDashboardLayout(selectedLayout.id, selectedLayout).then(function () {
-                    $mdDialog.hide({status: 'agree', data: {layout: selectedLayout}});
-                });
-
-            } else {
-                $mdDialog.hide({status: 'disagree'});
-            }
-
-        };
-
-
-        vm.init = function () {
+        inviteToSharedConfigurationFileService.updateMyInvite(invite.id, invite).then(function (value) {
 
             vm.getInvites();
-            vm.getList();
 
-        };
+        })
 
-        vm.init();
+    };
+
+    vm.getInvites = function () {
+
+        vm.invites = [];
+
+        // Deprecated
+        // inviteToSharedConfigurationFileService.getListOfMyInvites({
+        //     filters: {
+        //         status: '0'
+        //     }
+        // }).then(function (data) {
+        //
+        //     vm.invites = data.results;
+        //
+        //     console.log('vm.invites', vm.invites);
+        //
+        //     $scope.$apply();
+        //
+        // })
+
+    };
+
+    vm.openLayout = function (layout, $event) {
+
+        $event.stopPropagation();
+
+        selectedLayout = layout;
+
+        vm.agree();
+    };
+
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
+
+    vm.agree = function () {
+
+        if (selectedLayout) {
+            selectedLayout.is_active = true;
+
+            uiService.updateDashboardLayout(selectedLayout.id, selectedLayout).then(function () {
+                $mdDialog.hide({status: 'agree', data: {layout: selectedLayout}});
+            });
+
+        } else {
+            $mdDialog.hide({status: 'disagree'});
+        }
+
+    };
 
 
-    }
+    vm.init = function () {
 
-}());
+        vm.getInvites();
+        vm.getList();
+
+    };
+
+    vm.init();
+
+
+};

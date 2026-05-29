@@ -1,18 +1,10 @@
-/**
- * Created by szhitenev on 28.07.2020.
- */
-(function () {
+import healthcheckRepository from '../repositories/healthcheckRepository';
 
-    var healthcheckRepository = require('../repositories/healthcheckRepository');
-
-    var getData = function () {
-        return healthcheckRepository.getData();
-    };
+var getData = function () {
+    return healthcheckRepository.getData();
+};
 
 
-    module.exports = {
-        getData: getData
-    }
-
-
-}());
+export default {
+    getData: getData
+};

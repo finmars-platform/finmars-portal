@@ -1,18 +1,10 @@
-/**
- * Created by szhitenev on 15.12.2022.
- */
-(function () {
+import errorRecordRepository from '../repositories/errorRecordRepository';
 
-    var errorRecordRepository = require('../repositories/errorRecordRepository');
+var getList = function (options) {
+    return errorRecordRepository.getList(options);
+};
 
-    var getList = function (options) {
-        return errorRecordRepository.getList(options);
-    };
+export default {
+    getList: getList,
 
-    module.exports = {
-        getList: getList,
-
-    }
-
-
-}());
+};

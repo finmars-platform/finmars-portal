@@ -1,75 +1,68 @@
-/**
- * Created by szhitenev on 05.05.2016.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import uiService from '../services/uiService';
 
-    var uiService = require('../services/uiService').default;
+export default function ($scope, $mdDialog) {
 
-    module.exports = function ($scope, $mdDialog) {
+    var vm = this;
 
-        var vm = this;
+    vm.items = [];
+    vm.readyStatus = {data: false};
 
-        vm.items = [];
-        vm.readyStatus = {data: false};
+    vm.getData = function () {
 
-        vm.getData = function () {
+        uiService.getContextMenuLayoutList().then(function (data) {
 
-            uiService.getContextMenuLayoutList().then(function (data) {
+            vm.items = data.results;
 
-                vm.items = data.results;
+            vm.readyStatus.data = true;
 
-                vm.readyStatus.data = true;
+            $scope.$apply();
 
-                $scope.$apply();
+        })
 
-            })
+    };
 
-        };
+    vm.deleteItem = function ($event, item) {
 
-        vm.deleteItem = function ($event, item) {
-
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                multiple: true,
-                skipHide: true,
-                locals: {
-                    warning: {
-                        title: 'Warning',
-                        description: 'Are you sure you want to delete context menu layout ' + item.name + '?'
-                    }
+        $mdDialog.show({
+            controller: 'WarningDialogController as vm',
+            templateUrl: 'views/dialogs/warning-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
+            targetEvent: $event,
+            preserveScope: true,
+            autoWrap: true,
+            multiple: true,
+            skipHide: true,
+            locals: {
+                warning: {
+                    title: 'Warning',
+                    description: 'Are you sure you want to delete context menu layout ' + item.name + '?'
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
+            }
+        }).then(function (res) {
+            if (res.status === 'agree') {
 
-                    uiService.deleteContextMenuLayoutByKey(item.id).then(function () {
+                uiService.deleteContextMenuLayoutByKey(item.id).then(function () {
 
-                        vm.getData();
+                    vm.getData();
 
-                    })
+                })
 
-                }
-            });
+            }
+        });
 
 
-        };
+    };
 
-        vm.init = function () {
+    vm.init = function () {
 
-            vm.readyStatus.data = false;
+        vm.readyStatus.data = false;
 
-            vm.getData();
+        vm.getData();
 
-        };
+    };
 
-        vm.init();
+    vm.init();
 
-    }
-
-}());
+};

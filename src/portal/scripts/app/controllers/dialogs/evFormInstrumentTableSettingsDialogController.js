@@ -1,293 +1,286 @@
-(function () {
+'use strict';
 
-	'use strict';
+import metaHelper from '../../helpers/meta.helper';
+import accrualCalculationModelService from '../../services/accrualCalculationModelService';
+import instrumentPeriodicityService from '../../services/instrumentPeriodicityService';
+import GridTableDataService from '../../services/gridTableDataService';
+import EventService from '../../services/eventService';
+import gtEvents from '../../services/gridTableEvents';
 
-	const metaHelper = require('../../helpers/meta.helper').default;
+export default function instrumentTablesSettingsDialogController($scope, $mdDialog, gridTableHelperService, data) {
 
-	const accrualCalculationModelService = require('../../services/accrualCalculationModelService');
-	const instrumentPeriodicityService = require('../../services/instrumentPeriodicityService');
+    const vm = this;
 
-	const GridTableDataService = require('../../services/gridTableDataService');
-	const EventService = require('../../services/eventService');
+    /* const rowNames = {
+        notes: 'Notes',
+        accrual_start_date: 'Accrual start date',
+        first_payment_date: 'First payment date',
+        accrual_size: 'Accrual size',
+        accrual_calculation_model: "Calculation model",
+        periodicity: "Periodicity",
+        periodicity_n: "Periodicity N",
+        build_accruals_btn: '"Build Accruals" Button',
+        rows_addition: '"Add" Button',
+        rows_deletion: '"Delete" Button'
+    };
 
-	const gtEvents = require('../../services/gridTableEvents');
+    const defaultSettings = [
+        {key: "notes", to_show: true, override_name: ""},
+        {key: "accrual_start_date", to_show: true, override_name: ""},
+        {key: "first_payment_date", to_show: true, override_name: ""},
+        {key: "accrual_size", to_show: true, override_name: ""},
+        {key: "accrual_calculation_model", to_show: true, override_name: "", options: []},
+        {key: "periodicity", to_show: true, override_name: "", options: []},
+        {key: "periodicity_n", to_show: true, override_name: ""},
+        {key: "build_accruals_btn", to_show: true},
+        {key: "rows_addition", to_show: true},
+        {key: "rows_deletion", to_show: true}
+    ]; */
 
-	module.exports = function instrumentTablesSettingsDialogController($scope, $mdDialog, gridTableHelperService, data) {
+    vm.dialogLabel = data.dialogLabel;
 
-		const vm = this;
+    vm.gridTableData = {
+        header: {
+            order: 'header',
+            columns: []
+        },
+        body: [],
+        templateRow: {
+            order: 'newRow',
+            isActive: false,
+            columns: [
+                {
+                    key: 'name',
+                    objPath: ['name'],
+                    columnName: 'Name',
+                    order: 0,
+                    cellType: 'readonly_text',
+                    settings: {
+                        value: null
+                    },
+                    styles: {
+                        'grid-table-cell': {'width': '210px'}
+                    }
+                },
+                {
+                    key: 'to_show',
+                    objPath: ['to_show'],
+                    columnName: 'To show',
+                    order: 1,
+                    cellType: 'checkbox',
+                    settings: {
+                        value: false
+                    },
+                    styles: {
+                        'grid-table-cell': {'width': '85px'}
+                    }
+                },
+                {
+                    key: 'override_name',
+                    objPath: ['override_name'],
+                    columnName: 'Override name',
+                    order: 2,
+                    cellType: 'text',
+                    settings: {
+                        value: null,
+                        closeOnMouseOut: false
+                    },
+                    styles: {
+                        'grid-table-cell': {'width': '210px'}
+                    }
+                },
+                {
+                    key: 'options_settings',
+                    objPath: ['options'],
+                    columnName: '',
+                    order: 3,
+                    cellType: 'customPopup',
+                    settings: {
+                        value: null,
+                        closeOnMouseOut: false,
+                        cellText: '...',
+                        popupSettings: {
+                            contentHtml: {
+                                main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"
+                            },
+                            popupData: {
+                                cancel: (popupData, _$popup) => {
+                                    popupData.option.override_name = popupData.oldValue; // set value which saved before in template
+                                    _$popup.cancel();
+                                },
+                                save: (_$popup) => {
+                                    _$popup.cancel(); // user change model directly, simple close popup
+                                },
+                            },
+                            classes: "ev-instr-accruals-settings-popup"
+                        }
+                    },
+                    styles: {
+                        'grid-table-cell': {'width': '65px'}
+                    }
+                }
+            ]
+        },
+        components: {
+            topPanel: false,
+            rowCheckboxes: false
+        }
+    };
 
-		/* const rowNames = {
-			notes: 'Notes',
-			accrual_start_date: 'Accrual start date',
-			first_payment_date: 'First payment date',
-			accrual_size: 'Accrual size',
-			accrual_calculation_model: "Calculation model",
-			periodicity: "Periodicity",
-			periodicity_n: "Periodicity N",
-			build_accruals_btn: '"Build Accruals" Button',
-			rows_addition: '"Add" Button',
-			rows_deletion: '"Delete" Button'
-		};
+    vm.label = "";
 
-		const defaultSettings = [
-			{key: "notes", to_show: true, override_name: ""},
-			{key: "accrual_start_date", to_show: true, override_name: ""},
-			{key: "first_payment_date", to_show: true, override_name: ""},
-			{key: "accrual_size", to_show: true, override_name: ""},
-			{key: "accrual_calculation_model", to_show: true, override_name: "", options: []},
-			{key: "periodicity", to_show: true, override_name: "", options: []},
-			{key: "periodicity_n", to_show: true, override_name: ""},
-			{key: "build_accruals_btn", to_show: true},
-			{key: "rows_addition", to_show: true},
-			{key: "rows_deletion", to_show: true}
-		]; */
+    let tableData = {};
+    if (data.tableData) {
+        tableData = JSON.parse(JSON.stringify(data.tableData));
+    }
 
-		vm.dialogLabel = data.dialogLabel;
+    if (data.label) {
+        vm.label = data.label;
+    }
 
-		vm.gridTableData = {
-			header: {
-				order: 'header',
-				columns: []
-			},
-			body: [],
-			templateRow: {
-				order: 'newRow',
-				isActive: false,
-				columns: [
-					{
-						key: 'name',
-						objPath: ['name'],
-						columnName: 'Name',
-						order: 0,
-						cellType: 'readonly_text',
-						settings: {
-							value: null
-						},
-						styles: {
-							'grid-table-cell': {'width': '210px'}
-						}
-					},
-					{
-						key: 'to_show',
-						objPath: ['to_show'],
-						columnName: 'To show',
-						order: 1,
-						cellType: 'checkbox',
-						settings: {
-							value: false
-						},
-						styles: {
-							'grid-table-cell': {'width': '85px'}
-						}
-					},
-					{
-						key: 'override_name',
-						objPath: ['override_name'],
-						columnName: 'Override name',
-						order: 2,
-						cellType: 'text',
-						settings: {
-							value: null,
-							closeOnMouseOut: false
-						},
-						styles: {
-							'grid-table-cell': {'width': '210px'}
-						}
-					},
-					{
-						key: 'options_settings',
-						objPath: ['options'],
-						columnName: '',
-						order: 3,
-						cellType: 'customPopup',
-						settings: {
-							value: null,
-							closeOnMouseOut: false,
-							cellText: '...',
-							popupSettings: {
-								contentHtml: {
-									main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"
-								},
-								popupData: {
-									cancel: (popupData, _$popup) => {
-										popupData.option.override_name = popupData.oldValue; // set value which saved before in template
-										_$popup.cancel();
-									},
-									save: (_$popup) => {
-										_$popup.cancel(); // user change model directly, simple close popup
-									},
-								},
-								classes: "ev-instr-accruals-settings-popup"
-							}
-						},
-						styles: {
-							'grid-table-cell': {'width': '65px'}
-						}
-					}
-				]
-			},
-			components: {
-				topPanel: false,
-				rowCheckboxes: false
-			}
-		};
+    const formatDataForGridTable = function (rowsList) {
 
-		vm.label = "";
+        var rowObj = metaHelper.recursiveDeepCopy(vm.gridTableData.templateRow, true);
 
-		let tableData = {};
-		if (data.tableData) {
-			tableData = JSON.parse(JSON.stringify(data.tableData));
-		}
+        //<editor-fold desc="Assemble header columns">
+        vm.gridTableData.header.columns = rowObj.columns.map(function (column) {
 
-		if (data.label) {
-			vm.label = data.label;
-		}
+            return {
+                key: column.key,
+                columnName: column.columnName,
+                order: column.order,
+                sorting: false,
+                styles: {
+                    'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
+                }
+            };
 
-		const formatDataForGridTable = function (rowsList) {
+        });
+        //</editor-fold>
 
-			var rowObj = metaHelper.recursiveDeepCopy(vm.gridTableData.templateRow, true);
+        rowsList.forEach((rowData, rowIndex) => {
 
-			//<editor-fold desc="Assemble header columns">
-			vm.gridTableData.header.columns = rowObj.columns.map(function (column) {
+            rowObj = metaHelper.recursiveDeepCopy(vm.gridTableData.templateRow, true);
 
-				return {
-					key: column.key,
-					columnName: column.columnName,
-					order: column.order,
-					sorting: false,
-					styles: {
-						'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
-					}
-				};
+            rowObj.key = rowData.key;
+            rowObj.order = rowIndex;
 
-			});
-			//</editor-fold>
+            rowObj.columns.forEach(column => {
 
-			rowsList.forEach((rowData, rowIndex) => {
+                const colProp = column.objPath[0];
 
-				rowObj = metaHelper.recursiveDeepCopy(vm.gridTableData.templateRow, true);
+                if (rowData.hasOwnProperty(colProp)) {
 
-				rowObj.key = rowData.key;
-				rowObj.order = rowIndex;
+                    /* if (column.key === 'options_settings') {
 
-				rowObj.columns.forEach(column => {
+                        column.settings.value = settings.options;
 
-					const colProp = column.objPath[0];
+                    } else {
+                        column.settings.value = settings[colProp];
+                    } */
+                    if (column.key === 'options_settings') {
 
-					if (rowData.hasOwnProperty(colProp)) {
+                        if (rowData.editableOptions) {
+                            column.settings.value = rowData[colProp];
 
-						/* if (column.key === 'options_settings') {
+                        } else {
+                            column.cellType = 'empty';
+                            delete column.settings;
+                        }
 
-							column.settings.value = settings.options;
+                    } else {
+                        column.settings.value = rowData[colProp];
+                    }
 
-						} else {
-							column.settings.value = settings[colProp];
-						} */
-						if (column.key === 'options_settings') {
+                }
+                else { // make cell empty if there is not corresponding property
+                    column.cellType = 'empty';
+                    delete column.settings;
+                }
 
-							if (rowData.editableOptions) {
-								column.settings.value = rowData[colProp];
+            });
 
-							} else {
-								column.cellType = 'empty';
-								delete column.settings;
-							}
+            vm.gridTableData.body.push(rowObj);
+            // const nameColumn = gridTableHelperService.getCellFromRowByKey(rowObj, 'notes');
 
-						} else {
-							column.settings.value = rowData[colProp];
-						}
+        });
 
-					}
-					else { // make cell empty if there is not corresponding property
-						column.cellType = 'empty';
-						delete column.settings;
-					}
+        return vm.gridTableData;
 
-				});
+    };
 
-				vm.gridTableData.body.push(rowObj);
-				// const nameColumn = gridTableHelperService.getCellFromRowByKey(rowObj, 'notes');
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-			});
+    vm.save = function () {
+        $mdDialog.hide({
+            status: 'agree',
+            data: {label: vm.label, tableData: tableData}
+        });
+    };
 
-			return vm.gridTableData;
+    const init = async function () {
 
-		};
+        vm.gridTableDataService = new GridTableDataService();
+        vm.gridTableEventService = new EventService();
 
-		vm.cancel = function () {
-			$mdDialog.hide({status: 'disagree'});
-		};
+        /* if (!data) { // get fixed default data for new entity data component
 
-		vm.save = function () {
-			$mdDialog.hide({
-				status: 'agree',
-				data: {label: vm.label, tableData: tableData}
-			});
-		};
+            const mapOptions = function (item) {
+                return {
+                    user_code: item.user_code,
+                    name: item.name,
+                    to_show: true,
+                    override_name: "",
+                };
+            };
 
-		const init = async function () {
+            /!* accrualCalculationModelService.getList().then(accrualModelsData => {
+                defaultOpts.accrualModels = accrualModelsData.map(mapOptions);
+            });
 
-			vm.gridTableDataService = new GridTableDataService();
-			vm.gridTableEventService = new EventService();
+            instrumentPeriodicityService.getList().then(function (periodicityData) {
+                defaultOpts.periodicity = periodicityData.map(mapOptions);
+            }); *!/
+            const defaultCalculationModelIndex = defaultSettings.findIndex(settings => settings.key === 'accrual_calculation_model');
+            const defaultPeriodicityIndex = defaultSettings.findIndex(settings => settings.key === 'periodicity');
 
-			/* if (!data) { // get fixed default data for new entity data component
+            try {
 
-				const mapOptions = function (item) {
-					return {
-						user_code: item.user_code,
-						name: item.name,
-						to_show: true,
-						override_name: "",
-					};
-				};
+                let accrualCalcModels = await accrualCalculationModelService.getList();
+                defaultSettings[defaultCalculationModelIndex].options = accrualCalcModels.map(mapOptions);
 
-				/!* accrualCalculationModelService.getList().then(accrualModelsData => {
-					defaultOpts.accrualModels = accrualModelsData.map(mapOptions);
-				});
+            } catch (error) {}
 
-				instrumentPeriodicityService.getList().then(function (periodicityData) {
-					defaultOpts.periodicity = periodicityData.map(mapOptions);
-				}); *!/
-				const defaultCalculationModelIndex = defaultSettings.findIndex(settings => settings.key === 'accrual_calculation_model');
-				const defaultPeriodicityIndex = defaultSettings.findIndex(settings => settings.key === 'periodicity');
+            try {
 
-				try {
+                const periodicityItems = await instrumentPeriodicityService.getList();
+                defaultSettings[defaultPeriodicityIndex].options = periodicityItems.map(mapOptions);
 
-					let accrualCalcModels = await accrualCalculationModelService.getList();
-					defaultSettings[defaultCalculationModelIndex].options = accrualCalcModels.map(mapOptions);
+            } catch (error) {}
 
-				} catch (error) {}
+        } */
 
-				try {
+        vm.gridTableData = formatDataForGridTable(tableData);
+        vm.gridTableDataService.setTableData(vm.gridTableData);
 
-					const periodicityItems = await instrumentPeriodicityService.getList();
-					defaultSettings[defaultPeriodicityIndex].options = periodicityItems.map(mapOptions);
+        vm.gridTableEventService.addEventListener(gtEvents.CELL_VALUE_CHANGED, argObj => {
 
-				} catch (error) {}
+            const changedCell = vm.gridTableDataService.getCell(argObj.row.order, argObj.column.order);
+            const dataKey = changedCell.objPath[0];
 
-			} */
+            if (changedCell.settings.value && typeof changedCell.settings.value === 'object') {
+                tableData[argObj.row.order][dataKey] = JSON.parse(angular.toJson(changedCell.settings.value));
 
-			vm.gridTableData = formatDataForGridTable(tableData);
-			vm.gridTableDataService.setTableData(vm.gridTableData);
+            } else {
+                tableData[argObj.row.order][dataKey] = changedCell.settings.value;
+            }
 
-			vm.gridTableEventService.addEventListener(gtEvents.CELL_VALUE_CHANGED, argObj => {
+        });
 
-				const changedCell = vm.gridTableDataService.getCell(argObj.row.order, argObj.column.order);
-				const dataKey = changedCell.objPath[0];
+    };
 
-				if (changedCell.settings.value && typeof changedCell.settings.value === 'object') {
-					tableData[argObj.row.order][dataKey] = JSON.parse(angular.toJson(changedCell.settings.value));
+    init();
 
-				} else {
-					tableData[argObj.row.order][dataKey] = changedCell.settings.value;
-				}
-
-			});
-
-		};
-
-		init();
-
-	};
-
-}());
+};

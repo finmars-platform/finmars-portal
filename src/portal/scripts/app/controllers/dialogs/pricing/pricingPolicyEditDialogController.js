@@ -1,93 +1,84 @@
-/**
- * Created by szhitenev on 30.01.2020.
- */
-(function () {
+'use strict';
 
-    'use strict';
+import pricingPolicyService from '../../../services/pricingPolicyService';
+import currencyPricingSchemeService from '../../../services/pricing/currencyPricingSchemeService';
+import instrumentPricingSchemeService from '../../../services/pricing/instrumentPricingSchemeService';
 
-    var pricingPolicyService = require('../../../services/pricingPolicyService').default;;
+export default function ($scope, $mdDialog, toastNotificationService, data) {
 
-    var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
-    var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
+    var vm = this;
 
+    vm.itemId = data.item.id;
 
-    module.exports = function ($scope, $mdDialog, toastNotificationService, data) {
+    vm.item = {};
 
-        var vm = this;
+    vm.currencyPricingSchemes = [];
+    vm.instrumentPricingSchemes = [];
 
-        vm.itemId = data.item.id;
+    vm.readyStatus = {policy: false, currencyPricingSchemes: false, instrumentPricingSchemes: false};
 
-        vm.item = {};
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.currencyPricingSchemes = [];
-        vm.instrumentPricingSchemes = [];
+    vm.agree = function () {
 
-        vm.readyStatus = {policy: false, currencyPricingSchemes: false, instrumentPricingSchemes: false};
+        pricingPolicyService.update(vm.item.id, vm.item).then(function (data) {
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+            vm.item = data;
 
-        vm.agree = function () {
+            toastNotificationService.success("Pricing policy was updated");
 
-            pricingPolicyService.update(vm.item.id, vm.item).then(function (data) {
+            $mdDialog.hide({status: 'agree', data: {item: vm.item}});
 
-                vm.item = data;
+        });
 
-                toastNotificationService.success("Pricing policy was updated");
+    };
 
-                $mdDialog.hide({status: 'agree', data: {item: vm.item}});
+    vm.getItem = function () {
 
-            });
+        pricingPolicyService.getByKey(vm.itemId).then(function (data) {
 
-        };
+            vm.item = data;
 
-        vm.getItem = function () {
+            vm.readyStatus.policy = true;
 
-            pricingPolicyService.getByKey(vm.itemId).then(function (data) {
+            $scope.$apply();
 
-                vm.item = data;
+        })
 
-                vm.readyStatus.policy = true;
+    };
 
-                $scope.$apply();
+    vm.editAsJson = function (ev) {
 
-            })
-
-        };
-
-        vm.editAsJson = function (ev) {
-
-            $mdDialog.show({
-                controller: 'EntityAsJsonEditorDialogController as vm',
-                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
-                targetEvent: ev,
-                multiple: true,
-                locals: {
-                    data: {
-                        item: vm.item,
-                        entityType: 'pricing-policy'
-                    }
+        $mdDialog.show({
+            controller: 'EntityAsJsonEditorDialogController as vm',
+            templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+            targetEvent: ev,
+            multiple: true,
+            locals: {
+                data: {
+                    item: vm.item,
+                    entityType: 'pricing-policy'
                 }
-            }).then(function (res) {
+            }
+        }).then(function (res) {
 
-                if (res.status === "agree") {
+            if (res.status === "agree") {
 
-                    vm.getItem();
+                vm.getItem();
 
-                }
-            })
-
-        }
-
-        vm.init = function () {
-
-            vm.getItem();
-
-        };
-
-        vm.init();
+            }
+        })
 
     }
 
-}());
+    vm.init = function () {
+
+        vm.getItem();
+
+    };
+
+    vm.init();
+
+};

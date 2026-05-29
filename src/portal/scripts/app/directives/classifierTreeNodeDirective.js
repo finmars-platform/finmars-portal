@@ -1,78 +1,71 @@
-/**
- * Created by mevstratov on 16.06.2021.
- */
-(function () {
+'use strict';
 
-	'use strict';
+import utilsHelper from '../helpers/utils.helper';
 
-	const utilsHelper = require('../helpers/utils.helper');
+export default function () {
 
-	module.exports = function () {
+    return {
+        require: '^^classifierTree',
+        restrict: 'E',
+        scope: {
+            parent: '=',
+            node: '='
+        },
+        templateUrl: 'views/directives/classifier-tree-node-view.html',
+        link: function (scope, elem, attrs, cTreeVm) {
 
-		return {
-			require: '^^classifierTree',
-			restrict: 'E',
-			scope: {
-				parent: '=',
-				node: '='
-			},
-			templateUrl: 'views/directives/classifier-tree-node-view.html',
-			link: function (scope, elem, attrs, cTreeVm) {
+            scope.selectNode = cTreeVm.selectNode;
+            scope.toggleNodeFolding = cTreeVm.toggleNodeFolding;
 
-				scope.selectNode = cTreeVm.selectNode;
-				scope.toggleNodeFolding = cTreeVm.toggleNodeFolding;
+            scope.onCancelEdit = function ($event) {
 
-				scope.onCancelEdit = function ($event) {
+                $event.stopPropagation();
 
-					$event.stopPropagation();
+                cTreeVm.onCancelEdit();
 
-					cTreeVm.onCancelEdit();
+            };
 
-				};
+            scope.onSaveNode = cTreeVm.onSaveNode;
+            // scope.editableNode = cTreeVm.editableNode;
+            scope.editingNode = cTreeVm.editingNode;
+            scope.currentEdit = {
+                name: ''
+            }
 
-				scope.onSaveNode = cTreeVm.onSaveNode;
-				// scope.editableNode = cTreeVm.editableNode;
-				scope.editingNode = cTreeVm.editingNode;
-				scope.currentEdit = {
-					name: ''
-				}
+            const classifierNodeRowElem = elem[0].querySelector('.classifierNodeRow');
 
-				const classifierNodeRowElem = elem[0].querySelector('.classifierNodeRow');
+            const focusInput = () => {
+                const inputElement = elem[0].querySelector('input.classifier-name');
+                inputElement.focus();
+            }
 
-				const focusInput = () => {
-					const inputElement = elem[0].querySelector('input.classifier-name');
-					inputElement.focus();
-				}
+            scope.onInputInit = () => {
+                scope.currentEdit.name = scope.node.name;
+                focusInput();
+            }
 
-				scope.onInputInit = () => {
-					scope.currentEdit.name = scope.node.name;
-					focusInput();
-				}
+            scope.isSaveDisabled = () => {
+                return !scope.currentEdit.name.trim();
+            }
 
-				scope.isSaveDisabled = () => {
-					return !scope.currentEdit.name.trim();
-				}
+            classifierNodeRowElem.addEventListener('dragstart', cTreeVm.onNodeDragStart);
+            classifierNodeRowElem.addEventListener('dragend', cTreeVm.onNodeDragEnd);
 
-				classifierNodeRowElem.addEventListener('dragstart', cTreeVm.onNodeDragStart);
-				classifierNodeRowElem.addEventListener('dragend', cTreeVm.onNodeDragEnd);
+            scope.getPathToNodeAsString = function () {
+                return scope.node.frontOptions.treePath.join(',');
+            };
 
-				scope.getPathToNodeAsString = function () {
-					return scope.node.frontOptions.treePath.join(',');
-				};
+            scope.callFnForCustomBtn = function ($event, actionData) {
 
-				scope.callFnForCustomBtn = function ($event, actionData) {
+                if (actionData.parameters) {
+                    actionData.callback($event, scope.node, actionData.parameters);
+                } else {
+                    actionData.callback($event, scope.node);
+                }
 
-					if (actionData.parameters) {
-						actionData.callback($event, scope.node, actionData.parameters);
-					} else {
-						actionData.callback($event, scope.node);
-					}
+            };
 
-				};
+        }
+    }
 
-			}
-		}
-
-	}
-
-})();
+};

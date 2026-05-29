@@ -1,45 +1,67 @@
-(function () {
+'use strict';
 
-    'use strict';
+export default function ($mdDialog) {
 
-    module.exports = function ($mdDialog) {
+    return {
+        restrict: 'E',
+        scope: {
+            palettesList: '=',
+            model: '=',
+            onPalettesChangeCallback: '&?'
+        },
+        templateUrl: 'views/directives/color-picker-view.html',
+        link: function (scope, elem, attr) {
 
-        return {
-            restrict: 'E',
-            scope: {
-                palettesList: '=',
-                model: '=',
-                onPalettesChangeCallback: '&?'
-            },
-            templateUrl: 'views/directives/color-picker-view.html',
-            link: function (scope, elem, attr) {
+            scope.selectedPalette = {};
+            scope.selectedColor = {};
 
-                scope.selectedPalette = {};
-                scope.selectedColor = {};
+            scope.getColorDivStyle = function () {
+                var styleText;
 
-                scope.getColorDivStyle = function () {
-                    var styleText;
-
-                    if (scope.selectedColor.value) {
-                        styleText = 'background-color: ' + scope.selectedColor.value + ';';
-                    }
-
-                    return styleText;
+                if (scope.selectedColor.value) {
+                    styleText = 'background-color: ' + scope.selectedColor.value + ';';
                 }
 
-                var findSelectedColor = function () {
+                return styleText;
+            }
 
-                    var paletteNotFound = true;
+            var findSelectedColor = function () {
 
-                    var i,a;
-                    for (i = 0; i < scope.palettesList.length; i++) {
+                var paletteNotFound = true;
 
-                        if (scope.palettesList[i].user_code === scope.model.paletteUserCode) {
+                var i,a;
+                for (i = 0; i < scope.palettesList.length; i++) {
+
+                    if (scope.palettesList[i].user_code === scope.model.paletteUserCode) {
+
+                        scope.selectedPalette = scope.palettesList[i];
+                        paletteNotFound = false;
+
+                        /*for (a = 0; a < scope.selectedPalette.colors.length; a++) {
+
+                            if (scope.selectedPalette.colors[a].order === scope.model.colorOrder) {
+
+                                scope.selectedColor = JSON.parse(JSON.stringify(scope.palettesList[i].colors[a]));
+                                break loop1;
+
+                            }
+
+                        }*/
+
+                        scope.selectedColor = JSON.parse(JSON.stringify(scope.palettesList[i].colors[scope.model.colorOrder]));
+
+                    }
+
+                }
+
+                if (paletteNotFound) {
+                    loop1: for (i = 0; i < scope.palettesList.length; i++) {
+
+                        if (scope.palettesList[i].user_code === 'Default Palette') {
 
                             scope.selectedPalette = scope.palettesList[i];
-                            paletteNotFound = false;
 
-                            /*for (a = 0; a < scope.selectedPalette.colors.length; a++) {
+                            for (a = 0; a < scope.selectedPalette.colors.length; a++) {
 
                                 if (scope.selectedPalette.colors[a].order === scope.model.colorOrder) {
 
@@ -48,106 +70,80 @@
 
                                 }
 
-                            }*/
-
-                            scope.selectedColor = JSON.parse(JSON.stringify(scope.palettesList[i].colors[scope.model.colorOrder]));
+                            }
 
                         }
 
                     }
+                }
 
-                    if (paletteNotFound) {
-                        loop1: for (i = 0; i < scope.palettesList.length; i++) {
+            };
 
-                            if (scope.palettesList[i].user_code === 'Default Palette') {
+            scope.openSelectColorDialog = function ($event) {
 
-                                scope.selectedPalette = scope.palettesList[i];
-
-                                for (a = 0; a < scope.selectedPalette.colors.length; a++) {
-
-                                    if (scope.selectedPalette.colors[a].order === scope.model.colorOrder) {
-
-                                        scope.selectedColor = JSON.parse(JSON.stringify(scope.palettesList[i].colors[a]));
-                                        break loop1;
-
-                                    }
-
-                                }
-
-                            }
-
+                $mdDialog.show({
+                    controller: 'SelectColorDialogController as vm',
+                    templateUrl: 'views/colorPicker/select-color-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            palette: scope.selectedPalette,
+                            color: scope.selectedColor,
+                            palettesList: scope.palettesList
                         }
                     }
+                }).then(function (res) {
 
-                };
+                    if (res.status === 'agree') {
 
-                scope.openSelectColorDialog = function ($event) {
+                        scope.selectedPalette = res.data.palette;
+                        scope.selectedColor = res.data.color;
 
-                    $mdDialog.show({
-                        controller: 'SelectColorDialogController as vm',
-                        templateUrl: 'views/colorPicker/select-color-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                palette: scope.selectedPalette,
-                                color: scope.selectedColor,
-                                palettesList: scope.palettesList
-                            }
-                        }
-                    }).then(function (res) {
+                        scope.model = {};
 
-                        if (res.status === 'agree') {
+                        scope.model.paletteUserCode = res.data.palette.user_code;
+                        scope.model.colorOrder = res.data.color.order;
+                        /*if (scope.onPalettesChangeCallback) {
+                            setTimeout(function () {
+                                scope.onPalettesChangeCallback();
+                            }, 100);
+                        }*/
 
-                            scope.selectedPalette = res.data.palette;
-                            scope.selectedColor = res.data.color;
+                    }
 
-                            scope.model = {};
+                    if (res.data && res.data.palettesList) {
 
-                            scope.model.paletteUserCode = res.data.palette.user_code;
-                            scope.model.colorOrder = res.data.color.order;
-                            /*if (scope.onPalettesChangeCallback) {
-                                setTimeout(function () {
-                                    scope.onPalettesChangeCallback();
-                                }, 100);
-                            }*/
+                        scope.palettesList = res.data.palettesList;
 
+                        if (Object.keys(scope.selectedColor).length) {
+                            findSelectedColor();
                         }
 
-                        if (res.data && res.data.palettesList) {
-
-                            scope.palettesList = res.data.palettesList;
-
-                            if (Object.keys(scope.selectedColor).length) {
-                                findSelectedColor();
-                            }
-
-                            if (scope.onPalettesChangeCallback) {
-                                setTimeout(function () {
-                                    scope.onPalettesChangeCallback();
-                                }, 100);
-                            }
-
+                        if (scope.onPalettesChangeCallback) {
+                            setTimeout(function () {
+                                scope.onPalettesChangeCallback();
+                            }, 100);
                         }
 
-                    });
+                    }
 
-                }
-
-                if (scope.model && typeof scope.model === 'object' && scope.model.paletteUserCode) {
-                    findSelectedColor();
-
-                } else {
-
-                    scope.selectedPalette = JSON.parse(JSON.stringify(scope.palettesList[0]));
-                    scope.selectedColor = scope.selectedPalette.colors[0];
-
-                }
+                });
 
             }
-        }
 
+            if (scope.model && typeof scope.model === 'object' && scope.model.paletteUserCode) {
+                findSelectedColor();
+
+            } else {
+
+                scope.selectedPalette = JSON.parse(JSON.stringify(scope.palettesList[0]));
+                scope.selectedColor = scope.selectedPalette.colors[0];
+
+            }
+
+        }
     }
 
-}());
+};

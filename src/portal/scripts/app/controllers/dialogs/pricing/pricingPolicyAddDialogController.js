@@ -1,52 +1,44 @@
-/**
- * Created by szhitenev on 30.01.2020.
- */
-(function(){
+'use strict';
 
-    'use strict';
+import pricingPolicyService from '../../../services/pricingPolicyService';
+import currencyPricingSchemeService from '../../../services/pricing/currencyPricingSchemeService';
+import instrumentPricingSchemeService from '../../../services/pricing/instrumentPricingSchemeService';
 
-    var pricingPolicyService = require('../../../services/pricingPolicyService').default;;
+export default function($scope, $mdDialog, data){
 
-    var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
-    var instrumentPricingSchemeService= require('../../../services/pricing/instrumentPricingSchemeService');
+    var vm = this;
 
-    module.exports = function($scope, $mdDialog, data){
+    vm.item = {};
+    vm.types = [];
 
-        var vm = this;
+    vm.currencyPricingSchemes = [];
+    vm.instrumentPricingSchemes = [];
 
-        vm.item = {};
-        vm.types = [];
-
-        vm.currencyPricingSchemes = [];
-        vm.instrumentPricingSchemes = [];
-
-        vm.readyStatus = {content: false, currencyPricingSchemes: false, instrumentPricingSchemes: false};
+    vm.readyStatus = {content: false, currencyPricingSchemes: false, instrumentPricingSchemes: false};
 
 
 
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+    vm.cancel = function () {
+        $mdDialog.hide({status: 'disagree'});
+    };
 
-        vm.agree = function () {
+    vm.agree = function () {
 
-            pricingPolicyService.create(vm.item).then(function (data) {
+        pricingPolicyService.create(vm.item).then(function (data) {
 
-                vm.item = data;
+            vm.item = data;
 
-                $mdDialog.hide({status: 'agree', data: {item: vm.item}});
+            $mdDialog.hide({status: 'agree', data: {item: vm.item}});
 
-            });
+        });
 
-        };
+    };
 
-        vm.init = function () {
+    vm.init = function () {
 
-        };
+    };
 
-        vm.init();
+    vm.init();
 
-    }
-
-}());
+};

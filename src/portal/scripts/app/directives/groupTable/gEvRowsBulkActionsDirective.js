@@ -1,106 +1,103 @@
-(function () {
-	'use strict';
+'use strict';
 
-	const evDataHelper = require('../../helpers/ev-data.helper').default;
+import evDataHelper from '../../helpers/ev-data.helper';
+import evEvents from '../../services/entityViewerEvents';
 
-	const evEvents = require('../../services/entityViewerEvents');
+export default function (evRvDomManagerService) {
+    return {
+        require: '^^gRowsBulkActions',
+        restrict: 'E',
+        scope: {
+            evDataService: '=',
+            evEventService: '=',
+        },
+        templateUrl: 'views/directives/groupTable/g-ev-rows-bulk-actions-view.html',
+        link: function (scope, elem, attrs, ctrlVm) {
 
-	module.exports = function (evRvDomManagerService) {
-		return {
-			require: '^^gRowsBulkActions',
-			restrict: 'E',
-			scope: {
-				evDataService: '=',
-				evEventService: '=',
-			},
-			templateUrl: 'views/directives/groupTable/g-ev-rows-bulk-actions-view.html',
-			link: function (scope, elem, attrs, ctrlVm) {
+            const entityType = scope.evDataService.getEntityType();
 
-				const entityType = scope.evDataService.getEntityType();
+            let optionsList = [{
+                actionKey: "delete",
+                name: "Delete",
+            }];
 
-				let optionsList = [{
-					actionKey: "delete",
-					name: "Delete",
-				}];
+            const bulkRestoreDeleted = {
+                name: "Restore",
+                actionKey: "bulk_restore_deleted"
+            };
 
-				const bulkRestoreDeleted = {
-					name: "Restore",
-					actionKey: "bulk_restore_deleted"
-				};
+            if (entityType === 'complex-transaction') {
 
-				if (entityType === 'complex-transaction') {
+                optionsList = optionsList.concat([
+                    {
+                        actionKey: "lock_transaction",
+                        name: "Lock Transaction",
+                    },
+                    {
+                        actionKey: "unlock_transaction",
+                        name: "Unlock Transaction",
+                    },
+                    {
+                        actionKey: "ignore_transaction",
+                        name: "Ignore Transaction",
+                    },
+                    {
+                        actionKey: "activate_transaction",
+                        name: "Activate Transaction",
+                    },
+                ]);
 
-					optionsList = optionsList.concat([
-						{
-							actionKey: "lock_transaction",
-							name: "Lock Transaction",
-						},
-						{
-							actionKey: "unlock_transaction",
-							name: "Unlock Transaction",
-						},
-						{
-							actionKey: "ignore_transaction",
-							name: "Ignore Transaction",
-						},
-						{
-							actionKey: "activate_transaction",
-							name: "Activate Transaction",
-						},
-					]);
+            }
+            else if (entityType === "instrument") {
 
-				}
-				else if (entityType === "instrument") {
+                optionsList = optionsList.concat([
+                    {
+                        name: "Deactivate",
+                        actionKey: "deactivate_instrument"
+                    },
+                    {
+                        name: "Activate",
+                        actionKey: "activate_instrument"
+                    }
+                ]);
 
-					optionsList = optionsList.concat([
-						{
-							name: "Deactivate",
-							actionKey: "deactivate_instrument"
-						},
-						{
-							name: "Activate",
-							actionKey: "activate_instrument"
-						}
-					]);
+                // optionsList.push(bulkRestoreDeleted);
 
-					// optionsList.push(bulkRestoreDeleted);
+            }
 
-				}
+            if ( evRvDomManagerService.isRestorable(entityType) ) {
 
-				if ( evRvDomManagerService.isRestorable(entityType) ) {
+                optionsList.push(bulkRestoreDeleted);
 
-					optionsList.push(bulkRestoreDeleted);
+            }
 
-				}
+            optionsList.push({
+                name: "View JSON",
+                actionKey: "bulk_view_json"
+            })
 
-				optionsList.push({
-					name: "View JSON",
-					actionKey: "bulk_view_json"
-				})
+            const selectOption = function (option, _$popup, $event) {
 
-				const selectOption = function (option, _$popup, $event) {
+                _$popup.cancel();
 
-					_$popup.cancel();
+                let actionData = {actionKey: option.actionKey};
 
-					let actionData = {actionKey: option.actionKey};
+                actionData.event = $event;
 
-					actionData.event = $event;
+                /* ctrlVm.evDataService.setActiveObjectAction(actionData);
+                ctrlVm.evDataService.setActiveObjectActionData(actionData); */
+                scope.evDataService.setRowsActionData(actionData);
 
-					/* ctrlVm.evDataService.setActiveObjectAction(actionData);
-					ctrlVm.evDataService.setActiveObjectActionData(actionData); */
-					scope.evDataService.setRowsActionData(actionData);
+                scope.evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
+                scope.evEventService.dispatchEvent(evEvents.HIDE_BULK_ACTIONS_AREA);
 
-					scope.evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
-					scope.evEventService.dispatchEvent(evEvents.HIDE_BULK_ACTIONS_AREA);
+            };
 
-				};
+            scope.popupData = {
+                selectOption: selectOption,
+                options: optionsList
+            };
 
-				scope.popupData = {
-					selectOption: selectOption,
-					options: optionsList
-				};
-
-			}
-		};
-	};
-})();
+        }
+    };
+};

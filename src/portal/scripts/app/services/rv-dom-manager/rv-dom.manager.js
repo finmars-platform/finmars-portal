@@ -1,11 +1,10 @@
-const utilsHelper = require('../../helpers/utils.helper').default;
-const evEvents = require('../../services/entityViewerEvents').default;
-const evDataHelper = require('../../helpers/ev-data.helper').default;
-const rvDataHelper = require('../../helpers/rv-data.helper').default;
-const evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
-const metaHelper = require('../../helpers/meta.helper').default;
-
-const RvScrollManager = require('./rv-scroll.manager').default;
+import utilsHelper from '../../helpers/utils.helper';
+import evEvents from '../../services/entityViewerEvents';
+import evDataHelper from '../../helpers/ev-data.helper';
+import rvDataHelper from '../../helpers/rv-data.helper';
+import evRvCommonHelper from '../../helpers/ev-rv-common.helper';
+import metaHelper from '../../helpers/meta.helper';
+import RvScrollManager from './rv-scroll.manager';
 
 export default function (toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService, rvDataProviderService) {
 
